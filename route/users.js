@@ -33,7 +33,7 @@ router.post('/users/login',(req,res)=>{
 router.post('/customer_webhook',(req,res)=>{
     var event = req.body;
     console.log('Event',event)
-    res.send(200);
+    res.send(event);
     
 })
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
