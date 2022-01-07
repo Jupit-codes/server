@@ -30,6 +30,12 @@ router.post('/users/login',(req,res)=>{
     console.log(req.body);
     res.send('Login Successful')
 });
+router.post('/customer_webhook',(req,res)=>{
+    var event = req.body;
+    console.log('Event',event)
+    res.send(200);
+    
+})
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
     console.log(req.params.id);
     // res.send(req.params.id);
