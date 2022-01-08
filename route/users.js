@@ -34,6 +34,7 @@ router.post('/users/login',(req,res)=>{
     res.send('Login Successful')
 });
 router.post('/customer_webhook',(req,res)=>{
+    console.log('Event',req.body)
     const webhook = WebHook.create({
         event:req.body.event,
         customerid:req.body.data.customer_id,
@@ -46,7 +47,7 @@ router.post('/customer_webhook',(req,res)=>{
 
     const mailData = {
         from: 'hello@jupit.app',  // sender address
-        to: req.body.data.email,   // list of receivers
+        to: 'hademylola@gmail.com',   // list of receivers
         subject: 'KYC Level 2 Notification',
         text: 'That was easy!',
         html: `
