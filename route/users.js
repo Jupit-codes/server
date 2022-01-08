@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import querystring from 'querystring';
 import random from 'random-number';
 import nodemailer from 'nodemailer';
+import res from "express/lib/response";
 
 
 
@@ -35,15 +36,7 @@ router.post('/users/login',(req,res)=>{
 });
 router.post('/customer_webhook',(req,res)=>{
     console.log('Event',req.body)
-    const webhook = WebHook.create({
-        event:req.body.event,
-        customerid:req.body.data.customer_id,
-        customercode:req.body.data.customer_code,
-        email:req.body.data.email,
-        bvn:req.body.data.identification.bvn,
-        accountnumber:req.body.data.identification.account_number,
-        bankcode:req.body.data.identification.bank_code,
-    })
+    saveWebHook();
 
     const mailData = {
         from: 'hello@jupit.app',  // sender address
@@ -550,6 +543,25 @@ router.post('/users/validate/bvntoaccount/kyc/level2',(req,res)=>{
         })
 
 });
+
+async function saveWebHook (){
+    try{
+        const webhook = await WebHook.create({
+            event:req.body.event,
+            customerid:req.body.data.customer_id,
+            customercode:req.body.data.customer_code,
+            email:req.body.data.email,
+            bvn:req.body.data.identification.bvn,
+            accountnumber:req.body.data.identification.account_number,
+            bankcode:req.body.data.identification.bank_code,
+        })
+
+        console.log('WebhookSaved')
+    }
+    catch(err){
+        console.log(err)
+    }
+}
 
 
 
