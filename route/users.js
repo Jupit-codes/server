@@ -1,10 +1,13 @@
 import express from "express";
-import Usermodel from '../model/users.js'
+import Usermodel from '../model/users.js';
+import KycModel from '../model/kyc.js';
+import WebHook from "../model/webhook.js";
 import axios from "axios";
 import crypto from 'crypto';
 import querystring from 'querystring';
-import random from 'random-number'
-import nodemailer from 'nodemailer'
+import random from 'random-number';
+import nodemailer from 'nodemailer';
+
 
 
 const transporter = nodemailer.createTransport({
@@ -31,9 +34,71 @@ router.post('/users/login',(req,res)=>{
     res.send('Login Successful')
 });
 router.post('/customer_webhook',(req,res)=>{
-    var event = req.body;
-    console.log('Event',event)
-    res.send({"event":event});
+    const webhook = WebHook.create({
+        event:req.body.event,
+        customerid:req.body.data.customer_id,
+        customercode:req.body.data.customer_code,
+        email:req.body.data.email,
+        bvn:req.body.data.identification.bvn,
+        accountnumber:req.body.data.identification.account_number,
+        bankcode:req.body.data.identification.bank_code,
+    })
+
+    const mailData = {
+        from: 'hello@jupit.app',  // sender address
+        to: req.body.data.email,   // list of receivers
+        subject: 'KYC Level 2 Notification',
+        text: 'That was easy!',
+        html: `
+                <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
+                    <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                        <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                        <div style="width:100%;text-align:center">
+                                <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
+                        </div>   
+                        <div style="width:100%;text-align:center;margin-top:20px">
+                            <h2 style="font-family:candara">WebHook Notification </h2>
+                        <div>   
+                        <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                            <hr style="background-color:#f5f5f5;width:95%"/>
+                        <div>
+                            <div style="width:100%; text-align:center">
+                                <p>Dear Client,</p>
+                                <p>Trust this notification meets you well?</p>
+                                <p>You Just received a callback response as regards, your KYC Level 2 with US</p>
+                            </div>
+                           
+                        </div>
+                        </div>
+
+                        <div >
+                        <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
+                        </div>
+                    </div>
+        
+                </div>
+            `
+      };
+
+    transporter.sendMail(mailData, function (err, info) {
+        if(err){
+           
+            res.send({"message":"An Error Occurred","callback":err})
+        }
+        
+        else{
+
+            res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
+            
+        }
+          
+     });
+    
+
+
+
+
+    
     
 })
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
@@ -56,7 +121,23 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                         }
                         const usdt_add = createUSDTWalletAddress(req.params.id);
                         const btc_add = createBTCWalletAddress(req.params.id);
-                        res.send({"SuccessMessage":"EmailAddress Verified","status":true});
+                        Usermodel.findOne({_id:req.params.id},function(err,docs){
+                            if(err){
+                                res.send({
+                                    "message":"An Error Occurred",
+                                    "Error":err,
+                                    "status":false
+                                })
+                            }
+                            if(docs){
+                                createKyc(docs._id,docs.email,docs.phonenumber);
+                                res.send({"SuccessMessage":"EmailAddress Verified","status":true});
+                            }
+                        })
+                        
+                        // const update_kyc_level1 = updateKycLevel1(req.params.id);
+                        // const update_kyc_level2= updateKycLevel2(req.params.id);
+                        
                         
                     });
                 }
@@ -99,6 +180,7 @@ router.post('/users/register',(req,res)=>{
             username:req.body.username,
             email:req.body.email,
             password:req.body.password,
+            phonenumber:req.body.phonenumber,
             email_verification:false
         })
         
@@ -322,6 +404,154 @@ function createBTCWalletAddress(userid){
         
     })
 }
+
+async function createKyc(userid,email,phonenumber){
+    try{
+        const kyc= await  KycModel.create({
+            userid:userid
+        })
+
+        createCustomerCode(kyc._id,email,phonenumber);
+
+        // KycModel.findByIdAndUpdate(kyc._id, { 
+        //     $push: { 
+        //             level1: {"status":"verified"}, 
+        //         } 
+        //     }).exec();
+
+
+    }
+    catch(err){
+        res.send({
+            "message":"An Error Occurred",
+            "error":err,
+            "status":false
+        })
+        console.log(err)
+    }
+}
+
+function createCustomerCode(kyc_id,email,phonenumber){
+    console.log(kyc_id,email,phonenumber)
+    const url ="https://api.paystack.co/customer";
+    const params = {
+        "email":email,
+        "phonenumber":phonenumber
+    }
+    axios.post(url,params,{
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer sk_live_e17b8c11ebd06acf37e6999d97ce43e7b1711a57'
+           
+        }
+    })
+    .then(res=>{
+        console.log('CustomerCode',res.data.data.customer_code);
+        console.log('res',res)
+        KycModel.findByIdAndUpdate(kyc_id, { 
+            $push: { 
+                    naira_wallet: {"balance":0,"address":"00000"},
+                    level1:{
+                        "email":email,
+                        "status":"Verified"
+                    },
+                    level2:{
+                        "email":email,
+                        "customer_code":res.data.data.customer_code,
+                        "integration":res.data.data.integration,
+                    }
+                    
+                } 
+            }).exec();
+            console.log('Kyc Successfully Created')
+            // res.send({"SuccessMessage":"EmailAddress Verified","status":true});
+    })
+    .catch((err)=>{
+        // res.send({
+        //     "message":"An Error Occurred",
+        //     "error":err,
+        //     "status":false
+        // })
+        console.log(err)
+    })
+}
+
+
+router.post('/users/validate/acountnumber',(req,res)=>{
+    const account_number = req.body.account_number;
+    const bankcode = req.body.bankcode;
+    const parameters = {
+        account_number:account_number,
+        bank_code:bankcode,
+    }
+    const get_request_args = querystring.stringify(parameters);
+    const url = "https://api.paystack.co/bank/resolve?"+get_request_args
+    axios.get(url,{
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization':'Bearer sk_live_e17b8c11ebd06acf37e6999d97ce43e7b1711a57'
+        }
+    })
+    .then(result=>{
+       
+         if(result.data.message === "Account number resolved"){
+             res.send({
+                 "Message":"Resolved"
+             })
+         }
+         
+        console.log(result.data)
+    })
+    .catch((err)=>{
+        res.send({
+            "Message":"Failed"
+        })
+        console.log(err)
+    })
+
+
+});
+
+router.post('/users/validate/bvntoaccount/kyc/level2',(req,res)=>{
+    const account_number = req.body.account_number;
+    const bankcode = req.body.bankcode;
+    const bvn = req.body.bvn;
+    const customer_code = req.body.customer_code
+    console.log(account_number,bankcode,bvn,customer_code)
+    const url = `https://api.paystack.co/customer/${customer_code}/identification`;
+    const params={
+        "country": "NG",
+        "type": "bank_account",
+        "account_number": account_number,
+        "bvn": bvn,
+        "bank_code": bankcode,
+        "first_name": "",
+        "last_name": ""
+    }
+        axios.post(url,params,{
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization':'Bearer sk_live_e17b8c11ebd06acf37e6999d97ce43e7b1711a57' 
+            }
+        })
+        .then(result=>{
+
+            res.send({
+                "message":result.data
+            })
+            console.log("here",result.data)
+        })
+        .catch((err)=>{
+            res.send({
+                "err":err
+            })
+            console.log("err",err.response)
+        })
+
+});
+
+
+
 
 
 export default router;

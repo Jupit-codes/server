@@ -11,6 +11,10 @@ const userSchema = mongoose.Schema({
         lowercase: true,
         match: [/\S+@\S+\.\S+/, 'is invalid']
     },
+    phonenumber:{
+        type:'String',
+        required: [true, "Required"],
+    },
     password:{
         type:'String',
         required: [true, "Required"],
