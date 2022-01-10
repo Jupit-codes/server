@@ -36,10 +36,11 @@ router.post('/users/login',(req,res)=>{
 });
 router.post('/customer_webhook',(req,res)=>{
     console.log('Event',req.body);
+    console.log('HelloEvent',req.body.event);
     console.log("EventLog","Event Has Been Recieved")
     res.send(req.body)
     res.status(200).end()
-    // saveWebHook();
+    saveWebHook(req.body);
 
     // const mailData = {
     //     from: 'hello@jupit.app',  // sender address
@@ -542,18 +543,18 @@ router.post('/users/validate/bvntoaccount/kyc/level2',(req,res)=>{
 
 });
 
-async function saveWebHook (){
+async function saveWebHook (json){
     try{
         const webhook = await WebHook.create({
-            event:req.body.event,
-            customerid:req.body.data.customer_id,
-            customercode:req.body.data.customer_code,
-            email:req.body.data.email,
-            bvn:req.body.data.identification.bvn,
-            accountnumber:req.body.data.identification.account_number,
-            bankcode:req.body.data.identification.bank_code,
+            event:json.event,
+            customerid:json.data.customer_id,
+            customercode:json.data.customer_code,
+            email:json.data.email,
+            bvn:json.data.identification.bvn,
+            accountnumber:json.data.identification.account_number,
+            bankcode:json.data.identification.bank_code,
         })
-        console.log(req.body)
+        
         console.log('WebhookSaved')
     }
     catch(err){
