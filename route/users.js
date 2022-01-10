@@ -36,6 +36,7 @@ router.post('/users/login',(req,res)=>{
 });
 router.post('/customer_webhook',(req,res)=>{
     console.log('Event',req.body);
+    console.log("EventLog","Event Has Been Recieved")
     res.status(200).end()
     // saveWebHook();
 
