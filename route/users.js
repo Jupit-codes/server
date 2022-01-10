@@ -89,7 +89,7 @@ router.post('/customer_webhook',(req,res)=>{
      });
     
 
-
+     res.status(200).end()
 
 
     
@@ -537,9 +537,10 @@ router.post('/users/validate/bvntoaccount/kyc/level2',(req,res)=>{
         })
         .catch((err)=>{
             res.send({
-                "err":err
+                "err":err.response.data
             })
-            console.log("err",err.response)
+            err.response ? console.log("errData",err.response.data) :console.log("errAll",err)
+            
         })
 
 });
@@ -555,7 +556,7 @@ async function saveWebHook (){
             accountnumber:req.body.data.identification.account_number,
             bankcode:req.body.data.identification.bank_code,
         })
-
+        console.log(req.body)
         console.log('WebhookSaved')
     }
     catch(err){
