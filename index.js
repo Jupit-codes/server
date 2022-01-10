@@ -8,7 +8,7 @@ import database from './config/database.js'
 import mongoose from 'mongoose'
 import cors from 'cors';
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 dotenv.config();
 
 const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/jupit_app?retryWrites=true&w=majority&useNewUrlParser=true&useUnifiedTopology=true'
