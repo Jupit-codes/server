@@ -46,6 +46,7 @@ router.post('/customer_webhook',(req,res)=>{
                 res.send(err);
             }
             if(docs){
+                console.log('I found An Existing');
                 KycModel.findOneAndUpdate({customercode:req.body.customercode},{event:req.body.event},function(err,result){
                     if(err){
                         res.send({
@@ -62,6 +63,7 @@ router.post('/customer_webhook',(req,res)=>{
                 })
             }
             else{
+                console.log('New Entry');
                 saveWebHook(req.body);
             }
         })
