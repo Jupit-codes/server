@@ -580,8 +580,12 @@ async function updateWebHook(json){
     console.log('Done',json);
     console.log('Done',json.data);
     console.log('CustomerCode',json.data.customer_code);
-    await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event:json.event});
-   
+    let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event:json.event},function(err){
+        if(err){
+            console.log('UpdateError',err)
+        }
+    });
+    console.log('res',res)
    
     // const res = await KycModel.findOneAndUpdate({customercode:docs.customercode}, { $set: {event:docs.event } }, { new: true },function(err,result){
     //     if(err){
