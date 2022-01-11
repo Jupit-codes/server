@@ -41,19 +41,21 @@ router.post('/customer_webhook',(req,res)=>{
     res.send(req.body)
     res.status(200).end()
     if(req.body.event){
-        KycModel.findOne({customercode:req.body.customercode},function(err,docs){
-            if(err){
-                res.send(err);
-            }
-            if(docs){
-                console.log('I found An Existing');
-                updateWebHook(req.body)
-            }
-            else{
-                console.log('New Entry');
-                saveWebHook(req.body);
-            }
-        })
+        // KycModel.findOne({customercode:req.body.customercode},function(err,docs){
+        //     if(err){
+        //         res.send(err);
+        //     }
+        //     if(docs){
+        //         console.log('I found An Existing');
+        //         updateWebHook(req.body)
+        //     }
+        //     else{
+        //         console.log('New Entry');
+        //         saveWebHook(req.body);
+        //     }
+        // })
+        updateWebHook(req.body);
+        saveWebHook(req.body);
     }
    
 
@@ -580,7 +582,7 @@ async function updateWebHook(json){
     console.log('Done',json);
     console.log('Done',json.data);
     console.log('CustomerCode',json.data.customer_code);
-    let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event:json.event},{new:true})
+    let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event_status:json.event},{new:true})
     console.log('res',res)
    
     // const res = await KycModel.findOneAndUpdate({customercode:docs.customercode}, { $set: {event:docs.event } }, { new: true },function(err,result){
