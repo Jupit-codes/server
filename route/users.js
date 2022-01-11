@@ -578,22 +578,24 @@ async function saveWebHook (json){
 }
 async function updateWebHook(docs){
 
-    const res = await KycModel.findOneAndUpdate({customercode:docs.customercode}, { $set: {event:docs.event } }, { new: true },function(err,result){
-        if(err){
-            res.send({
-                "err":err,
-                "status":false
-            })
-            console.log(err)
-        }
-        else{
-            res.send({
-                "message":"Resolved",
-                "status":true
-            })
+    await KycModel.findOneAndUpdate({customercode:docs.customercode},{event:docs.event});
+    console.log('Done')
+    // const res = await KycModel.findOneAndUpdate({customercode:docs.customercode}, { $set: {event:docs.event } }, { new: true },function(err,result){
+    //     if(err){
+    //         res.send({
+    //             "err":err,
+    //             "status":false
+    //         })
+    //         console.log(err)
+    //     }
+    //     else{
+    //         res.send({
+    //             "message":"Resolved",
+    //             "status":true
+    //         })
             
-        }
-    });
+    //     }
+    // });
 
 
     // await KycModel.findOneAndUpdate({customercode:docs.customercode},{event:docs.event},function(err,result){
