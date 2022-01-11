@@ -598,7 +598,7 @@ async function updateWebHook(json){
     //     process.exit(0)
     // })
 
-    console.log('res',res)
+    console.log('result',res)
     
    
 }
