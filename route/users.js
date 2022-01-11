@@ -47,22 +47,7 @@ router.post('/customer_webhook',(req,res)=>{
             }
             if(docs){
                 console.log('I found An Existing');
-                KycModel.findOneAndUpdate({customercode:req.body.customercode},{event:req.body.event},function(err,result){
-                    if(err){
-                        res.send({
-                            "err":err,
-                            "status":false
-                        })
-                        console.log(err)
-                    }
-                    else{
-                        res.send({
-                            "message":"Resolved",
-                            "status":true
-                        })
-                        console.log(result)
-                    }
-                })
+                updateWebHook(req.body)
             }
             else{
                 console.log('New Entry');
@@ -590,6 +575,24 @@ async function saveWebHook (json){
     catch(err){
         console.log(err)
     }
+}
+async function updateWebHook(docs){
+    await KycModel.findOneAndUpdate({customercode:docs.customercode},{event:docs.event},function(err,result){
+        if(err){
+            res.send({
+                "err":err,
+                "status":false
+            })
+            console.log(err)
+        }
+        else{
+            res.send({
+                "message":"Resolved",
+                "status":true
+            })
+            
+        }
+    })
 }
 
 
