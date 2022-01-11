@@ -580,16 +580,25 @@ async function saveWebHook (json){
     }
 }
 async function updateWebHook(json){
-    console.log('Done',json);
-    console.log('Done',json.data);
-    console.log('CustomerCode',json.data.customer_code);
+    
     //let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event_status:json.event},{new:true})
-    KycModel.findOneAndUpdate({customercode:json.data.customer_code}, { 
-        $push: { 
-                level2: {"event_status":json.event},
+    // KycModel.findOneAndUpdate({customercode:json.data.customer_code,'level2.id':0}, { 
+    //     $push: { 
+    //             level2: {"event_status":json.event},
                 
-            } 
-        }).exec();
+    //         } 
+    //     }).exec();
+    let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code,'level2.id':0},{'level2.$.event_status':json.event},null,(err)=>{
+        if(err){
+            console.log('Error',err)
+        }
+        else{
+            console.log('Updated','Updated')
+        }
+        process.exit(0)
+    })
+
+    console.log('res',res)
     
    
 }
