@@ -41,12 +41,12 @@ router.post('/customer_webhook',(req,res)=>{
     res.send(req.body)
     res.status(200).end()
     if(req.body.event){
-        KycModel.findOne({customer_code:req.body.customer_code},function(err,docs){
+        KycModel.findOne({customercode:req.body.customercode},function(err,docs){
             if(err){
                 res.send(err);
             }
             if(docs){
-                KycModel.findOneAndUpdate({customer_code:req.body.customer_code},{event:req.body.event},function(err,result){
+                KycModel.findOneAndUpdate({customercode:req.body.customercode},{event:req.body.event},function(err,result){
                     if(err){
                         res.send({
                             "err":err,
