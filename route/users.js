@@ -583,43 +583,15 @@ async function updateWebHook(json){
     console.log('Done',json);
     console.log('Done',json.data);
     console.log('CustomerCode',json.data.customer_code);
-    let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event_status:json.event},{new:true})
-    console.log('res',res)
+    //let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event_status:json.event},{new:true})
+    KycModel.findOneAndUpdate({customercode:json.data.customer_code}, { 
+        $push: { 
+                level2: {"event_status":json.event},
+                
+            } 
+        }).exec();
+    
    
-    // const res = await KycModel.findOneAndUpdate({customercode:docs.customercode}, { $set: {event:docs.event } }, { new: true },function(err,result){
-    //     if(err){
-    //         res.send({
-    //             "err":err,
-    //             "status":false
-    //         })
-    //         console.log(err)
-    //     }
-    //     else{
-    //         res.send({
-    //             "message":"Resolved",
-    //             "status":true
-    //         })
-            
-    //     }
-    // });
-
-
-    // await KycModel.findOneAndUpdate({customercode:docs.customercode},{event:docs.event},function(err,result){
-    //     if(err){
-    //         res.send({
-    //             "err":err,
-    //             "status":false
-    //         })
-    //         console.log(err)
-    //     }
-    //     else{
-    //         res.send({
-    //             "message":"Resolved",
-    //             "status":true
-    //         })
-            
-    //     }
-    // })
 }
 
 
