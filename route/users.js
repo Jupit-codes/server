@@ -40,7 +40,33 @@ router.post('/customer_webhook',(req,res)=>{
     console.log("EventLog","Event Has Been Recieved")
     res.send(req.body)
     res.status(200).end()
-    saveWebHook(req.body);
+    if(req.body.event){
+        KycModel.findOne({customer_code:req.body.customer_code},function(err,docs){
+            if(err){
+                res.send(err);
+            }
+            if(docs){
+                KycModel.findOneAndUpdate({customer_code:req.body.customer_code},{event:req.body.event},function(err,result){
+                    if(err){
+                        res.send({
+                            "err":err,
+                            "status":false
+                        })
+                    }
+                    else{
+                        res.send({
+                            "message":"Resolved",
+                            "status":true
+                        })
+                    }
+                })
+            }
+            else{
+                saveWebHook(req.body);
+            }
+        })
+    }
+   
 
     // const mailData = {
     //     from: 'hello@jupit.app',  // sender address
