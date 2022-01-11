@@ -583,11 +583,11 @@ async function updateWebHook(json){
     
     //let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event_status:json.event},{new:true})
    let res = await  KycModel.findOneAndUpdate({customercode:json.data.customer_code}, { 
-        // $push: { 
-        //         'level2.0': {"event_status":json.event},
+        $push: { 
+                'level2.0': {"event_status":json.event},
                 
-        //     } 
-        level2:{'event_status':json.event}
+            } 
+       
         }).exec();
     // let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code,'level2.id':0},{'level2.$.event_status':json.event},null,(err)=>{
     //     if(err){
