@@ -468,6 +468,7 @@ function createCustomerCode(kyc_id,email,phonenumber){
                         "email":email,
                         "customer_code":res.data.data.customer_code,
                         "integration":res.data.data.integration,
+                        "event_status":"undefined"
                     }
                     
                 } 
