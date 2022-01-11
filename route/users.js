@@ -582,7 +582,7 @@ async function saveWebHook (json){
 async function updateWebHook(json){
     
     //let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event_status:json.event},{new:true})
-    KycModel.findOneAndUpdate({customercode:json.data.customer_code}, { 
+   let res = await  KycModel.findOneAndUpdate({customercode:json.data.customer_code}, { 
         $push: { 
                 'level2.0': {"event_status":json.event},
                 
@@ -598,7 +598,7 @@ async function updateWebHook(json){
     //     process.exit(0)
     // })
 
-    console.log('result',res)
+    console.log('res',res)
     
    
 }
