@@ -53,12 +53,14 @@ router.post('/customer_webhook',(req,res)=>{
                             "err":err,
                             "status":false
                         })
+                        console.log(err)
                     }
                     else{
                         res.send({
                             "message":"Resolved",
                             "status":true
                         })
+                        console.log(result)
                     }
                 })
             }
