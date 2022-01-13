@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from 'body-parser'
 import userRouter from './route/users.js'
+import thresholdRouter from './route/threshold.js'
 import morgan from "morgan";
 import helmet from "helmet";
 import dotenv from 'dotenv'
@@ -39,5 +40,5 @@ app.use(helmet())
 app.use(morgan('combined'));
 
 app.use('/',userRouter);
-
+app.use('/threshold',thresholdRouter);
 app.listen(PORT, ()=>console.log(`App running on the localhost/${PORT}`))
