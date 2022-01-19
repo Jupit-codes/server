@@ -8,7 +8,7 @@ import querystring from 'querystring';
 import random from 'random-number';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken'
-import e from "express";
+import bcrypt from 'bcrypt'
 
 
 
@@ -28,40 +28,61 @@ const router = express.Router();
 router.get('/',(req,res)=>{
     res.send('Welcome to jupit server');
 });
-router.get('/users',(req,res)=>{
+router.get('/users',(req,res,next)=>{
     
-    jwt.verify(req.header['authorization'],'secretkey',(err,authData)=>{
-        if(err){
-            res.sendStatus(403);
-        }
-        else{
+    const bearerHeader = req.headers['authorization'];
+    console.log(bearerHeader)
 
-            Usermodel.find({},(err,users)=>{
-                if(err){
-                    res.json({
-                        'message':err,
-                        'status':false
-                    })
-                }
-                else if(users){
-                    res.send({
-                        'message':users,
-                        'status':true,
-                        authData
-                    })
-                }
-                else{
-                    res.send({
-                        'message':'NO User Found',
-                        'status':true,
-                        authData
-                    })
-                }
-            })
-            
-        }
-    })
+    if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+        res.sendStatus(403)
+    }
+    else{
+        const bearerToken = bearerHeader.split(' ')[1];
+        
+        
+        jwt.verify(bearerToken,'secretkey',(err,authData)=>{
+            if(err){
+                res.sendStatus(403);
+            }
+            else{
 
+                Usermodel.find({},(err,users)=>{
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    else if(users){
+                        res.send({
+                            'message':users,
+                            'status':true,
+                            authData
+                        })
+                    }
+                    else{
+                        res.send({
+                            'message':'NO User Found',
+                            'status':true,
+                            authData
+                        })
+                    }
+                })
+                
+            }
+        })
+
+    }
+    
+    // if(typeof bearerHeader !== "undefined"){
+    //     const bearerToken = bearerHeader.split(' ')[1];
+    //     req.token = bearerToken;
+    //     console.log('token',req.token)
+    // }
+    // else{
+    //     res.sendStatus(403);
+    // }
+    
 
 });
 router.post('/users/login',(req,res)=>{
@@ -246,11 +267,15 @@ router.post('/users/register',(req,res)=>{
 
     
    async function createUser(){
+
+    
+
        try{
-        const user = await  Usermodel.create({
+            const salt = await bcrypt.genSalt(10);
+            const user = await  Usermodel.create({
             username:req.body.username,
             email:req.body.email,
-            password:req.body.password,
+            password:await bcrypt.hash(req.body.password, salt),
             phonenumber:req.body.phonenumber,
             email_verification:false
         })
