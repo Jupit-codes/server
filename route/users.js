@@ -87,7 +87,7 @@ router.get('/users',(req,res,next)=>{
 });
 router.post('/users/login',(req,res)=>{
   
-    Usermodel.findOne({username:req.body.username,password:req.body.password},(err,docs)=>{
+    Usermodel.findOne({username:req.body.username},async (err,docs)=>{
         if(err){
             res.send({
                 'message':err,
@@ -95,20 +95,29 @@ router.post('/users/login',(req,res)=>{
             })
         }
         else if(docs){
-            jwt.sign({user:docs},'secretkey',(err,token)=>{
-                res.json({
-                    token,
-                    docs
+
+            const validPassword = await bcrypt.compare(req.body.password, docs.password);
+            console.log(validPassword)
+            if (validPassword) {
+                jwt.sign({user:docs},'secretkey',(err,token)=>{
+                    res.json({
+                        token,
+                        docs,
+                        'status':true
+                    })
                 })
-            })
-            // res.send({
-            //     'message':docs,
-            //     'status':true
-            // })
+            
+            } else {
+                res.send({
+                    'message':'Invalid Password',
+                    'status':false
+                })
+            }
+             
         }
         else{
             res.send({
-                'message':'Invalid Username/Password',
+                'message':'Invalid Username',
                 'status':false
             })
         }
@@ -706,6 +715,23 @@ function verifyToken(res,req,next){
     // else{
     //     res.sendStatus(403);
     // }
+}
+
+async function comparePassword(hashedPassword,requestPassword){
+    
+    const validPassword = await bcrypt.compare(requestPassword, hashedPassword);
+      if (validPassword) {
+          console.log('Password is Correct');
+        return true  
+       
+      } else {
+            
+        console.log('Password is Incorrect');
+        return false;
+      }
+
+      
+
 }
 
 
