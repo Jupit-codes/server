@@ -7,7 +7,8 @@ import crypto from 'crypto';
 import querystring from 'querystring';
 import random from 'random-number';
 import nodemailer from 'nodemailer';
-
+import jwt from 'jsonwebtoken'
+import e from "express";
 
 
 
@@ -27,13 +28,74 @@ const router = express.Router();
 router.get('/',(req,res)=>{
     res.send('Welcome to jupit server');
 });
-router.get('/users',(req,res)=>{
-    res.send('All Users');
+router.get('/users',verifyToken,(req,res)=>{
+
+    jwt.verify(req.token,'secretkey',(err,authData)=>{
+        if(err){
+            res.sendStatus(403);
+        }
+        else{
+
+            Usermodel.find({},(err,users)=>{
+                if(err){
+                    res.json({
+                        'message':err,
+                        'status':false
+                    })
+                }
+                else if(users){
+                    res.send({
+                        'message':users,
+                        'status':true,
+                        authData
+                    })
+                }
+                else{
+                    res.send({
+                        'message':'NO User Found',
+                        'status':true,
+                        authData
+                    })
+                }
+            })
+            
+        }
+    })
+
+
 });
 router.post('/users/login',(req,res)=>{
-    console.log(req.body);
-    res.send('Login Successful')
+  
+    Usermodel.findOne({username:req.body.username,password:req.body.password},(err,docs)=>{
+        if(err){
+            res.send({
+                'message':err,
+                'status':false
+            })
+        }
+        else if(docs){
+            jwt.sign({user:docs},'secretkey',(err,token)=>{
+                res.json({
+                    token,
+                    docs
+                })
+            })
+            // res.send({
+            //     'message':docs,
+            //     'status':true
+            // })
+        }
+        else{
+            res.send({
+                'message':'Invalid Username/Password',
+                'status':false
+            })
+        }
+    })
+    // res.send('Login Successful')
 });
+
+
 router.post('/customer_webhook',(req,res)=>{
     console.log('Event',req.body);
     console.log('HelloEvent',req.body.event);
@@ -604,6 +666,17 @@ async function updateWebHook(json){
    
 }
 
+function verifyToken(res,req,next){
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader !== "undefined"){
+        const bearerToken = bearerHeader.split(' ')[1];
+        req.token = bearerToken;
+        next();
+    }
+    else{
+        res.sendStatus(403);
+    }
+}
 
 
 
