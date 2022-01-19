@@ -28,9 +28,9 @@ const router = express.Router();
 router.get('/',(req,res)=>{
     res.send('Welcome to jupit server');
 });
-router.get('/users',verifyToken,(req,res)=>{
-
-    jwt.verify(req.token,'secretkey',(err,authData)=>{
+router.get('/users',(req,res)=>{
+    
+    jwt.verify(req.header['authorization'],'secretkey',(err,authData)=>{
         if(err){
             res.sendStatus(403);
         }
@@ -667,15 +667,20 @@ async function updateWebHook(json){
 }
 
 function verifyToken(res,req,next){
-    const bearerHeader = req.headers['authorization'];
-    if(typeof bearerHeader !== "undefined"){
-        const bearerToken = bearerHeader.split(' ')[1];
-        req.token = bearerToken;
-        next();
-    }
-    else{
-        res.sendStatus(403);
-    }
+    console.log(req.headers['authorization'])
+    next();
+    // const bearerHeader = req.headers['authorization'];
+    // res.send({
+    //     "message":req.headers
+    // })
+    // if(typeof bearerHeader !== "undefined"){
+    //     const bearerToken = bearerHeader.split(' ')[1];
+    //     req.token = bearerToken;
+    //     next();
+    // }
+    // else{
+    //     res.sendStatus(403);
+    // }
 }
 
 
