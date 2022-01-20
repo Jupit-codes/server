@@ -28,6 +28,14 @@ const router = express.Router();
 router.get('/',(req,res)=>{
     res.send('Welcome to jupit server');
 });
+
+router.get('/users/test',middlewareVerify,(req,res)=>{
+    res.json({
+        "Message":"Header Is Present",
+        "token":req.token
+
+    })
+})
 router.get('/users',(req,res,next)=>{
     
     const bearerHeader = req.headers['authorization'];
@@ -734,7 +742,16 @@ async function comparePassword(hashedPassword,requestPassword){
 
 }
 
-
+function middlewareVerify(req,res,next){
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+        res.sendStatus(403);
+    }
+    else{
+        req.token = bearerHeader;
+        next();
+    }
+}
 
 
 export default router;
