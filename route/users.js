@@ -8,7 +8,7 @@ import querystring from 'querystring';
 import random from 'random-number';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 
 
@@ -104,7 +104,7 @@ router.post('/users/login',(req,res)=>{
         }
         else if(docs){
 
-            const validPassword = await bcrypt.compare(req.body.password, docs.password);
+            const validPassword = bcrypt.compareSync(req.body.password, docs.password);
             console.log(validPassword)
             if (validPassword) {
                 jwt.sign({user:docs},'secretkey',(err,token)=>{
@@ -288,11 +288,11 @@ router.post('/users/register',(req,res)=>{
     
 
        try{
-            const salt = await bcrypt.genSalt(10);
+            const salt =  bcrypt.genSaltSync(10);
             const user = await  Usermodel.create({
             username:req.body.username,
             email:req.body.email,
-            password:await bcrypt.hash(req.body.password, salt),
+            password: bcrypt.hashSync(req.body.password, salt),
             phonenumber:req.body.phonenumber,
             email_verification:false
         })
