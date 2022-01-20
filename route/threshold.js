@@ -79,10 +79,26 @@ Router.post('/getautofee',(req,res)=>{
 
 Router.post('/incoming/depositcallback',(req,res)=>{
     console.log('Welcome Incoming CallBack')
-    console.log(req.body);
-    res.json({
-        'message':req.body
-    })
+
+    if(req.body.state === 4){
+        console.log('Completed',req.body);
+        res.sendStatus(200)
+        res.json({
+            'message':req.body,
+            'status':true,
+            'completed':true
+        })
+        
+    }
+    else{
+        console.log(req.body);
+        res.json({
+            'message':req.body,
+            'status':false,
+            'completed':false
+        })
+    }
+    
 })
 
 Router.post('/transfer/asset',(req,res)=>{
