@@ -77,6 +77,10 @@ Router.post('/getautofee',(req,res)=>{
    })
 })
 
+Router.post('/incoming/depositcallback/',(req,res)=>{
+    console.log(req.body);
+})
+
 Router.post('/transfer/asset',(req,res)=>{
     const userid = req.body.userid;
     const wallets_type = req.body.wallet_type;
