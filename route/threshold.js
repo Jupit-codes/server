@@ -77,8 +77,12 @@ Router.post('/getautofee',(req,res)=>{
    })
 })
 
-Router.post('/incoming/depositcallback/',(req,res)=>{
+Router.post('/incoming/depositcallback',(req,res)=>{
+    console.log('Welcome Incoming CallBack')
     console.log(req.body);
+    res.json({
+        'message':req.body
+    })
 })
 
 Router.post('/transfer/asset',(req,res)=>{
