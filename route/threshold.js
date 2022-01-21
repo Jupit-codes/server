@@ -80,7 +80,7 @@ Router.post('/getautofee',(req,res)=>{
 Router.post('/incoming/depositcallback',(req,res)=>{
     console.log('Welcome Incoming CallBack')
 
-    if(req.body.state === 4){
+    if(req.body.processing_state === 2){
         console.log('Completed',req.body);
         res.sendStatus(200)
         res.json({
