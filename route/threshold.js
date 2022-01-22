@@ -80,6 +80,52 @@ Router.post('/getautofee',(req,res)=>{
 Router.post('/incoming/depositcallback',(req,res)=>{
     console.log('Welcome Incoming CallBack')
     console.log(req.headers)
+    if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
+        if(req.body.processing_state === 2){
+            
+            res.sendStatus(200)
+            res.json({
+                'message':'Transaction done (N blocks confirmations reached)',
+                'status':true,
+                'completed':true
+            })
+            
+        }
+        if(req.body.processing_state === -1){
+            
+            res.sendStatus(200)
+            if(req.body.state === 5){
+                res.json({
+                    'message':'Transaction Failed',
+                    'status':false,
+                    'completed':false
+                })
+            }
+            else if(req.body.state === 8 ){
+                res.json({
+                    'message':'Transaction Cancelled',
+                    'status':false,
+                    'completed':false
+                })
+            }
+            else if(req.body.state ===  10){
+                res.json({
+                    'message':'Transaction Dropped',
+                    'status':false,
+                    'completed':false
+                })
+            }
+            else{
+                res.json({
+                    'message':'Transaction Unsuccessful',
+                    'status':false,
+                    'completed':false
+                }) 
+            }
+            
+            
+        }
+    }
     if(req.body.processing_state === 2){
         console.log('Completed',req.body);
 
