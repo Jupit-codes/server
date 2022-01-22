@@ -126,25 +126,14 @@ Router.post('/incoming/depositcallback',(req,res)=>{
             
         }
     }
-    if(req.body.processing_state === 2){
-        console.log('Completed',req.body);
-
-        res.sendStatus(200)
-        res.json({
-            'message':req.body,
-            'status':true,
-            'completed':true
-        })
-        
-    }
     else{
-        console.log(req.body);
         res.json({
-            'message':req.body,
+            'message':'Forbidden',
             'status':false,
             'completed':false
-        })
+        }) 
     }
+   
     
 })
 
