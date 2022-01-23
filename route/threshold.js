@@ -79,11 +79,12 @@ Router.post('/getautofee',(req,res)=>{
 
 Router.post('/incoming/depositcallback',(req,res)=>{
     console.log('Welcome Incoming CallBack')
-    console.log(req.headers)
+    console.log(req.headers['x-checksum']);
+    console.log(req.body);
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         if(req.body.processing_state === 2){
             
-            res.sendStatus(200)
+            res.sendStatus(200);
             res.json({
                 'message':'Transaction done (N blocks confirmations reached)',
                 'status':true,
