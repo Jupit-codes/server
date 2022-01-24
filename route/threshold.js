@@ -447,7 +447,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 // })
                 let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
 
-                if(docs.btc_wallet[0].balance >  totalAmount ){
+                if(totalAmount > docs.btc_wallet[0].balance    ){
                     let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,totalAmount)
                     console.log(callback)
                     res.json({
