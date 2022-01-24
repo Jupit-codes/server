@@ -418,6 +418,9 @@ Router.post('/incoming/depositcallback',(req,res)=>{
    
     
 })
+Router.post('/incoming/withdrawalcallback',(req,res)=>{
+    console.log('withdrawalcallback','Callback')
+})
 
 Router.post('/transfer/asset',(req,res)=>{
     const userid = req.body.userid;
