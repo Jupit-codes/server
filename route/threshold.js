@@ -419,7 +419,10 @@ Router.post('/incoming/depositcallback',(req,res)=>{
     
 })
 Router.post('/incoming/withdrawalcallback',(req,res)=>{
-    console.log('withdrawalcallback','Callback')
+    console.log('withdrawalcallback','Callback');
+    res.send({
+        'message':'Withdrawal Callback'
+    })
 })
 
 Router.post('/transfer/asset',(req,res)=>{
