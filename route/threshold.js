@@ -446,9 +446,23 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 //     "details":docs.btc_wallet[0].address
                 // })
                 let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
+
+                if(totalAmount >  docs.btc_wallet[0].balance){
+                    let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,totalAmount)
+                    res.send(callback);
+                    res.json({
+                        "Message":"Notification Has Been Sent To BlockChain",
+                        "Status":true
+                    })
+                }
+                else{
+                    res.json({
+                        "message":'Insufficent Amount',
+                        "Status":false
+                    })
+                }
                
-                let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,totalAmount)
-                res.send(callback);
+                
             }
             if(wallets_type === "USDT"){
                 let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
