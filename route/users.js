@@ -95,7 +95,7 @@ router.get('/users',(req,res,next)=>{
 });
 router.post('/users/login',(req,res)=>{
   
-    Usermodel.findOne({username:req.body.username},async (err,docs)=>{
+    Usermodel.findOne({email:req.body.email},async (err,docs)=>{
         if(err){
             res.send({
                 'message':err,
@@ -290,7 +290,7 @@ router.post('/users/register',(req,res)=>{
        try{
             const salt =  bcrypt.genSaltSync(10);
             const user = await  Usermodel.create({
-            username:req.body.username,
+            // username:req.body.username,
             email:req.body.email,
             password: bcrypt.hashSync(req.body.password, salt),
             phonenumber:req.body.phonenumber,
