@@ -439,7 +439,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
             })
         }
         if(docs){
-            // res.send(docs)
+            console.log('BTC Clicked');
             if(wallets_type === "BTC"){
                 // res.send({
                 //     'message':'Done',
