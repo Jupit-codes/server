@@ -457,7 +457,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 }
                 else{
                     res.json({
-                        "message":'Insufficent Amount',
+                        "message":'Insufficent Balance',
                         "Status":false
                     })
                 }
