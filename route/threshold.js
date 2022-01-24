@@ -100,7 +100,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         serial:req.body.serial,
                         order_id:req.body.order_id,
                         currency:req.body.currency,
-                        txtid:req.body.txtid,
+                        txtid:req.body.txid,
                         block_height:req.body.block_height,
                         tindex:req.body.tindex,
                         vout_index:req.body.vout_index,
