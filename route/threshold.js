@@ -425,7 +425,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
     })
 })
 
-Router.post('/transfer/asset',(req,res)=>{
+Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     const userid = req.body.userid;
     const wallets_type = req.body.wallet_type;
     
@@ -591,5 +591,17 @@ function creditWalletAddress(userid,address,wallet_type){
    })
 }
 
+
+
+function middlewareVerify(req,res,next){
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+        res.sendStatus(403);
+    }
+    else{
+        req.token = bearerHeader;
+        next();
+    }
+}
 
 export default Router;
