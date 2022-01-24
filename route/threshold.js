@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import querystring from 'querystring';
 import random from 'random-number';
 import Usermodel from '../model/users.js';
-import Walletmodel from '../model/wallet_transactions'
+import Walletmodel from '../model/wallet_transactions.js'
 
 
 const Router  = express.Router();
