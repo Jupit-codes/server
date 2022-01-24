@@ -428,6 +428,8 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     const userid = req.body.userid;
     const wallets_type = req.body.wallet_type;
+    const auto_fee = req.body.auto_fee;
+    const amount = req.body.amount;
     
    let User =  Usermodel.findById({_id:userid},function(err,docs){
         if(err){
@@ -443,12 +445,14 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 //     'message':'Done',
                 //     "details":docs.btc_wallet[0].address
                 // })
-                let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type)
+                let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
+               
+                let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,totalAmount)
                 res.send(callback);
             }
             if(wallets_type === "USDT"){
-               
-                let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type)
+                let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
+                let callback = creditWalletAddress(docs._id,docs.usdt_wallet[0].address,wallets_type,auto_fee)
                 res.send(callback);
             }
             
@@ -465,7 +469,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     
 });
 
-function creditWalletAddress(userid,address,wallet_type){
+function creditWalletAddress(userid,address,wallet_type,auto_fee,totalAmount){
     let secret="";
     let apikey = "";
     
@@ -510,11 +514,11 @@ function creditWalletAddress(userid,address,wallet_type){
           {
             "order_id": "187795_"+userid,
             "address": address,
-            "amount": "0.0001",
+            "amount": totalAmount,
             "memo": "memo-"+userid,
             "user_id": userid,
             "message": "message-"+userid,
-            "block_average_fee": 5
+            "block_average_fee": auto_fee
           },
         //   {
         //     "order_id": "187795_2",
