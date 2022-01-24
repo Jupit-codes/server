@@ -439,7 +439,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
             })
         }
         if(docs){
-            console.log('BTC Clicked');
+            
             if(wallets_type === "BTC"){
                 // res.send({
                 //     'message':'Done',
@@ -447,7 +447,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 // })
                 let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
 
-                if(totalAmount >  docs.btc_wallet[0].balance){
+                if(docs.btc_wallet[0].balance >  totalAmount ){
                     let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,totalAmount)
                     // res.send(callback);
                     res.json({
