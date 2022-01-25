@@ -597,6 +597,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
          
     
    })
+   return {'Value':'Welcome To creditWalletModule'}
 }
 
 
