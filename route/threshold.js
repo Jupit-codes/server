@@ -448,8 +448,8 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
 
                 if(totalAmount > docs.btc_wallet[0].balance    ){
-                    let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,totalAmount)
-                    console.log('callback',callback)
+                    let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,parseFloat(amount))
+                    console.log('callback',callback);
                     res.json({
                         "Message":"Notification Has Been Sent To BlockChain",
                         "Status":true
@@ -466,8 +466,17 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
             }
             if(wallets_type === "USDT"){
                 let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
-                let callback = creditWalletAddress(docs._id,docs.usdt_wallet[0].address,wallets_type,auto_fee)
-                res.send(callback);
+                if(totalAmount > docs.btc_wallet[0].balance ){
+                    let callback = creditWalletAddress(docs._id,docs.usdt_wallet[0].address,wallets_type,auto_fee,parseFloat(amount))
+                    res.send(callback);
+                }
+                else{
+                    res.json({
+                        "message":'Insufficent Balance',
+                        "Status":false
+                    })
+                }
+                
             }
             
             
