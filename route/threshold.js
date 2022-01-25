@@ -496,7 +496,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
 function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
     let secret="";
     let apikey = "";
-    console.log('auto_fee-2',auto_fee);
+   
     if(wallet_type === "BTC"){
         secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
         apikey = "4W1Pg2CeHQMS8hHGr";
@@ -563,7 +563,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
    
     const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/678693/sender/transactions?'+ get_request_args
     
-    const mycallback = [];
+    var mycallback = [];
    
    axios.post(url,params,{
         headers: {
@@ -588,12 +588,12 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
         //     "status":true
         // })
         
-        mycallback.push(result);
+        mycallback=result;
         
    })
    .catch((err)=>{
     //    console.log('err',err)
-    mycallback.push(err);
+    mycallback = err;
          
     
    })
