@@ -492,7 +492,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     
 });
 
-function creditWalletAddress(userid,address,wallet_type,auto_fee,totalAmount){
+function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
     let secret="";
     let apikey = "";
     console.log('auto_fee-2',auto_fee);
@@ -544,23 +544,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,totalAmount){
             "block_average_fee": 50
             
           },
-        //   {
-        //     "order_id": "187795_2",
-        //     "address": "0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015",
-        //     "amount": "0.0002",
-        //     "memo": "memo-002",
-        //     "user_id": "USER02",
-        //     "message": "message-002",
-        //     "manual_fee": 50
-        //   },
-        //   {
-        //     "order_id": "187795_2",
-        //     "address": "0x9638fa816ccd35389a9a98a997ee08b5321f3eb9",
-        //     "amount": "0.0002",
-        //     "memo": "memo-003",
-        //     "user_id": "USER03",
-        //     "message": "message-003"
-        //   }
+       
         ],
         "ignore_black_list": false
       }
@@ -593,7 +577,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,totalAmount){
        
        return [
             {
-                "success":result,
+                "success":result.data,
                 "status":true
             }
         ]
@@ -608,14 +592,11 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,totalAmount){
        console.log('err',err)
        return [
             {
-                "error":err,
+                "error":err.response,
                 "status":false
             }
          ]
-    //    res.send({
-    //        "message":err,
-    //        "status":false
-    //    })
+    
    })
 }
 
