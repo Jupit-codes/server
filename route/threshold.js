@@ -466,7 +466,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
             }
             if(wallets_type === "USDT"){
                 let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
-                if(totalAmount > docs.btc_wallet[0].balance ){
+                if(totalAmount > docs.usdt_wallet[0].balance ){
                     let callback = creditWalletAddress(docs._id,docs.usdt_wallet[0].address,wallets_type,auto_fee,parseFloat(amount))
                     res.send(callback);
                 }
