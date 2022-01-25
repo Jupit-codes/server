@@ -449,7 +449,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
 
                 if(totalAmount > docs.btc_wallet[0].balance    ){
                     let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,totalAmount)
-                    console.log(callback)
+                    console.log('callback',callback)
                     res.json({
                         "Message":"Notification Has Been Sent To BlockChain",
                         "Status":true
@@ -486,7 +486,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
 function creditWalletAddress(userid,address,wallet_type,auto_fee,totalAmount){
     let secret="";
     let apikey = "";
-    console.log(auto_fee);
+    console.log('auto_fee-2',auto_fee);
     if(wallet_type === "BTC"){
         secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
         apikey = "4W1Pg2CeHQMS8hHGr";
