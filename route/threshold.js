@@ -499,7 +499,8 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 }
                 else{
                     res.json({
-                        "message":'Insufficent Balance',
+                        "message":'Insufficent Balance'+docs.btc_wallet[0].balance,
+
                         "Status":false
                     })
                 }
