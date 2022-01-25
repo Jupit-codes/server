@@ -532,7 +532,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,totalAmount){
             "memo": "memo-"+userid,
             "user_id": userid,
             "message": "message-"+userid,
-            "block_average_fee": auto_fee
+            "block_average_fee": '50'
           },
         //   {
         //     "order_id": "187795_2",
