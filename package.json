@@ -27,7 +27,8 @@
     "nodemailer": "^6.7.2",
     "querystring": "^0.2.1",
     "random-number": "^0.0.9",
-    "random-url": "^1.0.0"
+    "random-url": "^1.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
