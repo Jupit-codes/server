@@ -486,7 +486,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
 function creditWalletAddress(userid,address,wallet_type,auto_fee,totalAmount){
     let secret="";
     let apikey = "";
-    
+    console.log(auto_fee);
     if(wallet_type === "BTC"){
         secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
         apikey = "4W1Pg2CeHQMS8hHGr";
