@@ -448,7 +448,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
 
                 if(totalAmount > docs.btc_wallet[0].balance    ){
-                    let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,parseFloat(amount))
+                    let callback = creditWalletAddress(docs._id,docs.btc_wallet[0].address,wallets_type,auto_fee,totalAmount)
                     console.log('callback',callback);
                     res.json({
                         "Message":"Notification Has Been Sent To BlockChain",
