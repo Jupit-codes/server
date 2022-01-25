@@ -493,7 +493,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     
 });
 
-function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
+async function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
     let secret="";
     let apikey = "";
    
@@ -566,7 +566,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
    const successCallback=[];
    const errorCallback=[];
    
-   axios.post(url,params,{
+   await axios.post(url,params,{
         headers: {
             'Content-Type': 'application/json',
             // 'X-API-CODE':'4W1Pg2CeHQMS8hHGr',
