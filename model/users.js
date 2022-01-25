@@ -18,9 +18,9 @@ const userSchema = mongoose.Schema({
         type:'String',
         required: [true, "Required"],
     },
-    naira_wallet:[{balance:{type:'Number'},address:'String'}],
-    btc_wallet:[{balance:{type:'Number'},address:'String'}],
-    usdt_wallet:[{balance:{type:'Number'},address:'String'}],
+    naira_wallet:[{balance:{type:mongoose.Decimal128},address:'String'}],
+    btc_wallet:[{balance:{type:mongoose.Decimal128},address:'String'}],
+    usdt_wallet:[{balance:{type:mongoose.Decimal128},address:'String'}],
     email_verification:{
         type:'Boolean',
         required:[true,"Required"]
