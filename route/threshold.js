@@ -464,7 +464,10 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                                 res.json(InternalWallet);
                             }
                             else{
-                                res.json('Error');
+                                res.json({
+                                    "Error":InternalWallet,
+                                    "Status":false
+                                });
                             }
                             
 
@@ -739,15 +742,13 @@ async function checkJupitAddress(address,wallet_type){
             addrr.push(d.address);
         })
         // return ([addrr,true])
-        console.log('myaddress',addrr)
+        
         if(addrr.includes(address)){
-            console.log(address)
-            console.log(addrr.includes(address))
+           
             return (['JupitCustomer',true]);
         }
         else{
-            console.log(address)
-            console.log(addrr.includes(address))
+           
             return (['Non-JupitCustomer',true]);
         }
         
@@ -782,6 +783,7 @@ async function InternalWalletTransfer(user_id,receipentAddress,amount){
 
         let getRequest = await Usermodel.findOneAndUpdate({'btc_wallet.address':receipentAddress},{$inc:{'btc_wallet.$.balance':amount}},null,(err)=>{
             if(err){
+                console.log(err)
                 return [err,false]
             }
             else{
