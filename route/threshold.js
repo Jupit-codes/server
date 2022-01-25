@@ -575,12 +575,11 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
    .then((result)=>{
     //    console.log('result',result)
        
-       return [
+       return 
             {
-                "success":result.data,
-                "status":true
+                result.data,true
             }
-        ]
+        
         
         // res.send({
         //    "message":result.data,
@@ -590,12 +589,12 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
    })
    .catch((err)=>{
     //    console.log('err',err)
-       return [
+       return 
             {
-                "error":err.response,
-                "status":false
+                err.response,
+                false
             }
-         ]
+         
     
    })
 }
