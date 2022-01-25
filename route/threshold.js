@@ -563,7 +563,8 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
    
     const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/678693/sender/transactions?'+ get_request_args
     
-    var mycallback = [];
+   const successCallback=[];
+   const errorCallback=[];
    
    axios.post(url,params,{
         headers: {
@@ -575,29 +576,17 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
         }
    })
    .then((result)=>{
-    //    console.log('result',result)
-       
-    //    return 
-    //         {
-    //             result.data,true
-    //         }
-        
-        
-        // res.send({
-        //    "message":result.data,
-        //     "status":true
-        // })
-        
-        mycallback=result;
+    
+        successCallback.push(result.data);
         
    })
    .catch((err)=>{
-    //    console.log('err',err)
-    mycallback = err;
-         
+    //    console.log('err',err.response.data)
+    errorCallback.push(err.response.data)
+   
     
-   })
-   return mycallback;
+   });
+   return {successCallback,errorCallback };
 }
 
 
