@@ -588,12 +588,12 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
         //     "status":true
         // })
         
-        mycallback.push(result.data);
+        mycallback.push(result);
         
    })
    .catch((err)=>{
     //    console.log('err',err)
-    mycallback.push(err.response);
+    mycallback.push(err);
          
     
    })
