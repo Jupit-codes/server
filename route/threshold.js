@@ -573,7 +573,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
         }
    })
    .then((result)=>{
-       console.log('result',result)
+    //    console.log('result',result)
        
        return [
             {
@@ -589,7 +589,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
         
    })
    .catch((err)=>{
-       console.log('err',err)
+    //    console.log('err',err)
        return [
             {
                 "error":err.response,
