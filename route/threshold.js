@@ -7,6 +7,7 @@ import Usermodel from '../model/users.js';
 import Walletmodel from '../model/wallet_transactions.js'
 
 
+
 const Router  = express.Router();
 
 Router.post('/getautofee',(req,res)=>{
@@ -562,6 +563,7 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
    
     const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/678693/sender/transactions?'+ get_request_args
     
+    const mycallback = [];
    
    axios.post(url,params,{
         headers: {
@@ -575,10 +577,10 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
    .then((result)=>{
     //    console.log('result',result)
        
-       return 
-            {
-                result.data,true
-            }
+    //    return 
+    //         {
+    //             result.data,true
+    //         }
         
         
         // res.send({
@@ -586,18 +588,16 @@ function creditWalletAddress(userid,address,wallet_type,auto_fee,amount){
         //     "status":true
         // })
         
+        mycallback.push(result.data);
+        
    })
    .catch((err)=>{
     //    console.log('err',err)
-       return 
-            {
-                err.response,
-                false
-            }
+    mycallback.push(err.response);
          
     
    })
-   return {'Value':'Welcome To creditWalletModule'}
+   return mycallback;
 }
 
 
