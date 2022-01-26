@@ -583,8 +583,9 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
             if(wallets_type === "BTC"){
                 
                 let fee = parseFloat(auto_fee * 0.00000001).toFixed(8);
-                let totalAmount  = parseFloat(fee) + parseFloat(amount).toFixed(8);
-
+                let totalAmount  = parseFloat(fee + amount).toFixed(8)
+                console.log(totalAmount)
+                
                 if(docs.btc_wallet[0].balance > totalAmount ){
                     
                     let jupitAddress = await checkJupitAddress(recipentAddress,wallets_type);
@@ -639,7 +640,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                         
                         }
                         else{
-                             let WalletCallback =  await creditWalletAddress(docs._id,docs.btc_wallet[0].address,recipentAddress,wallets_type,fee,parseFloat(amount).toFixed(8))
+                             let WalletCallback =  await creditWalletAddress(docs._id,docs.btc_wallet[0].address,recipentAddress,wallets_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8))
                             if(WalletCallback[1]){
                                 res.json({
                                     "Message":WalletCallback[0],
@@ -672,7 +673,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 let fee = parseFloat(auto_fee * 0.00000032).toFixed(6);
                 let totalAmount  = parseFloat(fee) + parseFloat(amount).toFixed(6);
                 if(parseFloat(totalAmount).toFixed(6) > docs.usdt_wallet[0].balance ){
-                    let callback = creditWalletAddress(docs._id,docs.usdt_wallet[0].address,recipentAddress,wallets_type,fee,parseFloat(amount).toFixed(6))
+                    let callback = creditWalletAddress(docs._id,docs.usdt_wallet[0].address,recipentAddress,wallets_type,parseFloat(fee).toFixed(6),parseFloat(amount).toFixed(6))
                     res.send(callback);
                 }
                 else{
@@ -738,7 +739,8 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     // var secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
     var time = Math.floor(new Date().getTime() / 1000);
     var generate_order_id = generateuuID();
-    console.log('Amount',auto_fee);
+    console.log('Amount',amount);
+    console.log('AutoFee',auto_fee);
     var params = {
         "requests": [
           {
