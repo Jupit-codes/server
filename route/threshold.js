@@ -7,7 +7,7 @@ import Usermodel from '../model/users.js';
 import Walletmodel from '../model/wallet_transactions.js'
 import { randomUUID } from 'crypto'
 import wallet_transactions from '../model/wallet_transactions.js';
-
+import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -149,7 +149,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
         }
         if(req.body.processing_state === 2){
 
-            Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+            Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                 if(err){
                     res.json({
                         'message':err,
