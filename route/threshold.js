@@ -657,7 +657,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         });
 
 
-                       // let SubFundToWallet = await SubFund(docs._id,parseFloat(req.body.amount).toFixed(8),req.body.currency,fee,req.body.from_address,req.body.to_address);
+                       
 
                          let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
                         if(UpdateDepositAccount){
@@ -1064,7 +1064,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 //1 UTXO vin and 2 UTXOs vout = 148+34*2+10(header) = 226 bytes
                 //2 UXTO vin and 2 UTXOs vout = 2*148 + 34*2 +10(header) = 374 bytes
                 // return false;
-                let fee = parseFloat(auto_fee * 226 * 0.00000001 ).toFixed(8);
+                let fee = parseFloat(auto_fee * 226 * 0.00000002 ).toFixed(8);
                 let totalAmount  = parseFloat(fee + amount).toFixed(8)
                 console.log(totalAmount)
                 
@@ -1122,19 +1122,33 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                         
                         }
                         else{
-                             let WalletCallback =  await creditWalletAddress(docs._id,docs.btc_wallet[0].address,recipentAddress,wallets_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
-                            if(WalletCallback[1]){
-                                res.json({
-                                    "Message":WalletCallback[0],
-                                    "Status":true
-                                })
-                            }
+                            let UpdateWalletBalances = await updateWalletBalance(docs._id,parseFloat(totalAmount).toFixed(8),wallets_type,fee,docs.btc_wallet[0].address,recipentAddress);
+                            if(UpdateWalletBalances){
+                                let WalletCallback =  await creditWalletAddress(docs._id,docs.btc_wallet[0].address,recipentAddress,wallets_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
+                                if(WalletCallback[1]){
+                                    res.json({
+                                        "Message":WalletCallback[0],
+                                        "Status":true
+                                    })
+                                }
+                                else{
+                                    res.json({
+                                        "Message":WalletCallback[0],
+                                        "Status":false
+                                    })
+                                }
+                            
+                            
+                            } 
                             else{
                                 res.json({
-                                    "Message":WalletCallback[0],
-                                    "Status":false
+                                    "error":"InternalServerError...UpdateWallet "+ UpdateWalletBalances,
+                                    "status":false,
                                 })
                             }
+
+                           
+                                
                         }
                     }
                     
@@ -1430,6 +1444,55 @@ async function AddFund(receipentAddress,amount){
     
 
 }
+
+async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,toAddress){
+    
+    let transactionSub =  await Usermodel.findOne({'btc_wallet.address':toAddress},async function(err,docs){
+        if(err){
+            
+            return [err,false];
+        }
+        else if(docs){
+           
+            let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
+                if(err){
+                    return [err,false]
+                }
+                else{
+                    let oldValue = docs.btc_wallet[0].balance;
+                    let newValue =   oldValue - amount;
+                   let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8)}}},function(err,docs){
+                       if(err){
+                            return [err,false]
+                       }
+                       else{
+                        return ['updated',true]
+                       }
+                   }).clone().catch(function(err){ return [err,false]});
+                    
+                }
+            }).clone().catch(function(err){ return [err,false]});
+           
+           
+            if(SubFunds){
+               
+        
+                return['updated',true]
+        
+            }
+            else{
+                return['Internal Server Error...UpdateWallet',true]
+            }
+            
+        }
+    }).clone().catch(function(err){ return [err,false]});
+    
+    return transactionSub;
+}
+
+
+
+
 
 async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
     
