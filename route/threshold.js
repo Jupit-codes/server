@@ -90,6 +90,8 @@ Router.post('/getautofee',(req,res)=>{
    })
 })
 
+
+
 Router.post('/incoming/depositcallback',(req,res)=>{
     console.log('Welcome Incoming CallBack')
     console.log(req.headers['x-checksum']);
@@ -554,13 +556,473 @@ Router.post('/incoming/depositcallback',(req,res)=>{
 })
 Router.post('/incoming/withdrawalcallback',(req,res)=>{
     console.log('withdrawalcallback');
-    if(req.body.processing_state === 2){
-        console.log('TRansaction Completed')
-        res.sendStatus(200);
+    
+    console.log(req.headers['x-checksum']);
+    console.log(req.body);
+    if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
+        if(req.body.processing_state === 1){
+            Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                if(err){
+                    res.json({
+                        'message':'An Error'+err,
+                        'status':false
+                    })
+                }
+                if(docs){
+
+                }
+                else{
+                    Walletmodel.create({
+                        type:req.body.type,
+                        serial:req.body.serial,
+                        order_id:req.body.order_id,
+                        currency:req.body.currency,
+                        txtid:req.body.txid,
+                        block_height:req.body.block_height,
+                        tindex:req.body.tindex,
+                        vout_index:req.body.vout_index,
+                        amount:req.body.amount,
+                        fees:req.body.fees,
+                        memo:req.body.memo,
+                        broadcast_at:req.body.broadcast_at,
+                        chain_at:req.body.chain_at,
+                        from_address:req.body.from_address,
+                        to_address:req.body.to_address,
+                        wallet_id:req.body.wallet_id,
+                        state:req.body.state,
+                        confirm_blocks:req.body.confirm_blocks,
+                        processing_state:req.body.processing_state,
+                        decimal:req.body.decimal,
+                        currency_bip44:req.body.currency_bip44,
+                        token_address:req.body.token_address,
+                        status:'Processing'
+                    });
+                    
+                    console.log('1st Notification Saved Widthrawal',req.body)
+                    // res.sendStatus(200);
+                    
+                    // res.json({
+                    //     'message':'Transaction Completed',
+                    //     'status':true,
+                    //     'completed':true
+                    // })
+                }
+            })
+
+            
+            
+        }
+        if(req.body.processing_state === 2){
+
+            Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
+                if(err){
+                    res.json({
+                        'message':err,
+                        'status':false
+                    })
+                }
+                if(docs){
+                    if(docs.processing_state !== 2){
+
+                        let newAmount;
+
+                        if(req.body.currency === "BTC"){
+                            newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                        }
+
+                        Walletmodel.create({
+                            type:req.body.type,
+                            serial:req.body.serial,
+                            order_id:req.body.order_id,
+                            currency:req.body.currency,
+                            txtid:req.body.txid,
+                            block_height:req.body.block_height,
+                            tindex:req.body.tindex,
+                            vout_index:req.body.vout_index,
+                            amount:newAmount,
+                            fees:req.body.fees,
+                            memo:req.body.memo,
+                            broadcast_at:req.body.broadcast_at,
+                            chain_at:req.body.chain_at,
+                            from_address:req.body.from_address,
+                            to_address:req.body.to_address,
+                            wallet_id:req.body.wallet_id,
+                            state:req.body.state,
+                            confirm_blocks:req.body.confirm_blocks,
+                            processing_state:req.body.processing_state,
+                            decimal:req.body.decimal,
+                            currency_bip44:req.body.currency_bip44,
+                            token_address:req.body.token_address,
+                            status:'Transaction Completed'
+                        });
+
+
+                       // let SubFundToWallet = await SubFund(docs._id,parseFloat(req.body.amount).toFixed(8),req.body.currency,fee,req.body.from_address,req.body.to_address);
+
+                         let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                        if(UpdateDepositAccount){
+
+                            const mailData = {
+                                from: 'callback@jupit.app',  // sender address
+                                to: req.body.email,   // list of receivers
+                                subject: `Failed Deposit Update onPremises<@${req.body.to_address}>`,
+                                html: `
+                                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
+                                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                                                <div style="width:100%;text-align:center">
+                                                        <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
+                                                </div>   
+                                                <div style="width:100%;text-align:center;margin-top:20px">
+                                                    <h2 style="font-family:candara">Failed Trasaction Impact on ${req.body.to_address} </h2>
+                                                <div>   
+                                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                                                    <hr style="background-color:#f5f5f5;width:95%"/>
+                                                <div>
+                                                    <div style="width:100%; text-align:center">
+
+                                                        <p style="font-family:candara;padding:10px;font-size:16px">Dear Team lead,</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Kindly Login to your dashboard to reprocess the above wallet address as the balance update on premise failed.</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Please Note, the transaction was successfully processed on the blockchain and the fund has been received into our Mass Collection Wallet.</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px;color:#ff0000">Kindly Treat as Urgent!.</p>
+                                                        
+                                                    </div>
+                                                    <div style="width:100%; text-align:center">
+                                                    <p style="font-family:candara;padding:5px"></p>
+                                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https:://www.jupit.app</p>
+                                                    </div>
+                                                </div>
+                                                </div>
+                
+                                                <div>
+                                                <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
+                                                </div>
+                                            </div>
+                                
+                                        </div>
+                                    `
+                              };
+                
+                            transporter.sendMail(mailData, function (err, info) {
+                                if(err){
+                                   
+                                    res.send({"message":"An Error Occurred","callback":err})
+                                }
+                                
+                                else{                                   
+                                   // res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
+                                    
+                                }
+                                  
+                             });
+                             console.log('Transaction Completed',req.body)
+                             res.sendStatus(200);
+                        }
+                        else{
+
+                            const mailData = {
+                                from: 'callback@jupit.app',  // sender address
+                                to: req.body.email,   // list of receivers
+                                subject: `Failed Deposit Update onPremises<${req.body.to_address}>`,
+                                html: `
+                                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
+                                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                                                <div style="width:100%;text-align:center">
+                                                        <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
+                                                </div>   
+                                                <div style="width:100%;text-align:center;margin-top:20px">
+                                                    <h2 style="font-family:candara">Failed Trasaction Impact on ${req.body.to_address} </h2>
+                                                <div>   
+                                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                                                    <hr style="background-color:#f5f5f5;width:95%"/>
+                                                <div>
+                                                    <div style="width:100%; text-align:center">
+
+                                                        <p style="font-family:candara;padding:10px;font-size:16px">Dear Team lead,</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Kindly Login to your dashboard to reprocess the above wallet address as the balance update on premise failed.</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Please Note, the transaction was successfully processed on the blockchain and the fund has been received into our Mass Collection Wallet.</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px;color:#ff0000">Kindly Treat as Urgent!.</p>
+                                                        
+                                                    </div>
+                                                    <div style="width:100%; text-align:center">
+                                                    <p style="font-family:candara;padding:5px"></p>
+                                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https:://www.jupit.app</p>
+                                                    </div>
+                                                </div>
+                                                </div>
+                
+                                                <div>
+                                                <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
+                                                </div>
+                                            </div>
+                                
+                                        </div>
+                                    `
+                              };
+                
+                            transporter.sendMail(mailData, function (err, info) {
+                                if(err){
+                                   
+                                    res.send({"message":"An Error Occurred","callback":err})
+                                }
+                                
+                                else{                                   
+                                   // res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
+                                    
+                                }
+                                  
+                             });
+
+
+
+                            
+                            res.sendStatus(200);
+                        }
+                      
+                        
+                        
+                    }
+                    // console.log('Transaction Completed',req.body)
+                    // res.sendStatus(200);
+                }
+                else{
+                    console.log('Transaction Completed Already',req.body)
+                    // res.sendStatus(200);
+                    
+                   
+                }
+            })
+            
+            // res.sendStatus(200);
+            // res.json({
+            //     'message':'Transaction Completed',
+            //     'status':true,
+            //     'completed':true
+            // })
+            
+        }
+        if(req.body.processing_state === -1){
+            
+            // res.sendStatus(200)
+            if(req.body.state === 5){
+                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    if(docs){
+                        if(docs.processing_state !== -1){
+                            Walletmodel.create({
+                                type:req.body.type,
+                                serial:req.body.serial,
+                                order_id:req.body.order_id,
+                                currency:req.body.currency,
+                                txtid:req.body.txid,
+                                block_height:req.body.block_height,
+                                tindex:req.body.tindex,
+                                vout_index:req.body.vout_index,
+                                amount:req.body.amount,
+                                fees:req.body.fees,
+                                memo:req.body.memo,
+                                broadcast_at:req.body.broadcast_at,
+                                chain_at:req.body.chain_at,
+                                from_address:req.body.from_address,
+                                to_address:req.body.to_address,
+                                wallet_id:req.body.wallet_id,
+                                state:req.body.state,
+                                confirm_blocks:req.body.confirm_blocks,
+                                processing_state:req.body.processing_state,
+                                decimal:req.body.decimal,
+                                currency_bip44:req.body.currency_bip44,
+                                token_address:req.body.token_address,
+                                status:'Transaction Failed'
+                            });
+                            
+                            
+                        }
+                        console.log('Transaction Failed',req.body)
+                        res.sendStatus(200);
+                    }
+                    else{
+                        console.log('Transaction Failed',req.body)
+                        res.sendStatus(200);
+                        
+                       
+                    }
+                })
+               
+            }
+            else if(req.body.state === 8 ){
+
+                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    if(docs){
+                        if(docs.processing_state !== -1){
+                            Walletmodel.create({
+                                type:req.body.type,
+                                serial:req.body.serial,
+                                order_id:req.body.order_id,
+                                currency:req.body.currency,
+                                txtid:req.body.txid,
+                                block_height:req.body.block_height,
+                                tindex:req.body.tindex,
+                                vout_index:req.body.vout_index,
+                                amount:req.body.amount,
+                                fees:req.body.fees,
+                                memo:req.body.memo,
+                                broadcast_at:req.body.broadcast_at,
+                                chain_at:req.body.chain_at,
+                                from_address:req.body.from_address,
+                                to_address:req.body.to_address,
+                                wallet_id:req.body.wallet_id,
+                                state:req.body.state,
+                                confirm_blocks:req.body.confirm_blocks,
+                                processing_state:req.body.processing_state,
+                                decimal:req.body.decimal,
+                                currency_bip44:req.body.currency_bip44,
+                                token_address:req.body.token_address,
+                                status:'Transaction Cancelled'
+                            });
+                            
+                            
+                        }
+                        console.log('Transaction Cancelled',req.body)
+                        res.sendStatus(200);
+                    }
+                    else{
+                        console.log('Transaction Cancelled',req.body)
+                        res.sendStatus(200);
+                        
+                       
+                    }
+                })
+                
+            }
+            else if(req.body.state ===  10){
+
+                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    if(docs){
+                        if(docs.processing_state !== -1){
+                            Walletmodel.create({
+                                type:req.body.type,
+                                serial:req.body.serial,
+                                order_id:req.body.order_id,
+                                currency:req.body.currency,
+                                txtid:req.body.txid,
+                                block_height:req.body.block_height,
+                                tindex:req.body.tindex,
+                                vout_index:req.body.vout_index,
+                                amount:req.body.amount,
+                                fees:req.body.fees,
+                                memo:req.body.memo,
+                                broadcast_at:req.body.broadcast_at,
+                                chain_at:req.body.chain_at,
+                                from_address:req.body.from_address,
+                                to_address:req.body.to_address,
+                                wallet_id:req.body.wallet_id,
+                                state:req.body.state,
+                                confirm_blocks:req.body.confirm_blocks,
+                                processing_state:req.body.processing_state,
+                                decimal:req.body.decimal,
+                                currency_bip44:req.body.currency_bip44,
+                                token_address:req.body.token_address,
+                                status:'Transaction Dropped'
+                            });
+                            
+                            
+                        }
+                        console.log('Transaction Dropped',req.body)
+                        res.sendStatus(200);
+                    }
+                    else{
+                        console.log('Transaction Dropped',req.body)
+                        res.sendStatus(200);
+                        
+                       
+                    }
+                })      
+            }
+            else{
+                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    if(docs){
+                        if(docs.processing_state !== -1){
+                            Walletmodel.create({
+                                type:req.body.type,
+                                serial:req.body.serial,
+                                order_id:req.body.order_id,
+                                currency:req.body.currency,
+                                txtid:req.body.txtid,
+                                block_height:req.body.block_height,
+                                tindex:req.body.tindex,
+                                vout_index:req.body.vout_index,
+                                amount:req.body.amount,
+                                fees:req.body.fees,
+                                memo:req.body.memo,
+                                broadcast_at:req.body.broadcast_at,
+                                chain_at:req.body.chain_at,
+                                from_address:req.body.from_address,
+                                to_address:req.body.to_address,
+                                wallet_id:req.body.wallet_id,
+                                state:req.body.state,
+                                confirm_blocks:req.body.confirm_blocks,
+                                processing_state:req.body.processing_state,
+                                decimal:req.body.decimal,
+                                currency_bip44:req.body.currency_bip44,
+                                token_address:req.body.token_address,
+                                status:'Transaction Unsuccessful'
+                            });
+                            
+                            
+                        }
+                        console.log('Transaction Unsuccessful',req.body)
+                        res.sendStatus(200);
+                    }
+                    else{
+                        console.log('Transaction Unsuccessful',req.body)
+                        res.sendStatus(200);
+                        
+                       
+                    }
+                })
+                
+
+
+                res.json({
+                    'message':'Transaction Unsuccessful',
+                    'status':false,
+                    'completed':false
+                }) 
+            }
+            
+            
+        }
     }
     else{
-        console.log('Error',req.body.processing_state)
-        res.sendStatus(200);
+        res.json({
+            'message':'Forbidden',
+            'status':false,
+            'completed':false
+        }) 
     }
 })
 
@@ -569,7 +1031,8 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     const wallets_type = req.body.wallet_type;
     const auto_fee = req.body.auto_fee;
     const amount = req.body.amount;
-    const recipentAddress = req.body.recipentaddress
+    const recipentAddress = req.body.recipentaddress;
+    const block_average_fee = req.body.block_average
     
     // console.log(recipentAddress);
     // res.json({
@@ -586,8 +1049,22 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
         if(docs){
             
             if(wallets_type === "BTC"){
+                // let getBlockFee = await getautofee();
                 
-                let fee = parseFloat(auto_fee * 0.00000001).toFixed(8);
+                // if(getBlockFee){
+                //     res.send({
+                //         getBlockFee
+                //     })
+                // }
+                // else{
+                //     res.send({
+                //         "errror":getBlockFee
+                //     })
+                // }
+                //1 UTXO vin and 2 UTXOs vout = 148+34*2+10(header) = 226 bytes
+                //2 UXTO vin and 2 UTXOs vout = 2*148 + 34*2 +10(header) = 374 bytes
+                // return false;
+                let fee = parseFloat(auto_fee * 226 * 0.00000001 ).toFixed(8);
                 let totalAmount  = parseFloat(fee + amount).toFixed(8)
                 console.log(totalAmount)
                 
@@ -645,7 +1122,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                         
                         }
                         else{
-                             let WalletCallback =  await creditWalletAddress(docs._id,docs.btc_wallet[0].address,recipentAddress,wallets_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8))
+                             let WalletCallback =  await creditWalletAddress(docs._id,docs.btc_wallet[0].address,recipentAddress,wallets_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
                             if(WalletCallback[1]){
                                 res.json({
                                     "Message":WalletCallback[0],
@@ -678,7 +1155,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 let fee = parseFloat(auto_fee * 0.00000032).toFixed(6);
                 let totalAmount  = parseFloat(fee) + parseFloat(amount).toFixed(6);
                 if(parseFloat(totalAmount).toFixed(6) > docs.usdt_wallet[0].balance ){
-                    let callback = creditWalletAddress(docs._id,docs.usdt_wallet[0].address,recipentAddress,wallets_type,parseFloat(fee).toFixed(6),parseFloat(amount).toFixed(6))
+                    let callback = creditWalletAddress(docs._id,docs.usdt_wallet[0].address,recipentAddress,wallets_type,parseFloat(fee).toFixed(6),parseFloat(amount).toFixed(6),block_average_fee)
                     res.send(callback);
                 }
                 else{
@@ -703,7 +1180,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     
 });
 
-async function creditWalletAddress(userid,address,recipentAddress,wallet_type,auto_fee,amount){
+async function creditWalletAddress(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
     let secret="";
     let apikey = "";
     let isTrue ;
@@ -746,9 +1223,10 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     var generate_order_id = generateuuID();
     // console.log('Amount',amount);
     // console.log('AutoFee',auto_fee);
-    var newauto_fee = parseInt(auto_fee / 0.00000001);
+    // var newauto_fee = parseInt(auto_fee / 0.00000001);
     
-    
+    // console.log('newAuto',newauto_fee)
+  
     var params = {
         "requests": [
           {
@@ -758,7 +1236,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
             "memo": "memo-"+userid,
             "user_id": userid,
             "message": "message-"+userid,
-            "block_average_fee": newauto_fee
+            "block_average_fee": block_average_fee
             
           },
        
@@ -1038,6 +1516,79 @@ function middlewareVerify(req,res,next){
         req.token = bearerHeader;
         next();
     }
+}
+
+ async function  getautofee(){
+    
+    let rand = random(option_rand);
+    var option_rand = {
+            min: 48886
+            , max: 67889
+            , integer: true
+        }
+    function build(params, secret, t, r, postData) {
+        const p = params || [];
+        p.push(`t=${t}`, `r=${r}`);
+        if (!!postData) {
+            if (typeof postData === 'string') {
+                    p.push(postData);
+            } else {
+                    p.push(JSON.stringify(postData));
+            }
+        }
+        p.sort();
+        p.push(`secret=${secret}`);
+        return crypto.createHash('sha256').update(p.join('&')).digest('hex');
+    }
+
+    var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+    var time = Math.floor(new Date().getTime() / 1000)
+    // var postData = [{ "block_num": [1] }]
+    const params = ['{"block_nums":[1,50,100]}'];
+
+    var CHECKSUM = build(params,secret,time,rand);
+
+
+    const parameters = {
+        t:time,
+        r:rand,
+    }
+    
+    const get_request_args = querystring.stringify(parameters);
+   
+    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/autofees?'+ get_request_args
+    
+    const new_params = {
+        "block_nums": [1,50,100]
+    }
+    let generateAutoFee = await axios.post(url,new_params,{
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-CODE':'4PiVpdbyLJZatLBwR',
+            'X-CHECKSUM':CHECKSUM,
+            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+        }
+   })
+   .then((result)=>{
+       console.log('GetAuto',result.data)
+        
+        // res.send({
+        //    "message":result.data,
+        //     "status":true
+        // })
+        return [result.data,true]
+        
+   })
+  
+   .catch((err)=>{
+    //    console.log(err)
+    //    res.send({
+    //        "message":err,
+    //        "status":false
+    //    })
+    return [err,false]
+   })
+   return generateAutoFee;
 }
 
 export default Router;
