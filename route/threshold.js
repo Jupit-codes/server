@@ -582,15 +582,12 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
             
             if(wallets_type === "BTC"){
                 
-                let totalAmount  = parseFloat(auto_fee) + parseFloat(amount);
-
+                let fee = parseFloat(auto_fee) * 0.00000001;
+                let totalAmount  = parseFloat(fee) + parseFloat(amount);
                 if(docs.btc_wallet[0].balance > totalAmount ){
                     
                     let jupitAddress = await checkJupitAddress(recipentAddress,wallets_type);
                     
-                    
-                    
-
                     if(jupitAddress[1]){
                         if(jupitAddress[0]=== "JupitCustomer"){
                             let SubFundToWallet = await SubFund(docs._id,amount,wallets_type,auto_fee,docs.btc_wallet[0].address,recipentAddress);
@@ -641,7 +638,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                         
                         }
                         else{
-                             let WalletCallback =  await creditWalletAddress(docs._id,docs.btc_wallet[0].address,recipentAddress,wallets_type,auto_fee,amount)
+                             let WalletCallback =  await creditWalletAddress(docs._id,docs.btc_wallet[0].address,recipentAddress,wallets_type,fee,amount)
                             if(WalletCallback[1]){
                                 res.json({
                                     "Message":WalletCallback[0],
