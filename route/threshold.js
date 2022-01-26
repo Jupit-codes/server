@@ -739,8 +739,11 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     // var secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
     var time = Math.floor(new Date().getTime() / 1000);
     var generate_order_id = generateuuID();
-    console.log('Amount',amount);
-    console.log('AutoFee',auto_fee);
+    // console.log('Amount',amount);
+    // console.log('AutoFee',auto_fee);
+    var newauto_fee = parseInt(auto_fee / 0.00000001);
+    
+    
     var params = {
         "requests": [
           {
@@ -750,7 +753,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
             "memo": "memo-"+userid,
             "user_id": userid,
             "message": "message-"+userid,
-            "block_average_fee": auto_fee
+            "block_average_fee": newauto_fee
             
           },
        
@@ -800,7 +803,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
         
    })
    .catch((err)=>{
-
+    console.log(err)
     // return new Promise(function(resolve,reject){
     //     resolve(err.response.data);
     // })
