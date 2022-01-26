@@ -553,10 +553,13 @@ Router.post('/incoming/depositcallback',(req,res)=>{
     
 })
 Router.post('/incoming/withdrawalcallback',(req,res)=>{
-    console.log('withdrawalcallback',req.body);
-    
+    console.log('withdrawalcallback');
     if(req.body.processing_state === 2){
         console.log('TRansaction Completed')
+        res.sendStatus(200);
+    }
+    else{
+        console.log('Error',req.body.processing_state)
         res.sendStatus(200);
     }
 })
