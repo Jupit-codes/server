@@ -557,6 +557,10 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
     res.send({
         'message':'Withdrawal Callback'
     })
+    if(req.body.processing_state === 2){
+        console.log('TRansaction Completed')
+        res.sendStatus(200);
+    }
 })
 
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
