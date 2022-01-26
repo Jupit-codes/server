@@ -6,8 +6,18 @@ import random from 'random-number';
 import Usermodel from '../model/users.js';
 import Walletmodel from '../model/wallet_transactions.js'
 import { randomUUID } from 'crypto'
+import wallet_transactions from '../model/wallet_transactions.js';
 
 
+const transporter = nodemailer.createTransport({
+    port: 465,               // true for 465, false for other ports
+    host: "smtp.gmail.com",
+       auth: {
+            user: 'hademylola@gmail.com',
+            pass: 'sxwoxbbomiivppxf',
+         },
+    secure: true,
+    });
 
 const Router  = express.Router();
 
@@ -127,7 +137,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     // res.sendStatus(200);
                     
                     // res.json({
-                    //     'message':'Transaction done (N blocks confirmations reached)',
+                    //     'message':'Transaction Completed',
                     //     'status':true,
                     //     'completed':true
                     // })
@@ -171,16 +181,78 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                             decimal:req.body.decimal,
                             currency_bip44:req.body.currency_bip44,
                             token_address:req.body.token_address,
-                            status:'Transaction done (N blocks confirmations reached)'
+                            status:'Transaction Completed'
                         });
+
+                         let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':req.body.amount}}).exec();
+                        if(UpdateDepositAccount){
+                            const mailData = {
+                                from: 'hello@jupit.app',  // sender address
+                                to: req.body.email,   // list of receivers
+                                subject: `Failed Deposit Update onPremises<@${req.body.to_address}>`,
+                                html: `
+                                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
+                                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                                                <div style="width:100%;text-align:center">
+                                                        <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
+                                                </div>   
+                                                <div style="width:100%;text-align:center;margin-top:20px">
+                                                    <h2 style="font-family:candara">Failed Trasaction Impact on ${req.body.to_address} </h2>
+                                                <div>   
+                                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                                                    <hr style="background-color:#f5f5f5;width:95%"/>
+                                                <div>
+                                                    <div style="width:100%; text-align:center">
+                                                    
+                                                        <p style="font-family:candara;padding:10px;font-size:16px">Dear Team lead,</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Kindly Login to your dashboard to reprocess the above wallet address as the balance update on premise failed.</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Please Note, the transaction was successfully processed on the blockchain and the fund has been received into our Mass Collection Wallet.</p>
+                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px;color:#ff0000">Kindly Treat as Urgent!.</p>
+                                                        
+                                                    </div>
+                                                    <div style="width:100%; text-align:center">
+                                                    <p style="font-family:candara;padding:5px"></p>
+                                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https:://www.jupit.app</p>
+                                                    </div>
+                                                </div>
+                                                </div>
+                
+                                                <div >
+                                                <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
+                                                </div>
+                                            </div>
+                                
+                                        </div>
+                                    `
+                              };
+                
+                            transporter.sendMail(mailData, function (err, info) {
+                                if(err){
+                                   
+                                    res.send({"message":"An Error Occurred","callback":err})
+                                }
+                                
+                                else{                                   
+                                    res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
+                                    
+                                }
+                                  
+                             });
+                            
+                        }
+                        else{
+
+                        }
+                        // Usermodel.findOneAndUpdate({'btc_wallet.balance':req.body.to_address},{})
                         
                         
                     }
-                    console.log('Transaction done (N blocks confirmations reached)',req.body)
+                    console.log('Transaction Completed',req.body)
                     res.sendStatus(200);
                 }
                 else{
-                    console.log('Transaction done (N blocks confirmations reached)',req.body)
+                    console.log('Transaction Completed',req.body)
                     res.sendStatus(200);
                     
                    
@@ -189,7 +261,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
             
             // res.sendStatus(200);
             // res.json({
-            //     'message':'Transaction done (N blocks confirmations reached)',
+            //     'message':'Transaction Completed',
             //     'status':true,
             //     'completed':true
             // })
@@ -456,19 +528,47 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                     
                     let jupitAddress = await checkJupitAddress(recipentAddress,wallets_type);
                     
+                    
+                    
+
                     if(jupitAddress[1]){
                         if(jupitAddress[0]=== "JupitCustomer"){
-                            let InternalWallet = await InternalWalletTransfer(docs._id,recipentAddress,amount)
+                            let SubFundToWallet = await SubFund(docs._id,amount,wallets_type,auto_fee,docs.btc_wallet[0].address,recipentAddress);
                             
-                            if(InternalWallet){
-                                res.json(InternalWallet);
+                            console.log('SubFundWallet',SubFundToWallet)
+                            
+                            if(SubFundToWallet){
+                                console.log('SubFundWalletII',SubFundToWallet)
+                                let AddFundToWallet = await AddFund(recipentAddress,amount);
+                                if(AddFundToWallet){
+                                    res.json({
+                                        "Message":'Transaction Was Successful',
+                                        "Status":true
+                                    })
+                                }
+                                else{
+                                    res.json({
+                                        "error":'Internal Server Error' + SubFundToWallet,
+                                        "Status":false
+                                    })
+                                }
                             }
                             else{
                                 res.json({
-                                    "Error":InternalWallet,
+                                    "error":'Internal Server Error'+ SubFundToWallet,
                                     "Status":false
-                                });
+                                })
                             }
+
+                            // if(InternalWallet){
+                            //     res.json(InternalWallet);
+                            // }
+                            // else{
+                            //     res.json({
+                            //         "Error":'Internal Server Error...recipient Address not Found On premises',
+                            //         "Status":false
+                            //     });
+                            // }
                             
 
                             // if(InternalWallet[1]){
@@ -762,39 +862,101 @@ async function checkJupitAddress(address,wallet_type){
    return check;
   
 }
-async function InternalWalletTransfer(user_id,receipentAddress,amount){
-
-//    let getRequest =  await Usermodel.findOne({'btc_wallet[0].address':receipentAddress},(err,docs)=>{
-//         if(err){
-//            return [err,false]
-//         }
-//         else if(docs){
-
-//             Usermodel.findByIdAndUpdate(docs._id, { 
-//                 $push: { 
-//                         btc_wallet: {"balance":500,},
-                        
-//                     } 
-//                 }).exec();
-//                 return[docs,true]
-//         }
-//     }).clone().catch(function(err){ return [err,false]});
+async function AddFund(receipentAddress,amount){
 
 
-        let getRequest = await Usermodel.findOneAndUpdate({'btc_wallet.address':receipentAddress},{$inc:{'btc_wallet.$.balance':amount}},null,(err)=>{
-            if(err){
-                console.log(err)
-                return [err,false]
-            }
-            else{
-                return ['Updated Successfully',true]
-            }
+        // let getRequest = await Usermodel.findOneAndUpdate({'btc_wallet.address':receipentAddress},{$set:{'btc_wallet.$.balance':amount}},null,(err)=>{
+        //     if(err){
+                
+        //         return [err,false]
+        //     }
+        //     else{
+        //         return ['Updated Successfully',true]
+        //     }
         
-        }).clone().catch(function(err){ return [err,false]});
+        // }).clone().catch(function(err){ return [err,false]});
 
-        return getRequest;
+        let AddFund = await Usermodel.findOneAndUpdate({'btc_wallet.address':receipentAddress},{$inc:{'btc_wallet.$.balance':amount}}).exec();
+        
+        
+        return AddFund
     
 
+}
+
+async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
+    
+    let transactionSub =  await Usermodel.findOne({'btc_wallet.address':toAddress},async function(err,docs){
+        if(err){
+            
+            return [err,false];
+        }
+        else if(docs){
+           
+            let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
+                if(err){
+                    return [err,false]
+                }
+                else{
+                    let oldValue = docs.btc_wallet[0].balance;
+                    let newValue =   oldValue - amount;
+                   let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(3)}}},function(err,docs){
+                       if(err){
+                            return [err,false]
+                       }
+                       else{
+                        return ['updated',true]
+                       }
+                   }).clone().catch(function(err){ return [err,false]});
+                    
+                }
+            }).clone().catch(function(err){ return [err,false]});
+           
+            //  let SubFunds = await Usermodel.findByIdAndUpdate(user_id, {$inc: { 
+            //     btc_wallet: [{ 
+            //           balance: parseFloat(amount), 
+                       
+            //     }] 
+            //  }},function(err){
+            //     if(err,docs){
+            //         console.log(err)
+            //     }
+            //     else{
+            //         console.log(docs)
+            //     }
+            //  }).clone().catch(function(err){ return [err,false]});
+            
+            
+            let transaction_id = generateuuID();
+            if(SubFunds){
+                try{
+                    let wallet = wallet_transactions.create({
+                        type:'Internal Transfer',
+                        serial:user_id,
+                        order_id:user_id,
+                        currency:currency,
+                        txtid:transaction_id,
+                        amount:amount,
+                        fees:auto_fee,
+                        from_address:fromAddress,
+                        to_address:toAddress,
+                        wallet_id:'MassSender'+user_id,
+                        status:'Transaction Completed'
+                
+                    })
+        
+                    return['success',true]
+        
+                }
+                catch(err){
+                    return [err,false]
+                }
+                
+            }
+        }
+    }).clone().catch(function(err){ return [err,false]});
+    
+    return transactionSub;
 }
 
 
