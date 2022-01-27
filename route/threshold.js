@@ -188,122 +188,14 @@ Router.post('/incoming/depositcallback',(req,res)=>{
 
                          let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
                         if(UpdateDepositAccount){
-
-                            const mailData = {
-                                from: 'callback@jupit.app',  // sender address
-                                to: req.body.email,   // list of receivers
-                                subject: `Failed Deposit Update onPremises<@${req.body.to_address}>`,
-                                html: `
-                                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
-                                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
-                                                <div style="width:100%;text-align:center">
-                                                        <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
-                                                </div>   
-                                                <div style="width:100%;text-align:center;margin-top:20px">
-                                                    <h2 style="font-family:candara">Failed Trasaction Impact on ${req.body.to_address} </h2>
-                                                <div>   
-                                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
-                                                    <hr style="background-color:#f5f5f5;width:95%"/>
-                                                <div>
-                                                    <div style="width:100%; text-align:center">
-
-                                                        <p style="font-family:candara;padding:10px;font-size:16px">Dear Team lead,</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Kindly Login to your dashboard to reprocess the above wallet address as the balance update on premise failed.</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Please Note, the transaction was successfully processed on the blockchain and the fund has been received into our Mass Collection Wallet.</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px;color:#ff0000">Kindly Treat as Urgent!.</p>
-                                                        
-                                                    </div>
-                                                    <div style="width:100%; text-align:center">
-                                                    <p style="font-family:candara;padding:5px"></p>
-                                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https:://www.jupit.app</p>
-                                                    </div>
-                                                </div>
-                                                </div>
-                
-                                                <div>
-                                                <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
-                                                </div>
-                                            </div>
-                                
-                                        </div>
-                                    `
-                              };
-                
-                            transporter.sendMail(mailData, function (err, info) {
-                                if(err){
-                                   
-                                    res.send({"message":"An Error Occurred","callback":err})
-                                }
-                                
-                                else{                                   
-                                   // res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
-                                    
-                                }
-                                  
-                             });
+                        //     let subject = "Failed Deposit Update onPremises"
+                        //    await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
                              console.log('Transaction Completed',req.body)
                              res.sendStatus(200);
                         }
                         else{
-
-                            const mailData = {
-                                from: 'callback@jupit.app',  // sender address
-                                to: req.body.email,   // list of receivers
-                                subject: `Failed Deposit Update onPremises<${req.body.to_address}>`,
-                                html: `
-                                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
-                                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
-                                                <div style="width:100%;text-align:center">
-                                                        <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
-                                                </div>   
-                                                <div style="width:100%;text-align:center;margin-top:20px">
-                                                    <h2 style="font-family:candara">Failed Trasaction Impact on ${req.body.to_address} </h2>
-                                                <div>   
-                                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
-                                                    <hr style="background-color:#f5f5f5;width:95%"/>
-                                                <div>
-                                                    <div style="width:100%; text-align:center">
-
-                                                        <p style="font-family:candara;padding:10px;font-size:16px">Dear Team lead,</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Kindly Login to your dashboard to reprocess the above wallet address as the balance update on premise failed.</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Please Note, the transaction was successfully processed on the blockchain and the fund has been received into our Mass Collection Wallet.</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px;color:#ff0000">Kindly Treat as Urgent!.</p>
-                                                        
-                                                    </div>
-                                                    <div style="width:100%; text-align:center">
-                                                    <p style="font-family:candara;padding:5px"></p>
-                                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https:://www.jupit.app</p>
-                                                    </div>
-                                                </div>
-                                                </div>
-                
-                                                <div>
-                                                <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
-                                                </div>
-                                            </div>
-                                
-                                        </div>
-                                    `
-                              };
-                
-                            transporter.sendMail(mailData, function (err, info) {
-                                if(err){
-                                   
-                                    res.send({"message":"An Error Occurred","callback":err})
-                                }
-                                
-                                else{                                   
-                                   // res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
-                                    
-                                }
-                                  
-                             });
-
-
-
-                            
+                            let subject = "Failed Deposit Update onPremises"
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
                             res.sendStatus(200);
                         }
                       
@@ -368,6 +260,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                                 status:'Transaction Failed'
                             });
                             
+
                             
                         }
                         console.log('Transaction Failed',req.body)
@@ -599,7 +492,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                     });
                     
                     console.log('1st Notification Saved Widthrawal',req.body)
-                    // res.sendStatus(200);
+                    res.sendStatus(200);
                     
                     // res.json({
                     //     'message':'Transaction Completed',
@@ -655,140 +548,14 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             token_address:req.body.token_address,
                             status:'Transaction Completed'
                         });
-
-
-                       
-
-                         let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
-                        if(UpdateDepositAccount){
-
-                            const mailData = {
-                                from: 'callback@jupit.app',  // sender address
-                                to: req.body.email,   // list of receivers
-                                subject: `Failed Deposit Update onPremises<@${req.body.to_address}>`,
-                                html: `
-                                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
-                                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
-                                                <div style="width:100%;text-align:center">
-                                                        <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
-                                                </div>   
-                                                <div style="width:100%;text-align:center;margin-top:20px">
-                                                    <h2 style="font-family:candara">Failed Trasaction Impact on ${req.body.to_address} </h2>
-                                                <div>   
-                                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
-                                                    <hr style="background-color:#f5f5f5;width:95%"/>
-                                                <div>
-                                                    <div style="width:100%; text-align:center">
-
-                                                        <p style="font-family:candara;padding:10px;font-size:16px">Dear Team lead,</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Kindly Login to your dashboard to reprocess the above wallet address as the balance update on premise failed.</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Please Note, the transaction was successfully processed on the blockchain and the fund has been received into our Mass Collection Wallet.</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px;color:#ff0000">Kindly Treat as Urgent!.</p>
-                                                        
-                                                    </div>
-                                                    <div style="width:100%; text-align:center">
-                                                    <p style="font-family:candara;padding:5px"></p>
-                                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https:://www.jupit.app</p>
-                                                    </div>
-                                                </div>
-                                                </div>
-                
-                                                <div>
-                                                <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
-                                                </div>
-                                            </div>
-                                
-                                        </div>
-                                    `
-                              };
-                
-                            transporter.sendMail(mailData, function (err, info) {
-                                if(err){
-                                   
-                                    res.send({"message":"An Error Occurred","callback":err})
-                                }
-                                
-                                else{                                   
-                                   // res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
-                                    
-                                }
-                                  
-                             });
-                             console.log('Transaction Completed',req.body)
-                             res.sendStatus(200);
-                        }
-                        else{
-
-                            const mailData = {
-                                from: 'callback@jupit.app',  // sender address
-                                to: req.body.email,   // list of receivers
-                                subject: `Failed Deposit Update onPremises<${req.body.to_address}>`,
-                                html: `
-                                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
-                                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
-                                                <div style="width:100%;text-align:center">
-                                                        <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
-                                                </div>   
-                                                <div style="width:100%;text-align:center;margin-top:20px">
-                                                    <h2 style="font-family:candara">Failed Trasaction Impact on ${req.body.to_address} </h2>
-                                                <div>   
-                                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
-                                                    <hr style="background-color:#f5f5f5;width:95%"/>
-                                                <div>
-                                                    <div style="width:100%; text-align:center">
-
-                                                        <p style="font-family:candara;padding:10px;font-size:16px">Dear Team lead,</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Kindly Login to your dashboard to reprocess the above wallet address as the balance update on premise failed.</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Please Note, the transaction was successfully processed on the blockchain and the fund has been received into our Mass Collection Wallet.</p>
-                                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px;color:#ff0000">Kindly Treat as Urgent!.</p>
-                                                        
-                                                    </div>
-                                                    <div style="width:100%; text-align:center">
-                                                    <p style="font-family:candara;padding:5px"></p>
-                                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https:://www.jupit.app</p>
-                                                    </div>
-                                                </div>
-                                                </div>
-                
-                                                <div>
-                                                <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
-                                                </div>
-                                            </div>
-                                
-                                        </div>
-                                    `
-                              };
-                
-                            transporter.sendMail(mailData, function (err, info) {
-                                if(err){
-                                   
-                                    res.send({"message":"An Error Occurred","callback":err})
-                                }
-                                
-                                else{                                   
-                                   // res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
-                                    
-                                }
-                                  
-                             });
-
-
-
-                            
-                            res.sendStatus(200);
-                        }
-                      
-                        
-                        
+   
                     }
-                    // console.log('Transaction Completed',req.body)
-                    // res.sendStatus(200);
+                    console.log('Transaction Completed',req.body)
+                    res.sendStatus(200); 
                 }
                 else{
                     console.log('Transaction Completed Already',req.body)
-                    // res.sendStatus(200);
+                    res.sendStatus(200);
                     
                    
                 }
@@ -806,7 +573,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
             
             // res.sendStatus(200)
             if(req.body.state === 5){
-                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                     if(err){
                         res.json({
                             'message':err,
@@ -843,8 +610,19 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             
                             
                         }
+                        
+                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
+                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
                         console.log('Transaction Failed',req.body)
-                        res.sendStatus(200);
+                        if(Reversal){
+                            res.sendStatus(200);
+                        }
+                        else{
+                            let subject = "Failed Reversal Update On Premises"
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
+                            res.sendStatus(200);
+                        }
+                        
                     }
                     else{
                         console.log('Transaction Failed',req.body)
@@ -857,7 +635,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
             }
             else if(req.body.state === 8 ){
 
-                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                     if(err){
                         res.json({
                             'message':err,
@@ -894,8 +672,18 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             
                             
                         }
-                        console.log('Transaction Cancelled',req.body)
-                        res.sendStatus(200);
+                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
+                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
+                        console.log('Transaction Failed',req.body)
+                        if(Reversal){
+                            res.sendStatus(200);
+                        }
+                        else{
+                            let subject = "Failed Reversal Update On Premises"
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
+                            res.sendStatus(200);
+                        }
+                        
                     }
                     else{
                         console.log('Transaction Cancelled',req.body)
@@ -908,7 +696,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
             }
             else if(req.body.state ===  10){
 
-                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                     if(err){
                         res.json({
                             'message':err,
@@ -945,8 +733,18 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             
                             
                         }
-                        console.log('Transaction Dropped',req.body)
-                        res.sendStatus(200);
+                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
+                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
+                        console.log('Transaction Failed',req.body)
+                        if(Reversal){
+                            res.sendStatus(200);
+                        }
+                        else{
+                            let subject = "Failed Reversal Update On Premises"
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
+                            res.sendStatus(200);
+                        }
+                        
                     }
                     else{
                         console.log('Transaction Dropped',req.body)
@@ -1064,7 +862,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 //1 UTXO vin and 2 UTXOs vout = 148+34*2+10(header) = 226 bytes
                 //2 UXTO vin and 2 UTXOs vout = 2*148 + 34*2 +10(header) = 374 bytes
                 // return false;
-                let fee = parseFloat(auto_fee * 226 * 0.00000002 ).toFixed(8);
+                let fee = parseFloat(auto_fee * 226 * 0.00000001 ).toFixed(8);
                 let totalAmount  = parseFloat(fee + amount).toFixed(8)
                 console.log(totalAmount)
                 
@@ -1652,6 +1450,62 @@ function middlewareVerify(req,res,next){
     return [err,false]
    })
    return generateAutoFee;
+}
+
+async function FailedUpdateEmail(addr,txid,subject){
+    const mailData = {
+        from: 'callback@jupit.app',  // sender address
+        to: req.body.email,   // list of receivers
+        subject: `${subject}`,
+        html: `
+                <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
+                    <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                        <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                        <div style="width:100%;text-align:center">
+                                <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
+                        </div>   
+                        <div style="width:100%;text-align:center;margin-top:20px">
+                            <h2 style="font-family:candara">Failed Trasaction Impact on ${addr} </h2>
+                        <div>   
+                        <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                            <hr style="background-color:#f5f5f5;width:95%"/>
+                        <div>
+                            <div style="width:100%; text-align:center">
+
+                                <p style="font-family:candara;padding:10px;font-size:16px">Dear Team lead,</p>
+                                <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Kindly Login to your dashboard to reprocess the above wallet address as the balance update on premise failed.</p>
+                                <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">Please Note, the transaction was successfully processed on the blockchain and the fund has been received into our Mass Collection Wallet.</p>
+                                <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px;color:#ff0000">Kindly Treat as Urgent!.</p>
+                                
+                            </div>
+                            <div style="width:100%; text-align:center">
+                            <p style="font-family:candara;padding:5px"></p>
+                            <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https:://www.jupit.app</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div>
+                        <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
+                        </div>
+                    </div>
+        
+                </div>
+            `
+      };
+
+    transporter.sendMail(mailData, function (err, info) {
+        if(err){
+           
+            res.send({"message":"An Error Occurred","callback":err})
+        }
+        
+        else{                                   
+           // res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
+            
+        }
+          
+     });
 }
 
 export default Router;
