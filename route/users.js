@@ -94,7 +94,7 @@ router.get('/users',(req,res,next)=>{
 
 });
 router.post('/users/login',(req,res)=>{
-  
+  console.log(req.body)
     Usermodel.findOne({email:req.body.email},async (err,docs)=>{
         if(err){
             res.send({
