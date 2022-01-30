@@ -116,18 +116,19 @@ router.post('/users/login',(req,res)=>{
                 })
             
             } else {
-                res.send({
-                    'message':'Invalid Password',
-                    'status':false
-                })
+                res.sendStatus(404).send({'message':'Invalid Password',
+                'status':false})
+                // res.send({
+                //     'message':'Invalid Password',
+                //     'status':false
+                // })
             }
              
         }
         else{
-            res.send({
-                'message':'Invalid Username',
-                'status':false
-            })
+            res.sendStatus(404).send({'message':'Invalid Username',
+                'status':false})
+           
         }
     })
     // res.send('Login Successful')
