@@ -122,16 +122,17 @@ router.post('/users/login',(req,res)=>{
                 //     'message':'Invalid Password',
                 //     'status':false
                 // })
-                res.statusMessage = "Invalid Password";
-                res.send(400).end();
+                // res.statusMessage = "Invalid Password";
+                // res.send(400).end();
+
+                res.status(400).send('Invalid Password');
             }
              
         }
         else{
             // res.sendStatus(404).send({'message':'Invalid Username',
             //     'status':false})
-            res.statusMessage = "Invalid Username";
-            res.send(400).end();
+            res.status(400).send('Invalid Username');
            
         }
     })
