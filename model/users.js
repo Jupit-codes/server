@@ -2,17 +2,21 @@ import mongoose from 'mongoose'
 
 const userSchema = mongoose.Schema({
     username:{
-        type:'String'
+        type:'String',
+        unique:true,
+        required: [true, "Required"],
     },
     email:{
         type:'String',
         required: [true, "Required"],
+        unique:true,
         lowercase: true,
         match: [/\S+@\S+\.\S+/, 'is invalid']
     },
     phonenumber:{
         type:'String',
         required: [true, "Required"],
+        unique:true,
     },
     password:{
         type:'String',
