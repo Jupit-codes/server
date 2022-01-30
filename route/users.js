@@ -116,18 +116,22 @@ router.post('/users/login',(req,res)=>{
                 })
             
             } else {
-                res.sendStatus(404).send({'message':'Invalid Password',
-                'status':false})
+                // res.sendStatus(404).send({'message':'Invalid Password',
+                // 'status':false})
                 // res.send({
                 //     'message':'Invalid Password',
                 //     'status':false
                 // })
+                res.statusMessage = "Invalid Password";
+                res.send(400).end();
             }
              
         }
         else{
-            res.sendStatus(404).send({'message':'Invalid Username',
-                'status':false})
+            // res.sendStatus(404).send({'message':'Invalid Username',
+            //     'status':false})
+            res.statusMessage = "Invalid Username";
+            res.send(400).end();
            
         }
     })
