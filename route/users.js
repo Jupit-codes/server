@@ -276,10 +276,10 @@ router.post('/users/register',(req,res)=>{
             if(docs){
                 if(docs.email_verification){
                     
-                    res.status(400).send({"message":"Email Account Already Exist","status":false});
+                    res.status(400).send("Email Account Already Exist");
                 }
                 else{
-                    res.status(400).send({"message":"Email Verification pending On this Account","status":false})
+                    res.status(400).send("Email Verification pending On this Account")
                     // res.send({"message":"Email Verification pending On this Account","status":false})
                 }
                
