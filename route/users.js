@@ -310,7 +310,7 @@ router.post('/users/register',(req,res)=>{
        try{
             const salt =  bcrypt.genSaltSync(10);
             const user = await  Usermodel.create({
-            // username:req.body.username,
+            username:req.body.username,
             email:req.body.email,
             password: bcrypt.hashSync(req.body.password, salt),
             phonenumber:req.body.phonenumber,
