@@ -132,7 +132,7 @@ router.post('/users/login',(req,res)=>{
         else{
             // res.sendStatus(404).send({'message':'Invalid Username',
             //     'status':false})
-            res.status(400).send('Invalid Username');
+            res.status(400).send('Invalid Password');
            
         }
     })
@@ -275,10 +275,12 @@ router.post('/users/register',(req,res)=>{
         else{
             if(docs){
                 if(docs.email_verification){
-                    res.send({"message":"Email Account Already Exist","status":false})
+                    
+                    res.status(400).send({"message":"Email Account Already Exist","status":false});
                 }
                 else{
-                    res.send({"message":"Email Verification pending On this Account","status":false})
+                    res.status(400).send({"message":"Email Verification pending On this Account","status":false})
+                    // res.send({"message":"Email Verification pending On this Account","status":false})
                 }
                
             }
