@@ -246,7 +246,8 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                             }
                             if(docs){
                                 createKyc(docs._id,docs.email,docs.phonenumber);
-                                res.send({"SuccessMessage":"EmailAddress Verified","status":true});
+                                res.redirect('http://localhost:3000/client/signin')
+                                // res.send({"SuccessMessage":"EmailAddress Verified","status":true});
                             }
                         })
                         
