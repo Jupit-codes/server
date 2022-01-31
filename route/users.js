@@ -266,7 +266,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
 })
 
 router.post('/users/register',(req,res)=>{
-    
+    console.log(req.body)
 
     Usermodel.findOne({email:req.body.email},function(err,docs){
         if(err){
