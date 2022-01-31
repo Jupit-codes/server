@@ -247,7 +247,8 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                             if(docs){
                                 createKyc(docs._id,docs.email,docs.phonenumber);
                                 // res.redirect('http://localhost:3000/client/signin')
-                                res.send({"SuccessMessage":"EmailAddress Verified","status":true});
+                                res.status(301).redirect("https://www.google.com")
+                                //res.send({"SuccessMessage":"EmailAddress Verified","status":true});
                             }
                         })
                         
@@ -267,7 +268,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
 })
 
 router.post('/users/register',(req,res)=>{
-    console.log(req.body)
+    
 
     Usermodel.findOne({email:req.body.email},function(err,docs){
         if(err){
