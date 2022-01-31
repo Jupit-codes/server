@@ -270,7 +270,7 @@ router.post('/users/register',(req,res)=>{
 
     Usermodel.findOne({email:req.body.email},function(err,docs){
         if(err){
-            res.send({"message":err,"status":false})
+            res.status(400).send(err);
         }
         else{
             if(docs){
@@ -285,7 +285,19 @@ router.post('/users/register',(req,res)=>{
                
             }
             else{
-                createUser();
+                Usermodel.findOne({username:req.body.username},function(err,docs){
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    else if(docs){
+                        res.status(400).send("Username Already Exist");
+
+                    }
+                    else{
+                        createUser();
+                    }
+                })
+                
             }
         }
     })
