@@ -357,11 +357,11 @@ router.post('/users/register',(req,res)=>{
                                     <div style="width:100%; text-align:center">
                                         <p style="font-family:candara;padding:10px;font-size:16px">To verify your email address, kindly click on the button below</p>
                                         <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">If you did not make this request, then ignore the email</p>
-                                        <a href="http://127.0.0.1:5000/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}" style="cursor:pointer"><button style="width:50%;height:40px;font-family:candara;font-size:18px;font-weight:bold;cursor:pointer;background-color:#ffc857;border:1px solid #ffc857">Verify Email Address</button></a>
+                                        <a href="https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}" style="cursor:pointer"><button style="width:50%;height:40px;font-family:candara;font-size:18px;font-weight:bold;cursor:pointer;background-color:#ffc857;border:1px solid #ffc857">Verify Email Address</button></a>
                                     </div>
                                     <div style="width:100%; text-align:center">
                                     <p style="font-family:candara;padding:5px">If you have trouble paste below link in your browser</p>
-                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">http://127.0.0.1:5000/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}</p>
+                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}</p>
                                     </div>
                                 </div>
                                 </div>
