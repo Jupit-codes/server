@@ -132,7 +132,7 @@ router.post('/users/login',(req,res)=>{
         else{
             // res.sendStatus(404).send({'message':'Invalid Username',
             //     'status':false})
-            res.status(400).send('Invalid Password');
+            res.status(400).send('Invalid Email Address');
            
         }
     })
