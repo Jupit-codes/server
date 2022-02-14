@@ -824,6 +824,14 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
     }
 })
 
+Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
+    let receipentAddress = req.body.receipent_address;
+    let wallet_type = req.body.wallet_type;
+    let jupitAddress = await checkJupitAddress(receipentAddress,wallet_type);
+
+    console.log('jupit',jupitAddress)
+})
+
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     const userid = req.body.userid;
     const wallets_type = req.body.wallet_type;
