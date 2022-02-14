@@ -1380,7 +1380,7 @@ async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
 function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
-        res.sendStatus(403);
+        // res.sendStatus(403);
         res.status(403).send('Token Not Found');
     }
     else{
