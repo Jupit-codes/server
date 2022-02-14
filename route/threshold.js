@@ -23,6 +23,8 @@ const Router  = express.Router();
 
 Router.post('/getautofee',(req,res)=>{
 
+    res.send('Welcome')
+
     let rand = random(option_rand);
     var option_rand = {
             min: 48886
@@ -83,10 +85,11 @@ Router.post('/getautofee',(req,res)=>{
    })
    .catch((err)=>{
        console.log(err)
-       res.send({
-           "message":err,
-           "status":false
-       })
+    //    res.send({
+    //        "message":err,
+    //        "status":false
+    //    })
+       res.status(403).send(err);
    })
 })
 
