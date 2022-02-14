@@ -830,7 +830,7 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     let jupitAddress = await checkJupitAddress(receipentAddress,wallet_type);
 
     console.log('jupit',jupitAddress)
-    res.send(jupitAddress)
+    res.send(jupitAddress[0])
 })
 
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
