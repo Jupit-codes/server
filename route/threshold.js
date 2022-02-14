@@ -23,7 +23,7 @@ const Router  = express.Router();
 
 Router.post('/getautofee',(req,res)=>{
 
-    res.send('Welcome')
+   
 
     let rand = random(option_rand);
     var option_rand = {
