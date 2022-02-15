@@ -9,6 +9,7 @@ import { randomUUID } from 'crypto'
 import wallet_transactions from '../model/wallet_transactions.js';
 import nodemailer from 'nodemailer';
 
+
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtp.gmail.com",
@@ -830,10 +831,16 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     let receipentAddress = req.body.receipent_address;
     let wallet_type = req.body.wallet_type;
-    let jupitAddress = await checkJupitAddress(receipentAddress,wallet_type);
-
-    console.log('jupit',jupitAddress)
-    res.send(jupitAddress[0])
+    // let jupitAddress = await checkJupitAddress(receipentAddress,wallet_type);
+    let jupitAddress = await JupitCustomerCheck(receipentAddress,wallet_type);
+    console.log('jupit',jupitAddress.length)
+    if(jupitAddress.length > 0){
+        res.send('Internal Transfer')
+    }
+    else{
+        receipentAddress.send('BlockChain Transfer')
+    }
+    // res.send(jupitAddress)
 })
 
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
@@ -1233,6 +1240,8 @@ async function checkJupitAddress(address,wallet_type){
    return check;
   
 }
+
+
 async function AddFund(receipentAddress,amount){
 
 
@@ -1464,6 +1473,22 @@ function middlewareVerify(req,res,next){
 //    })
 //    return generateAutoFee;
 // }
+async function JupitCustomerCheck(addr,wallet){
+    let result = [];
+    return  await Usermodel.find({'btc_wallet.address':addr},function(err,docs){
+        if(err){
+            return [err]
+        }
+        else if(docs.length > 0){
+            return [docs]
+        }
+        else{
+            return [docs];
+        }
+    }).clone();
+    
+    
+}
 
 async function FailedUpdateEmail(addr,txid,subject){
     const mailData = {
