@@ -829,6 +829,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 })
 
 Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
+    console.log('Temi','React Got Here')
     let receipentAddress = req.body.receipent_address;
     let wallet_type = req.body.wallet_type;
     // let jupitAddress = await checkJupitAddress(receipentAddress,wallet_type);
