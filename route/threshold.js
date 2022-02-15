@@ -21,77 +21,77 @@ const transporter = nodemailer.createTransport({
 
 const Router  = express.Router();
 
-Router.post('/getautofee',(req,res)=>{
+// Router.post('/getautofee',(req,res)=>{
 
    
 
-    let rand = random(option_rand);
-    var option_rand = {
-            min: 48886
-            , max: 67889
-            , integer: true
-        }
-    function build(params, secret, t, r, postData) {
-        const p = params || [];
-        p.push(`t=${t}`, `r=${r}`);
-        if (!!postData) {
-            if (typeof postData === 'string') {
-                    p.push(postData);
-            } else {
-                    p.push(JSON.stringify(postData));
-            }
-        }
-        p.sort();
-        p.push(`secret=${secret}`);
-        return crypto.createHash('sha256').update(p.join('&')).digest('hex');
-    }
+//     let rand = random(option_rand);
+//     var option_rand = {
+//             min: 48886
+//             , max: 67889
+//             , integer: true
+//         }
+//     function build(params, secret, t, r, postData) {
+//         const p = params || [];
+//         p.push(`t=${t}`, `r=${r}`);
+//         if (!!postData) {
+//             if (typeof postData === 'string') {
+//                     p.push(postData);
+//             } else {
+//                     p.push(JSON.stringify(postData));
+//             }
+//         }
+//         p.sort();
+//         p.push(`secret=${secret}`);
+//         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
+//     }
 
-    var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
-    var time = Math.floor(new Date().getTime() / 1000)
-    // var postData = [{ "block_num": [1] }]
-    const params = ['{"block_nums":[1,50,100]}'];
+//     var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+//     var time = Math.floor(new Date().getTime() / 1000)
+//     // var postData = [{ "block_num": [1] }]
+//     const params = ['{"block_nums":[1,50,100]}'];
 
-    var CHECKSUM = build(params,secret,time,rand);
+//     var CHECKSUM = build(params,secret,time,rand);
 
 
-    const parameters = {
-        t:time,
-        r:rand,
-    }
+//     const parameters = {
+//         t:time,
+//         r:rand,
+//     }
     
-    const get_request_args = querystring.stringify(parameters);
+//     const get_request_args = querystring.stringify(parameters);
    
-    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/autofees?'+ get_request_args
+//     const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/autofees?'+ get_request_args
     
-    const new_params = {
-        "block_nums": [1,50,100]
-    }
-   axios.post(url,new_params,{
-        headers: {
-            'Content-Type': 'application/json',
-            'X-API-CODE':'4PiVpdbyLJZatLBwR',
-            'X-CHECKSUM':CHECKSUM,
-            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
-        }
-   })
-   .then((result)=>{
-       console.log(result.data['auto_fees'][0]['auto_fee'])
+//     const new_params = {
+//         "block_nums": [1,50,100]
+//     }
+//    axios.post(url,new_params,{
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-API-CODE':'4PiVpdbyLJZatLBwR',
+//             'X-CHECKSUM':CHECKSUM,
+//             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+//         }
+//    })
+//    .then((result)=>{
+//        console.log(result.data['auto_fees'][0]['auto_fee'])
         
-        res.send({
-           "message":result.data,
-            "status":true
-        })
+//         res.send({
+//            "message":result.data,
+//             "status":true
+//         })
         
-   })
-   .catch((err)=>{
-       console.log(err)
-    //    res.send({
-    //        "message":err,
-    //        "status":false
-    //    })
-       res.status(403).send(err);
-   })
-})
+//    })
+//    .catch((err)=>{
+//        console.log(err)
+//     //    res.send({
+//     //        "message":err,
+//     //        "status":false
+//     //    })
+//        res.status(403).send(err);
+//    })
+// })
 
 
 
@@ -1392,78 +1392,78 @@ function middlewareVerify(req,res,next){
     }
 }
 
- async function  getautofee(){
+//  async function  getautofee(){
     
-    let rand = random(option_rand);
-    var option_rand = {
-            min: 48886
-            , max: 67889
-            , integer: true
-        }
-    function build(params, secret, t, r, postData) {
-        const p = params || [];
-        p.push(`t=${t}`, `r=${r}`);
-        if (!!postData) {
-            if (typeof postData === 'string') {
-                    p.push(postData);
-            } else {
-                    p.push(JSON.stringify(postData));
-            }
-        }
-        p.sort();
-        p.push(`secret=${secret}`);
-        return crypto.createHash('sha256').update(p.join('&')).digest('hex');
-    }
+//     let rand = random(option_rand);
+//     var option_rand = {
+//             min: 48886
+//             , max: 67889
+//             , integer: true
+//         }
+//     function build(params, secret, t, r, postData) {
+//         const p = params || [];
+//         p.push(`t=${t}`, `r=${r}`);
+//         if (!!postData) {
+//             if (typeof postData === 'string') {
+//                     p.push(postData);
+//             } else {
+//                     p.push(JSON.stringify(postData));
+//             }
+//         }
+//         p.sort();
+//         p.push(`secret=${secret}`);
+//         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
+//     }
 
-    var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
-    var time = Math.floor(new Date().getTime() / 1000)
-    // var postData = [{ "block_num": [1] }]
-    const params = ['{"block_nums":[1,50,100]}'];
+//     var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+//     var time = Math.floor(new Date().getTime() / 1000)
+//     // var postData = [{ "block_num": [1] }]
+//     const params = ['{"block_nums":[1,50,100]}'];
 
-    var CHECKSUM = build(params,secret,time,rand);
+//     var CHECKSUM = build(params,secret,time,rand);
 
 
-    const parameters = {
-        t:time,
-        r:rand,
-    }
+//     const parameters = {
+//         t:time,
+//         r:rand,
+//     }
     
-    const get_request_args = querystring.stringify(parameters);
+//     const get_request_args = querystring.stringify(parameters);
    
-    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/autofees?'+ get_request_args
+//     const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/autofees?'+ get_request_args
     
-    const new_params = {
-        "block_nums": [1,50,100]
-    }
-    let generateAutoFee = await axios.post(url,new_params,{
-        headers: {
-            'Content-Type': 'application/json',
-            'X-API-CODE':'4PiVpdbyLJZatLBwR',
-            'X-CHECKSUM':CHECKSUM,
-            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
-        }
-   })
-   .then((result)=>{
-       console.log('GetAuto',result.data)
+//     const new_params = {
+//         "block_nums": [1,50,100]
+//     }
+//     let generateAutoFee = await axios.post(url,new_params,{
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-API-CODE':'4PiVpdbyLJZatLBwR',
+//             'X-CHECKSUM':CHECKSUM,
+//             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+//         }
+//    })
+//    .then((result)=>{
+//        console.log('GetAuto',result.data)
         
-        // res.send({
-        //    "message":result.data,
-        //     "status":true
-        // })
-        return [result.data,true]
+//         // res.send({
+//         //    "message":result.data,
+//         //     "status":true
+//         // })
+//         return [result.data,true]
         
-   })
+//    })
   
-   .catch((err)=>{
-    //    console.log(err)
-    //    res.send({
-    //        "message":err,
-    //        "status":false
-    //    })
-    return [err,false]
-   })
-   return generateAutoFee;
-}
+//    .catch((err)=>{
+//     //    console.log(err)
+//     //    res.send({
+//     //        "message":err,
+//     //        "status":false
+//     //    })
+//     return [err,false]
+//    })
+//    return generateAutoFee;
+// }
 
 async function FailedUpdateEmail(addr,txid,subject){
     const mailData = {
