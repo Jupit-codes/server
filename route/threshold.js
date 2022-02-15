@@ -838,7 +838,7 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
         res.send('Internal Transfer')
     }
     else{
-        receipentAddress.send('BlockChain Transfer')
+        res.send('BlockChain Transfer')
     }
     // res.send(jupitAddress)
 })
