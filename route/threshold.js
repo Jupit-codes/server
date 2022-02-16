@@ -860,22 +860,29 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             console.log('SubFundWalletII',SubFundToWallet)
             let AddFundToWallet = await AddFund(recipentAddress,parseFloat(amount).toFixed(8));
             if(AddFundToWallet){
-                res.json({
+                res.send({
                     "Message":'Transaction Was Successful',
-                    "Status":true
                 })
             }
             else{
-                res.json({
-                    "error":'Internal Server Error' + AddFundToWallet,
-                    "Status":false
+                // res.json({
+                //     "error":'Internal Server Error' + AddFundToWallet,
+                //     "Status":false
+                // })
+                res.status(403).send({
+                    "Message":"Internal Server Error"+ AddFundToWallet,
+                    
                 })
             }
         }
         else{
-            res.json({
-                "error":'Internal Server Error'+ SubFundToWallet,
-                "Status":false
+            // res.json({
+            //     "error":'Internal Server Error'+ SubFundToWallet,
+            //     "Status":false
+            // })
+            res.status(403).send({
+                "message":"Internal Server Error"+ SubFundToWallet,
+                
             })
         }
     }
