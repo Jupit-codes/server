@@ -102,7 +102,7 @@ router.post('/users/refresh',middlewareVerify,(req,res)=>{
             res.status(403).send(err)
         }
         if(docs){
-            console.log(docs)
+           
             res.send(docs)
         }
         else if(!docs){
