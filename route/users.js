@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
        auth: {
             user: 'hademylola@gmail.com',
-            pass: 'sxwoxbbomiivppxf',
+            pass: 'wrumrgkuoalcclmc',
          },
     secure: true,
     });
@@ -331,7 +331,7 @@ router.post('/users/register',(req,res)=>{
 
        try{
             const salt =  bcrypt.genSaltSync(10);
-            const user = await  Usermodel.create({
+            const user = await Usermodel.create({
             username:req.body.username,
             email:req.body.email,
             password: bcrypt.hashSync(req.body.password, salt),
