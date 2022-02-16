@@ -24,8 +24,6 @@ const Router  = express.Router();
 
 Router.post('/getautofee',(req,res)=>{
 
-   
-
     let rand = random(option_rand);
     var option_rand = {
             min: 48886
@@ -842,6 +840,20 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
         res.send('BlockChain Transfer')
     }
     // res.send(jupitAddress)
+})
+
+Router.post('/internal/transfer/asset/',middlewareVerify,(req,res)=>{
+    const user_id = req.body.id;
+    const wallet_type = req.body.wallet_type;
+    const amount = req.body.amount;
+    const recipentAddress = req.body.receipentAddress;
+    const block_average_fee = req.body.block_average;
+    const auto_fee = req.body.auto_fee;
+    const tranferType = req.body.transferType;
+    if(tranferType === "Internal Transfer"){
+        
+    }
+
 })
 
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{

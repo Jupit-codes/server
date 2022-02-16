@@ -93,6 +93,24 @@ router.get('/users',(req,res,next)=>{
     
 
 });
+
+router.post('/users/refresh',middlewareVerify,(req,res)=>{
+    Usermodel.findOne({_id:req.body.userid},function(err,docs){
+        if(err){
+            res.status(403).send(err)
+        }
+        if(docs){
+            console.log(docs)
+            res.send(docs)
+        }
+        else if(!docs){
+            res.status(403).send('User Not Found')
+        }
+    }).clone();
+})
+
+
+
 router.post('/users/login',(req,res)=>{
   console.log(req.body)
     Usermodel.findOne({email:req.body.email},async (err,docs)=>{
