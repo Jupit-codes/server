@@ -850,8 +850,8 @@ Router.post('/transfer/coin/',middlewareVerify,(req,res)=>{
     const block_average_fee = req.body.block_average;
     const auto_fee = req.body.networkFee;
     const tranferType = req.body.transferType;
-    wallet_type = req.body.wallet_type;
-    senderAddress = req.body.senderAddress
+    const wallet_type = req.body.wallet_type;
+    const senderAddress = req.body.senderAddress
     if(tranferType === "Internal Transfer"){
         let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,auto_fee,senderAddress,recipentAddress);
                             
