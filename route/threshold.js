@@ -839,7 +839,7 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     else{
         res.send('BlockChain Transfer')
     }
-    // res.send(jupitAddress)
+    
 })
 
 Router.post('/transfer/coin/',middlewareVerify,(req,res)=>{
