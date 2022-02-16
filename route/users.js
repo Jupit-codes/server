@@ -95,9 +95,9 @@ router.get('/users',(req,res,next)=>{
 });
 
 router.post('/users/refresh',middlewareVerify,(req,res)=>{
-    res.send(req.body);
+   
 
-    Usermodel.findOne({_id:req.body.userid},function(err,docs){
+    Usermodel.findOne({_id:req.body._id},function(err,docs){
         if(err){
             res.status(403).send(err)
         }
