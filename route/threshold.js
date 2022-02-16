@@ -842,16 +842,43 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     // res.send(jupitAddress)
 })
 
-Router.post('/internal/transfer/asset/',middlewareVerify,(req,res)=>{
-    const user_id = req.body.id;
+Router.post('/transfer/coin/',middlewareVerify,(req,res)=>{
+    const user_id = req.body.userid;
     const wallet_type = req.body.wallet_type;
     const amount = req.body.amount;
     const recipentAddress = req.body.receipentAddress;
     const block_average_fee = req.body.block_average;
-    const auto_fee = req.body.auto_fee;
+    const auto_fee = req.body.networkFee;
     const tranferType = req.body.transferType;
+    wallet_type = req.body.wallet_type;
+    senderAddress = req.body.senderAddress
     if(tranferType === "Internal Transfer"){
+        let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,auto_fee,senderAddress,recipentAddress);
+                            
         
+        
+        if(SubFundToWallet){
+            console.log('SubFundWalletII',SubFundToWallet)
+            let AddFundToWallet = await AddFund(recipentAddress,parseFloat(amount).toFixed(8));
+            if(AddFundToWallet){
+                res.json({
+                    "Message":'Transaction Was Successful',
+                    "Status":true
+                })
+            }
+            else{
+                res.json({
+                    "error":'Internal Server Error' + AddFundToWallet,
+                    "Status":false
+                })
+            }
+        }
+        else{
+            res.json({
+                "error":'Internal Server Error'+ SubFundToWallet,
+                "Status":false
+            })
+        }
     }
 
 })
