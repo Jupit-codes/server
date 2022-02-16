@@ -842,7 +842,7 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     
 })
 
-Router.post('/transfer/coin/',middlewareVerify,(req,res)=>{
+Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const user_id = req.body.userid;
     const wallet_type = req.body.wallet_type;
     const amount = req.body.amount;
