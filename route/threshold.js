@@ -898,12 +898,14 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 // })
 
                 res.send({
-                    "Message":"Transaction Initiated On BlockChain"
+                    "Message":"Transaction Initiated",
+                    "Status":true
                 })
             }
             else{
+                console.log(WalletCallback[0]);
                 res.json({
-                    "Message":WalletCallback[0],
+                    "Message":"Internal Server Error..",
                     "Status":false
                 })
             }
