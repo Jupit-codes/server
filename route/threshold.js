@@ -868,7 +868,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 //     "Status":false
                 // })
                 res.status(403).send({
-                    "Message":"Internal Server Error"+ AddFundToWallet,
+                    "Message":"Internal Server Error AddFund"+ AddFundToWallet,
                     
                 })
             }
@@ -879,7 +879,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             //     "Status":false
             // })
             res.status(403).send({
-                "message":"Internal Server Error"+ SubFundToWallet,
+                "message":"Internal Server Error SendFund"+ SubFundToWallet,
                 
             })
         }
