@@ -1358,7 +1358,7 @@ async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,
 
 
 async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
-    
+    console.log(fromAddress)
     let transactionSub =  await Usermodel.findOne({'btc_wallet.address':toAddress},async function(err,docs){
         if(err){
             
