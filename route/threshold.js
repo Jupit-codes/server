@@ -845,12 +845,13 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
 Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const user_id = req.body.userid;
     const wallet_type = req.body.wallet_type;
-    const amount = req.body.amount;
+    const amount = parseFloat(req.body.amount).toFixed(8);
     const recipentAddress = req.body.receipentAddress;
     const block_average_fee = req.body.block_average;
     const auto_fee = req.body.networkFee;
     const tranferType = req.body.transferType;
     const sender = req.body.senderAddress;
+   
     if(tranferType === "Internal Transfer"){
         let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,auto_fee,sender,recipentAddress);
                         
@@ -883,6 +884,35 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 
             })
         }
+    }
+    else if(tranferType === "BlockChain Transfer"){
+                let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
+                let totalAmount  = parseFloat(fee + amount).toFixed(8)
+        let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentAddress);
+        if(UpdateWalletBalances){
+            let WalletCallback =  await creditWalletAddress(user_id,sender,recipentAddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
+            if(WalletCallback[1]){
+                res.json({
+                    "Message":WalletCallback[0],
+                    "Status":true
+                })
+            }
+            else{
+                res.json({
+                    "Message":WalletCallback[0],
+                    "Status":false
+                })
+            }
+        
+        
+        } 
+        else{
+            res.json({
+                "error":"InternalServerError...UpdateWallet "+ UpdateWalletBalances,
+                "status":false,
+            })
+        }
+
     }
 
 })
@@ -1309,15 +1339,15 @@ async function AddFund(receipentAddress,amount){
 }
 
 async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,toAddress){
-    
-    let transactionSub =  await Usermodel.findOne({'btc_wallet.address':fromAddress},async function(err,docs){
-        if(err){
-            
-            return [err,false];
-        }
-        else if(docs){
+    console.log('USER_ID',user_id);
+    console.log('amount',amount);
+    console.log('currency',currency);
+    console.log('auto_fee',auto_fee);
+    console.log('fromAddresss',fromAddress);
+    console.log('toAddress',toAddress);
+   
            
-            let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
+    let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
                 if(err){
                     return [err,false]
                 }
@@ -1346,10 +1376,7 @@ async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,
             else{
                 return['Internal Server Error...UpdateWallet',true]
             }
-            
-        }
-    }).clone().catch(function(err){ return [err,false]});
-    
+     
     return transactionSub;
 }
 
