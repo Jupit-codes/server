@@ -1365,7 +1365,7 @@ async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
             return [err,false];
         }
         else if(docs){
-           
+            console.log('docsSendFundI',docs)
             let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
                 if(err){
                     return [err,false]
