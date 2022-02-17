@@ -892,9 +892,13 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
         if(UpdateWalletBalances){
             let WalletCallback =  await creditWalletAddress(user_id,sender,recipentAddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
             if(WalletCallback[1]){
-                res.json({
-                    "Message":WalletCallback[0],
-                    "Status":true
+                // res.json({
+                //     "Message":WalletCallback[0],
+                //     "Status":true
+                // })
+
+                res.send({
+                    "Message":"Transaction Initiated On BlockChain"
                 })
             }
             else{
