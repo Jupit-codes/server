@@ -923,6 +923,18 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
 
 })
 
+
+Router.post('/test/update', (req,res)=>{
+    const balance = req.body.balance;
+    const id = req.body.userid;
+    console.log(parseFloat(balance).toFixed(8))
+    const update = { balance:parseFloat(balance).toFixed(8) };
+Usermodel.findByIdAndUpdate(id,update,{new: true,
+    upsert: true,
+    rawResult: true // Return the raw result from the MongoDB driver
+  })
+})
+
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     const userid = req.body.userid;
     const wallets_type = req.body.wallet_type;
@@ -1132,7 +1144,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     // var secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
     var time = Math.floor(new Date().getTime() / 1000);
     var generate_order_id = generateuuID();
-    // console.log('Amount',amount);
+    console.log('Amount',amount);
     // console.log('AutoFee',auto_fee);
     // var newauto_fee = parseInt(auto_fee / 0.00000001);
     
@@ -1385,6 +1397,8 @@ async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,
      
     return transactionSub;
 }
+
+
 
 
 
