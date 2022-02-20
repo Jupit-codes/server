@@ -899,6 +899,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     else if(tranfertype === "BlockChain Transfer"){
                 let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
                 let totalAmount  = parseFloat(fee + amount).toFixed(8)
+                console.log(totalAmount)
+                return false;
         let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentaddress);
         if(UpdateWalletBalances){
             let WalletCallback =  await creditWalletAddress(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
