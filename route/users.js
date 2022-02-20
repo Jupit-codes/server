@@ -111,6 +111,10 @@ router.post('/users/refresh',middlewareVerify,(req,res)=>{
     }).clone();
 })
 
+router.post('/users/test',middlewareVerify,(req,res)=>{
+    console.log(req.body)
+})
+
 
 
 router.post('/users/login',(req,res)=>{
