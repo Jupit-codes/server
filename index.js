@@ -37,10 +37,13 @@ app.use(bodyParser.json());
 //     "Origin, X-Requested-With, Content-Type, Accept,Authorization");
 //     next();
 // });
-app.use(cors({
-  "origin":"*"
-}));
-app.options('*', cors())
+app.use(cors());
+
+const corsOptions = {
+  origin: true,
+  credentials: true
+}
+app.options('*', cors(corsOptions));
 app.use(helmet())
 app.use(morgan('combined'));
 
