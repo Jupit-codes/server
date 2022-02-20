@@ -5,6 +5,7 @@ import querystring from 'querystring';
 import random from 'random-number';
 import Usermodel from '../model/users.js';
 import Walletmodel from '../model/wallet_transactions.js'
+
 import { randomUUID } from 'crypto'
 import wallet_transactions from '../model/wallet_transactions.js';
 import nodemailer from 'nodemailer';
@@ -851,7 +852,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const auto_fee = req.body.networkFee;
     const tranferType = req.body.transferType;
     const sender = req.body.senderAddress;
-   
+   console.log(req.body);
     if(tranferType === "Internal Transfer"){
         let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,auto_fee,sender,recipentAddress);
                         
@@ -923,16 +924,31 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
 
 })
 
+Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
+    const address = req.body.address;
+    // Walletmodel.findById
+    Walletmodel.find({ $or: [{ from_address: address }, { to_address: address }] },function(err,docs){
+        if(err){
+            res.send({err});
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+
+})
+
 
 Router.post('/test/update', (req,res)=>{
     const balance = req.body.balance;
     const id = req.body.userid;
     console.log(parseFloat(balance).toFixed(8))
     const update = { balance:parseFloat(balance).toFixed(8) };
-Usermodel.findByIdAndUpdate(id,update,{new: true,
-    upsert: true,
-    rawResult: true // Return the raw result from the MongoDB driver
-  })
+//    let x =  Usermodel.findByIdAndUpdate(id,update,{new: true,
+//         upsert: true,
+//         rawResult: true // Return the raw result from the MongoDB driver
+//     });
+//     res.json(x)
 })
 
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
@@ -1465,6 +1481,10 @@ async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
                         from_address:fromAddress,
                         to_address:toAddress,
                         wallet_id:'MassSender'+user_id,
+                        state: "null",
+                        confirm_blocks:"null",
+                        processing_state:"null",
+                        read:"unread",
                         status:'Transaction Completed'
                 
                     })

@@ -49,6 +49,9 @@ const wallet_transactions = mongoose.Schema({
     status:{
         type:'String'
     },
+    read:{
+        type:'String'
+    },
 
     updated: { type: Date, default: Date.now() },
 })
