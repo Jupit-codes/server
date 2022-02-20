@@ -866,7 +866,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
   
    console.log(req.body);
 
-   return false
+ 
     
     if(tranfertype === "Internal Transfer"){
         
