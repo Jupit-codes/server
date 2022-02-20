@@ -1445,7 +1445,7 @@ async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
                 else{
                     
                     let oldValue = docs.btc_wallet[0].balance;
-                    let newValue =   oldValue - amount;
+                    let newValue =   parseFloat(oldValue) - parseFloat(amount);
                     console.log('newValue',newValue);
                    let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8),'address':fromAddress}}},function(err,docs){
                        if(err){
