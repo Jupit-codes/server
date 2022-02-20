@@ -32,8 +32,7 @@ const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/j
 app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://127.0.0.1:3000");
-    res.header("Access-Control-Allow-Methods : GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Authorization");
     next();
 });
