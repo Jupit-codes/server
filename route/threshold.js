@@ -854,20 +854,20 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const block_average_fee = req.body.networkFee;
 
 
-    console.log(req.body);
+   
     
-    // console.log("sender",sender);
-    // console.log("user_id",user_id);
-    // console.log("wallet_type",wallet_type);
-    // console.log("amount",amount);
-    // console.log("reciepentaddress",recipentaddress);
-    // console.log("auto_fee",auto_fee);
-    // console.log('transfertype',tranfertype)
+    console.log("sender",sender);
+    console.log("user_id",user_id);
+    console.log("wallet_type",wallet_type);
+    console.log("amount",amount);
+    console.log("reciepentaddress",recipentaddress);
+    console.log("auto_fee",auto_fee);
+    console.log('transfertype',tranfertype)
   
    
     
     if(tranfertype === "Internal Transfer"){
-        console.log('Here')
+        
         let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,block_average_fee,sender,recipentaddress);
                         
         if(SubFundToWallet){
