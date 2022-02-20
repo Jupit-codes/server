@@ -850,9 +850,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const wallet_type = req.body.wallet_type;
     const amount = parseFloat(req.body.amount).toFixed(8);
     const recipentaddress = req.body.recipentaddress;
-    const auto_fee = req.body.networkFee;
     const tranfertype = req.body.tranfertype
-
+    const block_average_fee = req.body.networkFee;
     console.log("sender",sender);
     console.log("user_id",user_id);
     console.log("wallet_type",wallet_type);
@@ -865,7 +864,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     
     if(tranfertype === "Internal Transfer"){
         
-        let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,auto_fee,sender,recipentaddress);
+        let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,block_average_fee,sender,recipentaddress);
                         
         if(SubFundToWallet){
             console.log('SubFundWalletII',SubFundToWallet)
@@ -894,9 +893,9 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     else if(req.body.tranferType === "BlockChain Transfer"){
                 let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
                 let totalAmount  = parseFloat(fee + amount).toFixed(8)
-        let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentAddress);
+        let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentaddress);
         if(UpdateWalletBalances){
-            let WalletCallback =  await creditWalletAddress(user_id,sender,recipentAddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
+            let WalletCallback =  await creditWalletAddress(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
             if(WalletCallback[1]){
                 // res.json({
                 //     "Message":WalletCallback[0],
