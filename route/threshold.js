@@ -876,10 +876,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 })
             }
             else{
-                // res.json({
-                //     "error":'Internal Server Error' + AddFundToWallet,
-                //     "Status":false
-                // })
+               
                 res.status(403).send({
                     "Message":"Internal Server Error AddFund"+ AddFundToWallet,
                     
@@ -887,10 +884,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             }
         }
         else{
-            // res.json({
-            //     "error":'Internal Server Error'+ SubFundToWallet,
-            //     "Status":false
-            // })
+           
             res.status(403).send({
                 "message":"Internal Server Error SendFund"+ SubFundToWallet,
                 
