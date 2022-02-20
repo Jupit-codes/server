@@ -852,13 +852,13 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const recipentaddress = req.body.recipentaddress;
     const tranfertype = req.body.tranfertype
     const block_average_fee = req.body.networkFee;
-    console.log("sender",sender);
-    console.log("user_id",user_id);
-    console.log("wallet_type",wallet_type);
-    console.log("amount",amount);
-    console.log("reciepentaddress",recipentaddress);
-    console.log("auto_fee",auto_fee);
-    console.log('transfertype',tranfertype)
+    // console.log("sender",sender);
+    // console.log("user_id",user_id);
+    // console.log("wallet_type",wallet_type);
+    // console.log("amount",amount);
+    // console.log("reciepentaddress",recipentaddress);
+    // console.log("auto_fee",auto_fee);
+    // console.log('transfertype',tranfertype)
   
    
     
