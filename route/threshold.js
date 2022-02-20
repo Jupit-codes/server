@@ -890,7 +890,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             })
         }
     }
-    else if(req.body.tranferType === "BlockChain Transfer"){
+    else if(tranfertype === "BlockChain Transfer"){
                 let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
                 let totalAmount  = parseFloat(fee + amount).toFixed(8)
         let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentaddress);
