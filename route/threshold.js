@@ -863,7 +863,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
    
     
     if(tranfertype === "Internal Transfer"){
-        
+        console.log(req.body)
         let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,block_average_fee,sender,recipentaddress);
                         
         if(SubFundToWallet){
