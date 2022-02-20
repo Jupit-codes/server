@@ -11,6 +11,7 @@ import wallet_transactions from '../model/wallet_transactions.js';
 import nodemailer from 'nodemailer';
 
 
+
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtp.gmail.com",
@@ -845,20 +846,30 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
 
 Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const user_id = req.body.userid;
+    const sender = req.body.senderaddress;
     const wallet_type = req.body.wallet_type;
     const amount = parseFloat(req.body.amount).toFixed(8);
-    const recipentAddress = req.body.receipentAddress;
-    const block_average_fee = req.body.block_average;
+    const recipentaddress = req.body.recipentaddress;
     const auto_fee = req.body.networkFee;
-    const tranferType = req.body.transferType;
-    const sender = req.body.senderAddress;
-   console.log(req.body);
-    if(tranferType === "Internal Transfer"){
-        let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,auto_fee,sender,recipentAddress);
+    const tranfertype = req.body.tranfertype
+
+    console.log("sender",sender);
+    console.log("user_id",user_id);
+    console.log("wallet_type",wallet_type);
+    console.log("amount",amount);
+    console.log("reciepentaddress",recipentaddress);
+    console.log("auto_fee",auto_fee);
+    console.log('transfertype',tranfertype)
+  
+   
+    
+    if(tranfertype === "Internal Transfer"){
+        
+        let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,auto_fee,sender,recipentaddress);
                         
         if(SubFundToWallet){
             console.log('SubFundWalletII',SubFundToWallet)
-            let AddFundToWallet = await AddFund(recipentAddress,parseFloat(amount).toFixed(8));
+            let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8));
             if(AddFundToWallet){
                 res.send({
                     "Message":'Transaction Was Successful',
@@ -886,7 +897,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             })
         }
     }
-    else if(tranferType === "BlockChain Transfer"){
+    else if(req.body.tranferType === "BlockChain Transfer"){
                 let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
                 let totalAmount  = parseFloat(fee + amount).toFixed(8)
         let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentAddress);
@@ -921,6 +932,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
         }
 
     }
+    
 
 })
 
@@ -1425,6 +1437,7 @@ async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
     console.log('userid',user_id)
     console.log('amount',amount)
     console.log('auto_fee',auto_fee)
+    console.log('to',toAddress)
     let transactionSub =  await Usermodel.findOne({'btc_wallet.address':toAddress},async function(err,docs){
         if(err){
             
