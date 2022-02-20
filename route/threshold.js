@@ -867,7 +867,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
         let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,block_average_fee,sender,recipentaddress);
                         
         if(SubFundToWallet){
-            console.log('SubFundWalletII',SubFundToWallet)
+            
             let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8));
             if(AddFundToWallet){
                 res.send({
@@ -1451,8 +1451,11 @@ async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
                        if(err){
                             return [err,false]
                        }
-                       else{
+                       else if(docs){
                         return ['updated',true]
+                       }
+                       else{
+                        return ['Empty',false]
                        }
                    }).clone().catch(function(err){ return [err,false]});
                     
