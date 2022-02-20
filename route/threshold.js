@@ -909,19 +909,21 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             }
             else{
                 console.log(WalletCallback[0]);
-                res.json({
-                    "Message":"Internal Server Error..",
-                    "Status":false
-                })
+                res.status(403).send("Internal Server Error..")
+                // res.json({
+                //     "Message":"Internal Server Error..",
+                //     "Status":false
+                // })
             }
         
         
         } 
         else{
-            res.json({
-                "error":"InternalServerError...UpdateWallet "+ UpdateWalletBalances,
-                "status":false,
-            })
+            res.status(403).send("Internal Server Error.."+ UpdateWalletBalances)
+            // res.json({
+            //     "error":"InternalServerError...UpdateWallet "+ UpdateWalletBalances,
+            //     "status":false,
+            // })
         }
 
     }
