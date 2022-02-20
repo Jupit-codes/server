@@ -851,16 +851,22 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const amount = parseFloat(req.body.amount).toFixed(8);
     const recipentaddress = req.body.receipentaddress;
     const tranfertype = req.body.transfertype
-    const block_average_fee = req.body.networkFee;
+    const networkFee = req.body.networkFee
+    const block_average_fee = req.body.block_average;
+
+
     
-    console.log("sender",sender);
-    console.log("user_id",user_id);
-    console.log("wallet_type",wallet_type);
-    console.log("amount",amount);
-    console.log("reciepentaddress",recipentaddress);
-    console.log('transfertype',tranfertype)
+    
+    // console.log("sender",sender);
+    // console.log("user_id",user_id);
+    // console.log("wallet_type",wallet_type);
+    // console.log("amount",amount);
+    // console.log("reciepentaddress",recipentaddress);
+    // console.log('transfertype',tranfertype)
   
-   
+   console.log(req.body);
+
+   return false
     
     if(tranfertype === "Internal Transfer"){
         
@@ -897,10 +903,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
         if(UpdateWalletBalances){
             let WalletCallback =  await creditWalletAddress(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
             if(WalletCallback[1]){
-                // res.json({
-                //     "Message":WalletCallback[0],
-                //     "Status":true
-                // })
+              
 
                 res.send({
                     "Message":"Transaction Initiated",
@@ -1167,7 +1170,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     // var secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
     var time = Math.floor(new Date().getTime() / 1000);
     var generate_order_id = generateuuID();
-    console.log('Amount',amount);
+   
     // console.log('AutoFee',auto_fee);
     // var newauto_fee = parseInt(auto_fee / 0.00000001);
     
