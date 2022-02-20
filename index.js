@@ -38,6 +38,7 @@ app.use(bodyParser.json());
 //     next();
 // });
 app.use(cors());
+app.options('*', cors())
 app.use(helmet())
 app.use(morgan('combined'));
 
