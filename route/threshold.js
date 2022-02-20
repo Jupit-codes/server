@@ -849,12 +849,9 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const sender = req.body.senderaddress;
     const wallet_type = req.body.wallet_type;
     const amount = parseFloat(req.body.amount).toFixed(8);
-    const recipentaddress = req.body.recipentaddress;
-    const tranfertype = req.body.tranfertype
+    const recipentaddress = req.body.receipentaddress;
+    const tranfertype = req.body.transfertype
     const block_average_fee = req.body.networkFee;
-
-
-   
     
     console.log("sender",sender);
     console.log("user_id",user_id);
