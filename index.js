@@ -31,11 +31,13 @@ const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/j
 
 app.use(bodyParser.json());
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Authorization");
-    next();
-});
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", 
+//     "Origin, X-Requested-With, Content-Type, Accept,Authorization");
+//     next();
+// });
+app.use(cors());
 app.use(helmet())
 app.use(morgan('combined'));
 
