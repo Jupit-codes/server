@@ -862,7 +862,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     // console.log("wallet_type",wallet_type);
     // console.log("amount",amount);
     // console.log("reciepentaddress",recipentaddress);
-    // console.log('transfertype',tranfertype)
+    console.log('BlockAverage',block_average_fee)
   
    console.log(req.body);
 
