@@ -861,7 +861,6 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     console.log("wallet_type",wallet_type);
     console.log("amount",amount);
     console.log("reciepentaddress",recipentaddress);
-    console.log("auto_fee",auto_fee);
     console.log('transfertype',tranfertype)
   
    
