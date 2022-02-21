@@ -898,7 +898,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     amount:amount,
                     status:'Completed',
                     read:'unread',
-                    initiator:'sender',
+                    initiator:'receiver',
                     recipentaddress:recipentaddress,
                 })
                 res.send({
