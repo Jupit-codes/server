@@ -994,9 +994,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
     const addressBTC = req.body.addressBTC;
     const addressUSDT = req.body.addressUSDT;
 
-    res.send(req.body)
-    // Walletmodel.findById
-    Notification.find({ $or: [{ from_address: address }, { to_address: address }] },function(err,docs){
+    Notification.find({ $or: [{ senderaddress: addressBTC }, { recipientaddress: addressBTC },{ senderaddress: addressUSDT }, { recipientaddress: addressUSDT }] },function(err,docs){
         if(err){
             res.send({err});
         }
