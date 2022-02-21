@@ -6,6 +6,9 @@ const notification = mongoose.Schema({
         type:'String',
        
     },
+    asset:{
+        type:'String'  
+    },
     from_address:{
         type:'String',
     

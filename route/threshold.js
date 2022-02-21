@@ -877,7 +877,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8));
             if(AddFundToWallet){
                 Notification.create({
-                    type:wallet_type,
+                    type:tranfertype,
+                    asset:wallet_type,
                     from_address:sender,
                     to_address:recipentaddress,
                     amount:amount,
