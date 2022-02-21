@@ -497,7 +497,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 
                     Notification.create({
                         type:req.body.type,
-                        transfertype:tranfertype,
+                        transfertype:'BlockChain Transfer',
                         asset:currency,
                         from_address:req.body.from_address,
                         to_address:req.body.to_address,
@@ -569,7 +569,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 
                         Notification.create({
                             type:req.body.type,
-                            transfertype:tranfertype,
+                            transfertype:'BlockChain Transfer',
                             asset:currency,
                             from_address:req.body.from_address,
                             to_address:req.body.to_address,
