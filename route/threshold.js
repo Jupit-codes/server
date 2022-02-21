@@ -5,7 +5,7 @@ import querystring from 'querystring';
 import random from 'random-number';
 import Usermodel from '../model/users.js';
 import Walletmodel from '../model/wallet_transactions.js'
-
+import Notification from '../model/notification.js';
 import { randomUUID } from 'crypto'
 import wallet_transactions from '../model/wallet_transactions.js';
 import nodemailer from 'nodemailer';
@@ -876,6 +876,15 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             
             let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8));
             if(AddFundToWallet){
+                Notification.create({
+                    type:wallet_type,
+                    from_address:sender,
+                    to_address:recipentaddress,
+                    amount:amount,
+                    status:'Completed',
+                    read_sender:'unread',
+                    read_receipent:'unread',
+                })
                 res.send({
                     "Message":'Transaction Was Successful',
                 })
@@ -939,7 +948,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
 Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
     const address = req.body.address;
     // Walletmodel.findById
-    Walletmodel.find({ $or: [{ from_address: address }, { to_address: address }] },function(err,docs){
+    Notification.find({ $or: [{ from_address: address }, { to_address: address }] },function(err,docs){
         if(err){
             res.send({err});
         }
