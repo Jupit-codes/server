@@ -897,7 +897,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 // console.log('2',req.body.recipentaddress)
                 Notification.create({
                     type:2,
-                    orderid:'N/A',
+                    orderid:sender,
                     transfertype:tranfertype,
                     asset:wallet_type,
                     from_address:sender,
@@ -910,7 +910,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 })
                 Notification.create({
                     type:1,
-                    orderid:'N/A',
+                    orderid:recipentaddress,
                     transfertype:tranfertype,
                     asset:wallet_type,
                     from_address:sender,
@@ -997,7 +997,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
 Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
     const addressBTC = req.body.addressBTC;
     const addressUSDT = req.body.addressUSDT;
-
+    
     Notification.find({ $or: [{ senderaddress: addressBTC }, { recipientaddress: addressBTC },{ senderaddress: addressUSDT }, { recipientaddress: addressUSDT }] },function(err,docs){
         if(err){
             res.send({err});
@@ -1005,7 +1005,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
         else if(docs){
             res.send(docs)
         }
-    })
+    }).limit(5).sort('-updated')
 
 })
 
