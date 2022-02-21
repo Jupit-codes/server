@@ -862,9 +862,9 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     // console.log("wallet_type",wallet_type);
     // console.log("amount",amount);
     // console.log("reciepentaddress",recipentaddress);
-    console.log('BlockAverage',block_average_fee)
+//     console.log('BlockAverage',block_average_fee)
   
-   console.log(req.body);
+//    console.log(req.body);
 
  
     
@@ -876,6 +876,9 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             
             let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8));
             if(AddFundToWallet){
+
+                console.log('1',recipentaddress)
+                console.log('2',req.body.recipentaddress)
                 Notification.create({
                     type:tranfertype,
                     asset:wallet_type,
