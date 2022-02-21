@@ -899,7 +899,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     status:'Completed',
                     read:'unread',
                     initiator:'receiver',
-                    recipentaddress:recipentaddress,
+                    recipientaddress:recipentaddress,
                 })
                 res.send({
                     "Message":'Transaction Was Successful',
