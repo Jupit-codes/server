@@ -1460,7 +1460,7 @@ async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
                 }
                 else{
                     
-                    let oldValue = docs.btc_wallet[0].balance.$numberDecimal;
+                    let oldValue = docs.btc_wallet[0].balance;
                     let newValue =   parseFloat(oldValue) - parseFloat(amount);
                     console.log('oldValue',oldValue);
                     
