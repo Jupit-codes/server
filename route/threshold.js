@@ -991,7 +991,10 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
 })
 
 Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
-    const address = req.body.address;
+    const addressBTC = req.body.addressBTC;
+    const addressUSDT = req.body.addressUSDT;
+
+    res.send(req.body)
     // Walletmodel.findById
     Notification.find({ $or: [{ from_address: address }, { to_address: address }] },function(err,docs){
         if(err){
