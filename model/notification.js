@@ -20,13 +20,13 @@ const notification = mongoose.Schema({
     amount:{
         type:'String'
     },
+    userid:{
+        type:'String'
+    },
     status:{
         type:'String'
     },
-    read_sender:{
-        type:'String'
-    },
-    read_receipent:{
+    read:{
         type:'String'
     },
     updated: { type: Date, default: Date.now() },

@@ -829,7 +829,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 })
 
 Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
-    console.log('Temi','React Got Here')
+    
     let receipentAddress = req.body.receipent_address;
     let wallet_type = req.body.wallet_type;
     // let jupitAddress = await checkJupitAddress(receipentAddress,wallet_type);
@@ -877,8 +877,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8));
             if(AddFundToWallet){
 
-                console.log('1',recipentaddress)
-                console.log('2',req.body.recipentaddress)
+                // console.log('1',recipentaddress)
+                // console.log('2',req.body.recipentaddress)
                 Notification.create({
                     type:tranfertype,
                     asset:wallet_type,
@@ -886,8 +886,18 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     to_address:recipentaddress,
                     amount:amount,
                     status:'Completed',
-                    read_sender:'unread',
-                    read_receipent:'unread',
+                    read:'unread',
+                    senderaddress:sender,
+                })
+                Notification.create({
+                    type:tranfertype,
+                    asset:wallet_type,
+                    from_address:sender,
+                    to_address:recipentaddress,
+                    amount:amount,
+                    status:'Completed',
+                    read:'unread',
+                    recipentaddress:recipentaddress,
                 })
                 res.send({
                     "Message":'Transaction Was Successful',
