@@ -9,6 +9,7 @@ import Notification from '../model/notification.js';
 import { randomUUID } from 'crypto'
 import wallet_transactions from '../model/wallet_transactions.js';
 import nodemailer from 'nodemailer';
+import { Route } from 'express';
 
 
 
@@ -1009,6 +1010,16 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
 
 })
 
+Router.post('/notification/details',middlewareVerify,(req,res)=>{
+    Notification.findOne({orderid:req.body.orderid},function(err,docs){
+        if(err){
+            res.status(403).send(err)
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+})
 
 Router.post('/test/update', (req,res)=>{
     const balance = req.body.balance;
