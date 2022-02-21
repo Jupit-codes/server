@@ -495,19 +495,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         status:'Processing'
                     });
 
-                    Notification.create({
-                        type:req.body.type,
-                        transfertype:'BlockChain Transfer',
-                        asset:req.body.currency,
-                        from_address:req.body.from_address,
-                        to_address:req.body.to_address,
-                        amount:req.body.amount,
-                        status:'Processing',
-                        read:'unread',
-                        initiator:'sender',
-                        senderaddress:req.body.from_address,
-                    })
-                    
+                   
 
                     console.log('1st Notification Saved Widthrawal',req.body)
                     res.sendStatus(200);
@@ -569,6 +557,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 
                         Notification.create({
                             type:req.body.type,
+                            orderid:req.body.orderid,
                             transfertype:'BlockChain Transfer',
                             asset:req.body.currency,
                             from_address:req.body.from_address,
@@ -908,6 +897,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 // console.log('2',req.body.recipentaddress)
                 Notification.create({
                     type:2,
+                    orderid:'N/A',
                     transfertype:tranfertype,
                     asset:wallet_type,
                     from_address:sender,
@@ -920,6 +910,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 })
                 Notification.create({
                     type:1,
+                    orderid:'N/A',
                     transfertype:tranfertype,
                     asset:wallet_type,
                     from_address:sender,
@@ -960,7 +951,20 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             let WalletCallback =  await creditWalletAddress(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
             if(WalletCallback[1]){
               
-
+                Notification.create({
+                    type:1,
+                    orderid:'N/A',
+                    transfertype:tranfertype,
+                    asset:wallet_type,
+                    from_address:sender,
+                    to_address:recipentaddress,
+                    amount:amount,
+                    status:'Processing',
+                    read:'unread',
+                    initiator:'sender',
+                    senderaddress:sender,
+                })
+                
                 res.send({
                     "Message":"Transaction Initiated",
                     "Status":true

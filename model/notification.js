@@ -6,6 +6,9 @@ const notification = mongoose.Schema({
         type:'String',
        
     },
+    orderid:{
+        type:'String'
+    },
     transfertype:{
         type:'String',
     },
