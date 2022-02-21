@@ -29,4 +29,4 @@ const notification = mongoose.Schema({
 // module.exports = User;
 
 // module.exports = mongoose.model('User',userSchema)
-export default mongoose.model('notification', notification);
+export default mongoose.model('notifications', notification);
