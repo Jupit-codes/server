@@ -952,7 +952,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             if(WalletCallback[1]){
               
                 Notification.create({
-                    type:1,
+                    type:2,
                     orderid:'N/A',
                     transfertype:tranfertype,
                     asset:wallet_type,
