@@ -35,7 +35,7 @@ const notification = mongoose.Schema({
     senderaddress:{
         type:'String'
     },
-    recipentaddress:{
+    recipientaddress:{
         type:'String'
     },
     updated: { type: Date, default: Date.now() },
