@@ -887,6 +887,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     amount:amount,
                     status:'Completed',
                     read:'unread',
+                    initiator:'sender',
                     senderaddress:sender,
                 })
                 Notification.create({
@@ -897,6 +898,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     amount:amount,
                     status:'Completed',
                     read:'unread',
+                    initiator:'sender',
                     recipentaddress:recipentaddress,
                 })
                 res.send({
