@@ -13,6 +13,10 @@ const notification = mongoose.Schema({
         type:'String',
     
     }, 
+    to_address:{
+        type:'String',
+    
+    }, 
     amount:{
         type:'String'
     },
