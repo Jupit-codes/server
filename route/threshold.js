@@ -1232,14 +1232,15 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     // var newauto_fee = parseInt(auto_fee / 0.00000001);
     
     // console.log('newAuto',newauto_fee)
-  
+    // "order_id": "187795_"+generate_order_id,
+    console.log('OrderID',"187795_"+userid)
     var params = {
         "requests": [
           {
-            "order_id": "187795_"+generate_order_id,
+            "order_id": "187795_"+userid,
             "address": recipentAddress,
             "amount": amount,
-            "memo": "memo-"+userid,
+            "memo": address,
             "user_id": userid,
             "message": "message-"+userid,
             "block_average_fee": block_average_fee
