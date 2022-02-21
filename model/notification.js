@@ -6,6 +6,9 @@ const notification = mongoose.Schema({
         type:'String',
        
     },
+    transfertype:{
+        type:'String',
+    },
     asset:{
         type:'String'  
     },

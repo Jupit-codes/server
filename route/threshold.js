@@ -494,7 +494,21 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         token_address:req.body.token_address,
                         status:'Processing'
                     });
+
+                    Notification.create({
+                        type:req.body.type,
+                        transfertype:tranfertype,
+                        asset:currency,
+                        from_address:req.body.from_address,
+                        to_address:req.body.to_address,
+                        amount:req.body.amount,
+                        status:'Processing',
+                        read:'unread',
+                        initiator:'sender',
+                        senderaddress:req.body.from_address,
+                    })
                     
+
                     console.log('1st Notification Saved Widthrawal',req.body)
                     res.sendStatus(200);
                     
@@ -552,6 +566,19 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             token_address:req.body.token_address,
                             status:'Transaction Completed'
                         });
+
+                        Notification.create({
+                            type:req.body.type,
+                            transfertype:tranfertype,
+                            asset:currency,
+                            from_address:req.body.from_address,
+                            to_address:req.body.to_address,
+                            amount:req.body.amount,
+                            status:'Transaction Completed',
+                            read:'unread',
+                            initiator:'sender',
+                            senderaddress:req.body.from_address,
+                        })
    
                     }
                     console.log('Transaction Completed',req.body)
@@ -880,7 +907,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 // console.log('1',recipentaddress)
                 // console.log('2',req.body.recipentaddress)
                 Notification.create({
-                    type:tranfertype,
+                    type:2,
+                    transfertype:tranfertype,
                     asset:wallet_type,
                     from_address:sender,
                     to_address:recipentaddress,
@@ -891,7 +919,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     senderaddress:sender,
                 })
                 Notification.create({
-                    type:tranfertype,
+                    type:1,
+                    transfertype:tranfertype,
                     asset:wallet_type,
                     from_address:sender,
                     to_address:recipentaddress,
