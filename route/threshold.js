@@ -953,7 +953,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
               
                 Notification.create({
                     type:2,
-                    orderid:'N/A',
+                    orderid:WalletCallback[2],
                     transfertype:tranfertype,
                     asset:wallet_type,
                     from_address:sender,
@@ -1237,11 +1237,11 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     
     // console.log('newAuto',newauto_fee)
     // "order_id": "187795_"+generate_order_id,
-    console.log('OrderID',"187795_"+userid)
+   
     var params = {
         "requests": [
           {
-            "order_id": "187795_"+userid,
+            "order_id": "187795_"+generate_order_id,
             "address": recipentAddress,
             "amount": amount,
             "memo": address,
@@ -1280,7 +1280,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
    })
    .then((result)=>{
     
-        return([result.data,true])
+        return([result.data,true,generate_order_id])
         // let jupitPromise = new Promise(function(resolve,reject){
         //     isTrue = true;
         //     if(isTrue){
