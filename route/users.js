@@ -2,6 +2,7 @@ import express from "express";
 import Usermodel from '../model/users.js';
 import KycModel from '../model/kyc.js';
 import WebHook from "../model/webhook.js";
+import Kyc from '../model/kyc.js'
 import axios from "axios";
 import crypto from 'crypto';
 import querystring from 'querystring';
@@ -127,7 +128,7 @@ router.post('/users/login',(req,res)=>{
             })
         }
         else if(docs){
-
+            
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
             console.log(validPassword)
             if (validPassword) {
@@ -328,6 +329,17 @@ router.post('/users/register',(req,res)=>{
         }
     })
 
+    router.post('kyc/fetch',(req,res)=>{
+        // console.log(req.body)
+        Kyc.findById(req.body.userid,function(err,docs){
+            if(err){
+                res.status(403).send(err);
+            }
+            else if(docs){
+                res.send(docs)
+            }
+        })
+    })
     
    async function createUser(){
 
