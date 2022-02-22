@@ -1201,6 +1201,13 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
     
 });
 
+Router.post('/update/read',middlewareVerify,(req,res)=>{
+
+    res.send(req.body)
+
+
+})
+
 async function creditWalletAddress(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
     let secret="";
     let apikey = "";
