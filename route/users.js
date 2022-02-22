@@ -26,9 +26,22 @@ const transporter = nodemailer.createTransport({
 
 const router = express.Router();
 
-router.get('/',(req,res)=>{
+router.get('/kyc',(req,res)=>{
     res.send('Welcome to jupit server');
 });
+
+router.post('/users/kyc',middlewareVerify,(req,res)=>{
+   
+    Kyc.findOne({userid:req.body.userid},function(err,docs){
+        if(err){
+            res.status(403).send(err);
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+})
+
 
 router.get('/users/test',middlewareVerify,(req,res)=>{
     res.json({
@@ -329,17 +342,7 @@ router.post('/users/register',(req,res)=>{
         }
     })
 
-    router.post('kyc/fetch',(req,res)=>{
-        // console.log(req.body)
-        Kyc.findById(req.body.userid,function(err,docs){
-            if(err){
-                res.status(403).send(err);
-            }
-            else if(docs){
-                res.send(docs)
-            }
-        })
-    })
+    
     
    async function createUser(){
 
