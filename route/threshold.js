@@ -1205,17 +1205,18 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
 
 Router.post('/update/read',middlewareVerify,(req,res)=>{
     
+    let data = false
     req.body.forEach(d=>{
         Notification.findByIdAndUpdate(d,{"read":"read"},function(err,result){
             if(err){
                 console.log('MyError',err);
-            }
-            else if(result){
-                
-                res.send('Updated');
+                res.status(403).send(err)
+
             }
         })
     })
+
+    res.send('Updated');
 
 
 })
