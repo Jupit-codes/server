@@ -1202,9 +1202,9 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
 });
 
 Router.post('/update/read',middlewareVerify,(req,res)=>{
-    console.log(req.body.id)
-    req.body.id.forEach(d=>{
-        Notification.findByIdAndUpdate({d},{"read":"read"},function(err,result){
+    console.log(req.body)
+    req.body.forEach(d=>{
+        Notification.findByIdAndUpdate(d,{"read":"read"},function(err,result){
             if(err){
                 console.log(err);
             }
