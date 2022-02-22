@@ -1004,7 +1004,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
             res.send({err});
         }
         else if(docs){
-            console.log("docs Checksssss",docs)
+            
             res.send(docs)
            
         }
