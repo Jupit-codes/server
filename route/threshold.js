@@ -1208,7 +1208,7 @@ Router.post('/update/read',middlewareVerify,(req,res)=>{
     req.body.forEach(d=>{
         Notification.findByIdAndUpdate(d,{"read":"read"},function(err,result){
             if(err){
-                console.log(err);
+                console.log('MyError',err);
             }
             else if(result){
                 
