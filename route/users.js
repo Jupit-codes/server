@@ -671,16 +671,14 @@ router.post('/users/validate/acountnumber',(req,res)=>{
        
          if(result.data.message === "Account number resolved"){
              res.send({
-                 "Message":"Resolved"
+                 "Message":" Account Resolved"
              })
          }
          
         console.log(result.data)
     })
     .catch((err)=>{
-        res.send({
-            "Message":"Failed"
-        })
+        res.status(403).send('Account Unresolved')
         console.log(err)
     })
 
