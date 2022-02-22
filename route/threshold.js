@@ -1005,6 +1005,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
         }
         else if(docs){
             res.send(docs)
+            console.log('Delivered')
         }
     }).limit(5).sort('updated')
 
