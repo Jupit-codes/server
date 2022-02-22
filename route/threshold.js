@@ -1011,7 +1011,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
 })
 
 Router.post('/notification/details',middlewareVerify,(req,res)=>{
-    Notification.findOne({_id:req.body.orderid},function(err,docs){
+    Notification.findOne({_id:req.body.userid},function(err,docs){
         if(err){
             res.status(403).send(err)
         }
