@@ -652,12 +652,12 @@ function createCustomerCode(kyc_id,email,phonenumber){
 }
 
 
-router.post('/users/validate/acountnumber',(req,res)=>{
+router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
     const account_number = req.body.account_number;
-    const bankcode = req.body.bankcode;
+    const bankcode = req.body.bank_code;
     const parameters = {
         account_number:account_number,
-        bank_code:bankcode,
+        bank_code:bank_code,
     }
     const get_request_args = querystring.stringify(parameters);
     const url = "https://api.paystack.co/bank/resolve?"+get_request_args
@@ -671,11 +671,12 @@ router.post('/users/validate/acountnumber',(req,res)=>{
        
          if(result.data.message === "Account number resolved"){
              res.send({
-                 "Message":" Account Resolved"
+                 "Message":" Account Resolved",
+                 "data":result.data
              })
          }
          
-        console.log(result.data)
+       
     })
     .catch((err)=>{
         res.status(403).send('Account Unresolved')
