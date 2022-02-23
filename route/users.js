@@ -672,7 +672,7 @@ router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
          if(result.data.message === "Account number resolved"){
              res.send({
                  "Message":" Account Resolved",
-                 "data":result
+                 "data":result.data
              })
          }
          
