@@ -654,7 +654,7 @@ function createCustomerCode(kyc_id,email,phonenumber){
 
 router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
     const account_number = req.body.account_number;
-    const bankcode = req.body.bank_code;
+    const bank_code = req.body.bank_code;
     const parameters = {
         account_number:account_number,
         bank_code:bank_code,
