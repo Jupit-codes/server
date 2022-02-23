@@ -668,11 +668,11 @@ router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
         }
     })
     .then(result=>{
-       
+       console.log(result)
          if(result.data.message === "Account number resolved"){
              res.send({
                  "Message":" Account Resolved",
-                 "data":result.data
+                 "data":result
              })
          }
          
