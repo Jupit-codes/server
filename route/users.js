@@ -688,7 +688,7 @@ router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
 
 
 
-router.post('/users/validate/bvntoaccount/kyc/level2',async(req,res)=>{
+router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(req,res)=>{
 
 
     const account_number = req.body.account_number;
