@@ -694,68 +694,79 @@ router.post('/users/validate/bvntoaccount/kyc/level2',async(req,res)=>{
     const account_number = req.body.account_number;
     const bankcode = req.body.bankcode;
     const bvn = req.body.bvn;
-    const customer_code = req.body.customer_code
+    // const customer_code = req.body.customer_code
     const emailaddress = req.body.email
     // console.log(account_number,bankcode,bvn,customer_code)
 
     let CreateCustomerCode = await customer_code_fetch(emailaddress)
-
-    const url = `https://api.paystack.co/customer/${customer_code}/identification`;
-    const params={
-        "country": "NG",
-        "type": "bank_account",
-        "account_number": account_number,
-        "bvn": bvn,
-        "bank_code": bankcode,
-        "first_name": "",
-        "last_name": ""
-    }
-        axios.post(url,params,{
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization':'Bearer sk_live_e17b8c11ebd06acf37e6999d97ce43e7b1711a57' 
+        if(CreateCustomerCode[1]){
+            // res.send(CreateCustomerCode[0])
+            const url = `https://api.paystack.co/customer/${CreateCustomerCode[0]}/identification`;
+            const params={
+                "country": "NG",
+                "type": "bank_account",
+                "account_number": account_number,
+                "bvn": bvn,
+                "bank_code": bankcode,
+                "first_name": "",
+                "last_name": ""
             }
-        })
-        .then(result=>{
+            axios.post(url,params,{
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization':'Bearer sk_live_e17b8c11ebd06acf37e6999d97ce43e7b1711a57' 
+                }
+            })
+            .then(result=>{
 
-            res.send({
-                "message":result.data
+                res.send({
+                    "message":result.data
+                })
+                
             })
-            console.log("here",result.data)
-        })
-        .catch((err)=>{
-            res.send({
-                "err":err.response.data
+            .catch((err)=>{
+                res.send({
+                    "err":err.response.data
+                })
+                err.response ? console.log("errData",err.response.data) :console.log("errAll",err)
+                
             })
-            err.response ? console.log("errData",err.response.data) :console.log("errAll",err)
-            
-        })
+        }
+        else{
+            res.status(403).send(err);
+        }
+
+    return false;
+    
 
 });
 
 async function customer_code_fetch(emailaddress){
-    const url = `https://api.paystack.co/customer/${customer_code}/identification`;
+    const url = `https://api.paystack.co/customer`;
     const params={
         "email":emailaddress,
         "first_name":"",
         "last_name":"",
         "phone":""
     }
-    await axios.post(url,params,{
+    let cust_code = await axios.post(url,params,{
         headers: {
             "Content-Type": "application/json",
             'Authorization':'Bearer sk_live_e17b8c11ebd06acf37e6999d97ce43e7b1711a57' 
         }
     })
     .then(result=>{
-
-        return [result.data,true];
+        console.log(result.data.data.customer_code)
+        return [result.data.data.customer_code,true];
+        
     })
     .catch((err)=>{
+        console.log(err.response)
+        return[ err.response,false];
         
-        return[ err.response,true];
         
     })
+    return cust_code;
 }
 
 async function saveWebHook (json){
