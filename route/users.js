@@ -686,12 +686,20 @@ router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
 
 });
 
-router.post('/users/validate/bvntoaccount/kyc/level2',(req,res)=>{
+
+
+router.post('/users/validate/bvntoaccount/kyc/level2',async(req,res)=>{
+
+
     const account_number = req.body.account_number;
     const bankcode = req.body.bankcode;
     const bvn = req.body.bvn;
     const customer_code = req.body.customer_code
-    console.log(account_number,bankcode,bvn,customer_code)
+    const emailaddress = req.body.email
+    // console.log(account_number,bankcode,bvn,customer_code)
+
+    let CreateCustomerCode = await customer_code_fetch(emailaddress)
+
     const url = `https://api.paystack.co/customer/${customer_code}/identification`;
     const params={
         "country": "NG",
@@ -724,6 +732,31 @@ router.post('/users/validate/bvntoaccount/kyc/level2',(req,res)=>{
         })
 
 });
+
+async function customer_code_fetch(emailaddress){
+    const url = `https://api.paystack.co/customer/${customer_code}/identification`;
+    const params={
+        "email":emailaddress,
+        "first_name":"",
+        "last_name":"",
+        "phone":""
+    }
+    await axios.post(url,params,{
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization':'Bearer sk_live_e17b8c11ebd06acf37e6999d97ce43e7b1711a57' 
+        }
+    })
+    .then(result=>{
+
+        return [result.data,true];
+    })
+    .catch((err)=>{
+        
+        return[ err.response,true];
+        
+    })
+}
 
 async function saveWebHook (json){
     try{
