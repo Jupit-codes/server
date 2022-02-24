@@ -48,10 +48,8 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 
 router.post('/users/idcardverification',upload.single('idcard'),(req,res)=>{
     
-    if(req.files){
-        console.log(req.files)
-    }
-    res.send(req.files)
+   
+    res.send(req)
 })
 
 
