@@ -350,7 +350,7 @@ router.post('/users/register',(req,res)=>{
 router.post('/user/save/idcard/verification/submit',upload.single('idcard'),(req,res)=>{
     console.log(req.body);
 
-    
+    res.send(req.file)
     
     // IdCardVerification.create({
     //     cardnumber:req.body.cardnumber,
