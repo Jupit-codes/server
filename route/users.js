@@ -51,7 +51,7 @@ router.post('/users/idcardverification',upload.single('idcard'),(req,res)=>{
     if(req.files){
         console.log(req.files)
     }
-    res.send(req.body)
+    res.send(req.files)
 })
 
 
