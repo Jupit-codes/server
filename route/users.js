@@ -14,6 +14,8 @@ import bcrypt from 'bcryptjs'
 
 import multer from "multer";
 
+const upload = multer({ dest: 'uploads/' })
+
 
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -345,9 +347,11 @@ router.post('/users/register',(req,res)=>{
     })
 
 
-router.post('/user/save/idcard/verification/submit',middlewareVerify,(req,res)=>{
+router.post('/user/save/idcard/verification/submit',upload.single('idcard'),(req,res)=>{
     console.log(req.body);
 
+    
+    
     // IdCardVerification.create({
     //     cardnumber:req.body.cardnumber,
     //     cardtype:req.body.cardtype,
