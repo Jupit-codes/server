@@ -347,17 +347,7 @@ router.post('/users/register',(req,res)=>{
     })
 
 
-router.post('/user/submit',(req,res)=>{
-    res.send('Present')
-    
-    // IdCardVerification.create({
-    //     cardnumber:req.body.cardnumber,
-    //     cardtype:req.body.cardtype,
-    //     userid:req.body.userid,
-    //     path:path
-    // })
-})
-    
+
     
    async function createUser(){
 
