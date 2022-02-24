@@ -347,7 +347,7 @@ router.post('/users/register',(req,res)=>{
     })
 
 
-router.post('/user/verification/submit',(req,res)=>{
+router.post('/user/submit',(req,res)=>{
     res.send('Present')
     
     // IdCardVerification.create({
