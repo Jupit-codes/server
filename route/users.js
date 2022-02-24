@@ -3,6 +3,7 @@ import Usermodel from '../model/users.js';
 import KycModel from '../model/kyc.js';
 import WebHook from "../model/webhook.js";
 import Kyc from '../model/kyc.js'
+import IdCardVerification from '../model/idcardverification.js'
 import axios from "axios";
 import crypto from 'crypto';
 import querystring from 'querystring';
@@ -10,6 +11,8 @@ import random from 'random-number';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import { route } from "express/lib/application";
+import { request } from "http";
 
 
 
@@ -342,6 +345,17 @@ router.post('/users/register',(req,res)=>{
         }
     })
 
+
+router.post('/user/save/idcard/verification/submit',middlewareVerify,(req,res)=>{
+    console.log(req.body);
+
+    IdCardVerification.create({
+        cardnumber:req.body.cardnumber,
+        cardtype:req.body.cardtype,
+        userid:req.body.userid,
+        path:path
+    })
+})
     
     
    async function createUser(){
