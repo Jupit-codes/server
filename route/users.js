@@ -347,7 +347,7 @@ router.post('/users/register',(req,res)=>{
     })
 
 
-router.post('/user/save/idcard/verification/submit',upload.single('idcard'),(req,res)=>{
+router.post('/user/verification/submit',upload.single('idcard'),(req,res)=>{
     console.log(req.body);
 
     res.send(req.file)
