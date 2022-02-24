@@ -46,8 +46,8 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
     })
 })
 
-router.post('/users/idcardverification',(req,res)=>{
-    res.send('Submitted')
+router.post('/users/idcardverification',upload.single('idcard'),(req,res)=>{
+    res.send(req.file)
 })
 
 
