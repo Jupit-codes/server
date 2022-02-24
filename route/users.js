@@ -11,8 +11,7 @@ import random from 'random-number';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import { route } from "express/lib/application";
-import { request } from "http";
+
 import multer from "multer";
 
 
