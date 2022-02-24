@@ -13,7 +13,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { route } from "express/lib/application";
 import { request } from "http";
-
+import multer from "multer";
 
 
 const transporter = nodemailer.createTransport({
@@ -349,12 +349,12 @@ router.post('/users/register',(req,res)=>{
 router.post('/user/save/idcard/verification/submit',middlewareVerify,(req,res)=>{
     console.log(req.body);
 
-    IdCardVerification.create({
-        cardnumber:req.body.cardnumber,
-        cardtype:req.body.cardtype,
-        userid:req.body.userid,
-        path:path
-    })
+    // IdCardVerification.create({
+    //     cardnumber:req.body.cardnumber,
+    //     cardtype:req.body.cardtype,
+    //     userid:req.body.userid,
+    //     path:path
+    // })
 })
     
     
