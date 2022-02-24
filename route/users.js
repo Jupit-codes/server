@@ -46,6 +46,10 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
     })
 })
 
+router.post('users/idcardverification',(req,res)=>{
+    res.send('Submitted')
+})
+
 
 router.get('/users/test',middlewareVerify,(req,res)=>{
     res.json({
