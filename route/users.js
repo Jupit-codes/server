@@ -347,10 +347,8 @@ router.post('/users/register',(req,res)=>{
     })
 
 
-router.post('/user/verification/submit',upload.single('idcard'),(req,res)=>{
-    console.log(req.body);
-
-    res.send(req.file)
+router.post('/user/verification/submit',(req,res)=>{
+    res.send('Present')
     
     // IdCardVerification.create({
     //     cardnumber:req.body.cardnumber,
