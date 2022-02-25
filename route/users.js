@@ -11,7 +11,8 @@ import random from 'random-number';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-
+import { S3Client, AbortMultipartUploadCommand, S3Client } from "@aws-sdk/client-s3";
+import AWS from 'aws-sdk'
 import multer from "multer";
 
 const upload = multer({ dest: 'uploads/' })
@@ -48,8 +49,26 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 
 router.post('/users/idcardverification',(req,res)=>{
     console.log(req.body)
-   
-    res.send(req.body)
+
+    AWS.config.loadFromPath('../aws.json');
+    var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
+
+    var data = {
+        Key: req.body.CapturedImage, 
+        Body: buf,
+        ContentEncoding: 'base64',
+        ContentType: 'image/jpeg'
+      };
+      s3Bucket.putObject(data, function(err, data){
+          if (err) { 
+            console.log(err);
+            console.log('Error uploading data: ', data); 
+          } else {
+            console.log('successfully uploaded the image!');
+          }
+      });
+    res.send(req.body);
+
    
     
 })
