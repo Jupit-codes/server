@@ -52,7 +52,7 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 
 router.post('/users/idcardverification',(req,res)=>{
     
-    console.log("app",req.body);
+    console.log("app",req.body.items.CapturedImage);
   
    return false;
     AWS.config.loadFromPath(`${process.env.PWD}/route/aws.json`);
