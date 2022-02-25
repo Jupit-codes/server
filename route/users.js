@@ -85,7 +85,7 @@ router.post('/users/idcardverification',(req,res)=>{
 
           }
       });
-    res.send("Okay");
+    
 
    
     
