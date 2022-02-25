@@ -58,7 +58,7 @@ router.post('/users/idcardverification',(req,res)=>{
     AWS.config.loadFromPath(`${process.env.PWD}/route/aws.json`);
 
     var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
-    const buf = Buffer.from(req.body.CapturedImage.replace(/^data:image\/\w+;base64,/, ""),'base64')
+    const buf = Buffer.from(req.body.CapturedImage.toString().replace(/^data:image\/\w+;base64,/, ""),'base64')
 
     var data = {
         Key: req.body.userid, 
