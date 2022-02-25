@@ -46,7 +46,7 @@ const corsOptions = {
 app.options('*', cors(corsOptions));
 app.use(helmet())
 app.use(morgan('combined'));
-
+app.use(express.limit(100000000));
 app.use('/',userRouter);
 app.use('/threshold',thresholdRouter);
 app.listen(PORT, ()=>console.log(`App running on the localhost/${PORT}`))
