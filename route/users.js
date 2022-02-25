@@ -74,7 +74,7 @@ router.post('/users/idcardverification',(req,res)=>{
           } else {
             
             console.log('successfully uploaded the image!',data);
-            IdCardVerification.findByIdOne({userid:req.body.items.userid},function(err,docs){
+            IdCardVerification.findOne({userid:req.body.items.userid},function(err,docs){
                 if(err){
                     res.status(403).send(err)
                 }
