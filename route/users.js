@@ -11,7 +11,7 @@ import random from 'random-number';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import { dirname } from 'path';
+import path from 'path';
 import AWS from 'aws-sdk'
 import multer from "multer";
 
@@ -32,6 +32,7 @@ const transporter = nodemailer.createTransport({
 const router = express.Router();
 
 router.get('/kyc',(req,res)=>{
+    console.log(`${path.resolve()}/route/aws.json`)
     res.send('Welcome to jupit server');
 });
 
@@ -48,7 +49,7 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 })
 
 router.post('/users/idcardverification',(req,res)=>{
-    console.log(dirname(__filename))
+    console.log(path.resolve())
     return false;
     AWS.config.loadFromPath(`${__dirname}/aws.json`);
     var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
