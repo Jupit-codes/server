@@ -52,16 +52,16 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 
 router.post('/users/idcardverification',(req,res)=>{
     
-    console.log("app",req.body.items.CapturedImage);
+    // console.log("app",req.body.items.CapturedImage);
   
-   return false;
+   
     AWS.config.loadFromPath(`${process.env.PWD}/route/aws.json`);
 
     var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
-    const buf = Buffer.from(req.body.CapturedImage.replace(/^data:image\/\w+;base64,/, ""),'base64')
+    const buf = Buffer.from(req.body.items.CapturedImage.replace(/^data:image\/\w+;base64,/, ""),'base64')
 
     var data = {
-        Key: req.body.userid, 
+        Key: req.body.items.userid, 
         Body: buf,
         ContentEncoding: 'base64',
         ContentType: 'image/jpeg'
