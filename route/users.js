@@ -80,7 +80,7 @@ router.post('/users/idcardverification',(req,res)=>{
                 }
                 else if(docs){
                     if(docs.status === "Pending"){
-                        res.send("Your IDCard Verification Is Already In Progress")
+                        res.status(403).send("Your IDCard Verification Is Already In Progress")
                     }
                     else if(docs.status === "Rejected"){
                         IdCardVerification.create({
@@ -93,7 +93,7 @@ router.post('/users/idcardverification',(req,res)=>{
                         res.send("Verification Successfully Submitted")
                     }
                     else if(docs.status === "Resolved"){
-                        res.send("Previous Submission Has Already been Resolved")
+                        res.status(403).send("Previous Submission Has Already been Resolved")
                     }
                 }
                 else if(!docs){
