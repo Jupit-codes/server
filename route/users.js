@@ -61,17 +61,28 @@ router.post('/users/idcardverification',(req,res)=>{
     const buf = Buffer.from(req.body.items.CapturedImage.replace(/^data:image\/\w+;base64,/, ""),'base64')
 
     var data = {
-        Key: 'randomImage', 
+        Key: req.body.items.userid, 
         Body: buf,
         ContentEncoding: 'base64',
         ContentType: 'image/jpeg'
       };
       s3Bucket.putObject(data, function(err, data){
           if (err) { 
-            console.log(err);
-            console.log('Error uploading data: ', data); 
+            // console.log(err);
+            // console.log('Error uploading data: ', data); 
+            res.status(403).send('An Error Occurred..Pls Try Again');
           } else {
+            
             console.log('successfully uploaded the image!',data);
+            IdCardVerification.create({
+                cardnumber:req.body.items.cardNumber,
+                cardtype:req.body.items.cardType,
+                imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+                userid:req.body.items.userid
+            })
+
+            res.send('Application Successfully Submitted');
+
           }
       });
     res.send("Okay");
