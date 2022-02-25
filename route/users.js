@@ -52,7 +52,7 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 
 router.post('/users/idcardverification',(req,res)=>{
     
-    console.log(process.env.PWD);
+    console.log("app",process.env.PWD);
     res.send('Okay')
     return false;
     AWS.config.loadFromPath(`${'./aws.json'}`);
