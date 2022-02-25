@@ -222,6 +222,7 @@ router.post('/users/test',middlewareVerify,(req,res)=>{
 
 
 
+
 router.post('/users/login',(req,res)=>{
   console.log(req.body)
     Usermodel.findOne({email:req.body.email},async (err,docs)=>{
@@ -267,6 +268,10 @@ router.post('/users/login',(req,res)=>{
     })
     // res.send('Login Successful')
 });
+
+router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
+    res.send('Welcome');
+})
 
 
 router.post('/customer_webhook',(req,res)=>{
