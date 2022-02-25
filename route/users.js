@@ -274,7 +274,7 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
     console.log(req.body)
     Walletmodel.find(
         {
-            $and:[
+            $or:[
                 {
                     $or:[
                         {
