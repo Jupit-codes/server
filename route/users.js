@@ -66,23 +66,23 @@ router.post('/users/idcardverification',(req,res)=>{
         ContentEncoding: 'base64',
         ContentType: 'image/jpeg'
       };
-      s3Bucket.putObject(data, function(err, data){
-          if (err) { 
-            // console.log(err);
-            // console.log('Error uploading data: ', data); 
-            res.status(503).send('An Error Occurred..Pls Try Again');
-          } else {
-            
-            console.log('successfully uploaded the image!',data);
-            IdCardVerification.findOne({userid:req.body.items.userid},function(err,docs){
-                if(err){
-                    res.status(400).send(err)
-                }
-                else if(docs){
-                    if(docs.status === "Pending"){
-                        res.status(400).send("Your IDCard Verification Is Already In Progress")
-                    }
-                    else if(docs.status === "Rejected"){
+
+      IdCardVerification.findOne({userid:req.body.items.userid},function(err,docs){
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            if(docs.status === "Pending"){
+                res.status(400).send("Your IDCard Verification Is Already In Progress")
+            }
+            else if(docs.status === "Rejected"){
+                s3Bucket.putObject(data, function(err, data){
+                    if (err) { 
+                      // console.log(err);
+                      // console.log('Error uploading data: ', data); 
+                      res.status(400).send('An Error Occurred..Pls Try Again');
+                    } else {
+                      
                         IdCardVerification.create({
                             cardnumber:req.body.items.cardNumber,
                             cardtype:req.body.items.cardType,
@@ -91,12 +91,25 @@ router.post('/users/idcardverification',(req,res)=>{
                             status:'Pending'
                         })
                         res.send("Verification Successfully Submitted")
+          
                     }
-                    else if(docs.status === "Resolved"){
-                        res.status(400).send("Previous Submission Has Already been Resolved")
-                    }
-                }
-                else if(!docs){
+                });
+
+               
+            }
+            else if(docs.status === "Resolved"){
+                res.status(400).send("Previous Submission Has Already been Resolved")
+            }
+        }
+        else if(!docs){
+
+            s3Bucket.putObject(data, function(err, data){
+                if (err) { 
+                  // console.log(err);
+                  // console.log('Error uploading data: ', data); 
+                  res.status(400).send('An Error Occurred..Pls Try Again');
+                } else {
+                  
                     IdCardVerification.create({
                         cardnumber:req.body.items.cardNumber,
                         cardtype:req.body.items.cardType,
@@ -105,14 +118,15 @@ router.post('/users/idcardverification',(req,res)=>{
                         status:'Pending'
                     })
                     res.send("Verification Successfully Submitted")
+      
                 }
-            })
-            
+            });
 
-            
+        }
+    })
 
-          }
-      });
+
+      
     
 
    
