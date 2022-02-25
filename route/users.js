@@ -11,7 +11,7 @@ import random from 'random-number';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import { S3Client, AbortMultipartUploadCommand, S3Client } from "@aws-sdk/client-s3";
+
 import AWS from 'aws-sdk'
 import multer from "multer";
 
