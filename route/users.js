@@ -14,6 +14,7 @@ import bcrypt from 'bcryptjs'
 import path from 'path';
 import AWS from 'aws-sdk'
 import multer from "multer";
+import { cwd } from "process";
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -32,7 +33,8 @@ const transporter = nodemailer.createTransport({
 const router = express.Router();
 
 router.get('/kyc',(req,res)=>{
-    console.log(`${path.resolve()}/route/aws.json`)
+    console.log(path.basename(path.resolve(process.cwd())))
+    
     res.send('Welcome to jupit server');
 });
 
@@ -49,7 +51,7 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 })
 
 router.post('/users/idcardverification',(req,res)=>{
-    console.log(path.resolve())
+    console.log(path.basename(path.resolve(process.cwd())))
     return false;
     AWS.config.loadFromPath(`${__dirname}/aws.json`);
     var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
