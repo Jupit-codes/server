@@ -51,9 +51,10 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 })
 
 router.post('/users/idcardverification',(req,res)=>{
-    console.log(path.basename(path.resolve(process.cwd())))
+    
+    console.log(path.resolve(__dirname))
     return false;
-    AWS.config.loadFromPath(`${__dirname}/aws.json`);
+    AWS.config.loadFromPath('./aws.json');
     var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
 
     var data = {
