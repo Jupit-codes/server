@@ -269,7 +269,7 @@ router.post('/users/login',(req,res)=>{
     })
     // res.send('Login Successful')
 });
-{ $or: [{ from_address: req.body.addressBTC }, { to_address: req.body.addressBTC }]}
+
 router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
     Walletmodel.find(
         {
