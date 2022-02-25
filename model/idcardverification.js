@@ -13,6 +13,9 @@ const idcardverification = mongoose.Schema({
     userid:{
         type:'String'
     },
+    status:{
+        type:'String'
+    },
     updated: { type: Date, default: Date.now() },
 })
 

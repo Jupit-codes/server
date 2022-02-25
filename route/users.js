@@ -74,14 +74,42 @@ router.post('/users/idcardverification',(req,res)=>{
           } else {
             
             console.log('successfully uploaded the image!',data);
-            IdCardVerification.create({
-                cardnumber:req.body.items.cardNumber,
-                cardtype:req.body.items.cardType,
-                imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
-                userid:req.body.items.userid
+            IdCardVerification.findById(req.body.items.userid,function(err,docs){
+                if(err){
+                    res.status(403).send(err)
+                }
+                else if(docs){
+                    if(docs.status === "Pending"){
+                        res.send("Your IDCard Verification Is Already In Progress")
+                    }
+                    else if(docs.status === "Rejected"){
+                        IdCardVerification.create({
+                            cardnumber:req.body.items.cardNumber,
+                            cardtype:req.body.items.cardType,
+                            imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+                            userid:req.body.items.userid,
+                            status:'Pending'
+                        })
+                        res.send("Verification Successfully Submitted")
+                    }
+                    else if(docs.status === "Resolved"){
+                        res.send("Previous Submission Has Already been Resolved")
+                    }
+                }
+                else{
+                    IdCardVerification.create({
+                        cardnumber:req.body.items.cardNumber,
+                        cardtype:req.body.items.cardType,
+                        imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+                        userid:req.body.items.userid,
+                        status:'Pending'
+                    })
+                    res.send("Verification Successfully Submitted")
+                }
             })
+            
 
-            res.send('Application Successfully Submitted');
+            
 
           }
       });
