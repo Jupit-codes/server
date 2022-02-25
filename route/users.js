@@ -61,7 +61,7 @@ router.post('/users/idcardverification',(req,res)=>{
     const buf = Buffer.from(req.body.items.CapturedImage.replace(/^data:image\/\w+;base64,/, ""),'base64')
 
     var data = {
-        Key: req.body.items.userid, 
+        Key: 'randomImage', 
         Body: buf,
         ContentEncoding: 'base64',
         ContentType: 'image/jpeg'
