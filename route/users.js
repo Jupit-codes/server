@@ -4,6 +4,7 @@ import KycModel from '../model/kyc.js';
 import WebHook from "../model/webhook.js";
 import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
+import Walletmodel from '../model/wallet_transactions.js'
 import axios from "axios";
 import crypto from 'crypto';
 import querystring from 'querystring';
@@ -270,7 +271,17 @@ router.post('/users/login',(req,res)=>{
 });
 
 router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
-    res.send('Welcome');
+    Walletmodel.findOne({order_id:req.body.userid},function(err,docs){
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            res.send(docs)
+        }
+        else if(!docs){
+            res.send('Empty')
+        }
+    })
 })
 
 
