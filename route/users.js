@@ -53,9 +53,10 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 router.post('/users/idcardverification',(req,res)=>{
     
     console.log("app",process.env.PWD);
-    res.send('Okay')
-    return false;
-    AWS.config.loadFromPath(`${'./aws.json'}`);
+  
+   
+    AWS.config.loadFromPath(`${process.env,PWD}/route/aws.json`);
+
     var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
 
     var data = {
@@ -72,7 +73,7 @@ router.post('/users/idcardverification',(req,res)=>{
             console.log('successfully uploaded the image!');
           }
       });
-    res.send(req.body);
+    res.send("Okay");
 
    
     
