@@ -60,8 +60,8 @@ router.post('/users/idcardverification',(req,res)=>{
     var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
 
     var data = {
-        Key: req.body.CapturedImage, 
-        Body: buf,
+        Key: req.body.userid, 
+        Body: req.body.CapturedImage,
         ContentEncoding: 'base64',
         ContentType: 'image/jpeg'
       };
