@@ -33,8 +33,8 @@ const transporter = nodemailer.createTransport({
 const router = express.Router();
 
 router.get('/kyc',(req,res)=>{
-    console.log(path.basename(path.resolve(process.cwd())))
-    
+    // console.log(path.basename(path.resolve(`${'./aws.json'}`)));
+    console.log(process.cwd())
     res.send('Welcome to jupit server');
 });
 
@@ -52,9 +52,9 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 
 router.post('/users/idcardverification',(req,res)=>{
     
-    console.log(path.resolve(__dirname))
-    return false;
-    AWS.config.loadFromPath('./aws.json');
+    
+    console.log(process.cwd());
+    AWS.config.loadFromPath(`${'./aws.json'}`);
     var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
 
     var data = {
