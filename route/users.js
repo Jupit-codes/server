@@ -70,17 +70,17 @@ router.post('/users/idcardverification',(req,res)=>{
           if (err) { 
             // console.log(err);
             // console.log('Error uploading data: ', data); 
-            res.status(403).send('An Error Occurred..Pls Try Again');
+            res.status(503).send('An Error Occurred..Pls Try Again');
           } else {
             
             console.log('successfully uploaded the image!',data);
             IdCardVerification.findOne({userid:req.body.items.userid},function(err,docs){
                 if(err){
-                    res.status(403).send(err)
+                    res.status(503).send(err)
                 }
                 else if(docs){
                     if(docs.status === "Pending"){
-                        res.status(403).send("Your IDCard Verification Is Already In Progress")
+                        res.status(503).send("Your IDCard Verification Is Already In Progress")
                     }
                     else if(docs.status === "Rejected"){
                         IdCardVerification.create({
@@ -93,7 +93,7 @@ router.post('/users/idcardverification',(req,res)=>{
                         res.send("Verification Successfully Submitted")
                     }
                     else if(docs.status === "Resolved"){
-                        res.status(403).send("Previous Submission Has Already been Resolved")
+                        res.status(503).send("Previous Submission Has Already been Resolved")
                     }
                 }
                 else if(!docs){
