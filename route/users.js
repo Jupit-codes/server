@@ -271,6 +271,7 @@ router.post('/users/login',(req,res)=>{
 });
 
 router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
+    console.log(req.body)
     Walletmodel.find(
         {
             $and:[
