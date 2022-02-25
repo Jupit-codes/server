@@ -74,7 +74,7 @@ router.post('/users/idcardverification',(req,res)=>{
           } else {
             
             console.log('successfully uploaded the image!',data);
-            IdCardVerification.findById(req.body.items.userid,function(err,docs){
+            IdCardVerification.findByIdOne({userid:req.body.items.userid},function(err,docs){
                 if(err){
                     res.status(403).send(err)
                 }
@@ -96,7 +96,7 @@ router.post('/users/idcardverification',(req,res)=>{
                         res.send("Previous Submission Has Already been Resolved")
                     }
                 }
-                else{
+                else if(!docs){
                     IdCardVerification.create({
                         cardnumber:req.body.items.cardNumber,
                         cardtype:req.body.items.cardType,
