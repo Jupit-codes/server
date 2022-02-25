@@ -71,7 +71,7 @@ router.post('/users/idcardverification',(req,res)=>{
             console.log(err);
             console.log('Error uploading data: ', data); 
           } else {
-            console.log('successfully uploaded the image!');
+            console.log('successfully uploaded the image!',data);
           }
       });
     res.send("Okay");
