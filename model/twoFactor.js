@@ -18,6 +18,10 @@ const twofactor = mongoose.Schema({
     otpauth_url:{
         type:'String',
     }, 
+    activated:{
+        type:'Boolean',
+        default:false
+    },
     updated: { type: Date, default: Date.now() },
 })
 

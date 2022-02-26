@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from 'body-parser'
 import userRouter from './route/users.js'
 import thresholdRouter from './route/threshold.js'
+import twoFactorRouter from "./model/twoFactor.js";
 import morgan from "morgan";
 import helmet from "helmet";
 import dotenv from 'dotenv'
@@ -56,4 +57,5 @@ app.use(express.urlencoded({limit: '50mb'}));
 
 app.use('/',userRouter);
 app.use('/threshold',thresholdRouter);
+app.use('/twofactor',twoFactorRouter);
 app.listen(PORT, ()=>console.log(`App running on the localhost/${PORT}`))

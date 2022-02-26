@@ -2,6 +2,7 @@ import express from "express";
 import Usermodel from '../model/users.js';
 import KycModel from '../model/kyc.js';
 import WebHook from "../model/webhook.js";
+import TwoFactor from "../model/twoFactor.js";
 import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
 import Walletmodel from '../model/wallet_transactions.js'
@@ -16,6 +17,7 @@ import path from 'path';
 import AWS from 'aws-sdk'
 import multer from "multer";
 import { cwd } from "process";
+import SpeakEasy from 'speakeasy'
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -32,6 +34,34 @@ const transporter = nodemailer.createTransport({
     
 
 const router = express.Router();
+
+router.get('/2FA',(req,res)=>{
+    const secret = SpeakEasy.generateSecret()
+   let TOTP = TwoFactor.create({
+        userid:req.body.userid,
+        ascii:secret.ascii,
+        hex:secret.hex,
+        base32:secret.base32,
+        otpauth_url:secret.otpauth_url
+    })
+    res.json(TOTP);
+})
+
+router.post('/activate/2FA',(req,res)=>{
+    const {userid,token} = req.body
+    const secret = TwoFactor.findOne({userid:userid},function(err,docs){
+        if(err){
+            res.send(err)
+        }
+        else if(docs){
+            let secret = docs.base32;
+            res.send(secret)
+        }
+        else if(!docs){
+            res.send('UserID not Found')
+        }
+    })
+})
 
 router.get('/kyc',(req,res)=>{
     // console.log(path.basename(path.resolve(`${'./aws.json'}`)));
