@@ -29,6 +29,10 @@ const userSchema = mongoose.Schema({
         type:'Boolean',
         required:[true,"Required"]
     },
+    TWOFA:{
+        type:'Boolean',
+        default:false
+    },
     updated: { type: Date, default: Date.now() },
 })
 
