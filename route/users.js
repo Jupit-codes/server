@@ -19,6 +19,7 @@ import multer from "multer";
 import { cwd } from "process";
 import SpeakEasy from 'speakeasy'
 
+
 const upload = multer({ dest: 'uploads/' })
 
 
@@ -86,6 +87,18 @@ router.get('/kyc',(req,res)=>{
 router.post('/users/kyc',middlewareVerify,(req,res)=>{
    
     Kyc.findOne({userid:req.body.userid},function(err,docs){
+        if(err){
+            res.status(403).send(err);
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+})
+
+router.post('/users/2fa',middlewareVerify,(req,res)=>{
+   
+    TwoFactor.findOne({userid:req.body.userid},function(err,docs){
         if(err){
             res.status(403).send(err);
         }
