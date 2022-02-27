@@ -26,8 +26,8 @@ const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtp.gmail.com",
        auth: {
-            user: 'hademylola@gmail.com',
-            pass: 'wrumrgkuoalcclmc',
+            user: 'bigdevtemy@gmail.com',
+            pass: 'vyafmhqbffkiawrc',
          },
     secure: true,
     });
@@ -49,13 +49,27 @@ router.get('/2FA',(req,res)=>{
 
 router.post('/activate/2FA',(req,res)=>{
     const {userid,token} = req.body
-    const secret = TwoFactor.findOne({userid:userid},function(err,docs){
+    const secret = TwoFactor.findOne({userid:userid},async function(err,docs){
         if(err){
             res.send(err)
         }
         else if(docs){
             let secret = docs.base32;
-            res.send(secret)
+
+            const verified = SpeakEasy.totp.verify({secret,encoding:'base32',token:token})
+            // const verified = SpeakEasy.totp.verify({secret,encoding:'base32',token:token,window:1})
+            if(verified){
+                await TwoFactor.findOneAndUpdate({userid:userid},{activated:true},{
+                    new: true,
+                    upsert: true // Make this update into an upsert
+                  })
+                
+                res.send({Verification:"Passed"})
+            }
+            else{
+                res.send({Verification:"Failed"})
+            }
+            
         }
         else if(!docs){
             res.send('UserID not Found')
