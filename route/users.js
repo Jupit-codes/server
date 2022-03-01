@@ -36,7 +36,7 @@ const transporter = nodemailer.createTransport({
 
 const router = express.Router();
 
-router.get('/2FA',(req,res)=>{
+router.post('/2FA',(req,res)=>{
 
     const secret = SpeakEasy.generateSecret({
         name:'User',
