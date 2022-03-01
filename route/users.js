@@ -90,8 +90,14 @@ router.post('/activate/2FA',middlewareVerify,(req,res)=>{
                     new: true,
                     upsert: true // Make this update into an upsert
                   })
+
+                 const data = await Usermodel.findOneAndUpdate({_id:userid},{activated:true},{
+                    new: true,
+                    upsert: true // Make this update into an upsert
+                  })
+                  
                 
-                res.send("2FA Successfully Activated")
+                res.send({message:"2FA Successfully Activated",data:data})
             }
             else{
                 res.status(403).send("2FA Successfully Failed..Try Another Token")
