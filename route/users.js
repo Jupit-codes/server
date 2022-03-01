@@ -128,6 +128,17 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
     })
 })
 
+router.post('/get2FA',middlewareVerify,(req,res)=>{
+    TwoFactor.findOne({userid:req.body.userid},function(err,docs){
+        if(err){
+            res.status(403).send(err);
+        }
+        else{
+            res.send(docs)
+        }
+    })
+})
+
 router.post('/users/2fa',middlewareVerify,(req,res)=>{
    
     TwoFactor.findOne({userid:req.body.userid},function(err,docs){
