@@ -55,7 +55,12 @@ router.get('/2FA',(req,res)=>{
         })
         
     })
-    res.json(TOTP);
+    if(TOTP){
+        res.send('Activated')
+    }
+    else{
+        res.status(403).send('An Error Occurred')
+    }
 })
 
 router.post('/activate/2FA',(req,res)=>{
