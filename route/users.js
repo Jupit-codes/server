@@ -74,7 +74,7 @@ router.post('/2FA',middlewareVerify,(req,res)=>{
    
 })
 
-router.post('/activate/2FA',(req,res)=>{
+router.post('/activate/2FA',middlewareVerify,(req,res)=>{
     const {userid,token} = req.body
     const secret = TwoFactor.findOne({userid:userid},async function(err,docs){
         if(err){
@@ -91,15 +91,15 @@ router.post('/activate/2FA',(req,res)=>{
                     upsert: true // Make this update into an upsert
                   })
                 
-                res.send({Verification:"Passed"})
+                res.send("2FA Successfully Activated")
             }
             else{
-                res.send({Verification:"Failed"})
+                res.status(403).send("2FA Successfully Failed..Try Another Token")
             }
             
         }
         else if(!docs){
-            res.send('UserID not Found')
+            res.status(403).send("User cannot be Authenticated..")
         }
     })
 })
