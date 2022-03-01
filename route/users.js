@@ -91,7 +91,7 @@ router.post('/activate/2FA',middlewareVerify,(req,res)=>{
                     upsert: true // Make this update into an upsert
                   })
 
-                 const data = await Usermodel.findOneAndUpdate({_id:userid},{activated:true},{
+                 const data = await Usermodel.findOneAndUpdate({_id:userid},{TWOFA:true},{
                     new: true,
                     upsert: true // Make this update into an upsert
                   })
