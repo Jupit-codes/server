@@ -338,13 +338,19 @@ router.post('/users/login',(req,res)=>{
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
             console.log(validPassword)
             if (validPassword) {
-                jwt.sign({user:docs},'secretkey',(err,token)=>{
-                    res.json({
-                        token,
-                        docs,
-                        'status':true
+                if(docs.TWOFA){
+                    res.send('Token is Required')
+                }
+                else{
+                    jwt.sign({user:docs},'secretkey',(err,token)=>{
+                        res.json({
+                            token,
+                            docs,
+                            'status':true
+                        })
                     })
-                })
+                }
+               
             
             } else {
                 // res.sendStatus(404).send({'message':'Invalid Password',
