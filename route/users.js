@@ -37,13 +37,23 @@ const transporter = nodemailer.createTransport({
 const router = express.Router();
 
 router.get('/2FA',(req,res)=>{
-    const secret = SpeakEasy.generateSecret()
+
+    const secret = SpeakEasy.generateSecret({
+        name:'User',
+        issuer:'Jupit App'
+    })
+    
    let TOTP = TwoFactor.create({
         userid:req.body.userid,
         ascii:secret.ascii,
         hex:secret.hex,
         base32:secret.base32,
-        otpauth_url:secret.otpauth_url
+        otpauth_url:secret.otpauth_url = SpeakEasy.otpauthURL({
+            secret:secret.ascii,
+            label: encodeURIComponent('bigdevtemy'),
+            issuer:'Jupit App'
+        })
+        
     })
     res.json(TOTP);
 })
