@@ -86,7 +86,7 @@ router.post('/activate/2FA',middlewareVerify,(req,res)=>{
             const verified = SpeakEasy.totp.verify({secret,encoding:'base32',token:token})
             // const verified = SpeakEasy.totp.verify({secret,encoding:'base32',token:token,window:1})
             if(verified){
-                await TwoFactor.findOneAndUpdate({userid:userid},{activated:true},{
+                const new2fa = await TwoFactor.findOneAndUpdate({userid:userid},{activated:true},{
                     new: true,
                     upsert: true // Make this update into an upsert
                   })
@@ -97,7 +97,7 @@ router.post('/activate/2FA',middlewareVerify,(req,res)=>{
                   })
                   
                 
-                res.send({message:"2FA Successfully Activated",data:data})
+                res.send({message:"2FA Successfully Activated",data:data,new2fa:new2fa})
             }
             else{
                 res.status(403).send("2FA Successfully Failed..Try Another Token")
