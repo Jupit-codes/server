@@ -50,8 +50,8 @@ router.post('/2FA',middlewareVerify,(req,res)=>{
         base32:secret.base32,
         otpauth_url:secret.otpauth_url = SpeakEasy.otpauthURL({
             secret:secret.ascii,
-            label: encodeURIComponent('bigdevtemy'),
-            issuer:'Jupit App'
+            label: encodeURIComponent(req.body.email),
+            issuer:'Jupit  App'
         })
         
     })
