@@ -38,29 +38,40 @@ const router = express.Router();
 
 router.post('/2FA',middlewareVerify,(req,res)=>{
 
-    const secret = SpeakEasy.generateSecret({
-        name:'User',
-        issuer:'Jupit App'
+    TwoFactor.findOne({userid:req.body.userid},function(err,docs){
+        if(err){
+            res.status(403).send(err)
+        }
+        else if(docs){
+            res.send('Proceed...UserAlreadyPreActivated')
+        }
+        else if(!docs){
+            const secret = SpeakEasy.generateSecret({
+                name:'User',
+                issuer:'Jupit App'
+            })
+            
+           let TOTP = TwoFactor.create({
+                userid:req.body.userid,
+                ascii:secret.ascii,
+                hex:secret.hex,
+                base32:secret.base32,
+                otpauth_url:secret.otpauth_url = SpeakEasy.otpauthURL({
+                    secret:secret.ascii,
+                    label: encodeURIComponent(req.body.email),
+                    issuer:'Jupit  App'
+                })
+                
+            })
+            if(TOTP){
+                res.send('Activated')
+            }
+            else{
+                res.status(403).send('An Error Occurred')
+            }
+        }
     })
-    
-   let TOTP = TwoFactor.create({
-        userid:req.body.userid,
-        ascii:secret.ascii,
-        hex:secret.hex,
-        base32:secret.base32,
-        otpauth_url:secret.otpauth_url = SpeakEasy.otpauthURL({
-            secret:secret.ascii,
-            label: encodeURIComponent(req.body.email),
-            issuer:'Jupit  App'
-        })
-        
-    })
-    if(TOTP){
-        res.send('Activated')
-    }
-    else{
-        res.status(403).send('An Error Occurred')
-    }
+   
 })
 
 router.post('/activate/2FA',(req,res)=>{
