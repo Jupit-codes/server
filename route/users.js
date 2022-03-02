@@ -110,6 +110,51 @@ router.post('/activate/2FA',middlewareVerify,(req,res)=>{
     })
 })
 
+
+router.post('/login/2FA',(req,res)=>{
+    const {email,token,password} = req.body
+
+        Usermodel.findOne({email:email},async (err,docs)=>{
+            if(err){
+                res.status(403).send(err)
+            }
+            else if(docs){
+                const validPassword = bcrypt.compareSync(password, docs.password);
+                if(validPassword){
+                    await TwoFactor.findOne({userid:docs._id},function(err,fa_docs){
+                        if(err){
+                            res.status(403).send(err)
+                        }
+                        else if(fa_docs){
+                            let secret = fa_docs.base32;
+                            const verified = SpeakEasy.totp.verify({secret,encoding:'base32',token:token,window:1})
+                            
+                            if(verified){
+                                jwt.sign({user:docs},'secretkey',(err,token)=>{
+                                    res.json({
+                                        token,
+                                        docs,
+                                        'status':true
+                                    })
+                                })
+                            }
+                            else{
+                                res.status(403).send('Invalid Token...2FA Failed')
+                            }
+                            
+                        }
+                    });
+                    
+                }
+            }
+        })
+            
+            
+            
+       
+    
+})
+
 router.get('/kyc',(req,res)=>{
     // console.log(path.basename(path.resolve(`${'./aws.json'}`)));
     console.log(process.cwd())
@@ -375,6 +420,8 @@ router.post('/users/login',(req,res)=>{
     })
     // res.send('Login Successful')
 });
+
+
 
 router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
     console.log(req.body)
