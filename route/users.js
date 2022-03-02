@@ -124,6 +124,7 @@ router.post('/login/2FA',(req,res)=>{
                     await TwoFactor.findOne({userid:docs._id},function(err,fa_docs){
                         if(err){
                             res.status(403).send(err)
+                            console.log(err)
                         }
                         else if(fa_docs){
                             let secret = fa_docs.base32;
@@ -140,6 +141,7 @@ router.post('/login/2FA',(req,res)=>{
                             }
                             else{
                                 res.status(403).send('Invalid Token...2FA Failed')
+                                console.log('Invalid Token...2FA Failed')
                             }
                             
                         }
