@@ -872,7 +872,7 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     // let jupitAddress = await checkJupitAddress(receipentAddress,wallet_type);
     let CheckAddressValidityVar = await CheckAddressValidity(receipentAddress,wallet_type);
 
-    if(CheckAddressValidityVar){
+    if(CheckAddressValidityVar[0]){
         console.log('Hello',CheckAddressValidityVar)
         let jupitAddress = await JupitCustomerCheck(receipentAddress,wallet_type);
         console.log('jupit',jupitAddress.length)
