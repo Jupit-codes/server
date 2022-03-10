@@ -98,6 +98,22 @@ Router.post('/getautofee',(req,res)=>{
 
 Router.get('/activateusdtToken',async(req,res)=>{
     let result = await activate_token();
+    res.send(result);
+})
+
+Router.get('/checkaddressvalidity',async (req,res)=>{
+    let result = await CheckAddressValidity(req.body.address,req.body.type);
+    
+    res.send(result)
+    // if(result.result[0].valid){
+
+    //         res.send({'message':"Valid Address","address":result.result[0].address})
+
+    // }
+    // else{
+    //     res.send({'message':"InValid Address","address":result.result[0].address})
+    // }
+    
 })
 
 
@@ -1083,6 +1099,8 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 
                 if(docs.btc_wallet[0].balance > totalAmount ){
                     
+                   
+                    
                     let jupitAddress = await checkJupitAddress(recipentAddress,wallets_type);
                     
                     if(jupitAddress[1]){
@@ -1456,78 +1474,83 @@ async function checkJupitAddress(address,wallet_type){
   
 }
 
-async function CheckAddress (address,walletType){
-    const secret = ""
-    const Api=""
+async function CheckAddressValidity (address,walletType){
+        let secret = ""
+        let Api=""
 
-    if(walletType === "BTC"){
-        secret = "3A84eebqYqeU3HaaXMcEAip8zBRS";
-        Api="4PiVpdbyLJZatLBwR"
-    }
-    else if(walletType === "USDT"){
-        Api="491Wh19j3Ece4MJRz";
-        secret = "2Tzeo889sniN76LerbwjCSshkSZN"
-    }
-
-let rand = random(option_rand);
-    var option_rand = {
-            min: 48886
-            , max: 67889
-            , integer: true
+        if(walletType === "BTC"){
+            secret = "3A84eebqYqeU3HaaXMcEAip8zBRS";
+            Api="4PiVpdbyLJZatLBwR"
         }
-function buildChecksum(params, secret, t, r, postData) {
-    const p = params || [];
-    p.push(`t=${t}`, `r=${r}`);
-    if (!!postData) {
-          if (typeof postData === 'string') {
-                p.push(postData);
-          } else {
-                p.push(JSON.stringify(postData));
-          }
+        else if(walletType === "USDT"){
+            Api="491Wh19j3Ece4MJRz";
+            secret = "2Tzeo889sniN76LerbwjCSshkSZN"
+        }
+
+    let rand = random(option_rand);
+        var option_rand = {
+                min: 48886
+                , max: 67889
+                , integer: true
+            }
+    function buildChecksum(params, secret, t, r, postData) {
+        const p = params || [];
+        p.push(`t=${t}`, `r=${r}`);
+        if (!!postData) {
+            if (typeof postData === 'string') {
+                    p.push(postData);
+            } else {
+                    p.push(JSON.stringify(postData));
+            }
+        }
+        p.sort();
+        p.push(`secret=${secret}`);
+        return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
-    p.sort();
-    p.push(`secret=${secret}`);
-    return crypto.createHash('sha256').update(p.join('&')).digest('hex');
-}
 
 
 
-// var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
-var time = Math.floor(new Date().getTime() / 1000)
-var postData={
-    "address":address
-}
-const params = {
-    "addresses": [
-        address
-      ]
-}
-
-var build = buildChecksum(null,secret,time,rand,params);
-
-
-    const parameters = {
-        t:time,
-        r:rand,
+    // var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+    var time = Math.floor(new Date().getTime() / 1000)
+    var postData={
+        "address":address
     }
-    const get_request_args = querystring.stringify(parameters);
-    
-    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/addresses/verify?'+get_request_args
-
-    
-axios.post(url,params,{ 
-    headers: {
-        'Content-Type': 'application/json',
-        'X-API-CODE':Api,
-        'X-CHECKSUM':build,
-        'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+    const params = {
+        "addresses": [
+            address
+        ]
     }
-})
-.then(res=>console.log(res.data))
-.catch((error)=>{
-    console.log('Error',error.response)
-})
 
+    var build = buildChecksum(null,secret,time,rand,params);
+
+
+        const parameters = {
+            t:time,
+            r:rand,
+        }
+        const get_request_args = querystring.stringify(parameters);
+        
+        const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/addresses/verify?'+get_request_args
+
+        
+    let x =  await axios.post(url,params,{ 
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-CODE':Api,
+            'X-CHECKSUM':build,
+            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+        }
+    })
+    .then(res=>{
+        console.log('Data',res.data.result[0].valid)
+        return[res.data.result[0].valid]
+       
+    })
+    .catch((error)=>{
+        console.log('Error',error)
+        return [error.response? error.response.data : 'No Connection' ]
+    })
+    return x;
 }
 
 
