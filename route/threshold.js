@@ -96,6 +96,10 @@ Router.post('/getautofee',(req,res)=>{
 })
 
 
+Router.get('/activateusdtToken',async(req,res)=>{
+    let result = await activate_token();
+})
+
 
 Router.post('/incoming/depositcallback',(req,res)=>{
     console.log('Welcome Incoming CallBack')
@@ -1452,6 +1456,80 @@ async function checkJupitAddress(address,wallet_type){
   
 }
 
+async function CheckAddress (address,walletType){
+    const secret = ""
+    const Api=""
+
+    if(walletType === "BTC"){
+        secret = "3A84eebqYqeU3HaaXMcEAip8zBRS";
+        Api="4PiVpdbyLJZatLBwR"
+    }
+    else if(walletType === "USDT"){
+        Api="491Wh19j3Ece4MJRz";
+        secret = "2Tzeo889sniN76LerbwjCSshkSZN"
+    }
+
+let rand = random(option_rand);
+    var option_rand = {
+            min: 48886
+            , max: 67889
+            , integer: true
+        }
+function buildChecksum(params, secret, t, r, postData) {
+    const p = params || [];
+    p.push(`t=${t}`, `r=${r}`);
+    if (!!postData) {
+          if (typeof postData === 'string') {
+                p.push(postData);
+          } else {
+                p.push(JSON.stringify(postData));
+          }
+    }
+    p.sort();
+    p.push(`secret=${secret}`);
+    return crypto.createHash('sha256').update(p.join('&')).digest('hex');
+}
+
+
+
+// var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+var time = Math.floor(new Date().getTime() / 1000)
+var postData={
+    "address":address
+}
+const params = {
+    "addresses": [
+        address
+      ]
+}
+
+var build = buildChecksum(null,secret,time,rand,params);
+
+
+    const parameters = {
+        t:time,
+        r:rand,
+    }
+    const get_request_args = querystring.stringify(parameters);
+    
+    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/addresses/verify?'+get_request_args
+
+    
+axios.post(url,params,{ 
+    headers: {
+        'Content-Type': 'application/json',
+        'X-API-CODE':Api,
+        'X-CHECKSUM':build,
+        'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+    }
+})
+.then(res=>console.log(res.data))
+.catch((error)=>{
+    console.log('Error',error.response)
+})
+
+}
+
 
 async function AddFund(receipentAddress,amount){
 
@@ -1476,12 +1554,12 @@ async function AddFund(receipentAddress,amount){
 }
 
 async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,toAddress){
-    console.log('USER_ID',user_id);
-    console.log('amount',amount);
-    console.log('currency',currency);
-    console.log('auto_fee',auto_fee);
-    console.log('fromAddresss',fromAddress);
-    console.log('toAddress',toAddress);
+    // console.log('USER_ID',user_id);
+    // console.log('amount',amount);
+    // console.log('currency',currency);
+    // console.log('auto_fee',auto_fee);
+    // console.log('fromAddresss',fromAddress);
+    // console.log('toAddress',toAddress);
    
            
     let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
@@ -1516,9 +1594,6 @@ async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,
      
     return transactionSub;
 }
-
-
-
 
 
 
@@ -1713,6 +1788,133 @@ async function JupitCustomerCheck(addr,wallet){
     }).clone();
     
     
+}
+
+async function activate_token(){
+    
+
+let rand = random(option_rand);
+var option_rand = {
+        min: 48886
+        , max: 67889
+        , integer: true
+    }
+
+function buildChecksum(params, secret, t, r, postData) {
+const p = params || [];
+p.push(`t=${t}`, `r=${r}`);
+if (!!postData) {
+      if (typeof postData === 'string') {
+            p.push(postData);
+      } else {
+            p.push(JSON.stringify(postData));
+      }
+}
+p.sort();
+p.push(`secret=${secret}`);
+return crypto.createHash('sha256').update(p.join('&')).digest('hex');
+}
+var secret="2Tzeo889sniN76LerbwjCSshkSZN";
+// var rand = "Ademilola2@";
+var time = Math.floor(new Date().getTime() / 1000)
+var params="";
+var postData=""
+const parameters = {
+  t:time,
+  r:rand
+}
+
+var build = buildChecksum(null,secret,time,rand,null);
+
+const get_request_args = querystring.stringify(parameters);
+
+const options = {
+  hostname: 'demo.thresh0ld.com',
+  path: '/v1/sofa/wallets/194071/apisecret/activate?'+ get_request_args,
+  method: 'POST',
+  headers: {
+        'Content-Type': 'application/json',
+        'X-API-CODE':'491Wh19j3Ece4MJRz',
+        'X-CHECKSUM':build,
+        'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+      }
+}
+
+const req = https.request(options, res => {
+  console.log(`statusCode: ${res.statusCode}`)
+  
+
+  res.on('data', d => {
+    process.stdout.write(d)
+  })
+})
+
+req.on('error', error => {
+  console.error(error)
+})
+
+req.end()
+}
+
+async function activateUSDTToken(){
+    let rand = random(option_rand);
+    var option_rand = {
+            min: 48886
+            , max: 67889
+            , integer: true
+        }
+   
+    function buildChecksum(params, secret, t, r, postData) {
+        const p = params || [];
+        p.push(`t=${t}`, `r=${r}`);
+        if (!!postData) {
+            if (typeof postData === 'string') {
+                    p.push(postData);
+            } else {
+                    p.push(JSON.stringify(postData));
+            }
+        }
+        p.sort();
+        p.push(`secret=${secret}`);
+        return crypto.createHash('sha256').update(p.join('&')).digest('hex');
+    }
+    var secret="2Tzeo889sniN76LerbwjCSshkSZN";
+    // var rand = "Ademilola2@";
+    var time = Math.floor(new Date().getTime() / 1000)
+    var params="";
+    var postData="";
+
+    var build = buildChecksum(null,secret,time,rand,null);
+
+    const parameters = {
+        t:time,
+        r:rand,
+    }
+    const get_request_args = querystring.stringify(parameters);
+    
+    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/488433/apisecret/activate?'+get_request_args
+
+    let axiosCallback = await axios.post(url,params,{ 
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-CODE':'491Wh19j3Ece4MJRz',
+            'X-CHECKSUM':build,
+            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+        }
+        })
+        .then(res=>{
+            console.log(res.data)
+            return [res.data]
+        })
+        .catch((error)=>{
+        console.log('Error',error.response)
+        return [error.response.data]
+
+    })
+
+    return axiosCallback;
+
+
 }
 
 async function FailedUpdateEmail(addr,txid,subject){
