@@ -1487,14 +1487,18 @@ async function checkJupitAddress(address,wallet_type){
 async function CheckAddressValidity (address,walletType){
         let secret = ""
         let Api=""
+        let walletId="";
 
         if(walletType === "BTC"){
             secret = "3A84eebqYqeU3HaaXMcEAip8zBRS";
-            Api="4PiVpdbyLJZatLBwR"
+            Api="4PiVpdbyLJZatLBwR";
+            walletId ="194071"
+            
         }
         else if(walletType === "USDT"){
             Api="491Wh19j3Ece4MJRz";
-            secret = "2Tzeo889sniN76LerbwjCSshkSZN"
+            secret = "2Tzeo889sniN76LerbwjCSshkSZN";
+            walletId="488433"
         }
 
     let rand = random(option_rand);
@@ -1540,7 +1544,7 @@ async function CheckAddressValidity (address,walletType){
         }
         const get_request_args = querystring.stringify(parameters);
         
-        const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/addresses/verify?'+get_request_args
+        const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses/verify?`+get_request_args
 
         
     let x =  await axios.post(url,params,{ 
