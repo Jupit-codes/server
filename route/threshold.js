@@ -875,7 +875,7 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     if(CheckAddressValidityVar[0]){
         console.log('Hello',CheckAddressValidityVar)
         let jupitAddress = await JupitCustomerCheck(receipentAddress,wallet_type);
-        console.log('jupit',jupitAddress.length)
+        
         if(jupitAddress.length > 0){
             res.send('Internal Transfer')
         }
