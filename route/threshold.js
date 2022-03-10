@@ -870,14 +870,22 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     let receipentAddress = req.body.receipent_address;
     let wallet_type = req.body.wallet_type;
     // let jupitAddress = await checkJupitAddress(receipentAddress,wallet_type);
-    let jupitAddress = await JupitCustomerCheck(receipentAddress,wallet_type);
-    console.log('jupit',jupitAddress.length)
-    if(jupitAddress.length > 0){
-        res.send('Internal Transfer')
+    let CheckAddressValidityVar = await CheckAddressValidity(receipentAddress,wallet_type);
+
+    if(CheckAddressValidityVar){
+        let jupitAddress = await JupitCustomerCheck(receipentAddress,wallet_type);
+        console.log('jupit',jupitAddress.length)
+        if(jupitAddress.length > 0){
+            res.send('Internal Transfer')
+        }
+        else{
+            res.send('BlockChain Transfer')
+        }
     }
     else{
-        res.send('BlockChain Transfer')
+        res.send('Invalid Address')
     }
+   
     
 })
 
