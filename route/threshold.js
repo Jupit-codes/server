@@ -27,6 +27,21 @@ const Router  = express.Router();
 
 Router.post('/getautofee',(req,res)=>{
 
+    let Api ="";
+    let wallet_id = "";
+    let secret = "";
+
+    if(req.body.walletType === "BTC"){
+            secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+            Api="4PiVpdbyLJZatLBwR"
+            wallet_id="194071"
+    }
+    else if(req.body.walletType === "USDT"){
+        wallet_id="488433"
+        secret="2Tzeo889sniN76LerbwjCSshkSZN"
+        Api="491Wh19j3Ece4MJRz"
+    }
+        
     let rand = random(option_rand);
     var option_rand = {
             min: 48886
@@ -48,7 +63,7 @@ Router.post('/getautofee',(req,res)=>{
         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
 
-    var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+   
     var time = Math.floor(new Date().getTime() / 1000)
     // var postData = [{ "block_num": [1] }]
     const params = ['{"block_nums":[1,50,100]}'];
@@ -63,7 +78,7 @@ Router.post('/getautofee',(req,res)=>{
     
     const get_request_args = querystring.stringify(parameters);
    
-    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/autofees?'+ get_request_args
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/autofees?`+ get_request_args
     
     const new_params = {
         "block_nums": [1,50,100]
@@ -71,7 +86,7 @@ Router.post('/getautofee',(req,res)=>{
    axios.post(url,new_params,{
         headers: {
             'Content-Type': 'application/json',
-            'X-API-CODE':'4PiVpdbyLJZatLBwR',
+            'X-API-CODE':Api,
             'X-CHECKSUM':CHECKSUM,
             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
         }
