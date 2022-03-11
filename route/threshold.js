@@ -1031,7 +1031,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             if(wallet_type === "USDT"){
                
                 
-                let WalletCallback =  await creditWalletAddressUSDT(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
+                let WalletCallback =  await creditWalletAddressUSDT(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),networkFee)
                 if(WalletCallback[1]){
                   
                     Notification.create({
@@ -1442,7 +1442,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
 }
 
 
-async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
+async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_type,auto_fee,amount,networkFee){
     
     let isTrue ;
    
@@ -1492,7 +1492,7 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
             "memo": address,
             "user_id": userid,
             "message": "message-"+userid,
-            "block_average_fee": block_average_fee
+            "auto_fee": networkFee
             
           },
        
