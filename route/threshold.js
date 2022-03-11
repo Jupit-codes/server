@@ -1310,9 +1310,9 @@ Router.post('/update/read',middlewareVerify,(req,res)=>{
 async function creditWalletAddress(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
     
     let isTrue ;
-    secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
-    apikey = "4W1Pg2CeHQMS8hHGr";
-    wallet_id="678693"
+    let secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
+    let apikey = "4W1Pg2CeHQMS8hHGr";
+    let wallet_id="678693"
    
     
 
@@ -1443,14 +1443,12 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
 
 
 async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
-    // let secret="";
-    // let apikey = "";
-    // let wallet_id=""
+    
     let isTrue ;
    
-    secret="3v1aXdYguESktWRrJVd63ChuhmAu";
-    apikey="4Jr1WR58zR97LHTUH"
-    wallet_id="201075"
+    let secret="3v1aXdYguESktWRrJVd63ChuhmAu";
+    let  apikey="4Jr1WR58zR97LHTUH"
+    let wallet_id="201075"
     
 
 
