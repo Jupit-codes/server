@@ -1841,6 +1841,7 @@ async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress
     console.log('amount',amount)
     console.log('auto_fee',auto_fee)
     console.log('to',toAddress)
+    console.log('wallet_type',wallet_type)
     if(wallet_type === "BTC"){
         let transactionSub =  await Usermodel.findOne({'btc_wallet.address':toAddress},async function(err,docs){
             if(err){
