@@ -2013,17 +2013,33 @@ function middlewareVerify(req,res,next){
 async function JupitCustomerCheck(addr,wallet){
     console.log('wallet_type',wallet)
     let result = [];
-    return  await Usermodel.find({'btc_wallet.address':addr},function(err,docs){
-        if(err){
-            return [err]
-        }
-        else if(docs.length > 0){
-            return [docs]
-        }
-        else{
-            return [docs];
-        }
-    }).clone();
+    if(wallet === "BTC"){
+        return  await Usermodel.find({'btc_wallet.address':addr},function(err,docs){
+            if(err){
+                return [err]
+            }
+            else if(docs.length > 0){
+                return [docs]
+            }
+            else{
+                return [docs];
+            }
+        }).clone();
+    }
+    else if(wallet === "USDT"){
+        return  await Usermodel.find({'usdt_wallet.address':addr},function(err,docs){
+            if(err){
+                return [err]
+            }
+            else if(docs.length > 0){
+                return [docs]
+            }
+            else{
+                return [docs];
+            }
+        }).clone();
+    }
+    
     
     
 }
