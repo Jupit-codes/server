@@ -2011,6 +2011,7 @@ function middlewareVerify(req,res,next){
 //    return generateAutoFee;
 // }
 async function JupitCustomerCheck(addr,wallet){
+    console.log('wallet_type',wallet)
     let result = [];
     return  await Usermodel.find({'btc_wallet.address':addr},function(err,docs){
         if(err){
