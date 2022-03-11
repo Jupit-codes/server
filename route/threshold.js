@@ -994,36 +994,76 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 
         let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentaddress);
         if(UpdateWalletBalances){
-            let WalletCallback =  await creditWalletAddress(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
-            if(WalletCallback[1]){
-              
-                Notification.create({
-                    type:2,
-                    orderid:WalletCallback[2],
-                    transfertype:tranfertype,
-                    asset:wallet_type,
-                    from_address:sender,
-                    to_address:recipentaddress,
-                    amount:amount,
-                    status:'Processing',
-                    read:'unread',
-                    initiator:'sender',
-                    senderaddress:sender,
-                })
-                
-                res.send({
-                    "Message":"Transaction Initiated",
-                    "Status":true
-                })
+            if(wallet_type === "BTC"){
+                console.log('I am Here BTC');
+                return false;
+                let WalletCallback =  await creditWalletAddress(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
+                if(WalletCallback[1]){
+                  
+                    Notification.create({
+                        type:2,
+                        orderid:WalletCallback[2],
+                        transfertype:tranfertype,
+                        asset:wallet_type,
+                        from_address:sender,
+                        to_address:recipentaddress,
+                        amount:amount,
+                        status:'Processing',
+                        read:'unread',
+                        initiator:'sender',
+                        senderaddress:sender,
+                    })
+                    
+                    res.send({
+                        "Message":"Transaction Initiated",
+                        "Status":true
+                    })
+                }
+                else{
+                    console.log(WalletCallback[0]);
+                    res.status(403).send("Internal Server Error..")
+                    // res.json({
+                    //     "Message":"Internal Server Error..",
+                    //     "Status":false
+                    // })
+                }
             }
-            else{
-                console.log(WalletCallback[0]);
-                res.status(403).send("Internal Server Error..")
-                // res.json({
-                //     "Message":"Internal Server Error..",
-                //     "Status":false
-                // })
+
+            if(wallet_type === "USDT"){
+                console.log('I am Here USDT');
+                return false;
+                let WalletCallback =  await creditWalletAddressUSDT(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
+                if(WalletCallback[1]){
+                  
+                    Notification.create({
+                        type:2,
+                        orderid:WalletCallback[2],
+                        transfertype:tranfertype,
+                        asset:wallet_type,
+                        from_address:sender,
+                        to_address:recipentaddress,
+                        amount:amount,
+                        status:'Processing',
+                        read:'unread',
+                        initiator:'sender',
+                        senderaddress:sender,
+                    })
+                    
+                    res.send({
+                        "Message":"Transaction Initiated",
+                        "Status":true
+                    })
+                }
+                else{
+                    console.log(WalletCallback[0]);
+                    res.status(403).send("Internal Server Error..")
+                    // res.json({
+                    //     "Message":"Internal Server Error..",
+                    //     "Status":false
+                    // })
+                }
             }
+            
         
         
         } 
@@ -1269,21 +1309,13 @@ Router.post('/update/read',middlewareVerify,(req,res)=>{
 })
 
 async function creditWalletAddress(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
-    let secret="";
-    let apikey = "";
+    
     let isTrue ;
+    secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
+    apikey = "4W1Pg2CeHQMS8hHGr";
+    wallet_id="678693"
    
-    if(wallet_type === "BTC"){
-        secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
-        apikey = "4W1Pg2CeHQMS8hHGr";
-    }
-    else if(wallet_type === "USDT"){
-
-    }
-    else{
-        return ["Invalid Wallet Type",false]
-    }
-
+    
 
     let rand = random(option_rand);
     var option_rand = {
@@ -1344,7 +1376,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
  
     const get_request_args = querystring.stringify(parameters);
    
-    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/678693/sender/transactions?'+ get_request_args
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
     
    
    let myAxios = await axios.post(url,params,{
@@ -1409,6 +1441,146 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
    
    
 }
+
+
+async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
+    // let secret="";
+    // let apikey = "";
+    // let wallet_id=""
+    let isTrue ;
+   
+    secret="3v1aXdYguESktWRrJVd63ChuhmAu";
+    apikey="4Jr1WR58zR97LHTUH"
+    wallet_id="201075"
+    
+
+
+    let rand = random(option_rand);
+    var option_rand = {
+            min: 48886
+            , max: 67889
+            , integer: true
+        }
+    function build(params, secret, t, r, postData) {
+        const p = params || [];
+        p.push(`t=${t}`, `r=${r}`);
+        if (!!postData) {
+            if (typeof postData === 'string') {
+                    p.push(postData);
+            } else {
+                    p.push(JSON.stringify(postData));
+            }
+        }
+        p.sort();
+        p.push(`secret=${secret}`);
+        return crypto.createHash('sha256').update(p.join('&')).digest('hex');
+    }
+
+    // var secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
+    var time = Math.floor(new Date().getTime() / 1000);
+    var generate_order_id = generateuuID();
+   
+    // console.log('AutoFee',auto_fee);
+    // var newauto_fee = parseInt(auto_fee / 0.00000001);
+    
+    // console.log('newAuto',newauto_fee)
+    // "order_id": "187795_"+generate_order_id,
+   
+    var params = {
+        "requests": [
+          {
+            "order_id": "187795_"+generate_order_id,
+            "address": recipentAddress,
+            "amount": amount,
+            "memo": address,
+            "user_id": userid,
+            "message": "message-"+userid,
+            "block_average_fee": block_average_fee
+            
+          },
+       
+        ],
+        "ignore_black_list": false
+      }
+    
+
+    var CHECKSUM = build(null,secret,time,rand,params);
+
+      
+    const parameters = {
+        t:time,
+        r:rand,
+    }
+ 
+    const get_request_args = querystring.stringify(parameters);
+   
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
+    
+   
+   let myAxios = await axios.post(url,params,{
+        headers: {
+            'Content-Type': 'application/json',
+            // 'X-API-CODE':'4W1Pg2CeHQMS8hHGr',
+            'X-API-CODE':apikey,
+            'X-CHECKSUM':CHECKSUM,
+            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+        }
+   })
+   .then((result)=>{
+    
+        return([result.data,true,generate_order_id])
+        // let jupitPromise = new Promise(function(resolve,reject){
+        //     isTrue = true;
+        //     if(isTrue){
+        //         resolve()
+        //     }
+            
+        // })
+        // jupitPromise.then(()=>{
+        //     return 'Completed';
+        // }).catch((err)=>{
+        //     return 'Uncompleted'
+        // })
+        
+        
+   })
+   .catch((err)=>{
+    console.log(err)
+    // return new Promise(function(resolve,reject){
+    //     resolve(err.response.data);
+    // })
+    //    console.log('err',err.response.data)
+    // console.log(err.response.data)
+    return [err.response.data,false]
+    
+
+    // let jupitPromise = new Promise(function(resolve,reject){
+    //     isTrue = false;
+    //     if(isTrue){
+    //         resolve()
+    //     }
+    //     else{
+    //         reject();
+    //     }
+        
+    // })
+    // jupitPromise.then(()=>{
+    //     return 'Completed';
+    // }).catch((err)=>{
+    //     return 'Uncompleted'
+    // })
+
+    
+    
+   });
+//    console.log('myAxios',myAxios);
+   return myAxios;
+   
+   
+   
+}
+
+
 
 function generateuuID(){
     return randomUUID(); 
