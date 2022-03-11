@@ -936,7 +936,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         
         if(SubFundToWallet){
             
-            let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8));
+            let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8),wallet_type);
             if(AddFundToWallet){
 
                 // console.log('1',recipentaddress)
@@ -1835,94 +1835,179 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
 
 
 
-async function SubFund(user_id,amount,currency,auto_fee,fromAddress,toAddress){
+async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress){
     console.log('fromAddress',fromAddress)
     console.log('userid',user_id)
     console.log('amount',amount)
     console.log('auto_fee',auto_fee)
     console.log('to',toAddress)
-    let transactionSub =  await Usermodel.findOne({'btc_wallet.address':toAddress},async function(err,docs){
-        if(err){
-            
-            return [err,false];
-        }
-        else if(docs){
-            
-            let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
-                if(err){
-                    return [err,false]
-                }
-                else{
-                    
-                    let oldValue = docs.btc_wallet[0].balance;
-                    let newValue =   parseFloat(oldValue) - parseFloat(amount);
-                    console.log('oldValue',oldValue);
-                    
-                    console.log('newValue',newValue);
-                   let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8),'address':fromAddress}}},function(err,docs){
-                       if(err){
-                            return [err,false]
-                       }
-                       else if(docs){
-                        return ['updated',true]
-                       }
-                       else{
-                        return ['Empty',false]
-                       }
-                   }).clone().catch(function(err){ return [err,false]});
-                    
-                }
-            }).clone().catch(function(err){ return [err,false]});
-           
-            //  let SubFunds = await Usermodel.findByIdAndUpdate(user_id, {$inc: { 
-            //     btc_wallet: [{ 
-            //           balance: parseFloat(amount), 
-                       
-            //     }] 
-            //  }},function(err){
-            //     if(err,docs){
-            //         console.log(err)
-            //     }
-            //     else{
-            //         console.log(docs)
-            //     }
-            //  }).clone().catch(function(err){ return [err,false]});
-            
-            
-            let transaction_id = generateuuID();
-            if(SubFunds){
-                try{
-                    let wallet = wallet_transactions.create({
-                        type:'Internal Transfer',
-                        serial:user_id,
-                        order_id:user_id,
-                        currency:currency,
-                        txtid:transaction_id,
-                        amount:amount,
-                        fees:auto_fee,
-                        from_address:fromAddress,
-                        to_address:toAddress,
-                        wallet_id:'MassSender'+user_id,
-                        state: "null",
-                        confirm_blocks:"null",
-                        processing_state:"null",
-                        read:"unread",
-                        status:'Transaction Completed'
+    if(wallet_type === "BTC"){
+        let transactionSub =  await Usermodel.findOne({'btc_wallet.address':toAddress},async function(err,docs){
+            if(err){
                 
-                    })
-        
-                    return['success',true]
-        
-                }
-                catch(err){
-                    return [err,false]
-                }
-                
+                return [err,false];
             }
-        }
-    }).clone().catch(function(err){ return [err,false]});
+            else if(docs){
+                
+                let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
+                    if(err){
+                        return [err,false]
+                    }
+                    else{
+                        
+                        let oldValue = docs.btc_wallet[0].balance;
+                        let newValue =   parseFloat(oldValue) - parseFloat(amount);
+                        console.log('oldValue',oldValue);
+                        
+                        console.log('newValue',newValue);
+                       let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8),'address':fromAddress}}},function(err,docs){
+                           if(err){
+                                return [err,false]
+                           }
+                           else if(docs){
+                            return ['updated',true]
+                           }
+                           else{
+                            return ['Empty',false]
+                           }
+                       }).clone().catch(function(err){ return [err,false]});
+                        
+                    }
+                }).clone().catch(function(err){ return [err,false]});
+               
+                //  let SubFunds = await Usermodel.findByIdAndUpdate(user_id, {$inc: { 
+                //     btc_wallet: [{ 
+                //           balance: parseFloat(amount), 
+                           
+                //     }] 
+                //  }},function(err){
+                //     if(err,docs){
+                //         console.log(err)
+                //     }
+                //     else{
+                //         console.log(docs)
+                //     }
+                //  }).clone().catch(function(err){ return [err,false]});
+                
+                
+                let transaction_id = generateuuID();
+                if(SubFunds){
+                    try{
+                        let wallet = wallet_transactions.create({
+                            type:'Internal Transfer',
+                            serial:user_id,
+                            order_id:user_id,
+                            currency:wallet_type,
+                            txtid:transaction_id,
+                            amount:amount,
+                            fees:auto_fee,
+                            from_address:fromAddress,
+                            to_address:toAddress,
+                            wallet_id:'MassSender'+user_id,
+                            state: "null",
+                            confirm_blocks:"null",
+                            processing_state:"null",
+                            read:"unread",
+                            status:'Transaction Completed'
+                    
+                        })
+            
+                        return['success',true]
+            
+                    }
+                    catch(err){
+                        return [err,false]
+                    }
+                    
+                }
+            }
+        }).clone().catch(function(err){ return [err,false]});
+        
+        return transactionSub;
+    }
+    else if(wallet_type === "USDT"){
+        let transactionSub =  await Usermodel.findOne({'usdt_wallet.address':toAddress},async function(err,docs){
+            if(err){
+                
+                return [err,false];
+            }
+            else if(docs){
+                
+                let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
+                    if(err){
+                        return [err,false]
+                    }
+                    else{
+                        
+                        let oldValue = docs.usdt_wallet[0].balance;
+                        let newValue =   parseFloat(oldValue) - parseFloat(amount);
+                        
+                       let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'usdt_wallet':{'balance':parseFloat(newValue).toFixed(8),'address':fromAddress}}},function(err,docs){
+                           if(err){
+                                return [err,false]
+                           }
+                           else if(docs){
+                            return ['updated',true]
+                           }
+                           else{
+                            return ['Empty',false]
+                           }
+                       }).clone().catch(function(err){ return [err,false]});
+                        
+                    }
+                }).clone().catch(function(err){ return [err,false]});
+               
+                //  let SubFunds = await Usermodel.findByIdAndUpdate(user_id, {$inc: { 
+                //     btc_wallet: [{ 
+                //           balance: parseFloat(amount), 
+                           
+                //     }] 
+                //  }},function(err){
+                //     if(err,docs){
+                //         console.log(err)
+                //     }
+                //     else{
+                //         console.log(docs)
+                //     }
+                //  }).clone().catch(function(err){ return [err,false]});
+                
+                
+                let transaction_id = generateuuID();
+                if(SubFunds){
+                    try{
+                        let wallet = wallet_transactions.create({
+                            type:'Internal Transfer',
+                            serial:user_id,
+                            order_id:user_id,
+                            currency:wallet_type,
+                            txtid:transaction_id,
+                            amount:amount,
+                            fees:auto_fee,
+                            from_address:fromAddress,
+                            to_address:toAddress,
+                            wallet_id:'MassSender'+user_id,
+                            state: "null",
+                            confirm_blocks:"null",
+                            processing_state:"null",
+                            read:"unread",
+                            status:'Transaction Completed'
+                    
+                        })
+            
+                        return['success',true]
+            
+                    }
+                    catch(err){
+                        return [err,false]
+                    }
+                    
+                }
+            }
+        }).clone().catch(function(err){ return [err,false]});
+        
+        return transactionSub;
+    }
     
-    return transactionSub;
 }
 
 
