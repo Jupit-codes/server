@@ -995,8 +995,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
         let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentaddress);
         if(UpdateWalletBalances){
             if(wallet_type === "BTC"){
-                console.log('I am Here BTC');
-                return false;
+                
                 let WalletCallback =  await creditWalletAddress(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
                 if(WalletCallback[1]){
                   
@@ -1030,8 +1029,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             }
 
             if(wallet_type === "USDT"){
-                console.log('I am Here USDT');
-                return false;
+               
+                
                 let WalletCallback =  await creditWalletAddressUSDT(user_id,sender,recipentaddress,wallet_type,parseFloat(fee).toFixed(8),parseFloat(amount).toFixed(8),block_average_fee)
                 if(WalletCallback[1]){
                   
@@ -1777,7 +1776,7 @@ async function AddFund(receipentAddress,amount){
 
 }
 
-async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,toAddress){
+async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress){
     // console.log('USER_ID',user_id);
     // console.log('amount',amount);
     // console.log('currency',currency);
@@ -1790,17 +1789,33 @@ async function updateWalletBalance(user_id,amount,currency,auto_fee,fromAddress,
                 if(err){
                     return [err,false]
                 }
-                else{
-                    let oldValue = docs.btc_wallet[0].balance;
-                    let newValue =   oldValue - amount;
-                   let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8),'address':fromAddress}}},function(err,docs){
-                       if(err){
-                            return [err,false]
-                       }
-                       else{
-                        return ['updated',true]
-                       }
-                   }).clone().catch(function(err){ return [err,false]});
+                else if(docs){
+
+                    if(wallet_type === "BTC"){
+                        let oldValue = docs.btc_wallet[0].balance;
+                        let newValue =   oldValue - amount;
+                        let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8),'address':fromAddress}}},function(err,docs){
+                            if(err){
+                                    return [err,false]
+                            }
+                            else{
+                                return ['updated',true]
+                            }
+                        }).clone().catch(function(err){ return [err,false]});
+                    }
+                    else if(wallet_type === "USDT"){
+                            let oldValue = docs.usdt_wallet[0].balance;
+                            let newValue =   oldValue - amount;
+                            let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'usdt_wallet':{'balance':parseFloat(newValue).toFixed(8),'address':fromAddress}}},function(err,docs){
+                                if(err){
+                                        return [err,false]
+                                }
+                                else{
+                                    return ['updated',true]
+                                }
+                        }).clone().catch(function(err){ return [err,false]});
+                    }
+                    
                     
                 }
             }).clone().catch(function(err){ return [err,false]});
