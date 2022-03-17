@@ -1486,7 +1486,7 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
     var params = {
         "requests": [
           {
-            "order_id": "187795_"+generate_order_id,
+            "order_id": "187795_"+userid,
             "address": recipentAddress,
             "amount": amount,
             "memo": address,
