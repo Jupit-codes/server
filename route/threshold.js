@@ -1092,7 +1092,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
             res.send(docs)
            
         }
-    }).limit(5).sort('updated')
+    }).limit(5).sort('updated' - 1)
 
 })
 
