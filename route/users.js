@@ -1125,7 +1125,7 @@ async function updateWebHook(json){
         process.exit(0)
     }).clone().catch(function(err){ console.log(err)});
 
-    console.log('res',res)
+    
     
    
 }
