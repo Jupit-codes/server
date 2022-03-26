@@ -6,6 +6,7 @@ import TwoFactor from "../model/twoFactor.js";
 import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
 import Walletmodel from '../model/wallet_transactions.js'
+import Bankmodel from "../model/bank.js";
 import axios from "axios";
 import crypto from 'crypto';
 import querystring from 'querystring';
@@ -1017,6 +1018,31 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
                 new: true,
                 upsert: true // Make this update into an upsert
               })
+
+              Bankmodel.findOne({email:req.body.email},async function(err,docs){
+                if(err){
+                    res.status(403).send('Internal Server Error')
+                }
+                else if(docs){
+                    Bankmodel.findOneAndUpdate({email:req.body.email},{bvn:req.body.bvn,account_number:req.body.account_number,account_name:req.body.account_name,bank_code:req.body.bankcode},null,async(err)=>{
+                        if(err){
+                            res.status(403).send('Error Updating Bank Details')
+                        }
+                    })
+                }
+                else if(!docs){
+                    const bankdetails = await Bankmodel.create({
+                        email:req.body.email,
+                        bvn:req.body.bvn,
+                        account_number:req.body.account_number,
+                        account_name:req.body.account_name,
+                        bankcode:req.body.bankcode
+                        
+                    })
+                }
+              })
+              
+
 
             const url = `https://api.paystack.co/customer/${CreateCustomerCode[0]}/identification`;
             const params={
