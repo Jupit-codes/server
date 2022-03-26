@@ -1152,6 +1152,12 @@ async function updateWebHook(json){
 //             } 
        
 //         }).exec();
+    let bankwebhook = await Bankmodel.findOneAndUpdate({email:json.data.email},{status:json.event},null,(err)=>{
+        if(err){
+            console.log(err)
+        }
+        process.exit(0)
+    }).clone().catch(function(err){ console.log(err)});
     let res = await KycModel.findOneAndUpdate ({customercode:json.data.customer_code,'level2.email':json.data.email},{'level2.$.event_status':json.event},null,async(err)=>{
         if(err){
             console.log('Error',err)

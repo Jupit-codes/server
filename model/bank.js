@@ -21,6 +21,9 @@ const bankSchema = mongoose.Schema({
         type:'String',
         required: [true, "Required"],
     },
+    status:{
+        type:'String'
+    },
     updated: { type: Date, default: Date.now() },
 })
 
