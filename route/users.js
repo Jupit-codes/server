@@ -693,8 +693,8 @@ router.post('/users/register',(req,res)=>{
                 subject: 'Email Verification <jupit.app>',
                 text: 'That was easy!',
                 html: `
-                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
-                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-items:center">
+                            <div style="width:50%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
                                 <hr style="width:100%;height:5px;background-color:#1c1c93"/>
                                 <div style="width:100%;text-align:center">
                                         <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
@@ -718,7 +718,7 @@ router.post('/users/register',(req,res)=>{
                                 </div>
 
                                 <div >
-                                <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
+                                <p style="color:#9DA8B6">If you have any questions, please contact support@jupit.app</p>
                                 </div>
                             </div>
                 
@@ -1114,17 +1114,168 @@ async function updateWebHook(json){
 //             } 
        
 //         }).exec();
-    let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code,'level2.email':json.data.email},{'level2.$.event_status':json.event},null,(err)=>{
+    let res = await KycModel.findOneAndUpdate ({customercode:json.data.customer_code,'level2.email':json.data.email},{'level2.$.event_status':json.event},null,async(err)=>{
         if(err){
             console.log('Error',err)
         }
         else{
-            console.log('Updated','Updated')
+            console.log('Updated','Updated');
+            await SendMail(json.data.email,json.event)
         }
         process.exit(0)
     }).clone().catch(function(err){ console.log(err)});
 
     console.log('res',res)
+    
+   
+}
+
+async function SendMail(address,status){
+    if(status === "customeridentification.success"){
+        const mailData = {
+            from: 'hello@jupit.app',  // sender address
+            to: address,   // list of receivers
+            subject: 'Account  Verification <jupit.app>',
+            text: 'That was easy!',
+            html: `
+                    
+                    <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-items:center">
+                    <div style="width:50%; height:60%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                        <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                        <div style="width:100%;text-align:center">
+                                <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
+                        </div>   
+                        <div style="width:100%;text-align:center;margin-top:20px">
+                            <h2 style="font-family:candara">Account Verification  </h2>
+                        <div>   
+                        <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                            <hr style="background-color:#f5f5f5;width:95%"/>
+                        <div>
+                            <div style="width:100%; text-align:left;">
+                                <div style="font-family:candara;padding:10px">
+                                <p style="padding-bottom: 20px;">Dear <strong>Customer</strong>,</p>
+
+                                <p style="padding-bottom: 20px;">Trust this mail meet you well?</p>
+
+                                <p style="padding-bottom: 20px;">Kindly find below response for your account verification on our app platform.</p>
+
+                                <p style="padding-bottom: 20px;">
+                                        - <strong>Email Address</strong> : ${address}<br/>
+                                        - <strong>Status</strong>: <span style="color: #003300">Success<span>
+
+                                </p>
+
+                                <p style="padding-bottom: 20px;">
+
+                                Thanks For Choosing Us
+
+                                </p>
+
+                            </div>
+                                
+                                <!-- <button style="width:50%;height:40px;font-family:candara;font-size:18px;font-weight:bold;cursor:pointer;background-color:#ffc857;border:1px solid #ffc857">Verify Email Address</button> -->
+                            </div>
+                        <!--  <div style="width:100%; text-align:center">
+                            <p style="font-family:candara;padding:10px">If you have trouble paste below link in your browser</p>
+                            <p style="font-family:candara;color:#1c1c93;font-weight:bold">https://www.google.com</p>
+                            </div> -->
+                        </div>
+                        </div>
+
+                        <div >
+                        <p style="color:#9DA8B6">If you have any questions, please contact support@jupit.app</p>
+                        </div>
+                    </div>
+                    
+                    </div>
+                `
+          };
+          transporter.sendMail(mailData, function (err, info) {
+            if(err){
+               
+                // res.send({"message":"An Error Occurred","callback":err})
+                console.log('Mailer Failed')
+            }
+            
+            else{
+            
+                console.log('Mailer Success')
+                
+            }
+              
+         });
+    
+    }
+    else{
+            const mailData = {
+                from: 'hello@jupit.app',  // sender address
+                to: address,   // list of receivers
+                subject: 'Account  Verification <jupit.app>',
+                text: 'That was easy!',
+                html: `
+                        
+                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-items:center">
+                            <div style="width:50%; height:60%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                                <div style="width:100%;text-align:center">
+                                    <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
+                                </div>   
+                                <div style="width:100%;text-align:center;margin-top:20px">
+                                    <h2 style="font-family:candara">Account Verification  </h2>
+                                <div>   
+                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                                    <hr style="background-color:#f5f5f5;width:95%"/>
+                                <div>
+                                <div style="width:100%; text-align:left;">
+                                    <div style="font-family:candara;padding:10px">
+                                        <p style="padding-bottom: 20px;">Dear <strong>Customer</strong>,</p>
+
+                                        <p style="padding-bottom: 20px;">Trust this mail meet you well?</p>
+
+                                        <p style="padding-bottom: 20px;">Kindly find below response for your account verification on our app platform.</p>
+
+                                        <p style="padding-bottom: 20px;">
+                                                - <strong>Email Address</strong> : ${address}<br/>
+                                                - <strong>Status</strong>: <span style="color: #FF0000">Failed<span>
+
+                                        </p>
+
+                                        <p style="padding-bottom: 20px;">
+
+                                        Thanks For Choosing Us
+
+                                        </p>
+
+                                    </div>
+                                </div>
+                        
+                            </div>
+                        </div>
+
+                            <div >
+                            <p style="color:#9DA8B6">If you have any questions, please contact support@jupit.app</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    `
+            };
+            transporter.sendMail(mailData, function (err, info) {
+                if(err){
+                
+                    // res.send({"message":"An Error Occurred","callback":err})
+                    console.log('Mailer Failed')
+                }
+                
+                else{
+                
+                    console.log('Mailer Success')
+                    
+                }
+              
+             });
+    
+    }
     
    
 }
