@@ -4,6 +4,15 @@ const idcardverification = mongoose.Schema({
     cardtype:{
         type:'String',
     },
+    firstname:{
+        type:'String'
+    },
+    lastname:{
+        type:'String'
+    },
+    dob:{
+        type:'String'
+    },
     cardnumber:{
         type:'String',
     },

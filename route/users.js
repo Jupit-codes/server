@@ -249,6 +249,9 @@ router.post('/users/idcardverification',(req,res)=>{
                             cardtype:req.body.items.cardType,
                             imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
                             userid:req.body.items.userid,
+                            firstname:req.body.items.firstname,
+                            lastname:req.body.items.lastname,
+                            dob:req.body.items.dob,
                             status:'Pending'
                         })
                         res.send("Verification Successfully Submitted")
