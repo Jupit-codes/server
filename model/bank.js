@@ -13,6 +13,10 @@ const bankSchema = mongoose.Schema({
         type:'String',
         required: [true, "Required"],
     },
+    account_name:{
+        type:'String',
+        required: [true, "Required"],
+    },
     bvn:{
         type:'String',
         required: [true, "Required"],
