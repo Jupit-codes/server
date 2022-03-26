@@ -269,7 +269,7 @@ router.post('/users/idcardverification',(req,res)=>{
 
             s3Bucket.putObject(data, function(err, data){
                 if (err) { 
-                  // console.log(err);
+                  console.log(err);
                   // console.log('Error uploading data: ', data); 
                   res.status(400).send('An Error Occurred..Pls Try Again');
                 } else {
