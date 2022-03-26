@@ -176,6 +176,18 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
     })
 })
 
+router.post('/users/bank',middlewareVerify,(req,res)=>{
+   
+    Bankmodel.findOne({email:req.body.email},function(err,docs){
+        if(err){
+            res.status(403).send(err);
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+})
+
 router.post('/get2FA',middlewareVerify,(req,res)=>{
     TwoFactor.findOne({userid:req.body.userid},function(err,docs){
         if(err){
@@ -1146,7 +1158,7 @@ async function updateWebHook(json){
         }
         else{
             console.log('Updated','Updated');
-            await SendMail(json.data.email,json.event)
+            SendMail(json.data.email,json.event)
         }
         process.exit(0)
     }).clone().catch(function(err){ console.log(err)});
