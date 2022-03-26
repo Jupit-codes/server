@@ -994,6 +994,13 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
     let CreateCustomerCode = await customer_code_fetch(emailaddress)
         if(CreateCustomerCode[1]){
             // res.send(CreateCustomerCode[0])
+
+            // Usermodel.findOneAndUpdate({email:emailaddress})
+            const updateCustomerCode = await Usermodel.findOneAndUpdate({email:emailaddress},{customer_code:CreateCustomerCode[0]},{
+                new: true,
+                upsert: true // Make this update into an upsert
+              })
+
             const url = `https://api.paystack.co/customer/${CreateCustomerCode[0]}/identification`;
             const params={
                 "country": "NG",
