@@ -237,27 +237,42 @@ router.post('/users/idcardverification',(req,res)=>{
                 res.status(400).send("Your IDCard Verification Is Already In Progress")
             }
             else if(docs.status === "Rejected"){
-                s3Bucket.putObject(data, function(err, data){
-                    if (err) { 
-                      // console.log(err);
-                      // console.log('Error uploading data: ', data); 
-                      res.status(400).send('An Error Occurred..Pls Try Again');
-                    } else {
+
+
+                IdCardVerification.create({
+                    cardnumber:req.body.items.cardNumber,
+                    cardtype:req.body.items.cardType,
+                    imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+                    userid:req.body.items.userid,
+                    firstname:req.body.items.firstname,
+                    lastname:req.body.items.lastname,
+                    dob:req.body.items.dob,
+                    status:'Pending'
+                })
+                res.send("Verification Successfully Submitted")
+
+
+                // s3Bucket.putObject(data, function(err, data){
+                //     if (err) { 
+                //       // console.log(err);
+                //       // console.log('Error uploading data: ', data); 
+                //       res.status(400).send('An Error Occurred..Pls Try Again');
+                //     } else {
                       
-                        IdCardVerification.create({
-                            cardnumber:req.body.items.cardNumber,
-                            cardtype:req.body.items.cardType,
-                            imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
-                            userid:req.body.items.userid,
-                            firstname:req.body.items.firstname,
-                            lastname:req.body.items.lastname,
-                            dob:req.body.items.dob,
-                            status:'Pending'
-                        })
-                        res.send("Verification Successfully Submitted")
+                //         IdCardVerification.create({
+                //             cardnumber:req.body.items.cardNumber,
+                //             cardtype:req.body.items.cardType,
+                //             imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+                //             userid:req.body.items.userid,
+                //             firstname:req.body.items.firstname,
+                //             lastname:req.body.items.lastname,
+                //             dob:req.body.items.dob,
+                //             status:'Pending'
+                //         })
+                //         res.send("Verification Successfully Submitted")
           
-                    }
-                });
+                //     }
+                // });
 
                
             }
@@ -267,24 +282,36 @@ router.post('/users/idcardverification',(req,res)=>{
         }
         else if(!docs){
 
-            s3Bucket.putObject(data, function(err, data){
-                if (err) { 
-                  console.log(err);
-                  // console.log('Error uploading data: ', data); 
-                  res.status(400).send('An Error Occurred..Pls Try Again');
-                } else {
+            IdCardVerification.create({
+                cardnumber:req.body.items.cardNumber,
+                cardtype:req.body.items.cardType,
+                imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+                userid:req.body.items.userid,
+                firstname:req.body.items.firstname,
+                lastname:req.body.items.lastname,
+                dob:req.body.items.dob,
+                status:'Pending'
+            })
+            res.send("Verification Successfully Submitted")
+
+            // s3Bucket.putObject(data, function(err, data){
+            //     if (err) { 
+            //       console.log(err);
+            //       // console.log('Error uploading data: ', data); 
+            //       res.status(400).send('An Error Occurred..Pls Try Again');
+            //     } else {
                   
-                    IdCardVerification.create({
-                        cardnumber:req.body.items.cardNumber,
-                        cardtype:req.body.items.cardType,
-                        imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
-                        userid:req.body.items.userid,
-                        status:'Pending'
-                    })
-                    res.send("Verification Successfully Submitted")
+            //         IdCardVerification.create({
+            //             cardnumber:req.body.items.cardNumber,
+            //             cardtype:req.body.items.cardType,
+            //             imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+            //             userid:req.body.items.userid,
+            //             status:'Pending'
+            //         })
+            //         res.send("Verification Successfully Submitted")
       
-                }
-            });
+            //     }
+            // });
 
         }
     })
