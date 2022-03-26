@@ -546,6 +546,23 @@ router.post('/customer_webhook',(req,res)=>{
     //  });
     
 })
+
+router.get('/users/test/hook',async (req,res)=>{
+    let customer_code = "CUS_70tg6oyphbuaue6";
+    let callback_email = "hademylola@gmail.com";
+     await KycModel.findOneAndUpdate({customercode:customer_code,'level2.email':callback_email},{'level2.$.event_status':"TEST SUCCESS"},null,(err,docs)=>{
+        if(err){
+            console.log('Error',err)
+        }
+        else{
+            console.log('Updated',docs)
+            res.send(docs)
+        }
+        process.exit(0)
+    }).clone().catch(function(err){ console.log(err)});
+
+    
+})
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
     console.log(req.params.id);
     // res.send(req.params.id);
