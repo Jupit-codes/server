@@ -5,9 +5,7 @@ const kycSchema = mongoose.Schema({
         type:'String',
         required: [true, "Required"]
     },
-    customer_code:{
-        type:'String'
-    },
+
     level1:[{email:"String",status:'String'}],
     level2:[
                 {
