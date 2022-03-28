@@ -18,12 +18,21 @@ const router = express.Router();
 
 router.get('/me',(req,res)=>{
     console.log('Welcome to Verify me');
-    res.send('Welcome');
+    
     const url = "https://api.verified.africa/sfx-verify/v3/id-service/"
-    axios.post(url,{ 
+    var params = {
+        "verificationType": "PASSPORT-FULL-DETAILS",
+        "searchParameter": "A07011111",
+        "firstName": "John",
+        "lastName": "Doe",
+        "dob": "1974-09-24",
+        "transactionReference":""
+    }
+    axios.post(url,params,{ 
         headers: {
             'Content-Type': 'application/json',
             'apiKey':'Imy5g2tzop7Uwp4bzguI',
+            'userid':'1641124470949',
             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
         }
     })
