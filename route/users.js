@@ -233,18 +233,7 @@ router.post('/users/idcardverification',(req,res)=>{
     //     ContentType: 'image/jpeg'
     //   };
     var uploadStr = 'data:image/jpeg;base64,' + req.body.items.CapturedImage;
-    cloudinary.v2.uploader.upload(uploadStr, {
-        overwrite: true,
-        invalidate: true
-    },
-        function (error, result) {
-            if(error){
-                // res.json(error)
-                console.log(error)
-                res.status(400).send('Upload Document Error...Pls try again')
-            }
-            
-      IdCardVerification.findOne({userid:req.body.items.userid},function(err,docs){
+    IdCardVerification.findOne({userid:req.body.items.userid},function(err,docs){
         if(err){
             res.status(400).send(err)
         }
@@ -254,43 +243,30 @@ router.post('/users/idcardverification',(req,res)=>{
             }
             else if(docs.status === "Rejected"){
 
-
-                IdCardVerification.create({
-                    cardnumber:req.body.items.cardNumber,
-                    cardtype:req.body.items.cardType,
-                    imagepath:result.secure_url,
-                    userid:req.body.items.userid,
-                    firstname:req.body.items.firstname,
-                    lastname:req.body.items.lastname,
-                    dob:req.body.items.dob,
-                    status:'Pending'
-                })
-                res.send("Verification Successfully Submitted")
-
-
-                // s3Bucket.putObject(data, function(err, data){
-                //     if (err) { 
-                //       // console.log(err);
-                //       // console.log('Error uploading data: ', data); 
-                //       res.status(400).send('An Error Occurred..Pls Try Again');
-                //     } else {
-                      
-                //         IdCardVerification.create({
-                //             cardnumber:req.body.items.cardNumber,
-                //             cardtype:req.body.items.cardType,
-                //             imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
-                //             userid:req.body.items.userid,
-                //             firstname:req.body.items.firstname,
-                //             lastname:req.body.items.lastname,
-                //             dob:req.body.items.dob,
-                //             status:'Pending'
-                //         })
-                //         res.send("Verification Successfully Submitted")
-          
-                //     }
-                // });
-
-               
+                cloudinary.v2.uploader.upload(uploadStr, {
+                    overwrite: true,
+                    invalidate: true
+                },
+                    function (error, result) {
+                        if(error){
+                            // res.json(error)
+                            console.log(error)
+                            res.status(400).send('Upload Document Error...Pls try again')
+                        }
+                        
+                        IdCardVerification.create({
+                            cardnumber:req.body.items.cardNumber,
+                            cardtype:req.body.items.cardType,
+                            imagepath:result.secure_url,
+                            userid:req.body.items.userid,
+                            firstname:req.body.items.firstname,
+                            lastname:req.body.items.lastname,
+                            dob:req.body.items.dob,
+                            status:'Pending'
+                        })
+                        res.send("Verification Successfully Submitted")
+                    });
+ 
             }
             else if(docs.status === "Resolved"){
                 res.status(400).send("Previous Submission Has Already been Resolved")
@@ -298,36 +274,32 @@ router.post('/users/idcardverification',(req,res)=>{
         }
         else if(!docs){
 
-            IdCardVerification.create({
-                cardnumber:req.body.items.cardNumber,
-                cardtype:req.body.items.cardType,
-                imagepath:result.secure_url,
-                userid:req.body.items.userid,
-                firstname:req.body.items.firstname,
-                lastname:req.body.items.lastname,
-                dob:req.body.items.dob,
-                status:'Pending'
-            })
-            res.send("Verification Successfully Submitted")
 
-            // s3Bucket.putObject(data, function(err, data){
-            //     if (err) { 
-            //       console.log(err);
-            //       // console.log('Error uploading data: ', data); 
-            //       res.status(400).send('An Error Occurred..Pls Try Again');
-            //     } else {
-                  
-            //         IdCardVerification.create({
-            //             cardnumber:req.body.items.cardNumber,
-            //             cardtype:req.body.items.cardType,
-            //             imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
-            //             userid:req.body.items.userid,
-            //             status:'Pending'
-            //         })
-            //         res.send("Verification Successfully Submitted")
-      
-            //     }
-            // });
+            cloudinary.v2.uploader.upload(uploadStr, {
+                overwrite: true,
+                invalidate: true
+            },
+                function (error, result) {
+                    if(error){
+                        // res.json(error)
+                        console.log(error)
+                        res.status(400).send('Upload Document Error...Pls try again')
+                    }
+                    
+                    IdCardVerification.create({
+                        cardnumber:req.body.items.cardNumber,
+                        cardtype:req.body.items.cardType,
+                        imagepath:result.secure_url,
+                        userid:req.body.items.userid,
+                        firstname:req.body.items.firstname,
+                        lastname:req.body.items.lastname,
+                        dob:req.body.items.dob,
+                        status:'Pending'
+                    })
+                    res.send("Verification Successfully Submitted")
+                });
+
+           
 
         }
     })
@@ -335,8 +307,7 @@ router.post('/users/idcardverification',(req,res)=>{
 
 
 
-            // res.json();
-        });
+    
     
 })
 
