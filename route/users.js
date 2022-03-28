@@ -232,7 +232,7 @@ router.post('/users/idcardverification',(req,res)=>{
     //     ContentEncoding: 'base64',
     //     ContentType: 'image/jpeg'
     //   };
-    var uploadStr = 'data:image/jpeg;base64,' + req.body.items.CapturedImage;
+    var uploadStr = req.body.items.CapturedImage;
     IdCardVerification.findOne({userid:req.body.items.userid},function(err,docs){
         if(err){
             res.status(400).send(err)
