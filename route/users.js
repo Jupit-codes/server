@@ -734,7 +734,7 @@ router.post('/users/register',(req,res)=>{
                             <div style="width:80%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
                                 <hr style="width:100%;height:5px;background-color:#1c1c93"/>
                                 <div style="width:100%;text-align:center">
-                                        <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
+                                        <img src="https://res.cloudinary.com/jupit/image/upload/v1648469496/logo_2_t4ogqs.png" />
                                 </div>   
                                 <div style="width:100%;text-align:center;margin-top:20px">
                                     <h2 style="font-family:candara">Email Verification  </h2>
