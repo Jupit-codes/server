@@ -285,18 +285,21 @@ router.post('/users/idcardverification',(req,res)=>{
                         console.log('error',error)
                         res.status(400).send('Upload Document Error...Pls try again')
                     }
+                    if(result){
+                        IdCardVerification.create({
+                            cardnumber:req.body.items.cardNumber,
+                            cardtype:req.body.items.cardType,
+                            imagepath:result.secure_url,
+                            userid:req.body.items.userid,
+                            firstname:req.body.items.firstname,
+                            lastname:req.body.items.lastname,
+                            dob:req.body.items.dob,
+                            status:'Pending'
+                        })
+                        res.send("Verification Successfully Submitted")
+                    }
                     
-                    IdCardVerification.create({
-                        cardnumber:req.body.items.cardNumber,
-                        cardtype:req.body.items.cardType,
-                        imagepath:result.secure_url,
-                        userid:req.body.items.userid,
-                        firstname:req.body.items.firstname,
-                        lastname:req.body.items.lastname,
-                        dob:req.body.items.dob,
-                        status:'Pending'
-                    })
-                    res.send("Verification Successfully Submitted")
+                   
                 });
 
            
