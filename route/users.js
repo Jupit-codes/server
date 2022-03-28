@@ -20,9 +20,14 @@ import multer from "multer";
 import { cwd } from "process";
 import SpeakEasy from 'speakeasy'
 
+import cloudinary from 'cloudinary'
+cloudinary.config({ 
+    cloud_name: 'jupit', 
+    api_key: '848134193962787', 
+    api_secret: '57S453gwuBc1_vypuLOcqYQ2V5o' 
+  });
 
 const upload = multer({ dest: 'uploads/' })
-
 
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -41,7 +46,7 @@ router.post('/2FA',middlewareVerify,(req,res)=>{
 
     TwoFactor.findOne({userid:req.body.userid},function(err,docs){
         if(err){
-            res.status(403).send(err)
+            res.status(400).send(err)
         }
         else if(docs){
             res.send('Proceed...UserAlreadyPreActivated')
@@ -68,7 +73,7 @@ router.post('/2FA',middlewareVerify,(req,res)=>{
                 res.send('Activated')
             }
             else{
-                res.status(403).send('An Error Occurred')
+                res.status(0).send('An Error Occurred')
             }
         }
     })
@@ -101,12 +106,12 @@ router.post('/activate/2FA',middlewareVerify,(req,res)=>{
                 res.send({message:"2FA Successfully Activated",data:data,new2fa:new2fa})
             }
             else{
-                res.status(403).send("2FA Successfully Failed..Try Another Token")
+                res.status(400).send("2FA Successfully Failed..Try Another Token")
             }
             
         }
         else if(!docs){
-            res.status(403).send("User cannot be Authenticated..")
+            res.status(400).send("User cannot be Authenticated..")
         }
     })
 })
@@ -117,14 +122,14 @@ router.post('/login/2FA',(req,res)=>{
 
         Usermodel.findOne({email:email},async (err,docs)=>{
             if(err){
-                res.status(403).send(err)
+                res.status(400).send(err)
             }
             else if(docs){
                 const validPassword = bcrypt.compareSync(password, docs.password);
                 if(validPassword){
                     await TwoFactor.findOne({userid:docs._id},function(err,fa_docs){
                         if(err){
-                            res.status(403).send(err)
+                            res.status(400).send(err)
                             console.log(err)
                         }
                         else if(fa_docs){
@@ -216,18 +221,29 @@ router.post('/users/idcardverification',(req,res)=>{
     // console.log("app",req.body.items.CapturedImage);
   
    
-    AWS.config.loadFromPath(`${process.env.PWD}/route/aws.json`);
+    // AWS.config.loadFromPath(`${process.env.PWD}/route/aws.json`);
 
-    var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
-    const buf = Buffer.from(req.body.items.CapturedImage.replace(/^data:image\/\w+;base64,/, ""),'base64')
+    // var s3Bucket = new AWS.S3( { params: {Bucket: 'idcardverification'} } );
+    // const buf = Buffer.from(req.body.items.CapturedImage.replace(/^data:image\/\w+;base64,/, ""),'base64')
 
-    var data = {
-        Key: req.body.items.userid, 
-        Body: buf,
-        ContentEncoding: 'base64',
-        ContentType: 'image/jpeg'
-      };
-
+    // var data = {
+    //     Key: req.body.items.userid, 
+    //     Body: buf,
+    //     ContentEncoding: 'base64',
+    //     ContentType: 'image/jpeg'
+    //   };
+    var uploadStr = 'data:image/jpeg;base64,' + req.body.items.CapturedImage;
+    cloudinary.v2.uploader.upload(uploadStr, {
+        overwrite: true,
+        invalidate: true
+    },
+        function (error, result) {
+            if(error){
+                // res.json(error)
+                console.log(error)
+                res.status(400).send('Upload Document Error...Pls try again')
+            }
+            
       IdCardVerification.findOne({userid:req.body.items.userid},function(err,docs){
         if(err){
             res.status(400).send(err)
@@ -242,7 +258,7 @@ router.post('/users/idcardverification',(req,res)=>{
                 IdCardVerification.create({
                     cardnumber:req.body.items.cardNumber,
                     cardtype:req.body.items.cardType,
-                    imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+                    imagepath:result.secure_url,
                     userid:req.body.items.userid,
                     firstname:req.body.items.firstname,
                     lastname:req.body.items.lastname,
@@ -285,7 +301,7 @@ router.post('/users/idcardverification',(req,res)=>{
             IdCardVerification.create({
                 cardnumber:req.body.items.cardNumber,
                 cardtype:req.body.items.cardType,
-                imagepath:`https://idcardverification.s3.us-east-2.amazonaws.com/${req.body.items.userid}`,
+                imagepath:result.secure_url,
                 userid:req.body.items.userid,
                 firstname:req.body.items.firstname,
                 lastname:req.body.items.lastname,
@@ -317,10 +333,10 @@ router.post('/users/idcardverification',(req,res)=>{
     })
 
 
-      
-    
 
-   
+
+            // res.json();
+        });
     
 })
 
@@ -1033,7 +1049,7 @@ router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
        
     })
     .catch((err)=>{
-        res.status(403).send('Account Unresolved')
+        res.status(400).send('Account Unresolved')
         console.log(err)
     })
 
@@ -1064,12 +1080,12 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
 
               Bankmodel.findOne({email:req.body.email},async function(err,docs){
                 if(err){
-                    res.status(403).send('Internal Server Error')
+                    res.status(400).send('Internal Server Error')
                 }
                 else if(docs){
                     Bankmodel.findOneAndUpdate({email:req.body.email},{bvn:req.body.bvn,account_number:req.body.account_number,account_name:req.body.account_name,bank_code:req.body.bankcode},null,async(err)=>{
                         if(err){
-                            res.status(403).send('Error Updating Bank Details')
+                            res.status(400).send('Error Updating Bank Details')
                         }
                     })
                 }
@@ -1119,7 +1135,7 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
             })
         }
         else{
-            res.status(403).send(err);
+            res.status(400).send(err);
         }
 
     return false;

@@ -9,6 +9,7 @@ import Notification from '../model/notification.js';
 import { randomUUID } from 'crypto'
 import wallet_transactions from '../model/wallet_transactions.js';
 import nodemailer from 'nodemailer';
+import cloudinary from 'cloudinary'
 import { Route } from 'express';
 
 
