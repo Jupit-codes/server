@@ -282,7 +282,7 @@ router.post('/users/idcardverification',(req,res)=>{
                 function (error, result) {
                     if(error){
                         // res.json(error)
-                        console.log(error)
+                        console.log('error',error)
                         res.status(400).send('Upload Document Error...Pls try again')
                     }
                     
