@@ -28,13 +28,12 @@ cloudinary.config({
   });
 
 const upload = multer({ dest: 'uploads/' })
-
+   // user: 'bigdevtemy@gmail.com',
+            // pass: 'vyafmhqbffkiawrc',
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtppro.zoho.com",
        auth: {
-            // user: 'bigdevtemy@gmail.com',
-            // pass: 'vyafmhqbffkiawrc',
             user:'hello@jupitapp.co',
             pass:'ijugNWscuWay'
          },
