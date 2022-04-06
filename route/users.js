@@ -31,7 +31,7 @@ const upload = multer({ dest: 'uploads/' })
 
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
-    host: "smtp.zoho.com",
+    host: "smtppro.zoho.com",
        auth: {
             // user: 'bigdevtemy@gmail.com',
             // pass: 'vyafmhqbffkiawrc',
