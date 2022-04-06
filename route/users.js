@@ -31,10 +31,12 @@ const upload = multer({ dest: 'uploads/' })
 
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
-    host: "smtp.gmail.com",
+    host: "smtppro.zoho.com",
        auth: {
-            user: 'bigdevtemy@gmail.com',
-            pass: 'vyafmhqbffkiawrc',
+            // user: 'bigdevtemy@gmail.com',
+            // pass: 'vyafmhqbffkiawrc',
+            user:'hello@jupitapp.co',
+            pass:'Jupit@2022'
          },
     secure: true,
     });
@@ -142,7 +144,10 @@ router.post('/login/2FA',(req,res)=>{
                                         token,
                                         docs,
                                         'status':true
-                                    })
+                                    }),
+                                   "Stack",{
+                                       expiresIn:"5h"
+                                   }
                                 })
                             }
                             else{
