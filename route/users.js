@@ -34,8 +34,9 @@ const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtppro.zoho.com",
        auth: {
-            user:'bigdevtemy@gmail.com',
-            pass:'ijugNWscuWay'
+            user:'support@jupitapp.co',
+            // pass:'ijugNWscuWay'
+            pass:'ii84NsMqT9Xv'
          },
     secure: true,
     });
