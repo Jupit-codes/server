@@ -25,11 +25,18 @@ const userSchema = mongoose.Schema({
     naira_wallet:[{balance:{type:mongoose.Decimal128},address:'String'}],
     btc_wallet:[{balance:{type:mongoose.Decimal128},address:'String'}],
     usdt_wallet:[{balance:{type:mongoose.Decimal128},address:'String'}],
+    wallet_pin:{
+        type:'String'
+    },
     email_verification:{
         type:'Boolean',
         required:[true,"Required"]
     },
     TWOFA:{
+        type:'Boolean',
+        default:false
+    },
+    Pin_Created:{
         type:'Boolean',
         default:false
     },
