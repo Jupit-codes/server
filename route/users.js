@@ -118,7 +118,7 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
         
         }
         else if(docs){
-            if(docs.otp === req.body.otp){
+            if(docs.code === req.body.otp){
 
                 
                 let update = Usermodel.findOneAndUpdate({_id:userid},{'Pin_Created':true},{'wallet_pin':req.body.createdpin}).exec();
