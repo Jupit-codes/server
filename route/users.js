@@ -106,6 +106,26 @@ router.get('/sendmail',(req,res)=>{
 
 })
 
+
+router.post('/save/pin',middlewareVerify,(req,res)=>{
+    let userid = req.body.userid;
+
+    PinCreation.findOne({userid:userid},function(err,docs){
+        if(err){
+            res.status(400).send(err);
+        
+        }
+        else if(docs){
+            if(docs.otp === req.body.otp){
+                
+                res.send({"message":"","status":true})
+            }
+            else{
+                res.status(400).send('Invalid Token');
+            }
+        }
+    })
+})
 router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
 
     let userid = req.body.userid;
