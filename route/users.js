@@ -3,6 +3,7 @@ import Usermodel from '../model/users.js';
 import KycModel from '../model/kyc.js';
 import WebHook from "../model/webhook.js";
 import TwoFactor from "../model/twoFactor.js";
+import PinCreation from '../model/setup_pin.js'
 import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
 import Walletmodel from '../model/wallet_transactions.js'
@@ -105,6 +106,145 @@ router.get('/sendmail',(req,res)=>{
 
 })
 
+router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
+
+    let userid = req.body.userid;
+    
+    const random = Math.floor(1000 + Math.random() * 9000);
+    PinCreation.findOne({userid:userid},function(err,docs){
+        if(err){
+            res.status(400).send(err);
+        }
+        else if(docs){
+            
+            let updateCode =   PinCreation.findOneAndUpdate({userid:userid},{'code':random}).exec();
+            if(updateCode){
+
+                const mailData = {
+                    from: 'hello@jupitapp.co',  // sender address
+                    to: req.body.email,   // list of receivers
+                    subject: 'WALLET PIN CREATION <jupit.app>',
+                    text: 'That was easy!',
+                    html: `
+                            <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-items:center">
+                                <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                                    <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                                    <div style="width:100%;text-align:center">
+                                            <img src="<img src="https://res.cloudinary.com/jupit/image/upload/v1648472935/ocry642pieozdbopltnx.png" />
+                                    </div>   
+                                    <div style="width:100%;text-align:center;margin-top:20px">
+                                        <h2 style="font-family:candara">WALLET PIN CREATION CODE  </h2>
+                                    <div>   
+                                    <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                                        <hr style="background-color:#f5f5f5;width:95%"/>
+                                    <div>
+                                        <div style="width:100%; text-align:center">
+                                            <p style="font-family:candara;padding:10px;font-size:16px">Dear Customer,<br/> Kindly find the Wallet Generated Code For Your use</p>
+                                            <p style="font-family:candara;padding:10px;font-size:20px"><b>${random}</b><p>
+                                            <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">If you did not make this request, then ignore the email</p>
+                                           
+                                        </div>
+                                        <div style="width:100%; text-align:center">
+                                        <p style="font-family:candara;padding:5px">If you have trouble paste below link in your browser</p>
+                                        <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}</p>
+                                        </div>
+                                    </div>
+                                    </div>
+    
+                                    <div >
+                                    <p style="color:#9DA8B6">If you have any questions, please contact support@jupitapp.co</p>
+                                    </div>
+                                </div>
+                    
+                            </div>
+                        `
+                  };
+    
+                transporter.sendMail(mailData, function (err, info) {
+                    if(err){
+                        console.log(err);
+                        res.send({"message":"An Error Occurred","callback":err})
+                    }
+                    
+                    else{
+                        
+                        res.send({"message":"Code has been Sent","callback":info,"status":true})
+                        
+                    }
+                      
+                 });
+
+
+
+            }
+            else{
+                res.status(400).send('Internal Server Error');
+            }
+        }
+        else if(!docs){
+            PinCreation.create({
+                userid:userid,
+                code:random
+            })
+
+
+            const mailData = {
+                from: 'hello@jupitapp.co',  // sender address
+                to: req.body.email,   // list of receivers
+                subject: 'WALLET PIN CREATION <jupit.app>',
+                text: 'That was easy!',
+                html: `
+                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-items:center">
+                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                                <div style="width:100%;text-align:center">
+                                        <img src="<img src="https://res.cloudinary.com/jupit/image/upload/v1648472935/ocry642pieozdbopltnx.png" />
+                                </div>   
+                                <div style="width:100%;text-align:center;margin-top:20px">
+                                    <h2 style="font-family:candara">WALLET PIN CREATION CODE  </h2>
+                                <div>   
+                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                                    <hr style="background-color:#f5f5f5;width:95%"/>
+                                <div>
+                                    <div style="width:100%; text-align:center">
+                                        <p style="font-family:candara;padding:10px;font-size:16px">Dear Customer,<br/> Kindly find the Wallet Generated Code For Your use</p>
+                                        <p style="font-family:candara;padding:10px;font-size:20px"><b>${random}</b><p>
+                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">If you did not make this request, then ignore the email</p>
+                                       
+                                    </div>
+                                    <div style="width:100%; text-align:center">
+                                    <p style="font-family:candara;padding:5px">If you have trouble paste below link in your browser</p>
+                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}</p>
+                                    </div>
+                                </div>
+                                </div>
+
+                                <div >
+                                <p style="color:#9DA8B6">If you have any questions, please contact support@jupitapp.co</p>
+                                </div>
+                            </div>
+                
+                        </div>
+                    `
+              };
+
+            transporter.sendMail(mailData, function (err, info) {
+                if(err){
+                    console.log(err);
+                    res.send({"message":"An Error Occurred","callback":err})
+                }
+                
+                else{
+                    
+                    res.send({"message":"Code has been Sent","callback":info,"status":true})
+                    
+                }
+                  
+             });
+        }
+    })
+
+})
 
 router.post('/2FA',middlewareVerify,(req,res)=>{
 
