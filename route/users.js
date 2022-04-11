@@ -113,6 +113,7 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
     PinCreation.findOne({userid:userid},function(err,docs){
         if(err){
             res.status(400).send(err);
+            console.log(err)
         
         }
         else if(docs){
