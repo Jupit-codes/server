@@ -112,8 +112,9 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
 
     PinCreation.findOne({userid:userid},function(err,docs){
         if(err){
-            res.status(400).send(err);
             console.log(err)
+            res.status(400).send(err);
+            
         
         }
         else if(docs){
@@ -123,6 +124,7 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
                 let update = Usermodel.findOneAndUpdate({_id:userid},{'Pin_Created':true},{'wallet_pin':req.body.createdpin}).exec();
 
                 if(update){
+                    console.log("Update Errr")
                     res.send({'message':'Pin Successfully Saved','status':true});
                 }
                 else{
