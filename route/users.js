@@ -109,7 +109,7 @@ router.get('/sendmail',(req,res)=>{
 
 router.post('/save/pin',middlewareVerify,(req,res)=>{
     let userid = req.body.userid;
-
+    console.log(req.body)
     PinCreation.findOne({userid:userid},function(err,docs){
         if(err){
             console.log(err)
