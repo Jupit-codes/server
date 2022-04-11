@@ -132,6 +132,9 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
                 res.status(400).send('Invalid Token');
             }
         }
+        else if(!docs){
+            res.status(400).send('Internal Server Error')
+        }
     })
 })
 router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
