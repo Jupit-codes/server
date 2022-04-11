@@ -118,6 +118,7 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
         
         }
         else if(docs){
+            console.log('Keeper',docs)
             if(docs.code === req.body.otp){
 
                 
