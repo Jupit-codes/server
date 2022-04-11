@@ -109,7 +109,7 @@ router.get('/sendmail',(req,res)=>{
 router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
 
     let userid = req.body.userid;
-    
+
     const random = Math.floor(1000 + Math.random() * 9000);
     PinCreation.findOne({userid:userid},function(err,docs){
         if(err){
@@ -145,8 +145,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                            
                                         </div>
                                         <div style="width:100%; text-align:center">
-                                        <p style="font-family:candara;padding:5px">If you have trouble paste below link in your browser</p>
-                                        <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}</p>
+                                        
                                         </div>
                                     </div>
                                     </div>
@@ -212,10 +211,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                         <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">If you did not make this request, then ignore the email</p>
                                        
                                     </div>
-                                    <div style="width:100%; text-align:center">
-                                    <p style="font-family:candara;padding:5px">If you have trouble paste below link in your browser</p>
-                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}</p>
-                                    </div>
+                            
                                 </div>
                                 </div>
 
