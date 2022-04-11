@@ -117,8 +117,16 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
         }
         else if(docs){
             if(docs.otp === req.body.otp){
-                
+
                 res.send({"message":"","status":true})
+                let update = Usermodel.findOneAndUpdate({_id:userid},{'Pin_Created':true},{'wallet_pin':req.body.createdpin}).exec();
+
+                if(update){
+                    res.send({'message':'Pin Successfully Saved','status':true});
+                }
+                else{
+                    res.status(400).send('Pin Creation was Unsuccessful');
+                }
             }
             else{
                 res.status(400).send('Invalid Token');
