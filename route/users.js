@@ -109,7 +109,7 @@ router.get('/sendmail',(req,res)=>{
 router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
 
     let userid = req.body.userid;
-
+    console.log(req.body.email)
     const random = Math.floor(1000 + Math.random() * 9000);
     PinCreation.findOne({userid:userid},function(err,docs){
         if(err){
