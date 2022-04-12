@@ -1853,6 +1853,21 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
 }
 
 
+Router.post('/update/phonenumber',middlewareVerify,async(req,res)=>{
+let userid = req.body.userid;
+let phonenumber = req.body.newphonenumber;
+
+let update = await Usermodel.findOneAndUpdate({_id:userid},{'phonenumber':phonenumber}).exec()
+
+if(update){
+    res.send('Phonenumber Successfully Updated');
+}
+else{
+    res.status(400).send('Update Error');
+}
+
+})
+
 
 
 async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress){
