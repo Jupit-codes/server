@@ -122,7 +122,7 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
             if(docs.code === req.body.otp){
 
                 
-                let update = Usermodel.findOneAndUpdate({_id:userid},{'Pin_Created':true},{'wallet_pin':req.body.createdpin}).exec();
+                let update = Usermodel.findOneAndUpdate({_id:userid},[{'Pin_Created':true},{'wallet_pin':req.body.createdpin}]).exec();
 
                 if(update){
                     console.log("Update Errr")
@@ -144,8 +144,7 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
 router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
 
     let userid = req.body.userid;
-    console.log(req.body.email)
-    console.log(req.body.email)
+    
     const random = Math.floor(1000 + Math.random() * 9000);
     PinCreation.findOne({userid:userid},function(err,docs){
         if(err){
@@ -309,7 +308,7 @@ router.post('/2FA',middlewareVerify,(req,res)=>{
                 res.send('Activated')
             }
             else{
-                res.status(0).send('An Error Occurred')
+                res.status(400).send('An Error Occurred')
             }
         }
     })
