@@ -1084,6 +1084,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
 Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
     const addressBTC = req.body.addressBTC;
     const addressUSDT = req.body.addressUSDT;
+    const userid = req.body.userid;
+    const email= req.body.email
     
     Notification.find({ $or: [{ senderaddress: addressBTC }, { recipientaddress: addressBTC },{ senderaddress: addressUSDT }, { recipientaddress: addressUSDT }] },function(err,docs){
         if(err){

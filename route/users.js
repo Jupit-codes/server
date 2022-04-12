@@ -4,6 +4,7 @@ import KycModel from '../model/kyc.js';
 import WebHook from "../model/webhook.js";
 import TwoFactor from "../model/twoFactor.js";
 import PinCreation from '../model/setup_pin.js'
+import Notification from "../model/notification.js";
 import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
 import Walletmodel from '../model/wallet_transactions.js'
@@ -745,9 +746,9 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
 
 
 router.post('/customer_webhook',(req,res)=>{
-    console.log('Event',req.body);
-    console.log('HelloEvent',req.body.event);
-    console.log("EventLog","Event Has Been Recieved")
+    // console.log('Event',req.body);
+    // console.log('HelloEvent',req.body.event);
+    // console.log("EventLog","Event Has Been Recieved")
     res.send(req.body)
     res.status(200).end()
     if(req.body.event){
@@ -766,6 +767,7 @@ router.post('/customer_webhook',(req,res)=>{
         // })
         updateWebHook(req.body);
         saveWebHook(req.body);
+        saveNotification(req.body);
     }
    
 
@@ -1404,6 +1406,29 @@ async function saveWebHook (json){
         console.log(err)
     }
 }
+async function saveNotification (json){
+    try{
+        const Notify = await Notification.create({
+                            type:3,
+                            orderid:json.data.customer_id,
+                            transfertype:json.event,
+                            asset:'Webhook CallBack',
+                            from_address:json.data.identification.account_number,
+                            to_address:json.data.identification.bvn,
+                            status:'Transaction Completed',
+                            read:'unread',
+                            initiator:json.data.email,
+        
+                        })
+        
+        
+        
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
 async function updateWebHook(json){
     
     //let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event_status:json.event},{new:true})
