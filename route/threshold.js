@@ -1109,16 +1109,32 @@ Router.post('/notification/details',middlewareVerify,(req,res)=>{
     })
 })
 
-Router.post('/test/update', (req,res)=>{
-    const balance = req.body.balance;
-    const id = req.body.userid;
-    console.log(parseFloat(balance).toFixed(8))
-    const update = { balance:parseFloat(balance).toFixed(8) };
+Router.post('/test/update', async (req,res)=>{
+
+    let userid = "62509e4a135feac8ad2be9c9";
+
+    let update = await Usermodel.updateMany({_id:userid},{ $set: { Pin_Created: false,email_verification:true } });
+    
+    if(update){
+        res.send({
+            'message':'Save'
+        })
+    }
+    else{
+        console.log('err')
+    }
+    
+    // const balance = req.body.balance;
+    // const id = req.body.userid;
+    // console.log(parseFloat(balance).toFixed(8))
+    // const update = { balance:parseFloat(balance).toFixed(8) };
 //    let x =  Usermodel.findByIdAndUpdate(id,update,{new: true,
 //         upsert: true,
 //         rawResult: true // Return the raw result from the MongoDB driver
 //     });
 //     res.json(x)
+
+
 })
 
 Router.post('/transfer/asset',middlewareVerify,(req,res)=>{

@@ -110,7 +110,7 @@ router.get('/sendmail',(req,res)=>{
 router.post('/save/pin',middlewareVerify,(req,res)=>{
     let userid = req.body.userid;
     console.log(req.body)
-    PinCreation.findOne({userid:userid},function(err,docs){
+    PinCreation.findOne({userid:userid}, async function(err,docs){
         if(err){
             console.log(err)
             res.status(400).send(err);
@@ -122,8 +122,8 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
             if(docs.code === req.body.otp){
 
                 
-                let update = Usermodel.findOneAndUpdate({_id:userid},[{'Pin_Created':true},{'wallet_pin':req.body.createdpin}]).exec();
-
+                //let update = Usermodel.findOneAndUpdate({_id:userid},[{'Pin_Created':true},{'wallet_pin':req.body.createdpin}]).exec();
+                let update = await Usermodel.updateMany({_id:userid},{ $set: { Pin_Created: true,wallet_pin:req.body.createdpin } });
                 if(update){
                     console.log("Update Errr")
                     res.send({'message':'Pin Successfully Saved','status':true});
