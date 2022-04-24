@@ -853,7 +853,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
             }
             else{
                 if(docs){
-                      Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  (err, doc) => {
+                      Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
                         if (err) {
                             res.send({"Errormessage":err,"status":false});
                         }
