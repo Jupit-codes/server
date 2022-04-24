@@ -863,7 +863,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                             const btc_add = await createBTCWalletAddress(req.params.id);
                             console.log('btc_add',btc_add);
                             if(btc_add[0]){
-                                Usermodel.findOne({_id:req.params.id},function(err,docs){
+                                Usermodel.findOne({_id:req.params.id},async function(err,docs){
                                     if(err){
                                         res.send({
                                             "message":"An Error Occurred",
@@ -872,7 +872,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                         })
                                     }
                                     if(docs){
-                                        createKyc(docs._id,docs.email,docs.phonenumber);
+                                       await createKyc(docs._id,docs.email,docs.phonenumber);
                                         res.redirect('https://jupitapp.vercel.app/client/signin')
                                         
                                         //res.status(200).redirect("https://www.google.com")
