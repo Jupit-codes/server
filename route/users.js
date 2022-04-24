@@ -852,55 +852,48 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                 res.send({"message":"Email has Already Been Verified"})
             }
             else{
-                if(docs){
-                      Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
-                        if (err) {
-                            res.send({"Errormessage":err,"status":false});
-                        }
-                        const usdt_add =  await createUSDTWalletAddress(req.params.id);
+
+                const usdt_add =  await createUSDTWalletAddress(req.params.id);
                         console.log('usdt',usdt_add);
                         if(usdt_add[0]){
                             const btc_add = await createBTCWalletAddress(req.params.id);
                             console.log('btc_add',btc_add);
                             if(btc_add[0]){
-                                Usermodel.findOne({_id:req.params.id},async function(err,docs){
-                                    if(err){
-                                        res.send({
-                                            "message":"An Error Occurred",
-                                            "Error":err,
-                                            "status":false
-                                        })
-                                    }
-                                    if(docs){
-                                        createKyc(docs._id,docs.email,docs.phonenumber);
-                                        res.redirect('https://jupitapp.vercel.app/client/signin')
-                                        
-                                        //res.status(200).redirect("https://www.google.com")
-                                        //res.send({"SuccessMessage":"EmailAddress Verified","status":true});
-                                    }
-                                })
+
+                                Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
+                                            if (err) {
+                                                res.send({"Errormessage":err,"status":false});
+                                            }
+                                            else{
+                                                createKyc(docs._id,docs.email,docs.phonenumber);
+                                                res.redirect('https://jupitapp.vercel.app/client/signin')
+                                            }
+                                            
+                                });
+                               
                             }
                             else{
-                                res.send({"ErrorMessage":btc_add[1]})
+                                res.send({"ErrorMessage":'Unable to create BTC Wallet Address..pls try again'})
                             }
 
                         }
                         else{
-                            res.send({"ErrorMessage":usdt_add[1]})
+                                res.send({"ErrorMessage":'Unable to create USDT Wallet Address..pls try again'})
                         }
 
+
+
+                // if(docs){
+                //       Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
+                //         if (err) {
+                //             res.send({"Errormessage":err,"status":false});
+                //         }
                         
-                      
-                        
-                        // const update_kyc_level1 = updateKycLevel1(req.params.id);
-                        // const update_kyc_level2= updateKycLevel2(req.params.id);
-                        
-                        
-                    });
-                }
-                else{
-                    res.send({"message":"Internal Server Error..try again","status":false})
-                }
+                //     });
+                // }
+                // else{
+                //     res.send({"message":"Internal Server Error..try again","status":false})
+                // }
                      
             }
         }
