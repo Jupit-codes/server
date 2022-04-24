@@ -664,7 +664,7 @@ router.post('/users/login',(req,res)=>{
                     res.send('Token is Required')
                 }
                 else{
-                    jwt.sign({user:docs},'secretkey',(err,token)=>{
+                    jwt.sign({user:docs},'secretkey',{expiresIn:'900s'},(err,token)=>{
                         res.json({
                             token,
                             docs,
@@ -843,7 +843,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
     console.log(req.params.id);
     // res.send(req.params.id);
    
-    Usermodel.findOne({_id: req.params.id }, function (err, docs) {
+    Usermodel.findOne({_id: req.params.id },   function (err, docs) {
         if (err){
             console.log(err)
         }
@@ -853,28 +853,44 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
             }
             else{
                 if(docs){
-                    Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true}, (err, doc) => {
+                     await Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  (err, doc) => {
                         if (err) {
                             res.send({"Errormessage":err,"status":false});
                         }
-                        const usdt_add = createUSDTWalletAddress(req.params.id);
-                        const btc_add = createBTCWalletAddress(req.params.id);
-                        Usermodel.findOne({_id:req.params.id},function(err,docs){
-                            if(err){
-                                res.send({
-                                    "message":"An Error Occurred",
-                                    "Error":err,
-                                    "status":false
+                        const usdt_add =  createUSDTWalletAddress(req.params.id);
+                        
+                        if(usdt_add[0]){
+                            const btc_add = createBTCWalletAddress(req.params.id);
+
+                            if(btc_add[0]){
+                                Usermodel.findOne({_id:req.params.id},function(err,docs){
+                                    if(err){
+                                        res.send({
+                                            "message":"An Error Occurred",
+                                            "Error":err,
+                                            "status":false
+                                        })
+                                    }
+                                    if(docs){
+                                        createKyc(docs._id,docs.email,docs.phonenumber);
+                                        res.redirect('https://jupitapp.vercel.app/client/signin')
+                                        
+                                        //res.status(200).redirect("https://www.google.com")
+                                        //res.send({"SuccessMessage":"EmailAddress Verified","status":true});
+                                    }
                                 })
                             }
-                            if(docs){
-                                createKyc(docs._id,docs.email,docs.phonenumber);
-                                res.redirect('https://jupitapp.vercel.app/client/signin')
-                                
-                                //res.status(200).redirect("https://www.google.com")
-                                //res.send({"SuccessMessage":"EmailAddress Verified","status":true});
+                            else{
+                                res.send({"ErrorMessage":btc_add[1]})
                             }
-                        })
+
+                        }
+                        else{
+                            res.send({"ErrorMessage":usdt_add[1]})
+                        }
+
+                        
+                      
                         
                         // const update_kyc_level1 = updateKycLevel1(req.params.id);
                         // const update_kyc_level2= updateKycLevel2(req.params.id);
@@ -1034,7 +1050,7 @@ router.post('/users/register',(req,res)=>{
   
 })
 
-function createUSDTWalletAddress(userid){
+async function createUSDTWalletAddress(userid){
     let rand = random(option_rand);
     var option_rand = {
             min: 48886
@@ -1075,7 +1091,7 @@ function createUSDTWalletAddress(userid){
         const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/488433/addresses?'+get_request_args
     
         
-    axios.post(url,params,{ 
+     let result = await axios.post(url,params,{ 
         headers: {
             'Content-Type': 'application/json',
             'X-API-CODE':'5GRhmr9GsjQ758bCH',
@@ -1090,14 +1106,19 @@ function createUSDTWalletAddress(userid){
                     usdt_wallet: {"balance":0,"address":res.data.addresses[0]},
                 } 
             }).exec();
+
+            return [true,'successful'];
         
     })
     .catch((error)=>{
         console.log('error_usdt',console.log(error.response))
-        return error.response
+        return [false,error.response];
+       
     })
+
+    return result;
 }
-function createBTCWalletAddress(userid){
+async function createBTCWalletAddress(userid){
         
     let rand = random(option_rand);
     var option_rand = {
@@ -1120,9 +1141,7 @@ function createBTCWalletAddress(userid){
     return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
 
-
-
-    var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+    var secret="2awjZJeeVhtG23tepAzv5tcMYYNT";
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
@@ -1142,28 +1161,33 @@ function createBTCWalletAddress(userid){
     const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/addresses?'+get_request_args
 
 
-    axios.post(url,params,{ 
+    let result = await axios.post(url,params,{ 
     headers: {
         'Content-Type': 'application/json',
-        'X-API-CODE':'4PiVpdbyLJZatLBwR',
+        'X-API-CODE':'55JbxSP6xosFTkFvg',
         'X-CHECKSUM':build,
         'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
     }
     })
     .then(res=>{
-        console.log('btc',res.data.addresses[0])
+        
         Usermodel.findByIdAndUpdate(userid, { 
             $push: { 
                     
                     btc_wallet: {"balance":0,"address":res.data.addresses[0]},
                 } 
             }).exec();
+
+            return [true,'success'];
     })
     .catch((error)=>{
         console.log('error',error.response)
-        return error.response
+        return [false,error.response];
+        
         
     })
+
+    return result;
 }
 
 async function createKyc(userid,email,phonenumber){
