@@ -872,7 +872,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                         })
                                     }
                                     if(docs){
-                                       await createKyc(docs._id,docs.email,docs.phonenumber);
+                                        createKyc(docs._id,docs.email,docs.phonenumber);
                                         res.redirect('https://jupitapp.vercel.app/client/signin')
                                         
                                         //res.status(200).redirect("https://www.google.com")
