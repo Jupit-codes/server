@@ -858,10 +858,10 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                             res.send({"Errormessage":err,"status":false});
                         }
                         const usdt_add =  createUSDTWalletAddress(req.params.id);
-                        
+                        console.log(usdt_add);
                         if(usdt_add[0]){
                             const btc_add = createBTCWalletAddress(req.params.id);
-
+                            console.log(btc_add);
                             if(btc_add[0]){
                                 Usermodel.findOne({_id:req.params.id},function(err,docs){
                                     if(err){
