@@ -1694,8 +1694,8 @@ async function CheckAddressValidity (address,walletType){
         let walletId="";
 
         if(walletType === "BTC"){
-            secret = "3A84eebqYqeU3HaaXMcEAip8zBRS";
-            Api="4PiVpdbyLJZatLBwR";
+            secret = "2awjZJeeVhtG23tepAzv5tcMYYN";
+            Api="55JbxSP6xosFTkFvg";
             walletId ="194071"
             
         }
@@ -1761,12 +1761,12 @@ async function CheckAddressValidity (address,walletType){
     })
     .then(res=>{
         console.log('Data',res.data.result[0].valid)
-        return[res.data.result[0].valid]
+        return[true,res.data.result[0].valid]
        
     })
     .catch((error)=>{
         console.log('Error',error)
-        return [error.response? error.response.data : 'No Connection' ]
+        return [false,error.response? error.response.data.message: 'No Connection' ]
     })
     return x;
 }
