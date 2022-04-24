@@ -1141,7 +1141,7 @@ async function createBTCWalletAddress(userid){
     return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
 
-    var secret="2awjZJeeVhtG23tepAzv5tcMYYNT";
+    var secret="2awjZJeeVhtG23tepAzv5tcMYYNTEST";
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
