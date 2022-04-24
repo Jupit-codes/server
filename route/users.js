@@ -858,10 +858,10 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                             res.send({"Errormessage":err,"status":false});
                         }
                         const usdt_add =  await createUSDTWalletAddress(req.params.id);
-                        console.log(usdt_add);
+                        console.log('usdt',usdt_add);
                         if(usdt_add[0]){
                             const btc_add = await createBTCWalletAddress(req.params.id);
-                            console.log(btc_add);
+                            console.log('btc_add',btc_add);
                             if(btc_add[0]){
                                 Usermodel.findOne({_id:req.params.id},function(err,docs){
                                     if(err){
@@ -1161,7 +1161,7 @@ async function createBTCWalletAddress(userid){
     var build = buildChecksum(null,secret,time,rand,postData);
 
     const params ={
-    "count": 1,}
+    "count": 1}
 
 
     const parameters = {
