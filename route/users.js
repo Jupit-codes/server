@@ -842,7 +842,7 @@ router.get('/users/test/hook',async (req,res)=>{
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
     
    
-    Usermodel.findOne({_id: req.params.id },   function (err, docs) {
+    Usermodel.findOne({_id: req.params.id },   async function (err, docs) {
         if (err){
             console.log(err)
             res.send({"err":err})
