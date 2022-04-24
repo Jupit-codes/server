@@ -840,12 +840,12 @@ router.get('/users/test/hook',async (req,res)=>{
     
 })
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
-    console.log(req.params.id);
-    // res.send(req.params.id);
+    
    
     Usermodel.findOne({_id: req.params.id },   function (err, docs) {
         if (err){
             console.log(err)
+            res.send({"err":err})
         }
         else{
             if(docs.email_verification){
@@ -857,10 +857,10 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                         if (err) {
                             res.send({"Errormessage":err,"status":false});
                         }
-                        const usdt_add =  createUSDTWalletAddress(req.params.id);
+                        const usdt_add =  await createUSDTWalletAddress(req.params.id);
                         console.log(usdt_add);
                         if(usdt_add[0]){
-                            const btc_add = createBTCWalletAddress(req.params.id);
+                            const btc_add = await createBTCWalletAddress(req.params.id);
                             console.log(btc_add);
                             if(btc_add[0]){
                                 Usermodel.findOne({_id:req.params.id},function(err,docs){
