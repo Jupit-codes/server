@@ -936,7 +936,20 @@ router.post('/users/register',(req,res)=>{
 
                     }
                     else{
-                        createUser();
+                        Usermodel.findOne({phonenumber:req.body.phonenumber},function(err,docs){
+                            if(err){
+                                res.status(400).send(err);
+                            }
+                            else if(docs){
+                                res.status(400).send("Phonenumber Already In use");
+                            }
+                            else if(!docs){
+                                createUser();
+                            }
+
+                        })
+
+                        
                     }
                 })
                 
