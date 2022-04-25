@@ -1101,7 +1101,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
 
             },
             {
-                'read':'unread'
+                "read":"unread"
             }
 
         ]
