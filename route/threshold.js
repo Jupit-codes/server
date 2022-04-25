@@ -33,8 +33,8 @@ Router.post('/getautofee',(req,res)=>{
     let secret = "";
 
     if(req.body.walletType === "BTC"){
-            secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
-            Api="4PiVpdbyLJZatLBwR"
+            secret="2awjZJeeVhtG23tepAzv5tcMYYN";
+            Api="55JbxSP6xosFTkFvg"
             wallet_id="194071"
     }
     else if(req.body.walletType === "USDT"){
