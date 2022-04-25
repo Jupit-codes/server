@@ -1086,8 +1086,27 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
     const addressUSDT = req.body.addressUSDT;
     const userid = req.body.userid;
     const email= req.body.email
-    
-    Notification.find({ $or: [{ senderaddress: addressBTC }, { recipientaddress: addressBTC },{ senderaddress: addressUSDT }, { recipientaddress: addressUSDT },{initiator:req.body.email}] },function(err,docs){
+    //{$and:[{read:'unread'}]}
+    Notification.find({ 
+        $and:[
+            {
+
+                $or: [
+                    { senderaddress: addressBTC }, 
+                    { recipientaddress: addressBTC },
+                    { senderaddress: addressUSDT }, 
+                    { recipientaddress: addressUSDT },
+                    {initiator:req.body.email}
+                ]
+
+            },
+            {
+                'read':'unread'
+            }
+
+        ]
+
+     },function(err,docs){
         if(err){
             res.send({err});
         }
