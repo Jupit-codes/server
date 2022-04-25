@@ -1196,7 +1196,8 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                             if(SubFundToWallet){
                                 console.log('SubFundWalletII',SubFundToWallet)
                                 let AddFundToWallet = await AddFund(recipentAddress,parseFloat(amount).toFixed(8));
-                                if(AddFundToWallet){
+                                console.log(AddFundToWallet)
+                                if(AddFundToWallet[0]){
                                     res.json({
                                         "Message":'Transaction Was Successful',
                                         "Status":true
@@ -1772,24 +1773,31 @@ async function CheckAddressValidity (address,walletType){
 }
 
 
-async function AddFund(receipentAddress,amount){
+async function AddFund(receipentAddress,amount,wallet_type){
 
 
-        // let getRequest = await Usermodel.findOneAndUpdate({'btc_wallet.address':receipentAddress},{$set:{'btc_wallet.$.balance':amount}},null,(err)=>{
-        //     if(err){
-                
-        //         return [err,false]
-        //     }
-        //     else{
-        //         return ['Updated Successfully',true]
-        //     }
-        
-        // }).clone().catch(function(err){ return [err,false]});
 
-        let AddFund = await Usermodel.findOneAndUpdate({'btc_wallet.address':receipentAddress},{$inc:{'btc_wallet.$.balance':amount}}).exec();
+        if(wallet_type === "BTC"){
+            let AddFund = await Usermodel.findOneAndUpdate({'btc_wallet.address':receipentAddress},{$inc:{'btc_wallet.$.balance':amount}}).exec();
+            if(AddFund){
+                return [true,'FundAdded'];
+            }
+            else{
+                return [false,'Failed'];
+            }
+        }
+        else if(wallet_type === "USDT"){
+            let AddFund = await Usermodel.findOneAndUpdate({'usdt_wallet.address':receipentAddress},{$inc:{'usdt_wallet.$.balance':amount}}).exec();
+            if(AddFund){
+                return [true,'FundAdded'];
+            }
+            else{
+                return [false,'Failed'];
+            }
         
-        
-        return AddFund
+        }
+
+        return [false, 'InternalServerError']
     
 
 }
