@@ -1217,23 +1217,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                                 })
                             }
 
-                            // if(InternalWallet){
-                            //     res.json(InternalWallet);
-                            // }
-                            // else{
-                            //     res.json({
-                            //         "Error":'Internal Server Error...recipient Address not Found On premises',
-                            //         "Status":false
-                            //     });
-                            // }
-                            
-
-                            // if(InternalWallet[1]){
-                                
-                            // }
-                            // else{
-                            //     res.json(InternalWallet)
-                            // }
+                           
                             
                         
                         }
