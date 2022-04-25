@@ -1764,6 +1764,7 @@ async function CheckAddressValidity (address,walletType){
         }
     })
     .then(res=>{
+        console.log('Data',res.data)
         console.log('Data',res.data.result[0].valid)
         return[true,res.data.result[0].valid]
        
