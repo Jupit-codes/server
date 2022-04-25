@@ -1700,8 +1700,8 @@ async function CheckAddressValidity (address,walletType){
             
         }
         else if(walletType === "USDT"){
-            Api="491Wh19j3Ece4MJRz";
-            secret = "2Tzeo889sniN76LerbwjCSshkSZN";
+            Api="5GRhmr9GsjQ758bCH";
+            secret = "3QGkFozHQAGeT5bJxvVejB4uMWeE";
             walletId="488433"
         }
 
