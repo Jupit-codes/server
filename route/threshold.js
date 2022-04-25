@@ -39,8 +39,8 @@ Router.post('/getautofee',(req,res)=>{
     }
     else if(req.body.walletType === "USDT"){
         wallet_id="488433"
-        secret="2Tzeo889sniN76LerbwjCSshkSZN"
-        Api="491Wh19j3Ece4MJRz"
+        secret="3QGkFozHQAGeT5bJxvVejB4uMWeE"
+        Api="5GRhmr9GsjQ758bCH"
     }
         
     let rand = random(option_rand);
