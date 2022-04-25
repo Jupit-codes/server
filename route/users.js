@@ -624,7 +624,7 @@ router.get('/users',(req,res,next)=>{
 
 router.post('/users/refresh',middlewareVerify,(req,res)=>{
    
-    console.log('UserID',req.body._id)
+    
     Usermodel.findOne({_id:req.body._id},function(err,docs){
         if(err){
             res.status(403).send(err)
