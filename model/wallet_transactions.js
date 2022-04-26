@@ -23,10 +23,10 @@ const wallet_transactions = mongoose.Schema({
         
     },
     amount:{
-        type:'String'
+        type:'Decimal128'
     },
     fees:{
-        type:'String'
+        type:'Decimal128'
     },
     from_address:{
         type:'String'

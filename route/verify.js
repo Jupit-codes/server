@@ -3,6 +3,7 @@
 import express from "express";
 import Usermodel from '../model/users.js';
 import KycModel from '../model/kyc.js';
+import wallet_transactions from "../model/wallet_transactions.js";
 import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
 
@@ -60,6 +61,51 @@ router.get('/cloudinary',(req,res)=>{
             res.json(result.secure_url);
         });
 
+})
+
+
+router.get('/date/aggregate',async (req,res)=>{
+    let dateToken = await wallet_transactions.aggregate([
+        { $match: { currency: 'BTC' } },
+        { $group : { 
+            _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" }}, 
+            count : { $sum : 1 },
+            amount: { $sum : "$amount"}
+        },
+            
+            
+            }, 
+       { $group : { 
+            _id : { year: "$_id.year", month: "$_id.month" }, 
+            dailyusage: { $push: { day: "$_id.day", count: "$count",totalTransaction:"$amount"  }}}
+            }, 
+       { $group : { 
+            _id : { year: "$_id.year" }, 
+            monthlyusage: { $push: { month: "$_id.month", dailyusage: "$dailyusage" }}}
+            }
+    ])
+
+     res.json(dateToken);
+      console.log(dateToken);
+         
+        
+  
+})
+
+router.get('/aggregate',async (req,res)=>{
+
+    let docs = await Usermodel.aggregate([
+        { $match: { Pin_Created: true } },
+        {
+          $group: {
+            _id: '$username',
+            count: { $sum: 1 }
+          }
+        }
+      ]);
+    
+      res.json(docs);
+      console.log(docs);
 })
 
 export default router
