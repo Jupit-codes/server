@@ -1081,7 +1081,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
 
 })
 
-Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
+Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
     const addressBTC = req.body.addressBTC;
     const addressUSDT = req.body.addressUSDT;
     const userid = req.body.userid;
@@ -1115,9 +1115,47 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
             res.send(docs)
            
         }
-    }).limit(10).sort({'updated': -1})
+    })
 
 })
+
+
+Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
+    const addressBTC = req.body.addressBTC;
+    const addressUSDT = req.body.addressUSDT;
+    const userid = req.body.userid;
+    const email= req.body.email
+    //{$and:[{read:'unread'}]}
+    Notification.find({ 
+        $and:[
+            {
+
+                $or: [
+                    { senderaddress: addressBTC }, 
+                    { recipientaddress: addressBTC },
+                    { senderaddress: addressUSDT }, 
+                    { recipientaddress: addressUSDT },
+                    {initiator:req.body.email}
+                ]
+
+            }
+
+        ]
+
+     },function(err,docs){
+        if(err){
+            res.send({err});
+        }
+        else if(docs){
+            
+            res.send(docs)
+           
+        }
+    }).limit(5).sort({'updated': -1})
+
+})
+
+
 
 Router.post('/notification/details',middlewareVerify,(req,res)=>{
     Notification.findOne({_id:req.body.userid},function(err,docs){
