@@ -529,6 +529,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         decimal:req.body.decimal,
                         currency_bip44:req.body.currency_bip44,
                         token_address:req.body.token_address,
+                        date_created:new Date(),
                         status:'Processing'
                     });
 
@@ -603,6 +604,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             status:'Transaction Completed',
                             read:'unread',
                             initiator:'sender',
+                            date_created:new Date(),
                             senderaddress:req.body.orderid,
                             // senderaddress:req.body.from_address,
                         })
@@ -954,6 +956,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     status:'Completed',
                     read:'unread',
                     initiator:'sender',
+                    date_created:new Date(),
                     senderaddress:sender,
                 })
                 Notification.create({
@@ -967,6 +970,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     status:'Completed',
                     read:'unread',
                     initiator:'receiver',
+                    date_created:new Date(),
                     recipientaddress:recipentaddress,
                 })
                 res.send({
@@ -1151,7 +1155,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
             res.send(docs)
            
         }
-    }).limit(10).sort({updated: -1})
+    }).limit(10).sort({date_created: -1})
 
 })
 
@@ -1994,7 +1998,7 @@ async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress
                             confirm_blocks:"null",
                             processing_state:"null",
                             read:"unread",
-                            date_created:new ISODate(),
+                            date_created:new Date(),
                             status:'Transaction Completed'
                     
                         })
@@ -2077,7 +2081,7 @@ async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress
                             confirm_blocks:"null",
                             processing_state:"null",
                             read:"unread",
-                            date_created:new ISODate(),
+                            date_created:new Date(),
                             status:'Transaction Completed'
                     
                         })

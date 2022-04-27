@@ -741,7 +741,7 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
         else if(!docs){
             res.send('Empty')
         }
-    }).sort({updatedAt:-1})
+    }).sort({date_created:-1})
 })
 
 
