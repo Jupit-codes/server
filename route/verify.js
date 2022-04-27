@@ -66,18 +66,20 @@ router.get('/cloudinary',(req,res)=>{
 
 router.get('/date/aggregate',async (req,res)=>{
     let dateToken = await wallet_transactions.aggregate([
-        { $match: { currency: 'BTC' } },
+        { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
         { $group : { 
             _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" }}, 
             count : { $sum : 1 },
-            amount: { $sum : "$amount"}
+            amount: { $sum : "$amount"},
+            transaction_type:{$sum:"$type"}
+            
         },
             
             
             }, 
        { $group : { 
             _id : { year: "$_id.year", month: "$_id.month" }, 
-            dailyusage: { $push: { day: "$_id.day", count: "$count",totalTransaction:"$amount"  }}}
+            dailyusage: { $push: { day: "$_id.day", count: "$count",totalTransaction:"$amount",type:"$transaction_type"  }}}
             }, 
        { $group : { 
             _id : { year: "$_id.year" }, 

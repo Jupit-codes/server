@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import Double from '@mongoosejs/double';
 
 const wallet_transactions = mongoose.Schema({
     type:{
@@ -23,10 +23,10 @@ const wallet_transactions = mongoose.Schema({
         
     },
     amount:{
-        type:'Decimal128'
+        type:Double
     },
     fees:{
-        type:'Decimal128'
+        type:Double
     },
     from_address:{
         type:'String'
