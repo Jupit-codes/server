@@ -1994,6 +1994,7 @@ async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress
                             confirm_blocks:"null",
                             processing_state:"null",
                             read:"unread",
+                            date_created:new ISODate(),
                             status:'Transaction Completed'
                     
                         })
@@ -2076,6 +2077,7 @@ async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress
                             confirm_blocks:"null",
                             processing_state:"null",
                             read:"unread",
+                            date_created:new ISODate(),
                             status:'Transaction Completed'
                     
                         })
