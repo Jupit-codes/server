@@ -40,7 +40,7 @@ const userSchema = mongoose.Schema({
         type:'Boolean',
         default:false
     },
-    updated: { type: Date, default: Date.now() },
+    updated: { type: Date, default: Date.now },
 })
 
 // const User = mongoose.model('User',userSchema);

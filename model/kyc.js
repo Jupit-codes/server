@@ -18,7 +18,7 @@ const kycSchema = mongoose.Schema({
             ],
     level3:[{utilitybill:'String',callbackStatus:'String',status:'String'}],
     level4:[{idcard_type:'String',uniqueNumber:'Number', callbackStatus:'String',status:'String'}],
-    updated: { type: Date, default: Date.now() },
+    updated: { type: Date, default: Date.now },
 })
 
 // const User = mongoose.model('User',userSchema);

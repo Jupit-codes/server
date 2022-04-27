@@ -44,7 +44,11 @@ const notification = mongoose.Schema({
     recipientaddress:{
         type:'String'
     },
-    updated: { type: Date, default: Date.now() },
+    date_created:{
+        type:Date
+
+    },
+    updated: { type: Date, default: Date.now },
 })
 
 // const User = mongoose.model('User',userSchema);

@@ -24,7 +24,7 @@ const bankSchema = mongoose.Schema({
     status:{
         type:'String'
     },
-    updated: { type: Date, default: Date.now() },
+    updated: { type: Date, default: Date.now },
 })
 
 // const User = mongoose.model('User',userSchema);

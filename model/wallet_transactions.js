@@ -52,8 +52,11 @@ const wallet_transactions = mongoose.Schema({
     read:{
         type:'String'
     },
+    date_created:{
+        type:Date
 
-    updated: { type: Date, default: Date.now() },
+    },
+    updated: { type: Date, default: Date.now },
 })
 
 // const User = mongoose.model('User',userSchema);

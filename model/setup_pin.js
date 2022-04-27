@@ -10,7 +10,7 @@ const SetUpPin = mongoose.Schema({
         required: [true, "Required"],
         
     },
-    updated: { type: Date, default: Date.now() },
+    updated: { type: Date, default: Date.now },
 })
 
 
