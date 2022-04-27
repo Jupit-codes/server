@@ -9,6 +9,7 @@ import IdCardVerification from '../model/idcardverification.js'
 
 import axios from "axios";
 import cloudinary from 'cloudinary'
+import notification from "../model/notification.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -92,6 +93,17 @@ router.get('/date/aggregate',async (req,res)=>{
          
         
   
+})
+
+router.get('/emptyTable',(req,res)=>{
+    notification.deleteMany({},(err,docs)=>{
+        if(err){
+            res.json(err)
+        }
+        if(docs){
+            res.json('Deleted')
+        }
+    })
 })
 
 router.get('/aggregate',async (req,res)=>{
