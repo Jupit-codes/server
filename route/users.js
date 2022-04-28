@@ -1385,17 +1385,31 @@ async function saveWebHook (json){
 }
 async function saveNotificationNEW (json){
     
-        let Notify = await Notification.create({
+        // let Notify = await Notification.create({
+        //                     type:"3",
+        //                     orderid:json.data.customer_id,
+        //                     transfertype:json.event,
+        //                     asset:'Webhook CallBack',
+        //                     from_address:json.data.identification.account_number,
+        //                     to_address:json.data.identification.bvn,
+        //                     status:'Transaction Completed',
+        //                     read:'unread',
+        //                     date_created:new Date(),
+        //                     initiator:json.data.email,
+        
+        //                 })
+
+                        let Notify = await Notification.create({
                             type:"3",
-                            orderid:json.data.customer_id,
-                            transfertype:json.event,
+                            orderid:"json.data.customer_id",
+                            transfertype:"json.event",
                             asset:'Webhook CallBack',
-                            from_address:json.data.identification.account_number,
-                            to_address:json.data.identification.bvn,
+                            from_address:"json.data.identification.account_number",
+                            to_address:"json.data.identification.bvn",
                             status:'Transaction Completed',
                             read:'unread',
                             date_created:new Date(),
-                            initiator:json.data.email,
+                            initiator:"json.data.email",
         
                         })
 
