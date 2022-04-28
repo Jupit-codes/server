@@ -746,9 +746,14 @@ router.post('/customer_webhook',async (req,res)=>{
     res.status(200).end();
     if(req.body.event){
         
-        await updateWebHook(req.body);
-        await saveWebHook(req.body);
-        await saveNotification(req.body);
+        let updateWebHookx = await updateWebHook(req.body);
+
+        if(updateWebHookx[0]){
+            let saveWebHookx =  await saveWebHook(req.body);
+            let saveNotificationx = await saveNotification(req.body);
+        }
+        
+        
     }
    
     
@@ -1350,7 +1355,7 @@ async function customer_code_fetch(emailaddress){
 }
 
 async function saveWebHook (json){
-    try{
+    
         const webhook = await WebHook.create({
             event:json.event,
             customerid:json.data.customer_id,
@@ -1358,14 +1363,20 @@ async function saveWebHook (json){
             email:json.data.email,
             bvn:json.data.identification.bvn,
             accountnumber:json.data.identification.account_number,
-            bankcode:json.data.identification.bank_code,
+            bankcode:json.data.identification.bank_code
         })
+
+        if(webhook){
+            return[true,"WebhookSaved"];
+        }
+        else{
+            return[false,"Webhook Failed"];
+        }
+
+    
         
-        // console.log('WebhookSaved')
-    }
-    catch(err){
-        console.log(err)
-    }
+        
+    
 }
 async function saveNotification (json){
     try{
@@ -1393,32 +1404,24 @@ async function saveNotification (json){
 
 async function updateWebHook(json){
     
-    //let res = await KycModel.findOneAndUpdate({customercode:json.data.customer_code},{event_status:json.event},{new:true})
-//    let res = await  KycModel.findOneAndUpdate({customercode:json.data.customer_code}, { 
-//         $push: { 
-//                 'level2.0': [{"event_status":json.event},{"event_status":json.event}],
-                
-//             } 
-       
-//         }).exec();
+   
     let bankwebhook = await Bankmodel.findOneAndUpdate({email:json.data.email},{status:json.event},null,(err)=>{
         if(err){
-            console.log(err)
+            return [false,err]
         }
-        process.exit(0)
-    }).clone().catch(function(err){ console.log(err)});
+        
+    }).clone().catch(function(err){ console.log(err);return [false,err]});
+
     let res = await KycModel.findOneAndUpdate ({customercode:json.data.customer_code,'level2.email':json.data.email},{'level2.$.event_status':json.event},null,async(err)=>{
         if(err){
             console.log('Error',err)
+            return [false,err]
         }
-        else{
-            // console.log('Updated','Updated');
-            SendMail(json.data.email,json.event)
-        }
+        
         process.exit(0)
-    }).clone().catch(function(err){ console.log(err)});
+    }).clone().catch(function(err){ console.log(err);return [false,err]});
 
-    
+    return [true,"Saved"];
     
    
 }
