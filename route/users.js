@@ -701,16 +701,26 @@ router.post('/users/login',(req,res)=>{
 
 
 router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
-    // console.log(req.body)
+    
     Walletmodel.find(
         {
             $or:[
                
                     {
                         from_address:req.body.addressBTC,
+                        
+                    },
+                    {
                         to_address:req.body.addressBTC,
+                        
+                    },
+                    {
                         from_address:req.body.addressUSDT,
+                        
+                    },
+                    {
                         to_address:req.body.addressUSDT,
+                        
                     }
 
                 ]
