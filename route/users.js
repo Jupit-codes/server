@@ -705,31 +705,15 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
     Walletmodel.find(
         {
             $or:[
-                {
-                    $or:[
-                        {
-                            from_address:req.body.addressBTC
-                        },
-                        {
-                            to_address:req.body.addressBTC
-                        }
-                        
-                    ]
-                },
-                {
-                    $or:[
-                        {
-                            from_address:req.body.addressUSDT
-                        },
-                        {
-                            to_address:req.body.addressUSDT
-                        }
-                        
-                    ]
+               
+                    {
+                        from_address:req.body.addressBTC,
+                        to_address:req.body.addressBTC,
+                        from_address:req.body.addressUSDT,
+                        to_address:req.body.addressUSDT,
+                    }
 
-                }
-
-            ]
+                ]
         }
     ,function(err,docs){
         if(err){
