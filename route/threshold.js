@@ -375,7 +375,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
     
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         if(req.body.processing_state === 1){
-            Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+            Walletmodel.findOne({txtid:req.body.txid}, async function(err,docs){
                 if(err){
                     res.json({
                         'message':'An Error'+err,
@@ -386,43 +386,16 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 
                 }
                 else{
-                    Walletmodel.create({
-                        type:req.body.type,
-                        serial:req.body.serial,
-                        order_id:req.body.order_id,
-                        currency:req.body.currency,
-                        txtid:req.body.txid,
-                        block_height:req.body.block_height,
-                        tindex:req.body.tindex,
-                        vout_index:req.body.vout_index,
-                        amount:req.body.amount,
-                        fees:req.body.fees,
-                        memo:req.body.memo,
-                        broadcast_at:req.body.broadcast_at,
-                        chain_at:req.body.chain_at,
-                        from_address:req.body.from_address,
-                        to_address:req.body.to_address,
-                        wallet_id:req.body.wallet_id,
-                        state:req.body.state,
-                        confirm_blocks:req.body.confirm_blocks,
-                        processing_state:req.body.processing_state,
-                        decimal:req.body.decimal,
-                        currency_bip44:req.body.currency_bip44,
-                        token_address:req.body.token_address,
-                        date_created:new Date(),
-                        status:'Processing'
-                    });
-
                    
+                    let status = "Processing"
+                    let insert = await updateDepositStatus(req.body,status);
 
-                    console.log('1st Notification Saved Widthrawal',req.body)
+                    if(insert[0]){
+                        let saveNotificationx = saveNotification(req.body,status)
+                    }
+
                     res.sendStatus(200);
                     
-                    // res.json({
-                    //     'message':'Transaction Completed',
-                    //     'status':true,
-                    //     'completed':true
-                    // })
                 }
             })
 
@@ -2289,6 +2262,13 @@ async function FailedUpdateEmail(addr,txid,subject,amount){
 }
 
 async function updateDepositStatus(body,status){
+    if(body.currency === "BTC"){
+        newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
+    }
+    else if(body.currency === "USDT"){
+        newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
+    }
+    
 
     let saveStatus = await Walletmodel.create({
         type:body.type,
@@ -2299,7 +2279,7 @@ async function updateDepositStatus(body,status){
         block_height:body.block_height,
         tindex:body.tindex,
         vout_index:body.vout_index,
-        amount:body.amount,
+        amount:newAmount,
         fees:body.fees,
         memo:body.memo,
         broadcast_at:body.broadcast_at,
