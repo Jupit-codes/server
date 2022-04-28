@@ -151,10 +151,11 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     
                     let status = 'Processing';
                     let insert = await updateDepositStatus(req.body,status);
-
+                    console.log('Deposit-Processing')
                     if(insert[0]){
                         let saveNotificationx = await saveNotification(req.body,status)
                     }
+
                     
                     
                 }
@@ -176,6 +177,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     if(docs.processing_state !== 2){
                         let status = 'Transaction Completed';
                         let insert = await updateDepositStatus(req.body,status);
+                        console.log('Deposit-Completed1')
                         if(insert[0]){
                             //NOtification
                             let saveNotificationx = await saveNotification(req.body,status)
@@ -192,6 +194,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                             await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
                             res.sendStatus(200);
                         }
+                        console.log('Deposit-Completed2')
                       
                         
                         
