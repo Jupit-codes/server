@@ -745,7 +745,7 @@ router.post('/customer_webhook',async (req,res)=>{
     res.send(req.body)
     res.status(200).end();
     if(req.body.event){
-        
+
         let saveNotificationx = await saveNotification(req.body);
         let updateWebHookx = await updateWebHook(req.body);
 
@@ -1381,8 +1381,8 @@ async function saveWebHook (json){
 }
 async function saveNotification (json){
     
-        const Notify = await Notification.create({
-                            type:3,
+        let Notify = await Notification.create({
+                            type:"3",
                             orderid:json.data.customer_id,
                             transfertype:json.event,
                             asset:'Webhook CallBack',
@@ -1394,6 +1394,14 @@ async function saveNotification (json){
                             initiator:json.data.email,
         
                         })
+
+                if(Notify){
+                    return [true];
+                
+                }
+                else{
+                    return [false];
+                }
              
     
 }
