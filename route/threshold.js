@@ -800,7 +800,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         
         if(SubFundToWallet){
             
-            let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8),wallet_type);
+            let AddFundToWallet = await AddFund(recipentaddress,newamount,wallet_type);
             if(AddFundToWallet){
 
                
@@ -811,27 +811,14 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     asset:wallet_type,
                     from_address:sender,
                     to_address:recipentaddress,
-                    amount:amount,
+                    amount:newamount,
                     status:'Completed',
                     read:'unread',
                     initiator:'sender',
                     date_created:new Date(),
                     senderaddress:sender,
                 })
-                // Notification.create({
-                //     type:1,
-                //     orderid:recipentaddress,
-                //     transfertype:tranfertype,
-                //     asset:wallet_type,
-                //     from_address:sender,
-                //     to_address:recipentaddress,
-                //     amount:amount,
-                //     status:'Completed',
-                //     read:'unread',
-                //     initiator:'receiver',
-                //     date_created:new Date(),
-                //     recipientaddress:recipentaddress,
-                // })
+                
                 res.send({
                     "Message":'Transaction Was Successful',
                 })
