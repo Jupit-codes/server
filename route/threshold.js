@@ -993,6 +993,7 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
 
      },function(err,docs){
         if(err){
+            console.log(err)
             res.send({err});
         }
         else if(docs){
