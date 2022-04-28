@@ -93,7 +93,7 @@ Router.post('/getautofee',(req,res)=>{
         }
    })
    .then((result)=>{
-       console.log(result.data['auto_fees'][0]['auto_fee'])
+    //    console.log(result.data['auto_fees'][0]['auto_fee'])
         
         res.send({
            "message":result.data,
@@ -134,12 +134,10 @@ Router.get('/checkaddressvalidity',async (req,res)=>{
 
 
 Router.post('/incoming/depositcallback',(req,res)=>{
-    console.log('Welcome Incoming CallBack')
-    console.log(req.headers['x-checksum']);
-    console.log(req.body);
+    
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         if(req.body.processing_state === 1){
-            Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+            Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                 if(err){
                     res.json({
                         'message':'An Error'+err,
@@ -150,40 +148,15 @@ Router.post('/incoming/depositcallback',(req,res)=>{
 
                 }
                 else{
-                    Walletmodel.create({
-                        type:req.body.type,
-                        serial:req.body.serial,
-                        order_id:req.body.order_id,
-                        currency:req.body.currency,
-                        txtid:req.body.txid,
-                        block_height:req.body.block_height,
-                        tindex:req.body.tindex,
-                        vout_index:req.body.vout_index,
-                        amount:req.body.amount,
-                        fees:req.body.fees,
-                        memo:req.body.memo,
-                        broadcast_at:req.body.broadcast_at,
-                        chain_at:req.body.chain_at,
-                        from_address:req.body.from_address,
-                        to_address:req.body.to_address,
-                        wallet_id:req.body.wallet_id,
-                        state:req.body.state,
-                        confirm_blocks:req.body.confirm_blocks,
-                        processing_state:req.body.processing_state,
-                        decimal:req.body.decimal,
-                        currency_bip44:req.body.currency_bip44,
-                        token_address:req.body.token_address,
-                        status:'Processing'
-                    });
                     
-                    console.log('1st Notification Saved',req.body)
-                    // res.sendStatus(200);
+                    let status = 'Processing';
+                    let insert = await updateDepositStatus(req.body,status);
+
+                    if(insert[0]){
+                        //notification
+                    }
                     
-                    // res.json({
-                    //     'message':'Transaction Completed',
-                    //     'status':true,
-                    //     'completed':true
-                    // })
+                    
                 }
             })
 
@@ -201,50 +174,28 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                 }
                 if(docs){
                     if(docs.processing_state !== 2){
-                        Walletmodel.create({
-                            type:req.body.type,
-                            serial:req.body.serial,
-                            order_id:req.body.order_id,
-                            currency:req.body.currency,
-                            txtid:req.body.txid,
-                            block_height:req.body.block_height,
-                            tindex:req.body.tindex,
-                            vout_index:req.body.vout_index,
-                            amount:req.body.amount,
-                            fees:req.body.fees,
-                            memo:req.body.memo,
-                            broadcast_at:req.body.broadcast_at,
-                            chain_at:req.body.chain_at,
-                            from_address:req.body.from_address,
-                            to_address:req.body.to_address,
-                            wallet_id:req.body.wallet_id,
-                            state:req.body.state,
-                            confirm_blocks:req.body.confirm_blocks,
-                            processing_state:req.body.processing_state,
-                            decimal:req.body.decimal,
-                            currency_bip44:req.body.currency_bip44,
-                            token_address:req.body.token_address,
-                            status:'Transaction Completed'
-                        });
+                        let status = 'Transaction Completed';
+                        let insert = await updateDepositStatus(req.body,status);
+                        if(insert[0]){
+                            //NOtification
+                        }
 
-                         let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+
+                        let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
                         if(UpdateDepositAccount){
-                        //     let subject = "Failed Deposit Update onPremises"
-                        //    await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
-                             console.log('Transaction Completed',req.body)
+
                              res.sendStatus(200);
                         }
                         else{
                             let subject = "Failed Deposit Update onPremises"
-                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
                             res.sendStatus(200);
                         }
                       
                         
                         
                     }
-                    // console.log('Transaction Completed',req.body)
-                    // res.sendStatus(200);
+                    
                 }
                 else{
                     console.log('Transaction Completed Already',req.body)
@@ -254,12 +205,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                 }
             })
             
-            // res.sendStatus(200);
-            // res.json({
-            //     'message':'Transaction Completed',
-            //     'status':true,
-            //     'completed':true
-            // })
+           
             
         }
         if(req.body.processing_state === -1){
@@ -275,36 +221,15 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     }
                     if(docs){
                         if(docs.processing_state !== -1){
-                            Walletmodel.create({
-                                type:req.body.type,
-                                serial:req.body.serial,
-                                order_id:req.body.order_id,
-                                currency:req.body.currency,
-                                txtid:req.body.txid,
-                                block_height:req.body.block_height,
-                                tindex:req.body.tindex,
-                                vout_index:req.body.vout_index,
-                                amount:req.body.amount,
-                                fees:req.body.fees,
-                                memo:req.body.memo,
-                                broadcast_at:req.body.broadcast_at,
-                                chain_at:req.body.chain_at,
-                                from_address:req.body.from_address,
-                                to_address:req.body.to_address,
-                                wallet_id:req.body.wallet_id,
-                                state:req.body.state,
-                                confirm_blocks:req.body.confirm_blocks,
-                                processing_state:req.body.processing_state,
-                                decimal:req.body.decimal,
-                                currency_bip44:req.body.currency_bip44,
-                                token_address:req.body.token_address,
-                                status:'Transaction Failed'
-                            });
-                            
+                            let status = 'Transaction Failed';
+                            let insert = updateDepositStatus(req.body,status);
 
-                            
+                            if(insert[0]){
+                                //notification
+                            }
+     
                         }
-                        console.log('Transaction Failed',req.body)
+                        
                         res.sendStatus(200);
                     }
                     else{
@@ -327,35 +252,17 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     }
                     if(docs){
                         if(docs.processing_state !== -1){
-                            Walletmodel.create({
-                                type:req.body.type,
-                                serial:req.body.serial,
-                                order_id:req.body.order_id,
-                                currency:req.body.currency,
-                                txtid:req.body.txid,
-                                block_height:req.body.block_height,
-                                tindex:req.body.tindex,
-                                vout_index:req.body.vout_index,
-                                amount:req.body.amount,
-                                fees:req.body.fees,
-                                memo:req.body.memo,
-                                broadcast_at:req.body.broadcast_at,
-                                chain_at:req.body.chain_at,
-                                from_address:req.body.from_address,
-                                to_address:req.body.to_address,
-                                wallet_id:req.body.wallet_id,
-                                state:req.body.state,
-                                confirm_blocks:req.body.confirm_blocks,
-                                processing_state:req.body.processing_state,
-                                decimal:req.body.decimal,
-                                currency_bip44:req.body.currency_bip44,
-                                token_address:req.body.token_address,
-                                status:'Transaction Cancelled'
-                            });
+                           
+                            let status = 'Transaction Cancelled';
+                            let insert = updateDepositStatus(req.body,status);
+
+                            if(insert[0]){
+                                //notification
+                            }
                             
                             
                         }
-                        console.log('Transaction Cancelled',req.body)
+                       
                         res.sendStatus(200);
                     }
                     else{
@@ -378,39 +285,24 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     }
                     if(docs){
                         if(docs.processing_state !== -1){
-                            Walletmodel.create({
-                                type:req.body.type,
-                                serial:req.body.serial,
-                                order_id:req.body.order_id,
-                                currency:req.body.currency,
-                                txtid:req.body.txid,
-                                block_height:req.body.block_height,
-                                tindex:req.body.tindex,
-                                vout_index:req.body.vout_index,
-                                amount:req.body.amount,
-                                fees:req.body.fees,
-                                memo:req.body.memo,
-                                broadcast_at:req.body.broadcast_at,
-                                chain_at:req.body.chain_at,
-                                from_address:req.body.from_address,
-                                to_address:req.body.to_address,
-                                wallet_id:req.body.wallet_id,
-                                state:req.body.state,
-                                confirm_blocks:req.body.confirm_blocks,
-                                processing_state:req.body.processing_state,
-                                decimal:req.body.decimal,
-                                currency_bip44:req.body.currency_bip44,
-                                token_address:req.body.token_address,
-                                status:'Transaction Dropped'
-                            });
+                            
+
+                            let status = 'Transaction Dropped';
+                            let insert = updateDepositStatus(req.body,status);
+
+                            if(insert[0]){
+                                //notification
+                            }
+
+                           
                             
                             
                         }
-                        console.log('Transaction Dropped',req.body)
+                        
                         res.sendStatus(200);
                     }
                     else{
-                        console.log('Transaction Dropped',req.body)
+                        
                         res.sendStatus(200);
                         
                        
@@ -427,35 +319,18 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     }
                     if(docs){
                         if(docs.processing_state !== -1){
-                            Walletmodel.create({
-                                type:req.body.type,
-                                serial:req.body.serial,
-                                order_id:req.body.order_id,
-                                currency:req.body.currency,
-                                txtid:req.body.txtid,
-                                block_height:req.body.block_height,
-                                tindex:req.body.tindex,
-                                vout_index:req.body.vout_index,
-                                amount:req.body.amount,
-                                fees:req.body.fees,
-                                memo:req.body.memo,
-                                broadcast_at:req.body.broadcast_at,
-                                chain_at:req.body.chain_at,
-                                from_address:req.body.from_address,
-                                to_address:req.body.to_address,
-                                wallet_id:req.body.wallet_id,
-                                state:req.body.state,
-                                confirm_blocks:req.body.confirm_blocks,
-                                processing_state:req.body.processing_state,
-                                decimal:req.body.decimal,
-                                currency_bip44:req.body.currency_bip44,
-                                token_address:req.body.token_address,
-                                status:'Transaction Unsuccessful'
-                            });
+                           
+
+                            let status = 'Transaction Unsuccessful';
+                            let insert = updateDepositStatus(req.body,status);
+
+                            if(insert[0]){
+                                //notification
+                            }
                             
                             
                         }
-                        console.log('Transaction Unsuccessful',req.body)
+                        
                         res.sendStatus(200);
                     }
                     else{
@@ -486,8 +361,9 @@ Router.post('/incoming/depositcallback',(req,res)=>{
         }) 
     }
    
-    
 })
+
+
 Router.post('/incoming/withdrawalcallback',(req,res)=>{
     console.log('withdrawalcallback');
     
@@ -679,7 +555,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         }
                         else{
                             let subject = "Failed Reversal Update On Premises"
-                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
                             res.sendStatus(200);
                         }
                         
@@ -740,7 +616,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         }
                         else{
                             let subject = "Failed Reversal Update On Premises"
-                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
                             res.sendStatus(200);
                         }
                         
@@ -2351,11 +2227,11 @@ async function activateUSDTToken(){
 
 }
 
-async function FailedUpdateEmail(addr,txid,subject){
+async function FailedUpdateEmail(addr,txid,subject,amount){
     const mailData = {
-        from: 'callback@jupit.app',  // sender address
-        to: req.body.email,   // list of receivers
-        subject: `${subject}`,
+        from: 'hello@jupitapp.co',  // sender address
+        to: 'support@jupitapp.co',   // list of receivers
+        subject: `${subject}>>>>>>${amount}`,
         html: `
                 <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
                     <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
@@ -2405,6 +2281,46 @@ async function FailedUpdateEmail(addr,txid,subject){
         }
           
      });
+}
+
+async function updateDepositStatus(body,status){
+
+    let saveStatus = await Walletmodel.create({
+        type:body.type,
+        serial:body.serial,
+        order_id:body.order_id,
+        currency:body.currency,
+        txtid:body.txid,
+        block_height:body.block_height,
+        tindex:body.tindex,
+        vout_index:body.vout_index,
+        amount:body.amount,
+        fees:body.fees,
+        memo:body.memo,
+        broadcast_at:body.broadcast_at,
+        chain_at:body.chain_at,
+        from_address:body.from_address,
+        to_address:body.to_address,
+        wallet_id:body.wallet_id,
+        state:body.state,
+        confirm_blocks:body.confirm_blocks,
+        processing_state:body.processing_state,
+        decimal:body.decimal,
+        currency_bip44:body.currency_bip44,
+        token_address:body.token_address,
+        status:status
+    });
+
+    if(saveStatus){
+        return [true,'Wallet Status Saved'];
+    }
+    else{
+        return [false, 'Wallet Status Failed'];
+    }
+
+   
+
+
 }
 
 export default Router;

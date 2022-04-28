@@ -110,7 +110,7 @@ router.get('/sendmail',(req,res)=>{
 
 router.post('/save/pin',middlewareVerify,(req,res)=>{
     let userid = req.body.userid;
-    console.log(req.body)
+    // console.log(req.body)
     PinCreation.findOne({userid:userid}, async function(err,docs){
         if(err){
             console.log(err)
@@ -119,14 +119,14 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
         
         }
         else if(docs){
-            console.log('Keeper',docs)
+            // console.log('Keeper',docs)
             if(docs.code === req.body.otp){
 
                 
                 //let update = Usermodel.findOneAndUpdate({_id:userid},[{'Pin_Created':true},{'wallet_pin':req.body.createdpin}]).exec();
                 let update = await Usermodel.updateMany({_id:userid},{ $set: { Pin_Created: true,wallet_pin:req.body.createdpin } });
                 if(update){
-                    console.log("Update Errr")
+                    // console.log("Update Errr")
                     res.send({'message':'Pin Successfully Saved','status':true});
                 }
                 else{
@@ -647,7 +647,7 @@ router.post('/users/test',middlewareVerify,(req,res)=>{
 
 
 router.post('/users/login',(req,res)=>{
-  console.log(req.body)
+//   console.log(req.body)
     Usermodel.findOne({email:req.body.email},async (err,docs)=>{
         if(err){
             res.send({
@@ -658,7 +658,7 @@ router.post('/users/login',(req,res)=>{
         else if(docs){
             
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
-            console.log(validPassword)
+            // console.log(validPassword)
             if (validPassword) {
                 if(docs.TWOFA){
                     res.send('Token is Required')
@@ -701,7 +701,7 @@ router.post('/users/login',(req,res)=>{
 
 
 router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
-    console.log(req.body)
+    // console.log(req.body)
     Walletmodel.find(
         {
             $or:[
@@ -831,7 +831,7 @@ router.get('/users/test/hook',async (req,res)=>{
             console.log('Error',err)
         }
         else{
-            console.log('Updated',docs)
+            // console.log('Updated',docs)
             res.send(docs)
         }
         process.exit(0)
@@ -854,10 +854,10 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
             else{
 
                 const usdt_add =  await createUSDTWalletAddress(req.params.id);
-                        console.log('usdt',usdt_add);
+                        // console.log('usdt',usdt_add);
                         if(usdt_add[0]){
                             const btc_add = await createBTCWalletAddress(req.params.id);
-                            console.log('btc_add',btc_add);
+                            // console.log('btc_add',btc_add);
                             if(btc_add[0]){
 
                                 Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
@@ -1117,7 +1117,7 @@ async function createUSDTWalletAddress(userid){
         
     })
     .catch((error)=>{
-        console.log('error_usdt',console.log(error.response))
+        // console.log('error_usdt',console.log(error.response))
         return [false,error.response];
        
     })
@@ -1187,7 +1187,7 @@ async function createBTCWalletAddress(userid){
             return [true,'success'];
     })
     .catch((error)=>{
-        console.log('error',error.response)
+        // console.log('error',error.response)
         return [false,error.response];
         
         
@@ -1223,7 +1223,7 @@ async function createKyc(userid,email,phonenumber){
 }
 
 function createCustomerCode(kyc_id,email,phonenumber){
-    console.log(kyc_id,email,phonenumber)
+    // console.log(kyc_id,email,phonenumber)
     const url ="https://api.paystack.co/customer";
     const params = {
         "email":email,
@@ -1237,8 +1237,8 @@ function createCustomerCode(kyc_id,email,phonenumber){
         }
     })
     .then(res=>{
-        console.log('CustomerCode',res.data.data.customer_code);
-        console.log('res',res)
+        // console.log('CustomerCode',res.data.data.customer_code);
+        // console.log('res',res)
         KycModel.findByIdAndUpdate(kyc_id, { 
             $push: { 
                     naira_wallet: {"balance":0,"address":"00000"},
@@ -1255,7 +1255,7 @@ function createCustomerCode(kyc_id,email,phonenumber){
                     
                 } 
             }).exec();
-            console.log('Kyc Successfully Created')
+            // console.log('Kyc Successfully Created')
             // res.send({"SuccessMessage":"EmailAddress Verified","status":true});
     })
     .catch((err)=>{
@@ -1285,7 +1285,7 @@ router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
         }
     })
     .then(result=>{
-       console.log(result)
+    //    console.log(result)
          if(result.data.message === "Account number resolved"){
              res.send({
                  "Message":" Account Resolved",
@@ -1405,7 +1405,7 @@ async function customer_code_fetch(emailaddress){
         }
     })
     .then(result=>{
-        console.log(result.data.data.customer_code)
+        // console.log(result.data.data.customer_code)
         return [result.data.data.customer_code,true];
         
     })
@@ -1430,7 +1430,7 @@ async function saveWebHook (json){
             bankcode:json.data.identification.bank_code,
         })
         
-        console.log('WebhookSaved')
+        // console.log('WebhookSaved')
     }
     catch(err){
         console.log(err)
@@ -1447,6 +1447,7 @@ async function saveNotification (json){
                             to_address:json.data.identification.bvn,
                             status:'Transaction Completed',
                             read:'unread',
+                            date_created:new Date(),
                             initiator:json.data.email,
         
                         })
@@ -1480,7 +1481,7 @@ async function updateWebHook(json){
             console.log('Error',err)
         }
         else{
-            console.log('Updated','Updated');
+            // console.log('Updated','Updated');
             SendMail(json.data.email,json.event)
         }
         process.exit(0)
@@ -1662,7 +1663,7 @@ async function comparePassword(hashedPassword,requestPassword){
     
     const validPassword = await bcrypt.compare(requestPassword, hashedPassword);
       if (validPassword) {
-          console.log('Password is Correct');
+        //   console.log('Password is Correct');
         return true  
        
       } else {
