@@ -365,10 +365,10 @@ Router.post('/incoming/depositcallback',(req,res)=>{
 
 
 Router.post('/incoming/withdrawalcallback',(req,res)=>{
-    console.log('withdrawalcallback');
+    // console.log('withdrawalcallback');
     
-    console.log(req.headers['x-checksum']);
-    console.log(req.body);
+    // console.log(req.headers['x-checksum']);
+    // console.log(req.body);
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         if(req.body.processing_state === 1){
             Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
