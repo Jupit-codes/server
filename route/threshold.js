@@ -788,8 +788,15 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
  
     
     if(tranfertype === "Internal Transfer"){
+        let newamount = 0;
+        if(wallet_type === "BTC"){
+           newamount = parseFloat(amount).toFixed(8);
+        }
+        else if(wallet_type === "USDT"){
+            newamount = parseFloat(amount).toFixed(6);
+        }
         
-        let SubFundToWallet = await SubFund(user_id,parseFloat(amount).toFixed(8),wallet_type,block_average_fee,sender,recipentaddress);
+        let SubFundToWallet = await SubFund(user_id,newamount,wallet_type,block_average_fee,sender,recipentaddress);
                         
         if(SubFundToWallet){
             
