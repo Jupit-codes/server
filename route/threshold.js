@@ -823,10 +823,9 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
             let AddFundToWallet = await AddFund(recipentaddress,parseFloat(amount).toFixed(8),wallet_type);
             if(AddFundToWallet){
 
-                // console.log('1',recipentaddress)
-                // console.log('2',req.body.recipentaddress)
+               
                 Notification.create({
-                    type:2,
+                    type:5,
                     orderid:sender,
                     transfertype:tranfertype,
                     asset:wallet_type,
@@ -839,20 +838,20 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     date_created:new Date(),
                     senderaddress:sender,
                 })
-                Notification.create({
-                    type:1,
-                    orderid:recipentaddress,
-                    transfertype:tranfertype,
-                    asset:wallet_type,
-                    from_address:sender,
-                    to_address:recipentaddress,
-                    amount:amount,
-                    status:'Completed',
-                    read:'unread',
-                    initiator:'receiver',
-                    date_created:new Date(),
-                    recipientaddress:recipentaddress,
-                })
+                // Notification.create({
+                //     type:1,
+                //     orderid:recipentaddress,
+                //     transfertype:tranfertype,
+                //     asset:wallet_type,
+                //     from_address:sender,
+                //     to_address:recipentaddress,
+                //     amount:amount,
+                //     status:'Completed',
+                //     read:'unread',
+                //     initiator:'receiver',
+                //     date_created:new Date(),
+                //     recipientaddress:recipentaddress,
+                // })
                 res.send({
                     "Message":'Transaction Was Successful',
                 })
