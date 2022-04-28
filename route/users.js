@@ -1379,7 +1379,7 @@ async function saveWebHook (json){
     
 }
 async function saveNotification (json){
-    try{
+    
         const Notify = await Notification.create({
                             type:3,
                             orderid:json.data.customer_id,
@@ -1393,13 +1393,8 @@ async function saveNotification (json){
                             initiator:json.data.email,
         
                         })
-        
-        
-        
-    }
-    catch(err){
-        console.log(err)
-    }
+             
+    
 }
 
 async function updateWebHook(json){
