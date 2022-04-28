@@ -97,7 +97,7 @@ router.get('/date/aggregate',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    wallet_transactions.deleteMany({},(err,docs)=>{
+    notification.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }
