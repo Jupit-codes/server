@@ -745,81 +745,17 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
 })
 
 
-router.post('/customer_webhook',(req,res)=>{
-    // console.log('Event',req.body);
-    // console.log('HelloEvent',req.body.event);
-    // console.log("EventLog","Event Has Been Recieved")
+router.post('/customer_webhook',async (req,res)=>{
+   
     res.send(req.body)
-    res.status(200).end()
+    res.status(200).end();
     if(req.body.event){
-        // KycModel.findOne({customercode:req.body.customercode},function(err,docs){
-        //     if(err){
-        //         res.send(err);
-        //     }
-        //     if(docs){
-        //         console.log('I found An Existing');
-        //         updateWebHook(req.body)
-        //     }
-        //     else{
-        //         console.log('New Entry');
-        //         saveWebHook(req.body);
-        //     }
-        // })
-        updateWebHook(req.body);
-        saveWebHook(req.body);
-        saveNotification(req.body);
+        
+        await updateWebHook(req.body);
+        await saveWebHook(req.body);
+        await saveNotification(req.body);
     }
    
-
-    // const mailData = {
-    //     from: 'hello@jupit.app',  // sender address
-    //     to: 'hademylola@gmail.com',   // list of receivers
-    //     subject: 'KYC Level 2 Notification',
-    //     text: 'That was easy!',
-    //     html: `
-    //             <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
-    //                 <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-    //                     <hr style="width:100%;height:5px;background-color:#1c1c93"/>
-    //                     <div style="width:100%;text-align:center">
-    //                             <img src="https://jupit-asset.s3.us-east-2.amazonaws.com/manual/logo.png" />
-    //                     </div>   
-    //                     <div style="width:100%;text-align:center;margin-top:20px">
-    //                         <h2 style="font-family:candara">WebHook Notification </h2>
-    //                     <div>   
-    //                     <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
-    //                         <hr style="background-color:#f5f5f5;width:95%"/>
-    //                     <div>
-    //                         <div style="width:100%; text-align:center">
-    //                             <p>Dear Client,</p>
-    //                             <p>Trust this notification meets you well?</p>
-    //                             <p>You Just received a callback response as regards, your KYC Level 2 with US</p>
-    //                         </div>
-                           
-    //                     </div>
-    //                     </div>
-
-    //                     <div >
-    //                     <p style="color:#dedede">If you have any questions, please contact support@jupit.app</p>
-    //                     </div>
-    //                 </div>
-        
-    //             </div>
-    //         `
-    //   };
-
-    // transporter.sendMail(mailData, function (err, info) {
-    //     if(err){
-           
-    //         res.send({"message":"An Error Occurred","callback":err})
-    //     }
-        
-    //     else{
-
-    //         res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
-            
-    //     }
-          
-    //  });
     
 })
 

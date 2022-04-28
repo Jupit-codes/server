@@ -1,3 +1,4 @@
+import Double from '@mongoosejs/double';
 import mongoose from 'mongoose';
 
 
@@ -47,6 +48,9 @@ const notification = mongoose.Schema({
     date_created:{
         type:Date
 
+    },
+    amount:{
+        type:Double
     },
     updated: { type: Date, default: Date.now },
 })
