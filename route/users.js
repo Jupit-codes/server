@@ -37,7 +37,7 @@ const transporter = nodemailer.createTransport({
     host: "smtppro.zoho.com",
        auth: {
             user:'hello@jupitapp.co',
-            pass:'ijugNWscuWay'
+            pass:'rVhjJ7SPzZ0z'
             // pass:'ii84NsMqT9Xv'
          },
     secure: true,
