@@ -825,7 +825,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
 
                
                 Notification.create({
-                    type:5,
+                    type:12,
                     orderid:sender,
                     transfertype:tranfertype,
                     asset:wallet_type,
