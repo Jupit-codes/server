@@ -996,7 +996,7 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
             res.send({err});
         }
         else if(docs){
-            // console.log(docs)
+             console.log(docs)
             res.send(docs)
            
         }
