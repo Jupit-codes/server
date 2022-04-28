@@ -746,13 +746,16 @@ router.post('/customer_webhook',async (req,res)=>{
     res.status(200).end();
     if(req.body.event){
 
-        let saveNotificationx = await saveNotification(req.body);
+        
         let updateWebHookx = await updateWebHook(req.body);
 
         if(updateWebHookx[0]){
             let saveWebHookx =  await saveWebHook(req.body);
             
         }
+
+        let saveNotificationx =  saveNotificationNEW(req.body);
+       
         
         
     }
@@ -1379,7 +1382,7 @@ async function saveWebHook (json){
         
     
 }
-async function saveNotification (json){
+async function saveNotificationNEW (json){
     
         let Notify = await Notification.create({
                             type:"3",
