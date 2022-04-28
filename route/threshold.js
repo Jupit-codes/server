@@ -153,7 +153,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     let insert = await updateDepositStatus(req.body,status);
 
                     if(insert[0]){
-                        //notification
+                        let saveNotificationx = await saveNotification(req.body,status)
                     }
                     
                     
@@ -178,6 +178,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         let insert = await updateDepositStatus(req.body,status);
                         if(insert[0]){
                             //NOtification
+                            let saveNotificationx = await saveNotification(req.body,status)
                         }
 
 
@@ -212,7 +213,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
             
             // res.sendStatus(200)
             if(req.body.state === 5){
-                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                     if(err){
                         res.json({
                             'message':err,
@@ -222,10 +223,11 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     if(docs){
                         if(docs.processing_state !== -1){
                             let status = 'Transaction Failed';
-                            let insert = updateDepositStatus(req.body,status);
+                            let insert = await updateDepositStatus(req.body,status);
 
                             if(insert[0]){
                                 //notification
+                                let saveNotificationx = await saveNotification(req.body,status)
                             }
      
                         }
@@ -243,7 +245,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
             }
             else if(req.body.state === 8 ){
 
-                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                     if(err){
                         res.json({
                             'message':err,
@@ -254,10 +256,11 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         if(docs.processing_state !== -1){
                            
                             let status = 'Transaction Cancelled';
-                            let insert = updateDepositStatus(req.body,status);
+                            let insert = await updateDepositStatus(req.body,status);
 
                             if(insert[0]){
                                 //notification
+                                let saveNotificationx = await saveNotification(req.body,status)
                             }
                             
                             
@@ -276,7 +279,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
             }
             else if(req.body.state ===  10){
 
-                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                     if(err){
                         res.json({
                             'message':err,
@@ -288,10 +291,11 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                             
 
                             let status = 'Transaction Dropped';
-                            let insert = updateDepositStatus(req.body,status);
+                            let insert = await updateDepositStatus(req.body,status);
 
                             if(insert[0]){
                                 //notification
+                                let saveNotificationx = await saveNotification(req.body,status)
                             }
 
                            
@@ -310,7 +314,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                 })      
             }
             else{
-                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                     if(err){
                         res.json({
                             'message':err,
@@ -322,10 +326,10 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                            
 
                             let status = 'Transaction Unsuccessful';
-                            let insert = updateDepositStatus(req.body,status);
+                            let insert = await updateDepositStatus(req.body,status);
 
                             if(insert[0]){
-                                //notification
+                                let saveNotificationx = await saveNotification(req.body)
                             }
                             
                             
@@ -2315,7 +2319,30 @@ async function updateDepositStatus(body,status){
         return [false, 'Wallet Status Failed'];
     }
 
-   
+}
+
+async function saveNotification(body,status){
+    let saveStatus =  await Notification.create({
+        type:4,
+        orderid:body.order_id,
+        transfertype:body.currency,
+        asset:'Incoming Deposit',
+        from_address:body.from_address,
+        to_address:body.to_address,
+        status:status,
+        read:'unread',
+        date_created:new Date(),
+        initiator:body.amount,
+
+    })
+    
+    if(saveStatus){
+        return [true,'Notification Incoming Deposit Failed'];
+    }
+    else{
+        return [false,'Notification Incoming Deposit Failed']
+    }
+
 
 
 }
