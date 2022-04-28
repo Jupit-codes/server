@@ -1020,10 +1020,10 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
             {
 
                 $or: [
-                    { senderaddress: addressBTC }, 
-                    { recipientaddress: addressBTC },
-                    { senderaddress: addressUSDT }, 
-                    { recipientaddress: addressUSDT },
+                    { from_address: addressBTC }, 
+                    { to_address: addressBTC },
+                    { from_address: addressUSDT }, 
+                    { to_address: addressUSDT },
                     {initiator:req.body.email}
                 ]
 
