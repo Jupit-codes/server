@@ -761,8 +761,8 @@ router.post('/customer_webhook', (req,res)=>{
         
                         })
         
-        // updateWebHook(req.body);
-        // saveWebHook(req.body); 
+        updateWebHook(req.body);
+        saveWebHook(req.body); 
         
     }
    
