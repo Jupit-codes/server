@@ -720,6 +720,7 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
             res.status(400).send(err)
         }
         else if(docs){
+            console.log(docs)
             res.send(docs)
         }
         else if(!docs){
