@@ -742,10 +742,11 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
 
 router.post('/customer_webhook',async (req,res)=>{
    
-    res.send(req.body)
+    // res.send(req.body)
     res.status(200).end();
     if(req.body.event){
 
+        let saveNotificationx =  await saveNotificationNEW(req.body);
         
         let updateWebHookx = await updateWebHook(req.body);
 
@@ -754,7 +755,7 @@ router.post('/customer_webhook',async (req,res)=>{
             
         }
 
-        let saveNotificationx =  saveNotificationNEW(req.body);
+        
        
         
         
