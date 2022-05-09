@@ -66,11 +66,43 @@ router.get('/cloudinary',(req,res)=>{
 })
 
 
-router.get('/date/aggregate',async (req,res)=>{
+router.get('/getChart/data',async (req,res)=>{
+    let address = req.body.btcaddress;
     let dateToken = await wallet_transactions.aggregate([
-        { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
+        // { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
+        { $match: {
+            $or:[
+                {
+                    from_address:address
+                },
+                {
+                    to_address:address
+                }
+        
+            ]
+            // $and:[
+            //         {
+            //             currency:'BTC'
+            //         },
+            //         {
+            //             $or:[
+            //                 {
+            //                     from_address:'2NA2V8TMD1Vbi4xWqfuTcsxMyQczom84mN8'
+            //                 },
+            //                 {
+            //                     to_address:'2NA2V8TMD1Vbi4xWqfuTcsxMyQczom84mN8'
+            //                 }
+        
+            //             ]
+            //         }
+                
+        
+            //     ]
+            }
+        
+        },
         { $group : { 
-            _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },type:{type:"$type"}}, 
+            _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"}, 
             count : { $sum : 1 },
             amount: { $sum : "$amount"}
             
@@ -80,7 +112,7 @@ router.get('/date/aggregate',async (req,res)=>{
             }, 
        { $group : { 
             _id : { year: "$_id.year", month: "$_id.month" }, 
-            dailyusage: { $push: { day: "$_id.day", count: "$count",totalTransaction:"$amount",type:"$_id.type"  }}}
+            dailyusage: { $push: { day: "$_id.day", count: "$count",totalTransaction:"$amount",transactionType:"$_id.transactionType",currency:"$_id.currency",Send:"$_id.from_address",Receive:"$_id.to_address"}}}
             }, 
 
        { $group : { 
