@@ -70,19 +70,19 @@ router.get('/date/aggregate',async (req,res)=>{
     let dateToken = await wallet_transactions.aggregate([
         { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
         { $group : { 
-            _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" }}, 
+            _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },type:{type:"$type"}}, 
             count : { $sum : 1 },
-            amount: { $sum : "$amount"},
-            transaction_type:{$sum:"$type"}
+            amount: { $sum : "$amount"}
+            
             
         },
-            
             
             }, 
        { $group : { 
             _id : { year: "$_id.year", month: "$_id.month" }, 
-            dailyusage: { $push: { day: "$_id.day", count: "$count",totalTransaction:"$amount",type:"$transaction_type"  }}}
+            dailyusage: { $push: { day: "$_id.day", count: "$count",totalTransaction:"$amount",type:"$_id.type"  }}}
             }, 
+
        { $group : { 
             _id : { year: "$_id.year" }, 
             monthlyusage: { $push: { month: "$_id.month", dailyusage: "$dailyusage" }}}

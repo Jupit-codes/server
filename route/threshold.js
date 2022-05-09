@@ -394,7 +394,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         let saveNotificationx = saveNotification(req.body,status)
                     }
 
-                    res.sendStatus(200);
+                   
                     
                 }
             })
@@ -418,6 +418,9 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
 
                         if(req.body.currency === "BTC"){
                             newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                        }
+                        else if(req.body.currency === "USDT"){
+                            newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
                         }
 
                         Walletmodel.create({
