@@ -66,7 +66,7 @@ router.get('/cloudinary',(req,res)=>{
 })
 
 
-router.get('/getChart/data',async (req,res)=>{
+router.post('/getChart/data',async (req,res)=>{
     let address = req.body.btcaddress;
     let dateToken = await wallet_transactions.aggregate([
         // { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
