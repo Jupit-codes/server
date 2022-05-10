@@ -139,6 +139,46 @@ router.get('/emptyTable',(req,res)=>{
     })
 })
 
+
+router.get('/latest/transaction',(req,res)=>{
+    let btcaddress = req.body.btcaddress;
+    let usdtaddress = req.body.usdtaddress
+   wallet_transactions.find({
+    $or:[
+            {
+                $or:[
+                    {
+                        from_address:btcaddress
+                    },
+                    {
+                        to_address:btcaddress
+                    }
+                ]
+            },
+            {
+                $or:[
+                    {
+                        from_address:usdtaddress
+                    },
+                    {
+                        to_address:usdtaddress
+                    }
+                ]
+                
+                
+            }
+        ]
+   },(err,docs)=>{
+       if(err){
+           res.status(400).send(err)
+       }
+       else if(docs){
+           res.send(docs)
+       }
+       
+   }).limit(5).sort({date_created: -1})
+})
+
 router.get('/aggregate',async (req,res)=>{
 
     let docs = await Usermodel.aggregate([
