@@ -140,7 +140,7 @@ router.get('/emptyTable',(req,res)=>{
 })
 
 
-router.get('/latest/transaction',(req,res)=>{
+router.post('/latest/transaction',(req,res)=>{
     let btcaddress = req.body.btcaddress;
     let usdtaddress = req.body.usdtaddress
    wallet_transactions.find({
