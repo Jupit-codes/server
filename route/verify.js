@@ -197,8 +197,12 @@ router.get('/aggregate',async (req,res)=>{
 })
 
 router.post('/addCard',(req,res)=>{
-    giftcard.create({
+    let createGiftcard = giftcard.create({
         cardname:req.body.cardname
     })
+
+    console.log(createGiftcard);
+    res.json(createGiftcard)
+    
 })
 export default router
