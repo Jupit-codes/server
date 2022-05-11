@@ -11,6 +11,7 @@ import axios from "axios";
 import cloudinary from 'cloudinary'
 import notification from "../model/notification.js";
 import webhook from "../model/webhook.js";
+import giftcard from "../model/giftcard.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -195,4 +196,9 @@ router.get('/aggregate',async (req,res)=>{
       console.log(docs);
 })
 
+router.post('/addCard',(req,res)=>{
+    giftcard.create({
+        cardname:req.body.cardname
+    })
+})
 export default router
