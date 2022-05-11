@@ -176,7 +176,7 @@ router.post('/latest/transaction',(req,res)=>{
            res.send(docs)
        }
        
-   }).limit(5).sort({date_created: -1})
+   }).limit(3).sort({date_created: -1})
 })
 
 router.get('/aggregate',async (req,res)=>{
