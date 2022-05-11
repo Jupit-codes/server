@@ -196,13 +196,29 @@ router.get('/aggregate',async (req,res)=>{
       console.log(docs);
 })
 
-router.post('/addCard',(req,res)=>{
-    let createGiftcard = giftcard.create({
+router.post('/addCard',async(req,res)=>{
+    let createGiftcard = await giftcard.create({
         cardname:req.body.cardname
     })
+   let currencyItems={
+       "USA":"USD",
+       "UK":"GBP"
+   }
+    
+    if(createGiftcard){
+        giftcard.findOneAndUpdate({_id:createGiftcard._id},{$push:{
+            currency:currencyItems
+        }},(err,docs)=>{
+            if(err){
+                res.send(err);
+            }
+            else if(docs){
+                res.send(docs);
+            }
+        })
+    }
 
-    console.log(createGiftcard);
-    res.json(createGiftcard)
+    
     
 })
 export default router
