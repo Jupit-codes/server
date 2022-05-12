@@ -200,14 +200,11 @@ router.post('/addCard',async(req,res)=>{
     let createGiftcard = await giftcard.create({
         cardname:req.body.cardname
     })
-   let currencyItems={
-       "USA":"USD",
-       "UK":"GBP"
-   }
+   console.log(req.body.currency)
     
     if(createGiftcard){
         giftcard.findOneAndUpdate({_id:createGiftcard._id},{$push:{
-            currency:currencyItems
+            currency:currency
         }},(err,docs)=>{
             if(err){
                 res.send(err);
