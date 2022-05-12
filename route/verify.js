@@ -204,7 +204,7 @@ router.post('/addCard',async(req,res)=>{
     
     if(createGiftcard){
         giftcard.findOneAndUpdate({_id:createGiftcard._id},{$push:{
-            currency:currency
+            currency:req.body.currency
         }},(err,docs)=>{
             if(err){
                 res.send(err);
