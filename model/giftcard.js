@@ -6,8 +6,8 @@ const giftcardSchema = mongoose.Schema({
         unique:true,
         required: [true, "Required"],
     },
-    currency:[{currencyType:String}],
-    cardtype:[{cardTypeDocs:String}],
+    currency : { type : Array , "default" : [] },
+    cardType : { type : Array , "default" : [] },
     date_created:{
         type:Date
 
