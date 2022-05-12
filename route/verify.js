@@ -220,7 +220,14 @@ router.post('/addCard',async(req,res)=>{
 })
 
 router.get('/get/allgiftcards',middlewareVerify,(req,res)=>{
-
+    giftcard.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else{
+            res.send(docs);
+        }
+    })
 })
 
 function middlewareVerify(req,res,next){
