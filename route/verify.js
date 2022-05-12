@@ -215,9 +215,23 @@ router.post('/addCard',async(req,res)=>{
                 res.send(docs);
             }
         })
-    }
-
-    
+    }  
     
 })
+
+router.get('/get/allgiftcards',middlewareVerify,(req,res)=>{
+
+})
+
+function middlewareVerify(req,res,next){
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+        res.sendStatus(403);
+    }
+    else{
+        req.token = bearerHeader;
+        next();
+    }
+}
+
 export default router
