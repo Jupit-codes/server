@@ -8,6 +8,7 @@ const giftcardSchema = mongoose.Schema({
     },
     currency : { type : Array , "default" : [] },
     cardType : { type : Array , "default" : [] },
+    rate : { type : Array , "default" : [] },
     date_created:{
         type:Date
 
