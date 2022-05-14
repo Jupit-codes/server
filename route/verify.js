@@ -251,7 +251,8 @@ router.get('/giftCardApi',async (req,res)=>{
 
 
 router.post('/giftCardApi/brandname',async (req,res)=>{
-    let url = 'https://api-testbed.giftbit.com/papi/v1/brands/'+req.body.brandname;
+//    res.json(req.body);
+    let url = `https://api-testbed.giftbit.com/papi/v1/brands/${req.body.brandname}`;
     axios.get(url,{ 
         headers: {
             'Content-Type': 'application/json',
@@ -260,10 +261,12 @@ router.post('/giftCardApi/brandname',async (req,res)=>{
         }
     })
     .then(result=>{
+        // console.log(result.data)
         res.json(result.data)
         
     })
     .catch((error)=>{
+        // console.log(error.response)
         res.json(error.response)
     })
 })
