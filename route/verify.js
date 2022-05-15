@@ -11,6 +11,7 @@ import cloudinary from 'cloudinary'
 import notification from "../model/notification.js";
 import webhook from "../model/webhook.js";
 import giftcard from "../model/giftcard.js";
+import Crypto from 'crypto'
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -283,6 +284,75 @@ function middlewareVerify(req,res,next){
         next();
     }
 }
+
+router.post('/changepassword',middlewareVerify,(req,res)=>{
+    let code = Crypto.randomBytes(20).toString('hex');
+    let userid = req.body.userid;
+    Usermodel.findOne({_id:userid},(err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else if(docs){
+
+
+            const mailData = {
+                from: 'hello@jupitapp.co',  // sender address
+                to: docs.email,   // list of receivers
+                subject: 'Change Password <jupit.app>',
+                text: 'That was easy!',
+                html: `
+                        <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-items:center">
+                            <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                                <hr style="width:100%;height:5px;background-color:#1c1c93"/>
+                                <div style="width:100%;text-align:center">
+                                        <img src="<img src="https://res.cloudinary.com/jupit/image/upload/v1648472935/ocry642pieozdbopltnx.png" />
+                                </div>   
+                                <div style="width:100%;text-align:center;margin-top:20px">
+                                    <h2 style="font-family:candara">Change Password  </h2>
+                                <div>   
+                                <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
+                                    <hr style="background-color:#f5f5f5;width:95%"/>
+                                <div>
+                                    <div style="width:100%; text-align:center">
+                                        <p style="font-family:candara;padding:10px;font-size:16px">To change your password, kindly click on the button below</p>
+                                        <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">If you did not make this request, then ignore the email</p>
+                                        <a href="https://myjupit.herokuapp.com/users/jupit/changepassword/${code}/qvrse/${user._id}" style="cursor:pointer"><button style="width:100%;height:40px;font-family:candara;font-size:18px;font-weight:bold;cursor:pointer;background-color:#ffc857;border:1px solid #ffc857">Change Password</button></a>
+                                    </div>
+                                    <div style="width:100%; text-align:center">
+                                    <p style="font-family:candara;padding:5px">If you have trouble paste below link in your browser</p>
+                                    <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https://myjupit.herokuapp.com/users/jupit/changepassword/${code}/qvrse/${user._id}</p>
+                                    </div>
+                                </div>
+                                </div>
+
+                                <div >
+                                <p style="color:#9DA8B6">If you have any questions, please contact support@jupitapp.co</p>
+                                </div>
+                            </div>
+                
+                        </div>
+                    `
+              };
+
+            transporter.sendMail(mailData, function (err, info) {
+                if(err){
+                    console.log(err);
+                    res.send({"message":"An Error Occurred","callback":err})
+                }
+                
+                else{
+ 
+                    res.send({"message":"The Required Link has been sent to your mail","callback":info,"status":true})
+                    
+                }
+            })
+            
+        }
+        else if(!docs){
+            res.status(400).send('Userid not Found');
+        }
+    })
+})
 
 
 
