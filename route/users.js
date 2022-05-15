@@ -942,7 +942,7 @@ router.post('/users/register',(req,res)=>{
                             <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
                                 <hr style="width:100%;height:5px;background-color:#1c1c93"/>
                                 <div style="width:100%;text-align:center">
-                                        <img src="<img src="https://res.cloudinary.com/jupit/image/upload/v1648472935/ocry642pieozdbopltnx.png" />
+                                        <img src="https://res.cloudinary.com/jupit/image/upload/v1648472935/ocry642pieozdbopltnx.png" alt="company_logo" />
                                 </div>   
                                 <div style="width:100%;text-align:center;margin-top:20px">
                                     <h2 style="font-family:candara">Email Verification  </h2>
