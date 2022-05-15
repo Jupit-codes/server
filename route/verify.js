@@ -354,7 +354,7 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
                 
                 else{
  
-                    res.send({"message":"The Required Link has been sent to your mail","callback":info,"status":true})
+                    res.send({"message":"The password reset link has been sent to your mail","callback":info,"status":true})
                     
                 }
             })
