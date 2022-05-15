@@ -12,6 +12,7 @@ import notification from "../model/notification.js";
 import webhook from "../model/webhook.js";
 import giftcard from "../model/giftcard.js";
 import Crypto from 'crypto'
+import nodemailer from 'nodemailer';
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
