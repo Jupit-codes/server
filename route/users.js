@@ -23,6 +23,7 @@ import { cwd } from "process";
 import SpeakEasy from 'speakeasy'
 
 import cloudinary from 'cloudinary'
+import changepassword from "../model/changepassword.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -785,6 +786,18 @@ router.get('/users/test/hook',async (req,res)=>{
 
     
 })
+
+
+router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
+    const item = {
+        userid:req.params.id,
+        code:req.params.code
+    }
+    res.cookie("context", item, { httpOnly: true });
+    res.redirect("https://jupitapp.vercel.app/user/changepassword");
+})
+
+
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
     
    
