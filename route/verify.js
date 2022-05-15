@@ -18,6 +18,17 @@ cloudinary.config({
     api_secret: '57S453gwuBc1_vypuLOcqYQ2V5o' 
   });
 
+  const transporter = nodemailer.createTransport({
+    port: 465,               // true for 465, false for other ports
+    host: "smtppro.zoho.com",
+       auth: {
+            user:'hello@jupitapp.co',
+            pass:'rVhjJ7SPzZ0z'
+            // pass:'ii84NsMqT9Xv'
+         },
+    secure: true,
+    });
+
 const router = express.Router();
 
 router.get('/me',(req,res)=>{
