@@ -13,6 +13,7 @@ import database from './config/database.js'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid';
 import cors from 'cors';
+import { NoncurrentVersionTransition } from "@aws-sdk/client-s3";
 const oneDay = 1000 * 60 * 60 * 24;
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -37,22 +38,26 @@ const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/j
 
 // app.use(bodyParser.json());
 
-
+app.set("trust proxy",1);
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
 app.use(Session({
   secret: 'SECRET_SERVER',
   saveUninitialized:true,
+  
   cookie: { 
     
-    httpOnly:true,
-    maxAge: 36000000 ,
+    // httpOnly:true,
+    maxAge: oneDay ,
+    secure:false,
+    sameSite:"lax",
   },
-  resave: true
+  resave: true,
+  
 }));
 app.use((req,res,next)=>{
-  console.log(req.session);
+  console.log('Session Sense',req.session);
   next();
 })
 
