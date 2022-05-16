@@ -667,7 +667,7 @@ router.post('/users/login',(req,res)=>{
                     res.send('Token is Required')
                 }
                 else{
-                    jwt.sign({user:docs},'secretkey',{expiresIn:'900s'},(err,token)=>{
+                    jwt.sign({user:docs},'secretkey',{expiresIn:'2h'},(err,token)=>{
                         res.json({
                             token,
                             docs,
