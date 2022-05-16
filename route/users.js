@@ -792,12 +792,12 @@ router.get('/users/test/hook',async (req,res)=>{
 
 router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 
-   session.findOne({userid:req.params.id},(err,docs)=>{
+   session.findOne({userid:req.params.id},async(err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
         else if(docs){
-
+            console.log(docs)
             if(docs.code === req.params.code && docs.status === "completed"){
                 res.json({
                     message:"This Link has Expired",
@@ -809,7 +809,8 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
             }
         }
         else if(!docs){
-            session.create({
+            console.log('HereSaved')
+            await session.create({
                 userid:req.params.id,
                 status:'pending',
                 code:req.params.code

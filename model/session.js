@@ -1,10 +1,7 @@
 import mongoose from 'mongoose'
 
 const sessionSchema = mongoose.Schema({
-    email:{
-        type:'String',
-        required: [true, "Required"],
-    },
+    
     code:{
         type:'String',
         
