@@ -835,19 +835,23 @@ router.post('/user/changepassword/data',async (req,res)=>{
    console.log(req.body);
     await Usermodel.findOneAndUpdate({_id:req.body.userid},{password:req.body.password},null,async(err)=>{
         if(err){
-            res.status(400).send('Error Updating Bank Details')
+            res.status(400).send(err);
+
         }
-        await session.findOneAndUpdate({userid:userid},{status:'Completed'},null,async (err,success)=>{
-            if(err){
-                res.status(400).send(err);
-            }
-            else{
-                res.send({
-                    'Message':"Password Successfully Updated"
-                })
-            }
-        })
-    })
+        else{
+            await session.findOneAndUpdate({userid:req.body.userid},{status:'Completed'},null,async (err,success)=>{
+                if(err){
+                    res.status(400).send(err);
+                }
+                else{
+                    res.send({
+                        'Message':"Password Successfully Updated"
+                    })
+                }
+            }).clone().catch(function(err){ console.log(err);return [false,err]});
+        }
+        
+    }).clone().catch(function(err){ console.log(err);return [false,err]});
     
     // res.json("Welcome")
     // if(req.session.changepwd){
