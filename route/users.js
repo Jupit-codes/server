@@ -802,7 +802,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
     res.redirect("https://jupitapp.vercel.app/user/changepassword");
 })
 
-router.get('/getSession/data',(req,res)=>{
+router.get('/user/getSession/data',(req,res)=>{
     if(req.session.changepwd){
         res.send({
             'message':req.session.changepwd,
