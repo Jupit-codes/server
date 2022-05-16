@@ -50,7 +50,7 @@ app.use(Session({
     
     // httpOnly:true,
     maxAge: oneDay ,
-    secure:false,
+    secure:true,
     sameSite:"lax",
   },
   resave: true,
