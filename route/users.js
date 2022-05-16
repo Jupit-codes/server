@@ -24,6 +24,7 @@ import SpeakEasy from 'speakeasy'
 
 import cloudinary from 'cloudinary'
 import changepassword from "../model/changepassword.js";
+import session from "../model/session.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -790,21 +791,46 @@ router.get('/users/test/hook',async (req,res)=>{
 
 router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 
-    var passwordSess = req.session.changepwd = [];
-    const item = {
-        code:req.params.code,
-        userid: req.params.id,
-        
-    }
-    passwordSess.push(item);
+   session.findOne({userid:req.params.id},(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            
+            if(docs.code === req.params.code && docs.status === "completed"){
+                res.json({
+                    message:"This Link has Expired",
+                    status:false
+                })
+            }
+            else if(docs.code === req.params.code && docs.status === "pending"){
+                res.redirect("https://jupitapp.vercel.app/user/changepassword");
+            }
+        }
+        else if(!docs){
+            session.create({
+                userid:req.params.id,
+                status:'pending',
+                code:req.params.code
+            })
 
-    console.log('passwordSess',req.session)
-    req.session.cookie.expires = false;
-    res.redirect("https://jupitapp.vercel.app/user/changepassword");
+            res.redirect("https://jupitapp.vercel.app/user/changepassword");
+        }
+   })
+    // const item = {
+    //     code:req.params.code,
+    //     userid: req.params.id,
+        
+    // }
+    // passwordSess.push(item);
+
+    // console.log('passwordSess',req.session)
+    // req.session.cookie.expires = false;
+    
 })
 
 router.get('/user/getSession/data',async (req,res)=>{
-    console.log("CheckSession",req.session);
+   
     
     res.send(req.session)
     // if(req.session.changepwd){

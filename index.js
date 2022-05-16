@@ -58,16 +58,15 @@ app.use(Session({
 }));
 
 
-// app.use(cors());
+app.use(cors());
 
-// const corsOptions = {
-//   // origin: true,
-//   origin :"https://jupitapp.vercel.app",
-//   credentials: true
-// }
-// app.options('*', cors(corsOptions));
+const corsOptions = {
+  origin: true,
+  credentials: true
+}
+app.options('*', cors(corsOptions));
 
-app.use(cors({ credentials: true, origin: "https://jupitapp.vercel.app" }));
+// app.use(cors({ credentials: true, origin: "https://jupitapp.vercel.app" }));
 app.use(helmet())
 app.use(morgan('combined'));
 
