@@ -863,7 +863,8 @@ router.post('/user/changepassword/data',async (req,res)=>{
                     })
                    
                     res.send({
-                        'Message':"Password Successfully Updated"
+                        'Message':"Password Successfully Updated",
+                        'status':true
                     })
                 }
             }).clone().catch(function(err){ console.log(err);return [false,err]});
