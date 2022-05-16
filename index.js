@@ -41,32 +41,15 @@ const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/j
 // app.set("trust proxy",1);
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
-
-// app.use(Session({
-//   secret: 'SECRET_SERVER',
-//   saveUninitialized:true,
-//   resave: false,
-//   cookie: { 
-    
-//     // httpOnly:true,
-//     maxAge: oneDay ,
-//     secure:true,
-//     sameSite:"lax",
-//   }
- 
-  
-// }));
-
-
 app.use(cors());
 
-const corsOptions = {
-  origin: true,
-  credentials: true
-}
-app.options('*', cors(corsOptions));
+// const corsOptions = {
+//   origin: true,
+//   credentials: true
+// }
+// app.options('*', cors(corsOptions));
 
-// app.use(cors({ credentials: true, origin: "https://jupitapp.vercel.app" }));
+app.use(cors({ credentials: true, origin: true }));
 app.use(helmet())
 app.use(morgan('combined'));
 
