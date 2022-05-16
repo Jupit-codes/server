@@ -789,11 +789,13 @@ router.get('/users/test/hook',async (req,res)=>{
 
 
 router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
-    const item = {
-        userid:req.params.id,
-        code:req.params.code
-    }
-    res.cookie("context", item, { httpOnly: true });
+    // const item = {
+    //     userid:req.params.id,
+    //     code:req.params.code
+    // }
+    req.session.userid = req.params.id;
+    req.session.code = req.params.code
+   
     res.redirect("https://jupitapp.vercel.app/user/changepassword");
 })
 

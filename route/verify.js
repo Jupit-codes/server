@@ -78,7 +78,16 @@ router.get('/cloudinary',(req,res)=>{
 
 })
 
+router.get('/set/session',(req,res)=>{
+    let username = 'Temiloluwa Odewumi';
+    req.session.name = username;
+    res.send({'message':'session-set'});
+})
 
+router.get('/check/session',(req,res)=>{
+    
+    res.send({'message':req.session.name});
+})
 
 router.post('/getChart/data',async (req,res)=>{
     let address = req.body.btcaddress;

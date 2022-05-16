@@ -1,5 +1,7 @@
 import express from "express";
 import bodyParser from 'body-parser'
+import CookieParser from "cookie-parser";
+import Session from "express-session";
 import userRouter from './route/users.js'
 import thresholdRouter from './route/threshold.js'
 import twoFactorRouter from "./model/twoFactor.js";
@@ -9,7 +11,9 @@ import helmet from "helmet";
 import dotenv from 'dotenv'
 import database from './config/database.js'
 import mongoose from 'mongoose'
+import { v4 as uuidv4 } from 'uuid';
 import cors from 'cors';
+const oneDay = 1000 * 60 * 60 * 24;
 const app = express();
 const PORT = process.env.PORT || 5000;
 dotenv.config();
@@ -32,6 +36,13 @@ const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/j
 
 
 // app.use(bodyParser.json());
+app.use(Session({
+  secret: uuidv4(),
+  saveUninitialized:true,
+  cookie: { maxAge: oneDay },
+  resave: false
+}));
+
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
@@ -54,7 +65,7 @@ app.use(morgan('combined'));
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 
-
+app.use(CookieParser());
 
 app.use('/',userRouter);
 app.use('/threshold',thresholdRouter);
