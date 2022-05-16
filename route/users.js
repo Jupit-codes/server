@@ -846,13 +846,13 @@ router.post('/user/changepassword/data',async (req,res)=>{
            
             let newpassword =  bcrypt.hashSync(req.body.password, salt)
            
-    await Usermodel.findOneAndUpdate({_id:req.body.userid},{password:newpassword},null,async(err)=>{
+    await Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{password:newpassword}}, {new: true},  async (err, doc)=>{
         if(err){
             res.status(400).send(err);
 
         }
         else{
-            await session.findOneAndUpdate({userid:req.body.userid},{status:'Completed'},null,async (err,success)=>{
+            await session.findOneAndUpdate({_id: req.params.id}, {$set:{status:'completed'}}, {new: true},  async (err, doc)=>{
                 if(err){
                     res.status(400).send(err);
                 }
