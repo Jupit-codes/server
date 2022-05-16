@@ -36,15 +36,21 @@ const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/j
 
 
 // app.use(bodyParser.json());
-app.use(Session({
-  secret: uuidv4(),
-  saveUninitialized:true,
-  cookie: { maxAge: oneDay },
-  resave: false
-}));
+
 
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+
+app.use(Session({
+  secret: uuidv4(),
+  saveUninitialized:true,
+  cookie: { 
+    
+    httpOnly:true,
+    maxAge: 36000000 ,
+  },
+  resave: true
+}));
 
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
