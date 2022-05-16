@@ -831,10 +831,25 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
     
 })
 
-router.get('/user/getSession/data',async (req,res)=>{
+router.post('/user/changepassword/data',async (req,res)=>{
    
+    await Usermodel.findOneAndUpdate({_id:req.body.userid},{password:req.body.password},null,async(err)=>{
+        if(err){
+            res.status(400).send('Error Updating Bank Details')
+        }
+        await session.findOneAndUpdate({userid:userid},{status:'Completed'},null,async (err,success)=>{
+            if(err){
+                res.status(400).send(err);
+            }
+            else{
+                res.send({
+                    'Message':"Password Successfully Updated"
+                })
+            }
+        })
+    })
     
-    res.json("Welcome")
+    // res.json("Welcome")
     // if(req.session.changepwd){
     //     res.send({
     //         'message':req.session.changepwd,
