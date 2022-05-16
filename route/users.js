@@ -805,7 +805,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 })
 
 router.get('/user/getSession/data',async (req,res)=>{
-    console.log(req.session)
+    console.log("CheckSession",req.session)
     if(req.session.changepwd){
         res.send({
             'message':req.session.changepwd,
