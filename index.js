@@ -45,14 +45,15 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 app.use(Session({
   secret: 'SECRET_SERVER',
   saveUninitialized:true,
+  resave: false,
   cookie: { 
     
     // httpOnly:true,
     maxAge: oneDay ,
     secure:true,
     sameSite:"lax",
-  },
-  resave: true,
+  }
+ 
   
 }));
 // app.use((req,res,next)=>{
