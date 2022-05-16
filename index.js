@@ -70,7 +70,8 @@ app.use((req,res,next)=>{
 app.use(cors());
 
 const corsOptions = {
-  origin: true,
+  // origin: true,
+  origin :"https://jupitapp.vercel.app",
   credentials: true
 }
 app.options('*', cors(corsOptions));
