@@ -38,24 +38,24 @@ const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/j
 
 // app.use(bodyParser.json());
 
-app.set("trust proxy",1);
+// app.set("trust proxy",1);
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
-app.use(Session({
-  secret: 'SECRET_SERVER',
-  saveUninitialized:true,
-  resave: false,
-  cookie: { 
+// app.use(Session({
+//   secret: 'SECRET_SERVER',
+//   saveUninitialized:true,
+//   resave: false,
+//   cookie: { 
     
-    // httpOnly:true,
-    maxAge: oneDay ,
-    secure:true,
-    sameSite:"lax",
-  }
+//     // httpOnly:true,
+//     maxAge: oneDay ,
+//     secure:true,
+//     sameSite:"lax",
+//   }
  
   
-}));
+// }));
 
 
 app.use(cors());
