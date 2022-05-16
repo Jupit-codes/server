@@ -56,25 +56,18 @@ app.use(Session({
  
   
 }));
-// app.use((req,res,next)=>{
-//   console.log('Session Sense',req.session);
-//   next();
-// })
 
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", 
-//     "Origin, X-Requested-With, Content-Type, Accept,Authorization");
-//     next();
-// });
-app.use(cors());
 
-const corsOptions = {
-  // origin: true,
-  origin :"https://jupitapp.vercel.app",
-  credentials: true
-}
-app.options('*', cors(corsOptions));
+// app.use(cors());
+
+// const corsOptions = {
+//   // origin: true,
+//   origin :"https://jupitapp.vercel.app",
+//   credentials: true
+// }
+// app.options('*', cors(corsOptions));
+
+app.use(cors({ credentials: true, origin: "https://jupitapp.vercel.app" }));
 app.use(helmet())
 app.use(morgan('combined'));
 
