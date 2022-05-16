@@ -832,7 +832,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 })
 
 router.post('/user/changepassword/data',async (req,res)=>{
-   
+   console.log(req.body);
     await Usermodel.findOneAndUpdate({_id:req.body.userid},{password:req.body.password},null,async(err)=>{
         if(err){
             res.status(400).send('Error Updating Bank Details')
