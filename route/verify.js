@@ -94,8 +94,13 @@ router.post('/set/session',(req,res)=>{
 router.get('/check/session',(req,res)=>{
 
     
-    
-    res.send({'message':req.session.changepwd});
+     if(req.session.changepwd){
+        res.send(req.session.changepwd);
+     }
+     else{
+         res.send({'message':'No Session Found'})
+     }
+   
 })
 
 router.post('/getChart/data',async (req,res)=>{
