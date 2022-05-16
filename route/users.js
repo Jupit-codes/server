@@ -807,6 +807,15 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
             else if(docs.code === req.params.code && docs.status === "pending"){
                 res.redirect("https://jupitapp.vercel.app/user/changepassword");
             }
+            else{
+                await session.create({
+                    userid:req.params.id,
+                    status:'pending',
+                    code:req.params.code
+                })
+    
+                res.redirect("https://jupitapp.vercel.app/user/changepassword");
+            }
         }
         else if(!docs){
             console.log('HereSaved')
