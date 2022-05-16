@@ -789,15 +789,33 @@ router.get('/users/test/hook',async (req,res)=>{
 
 
 router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
-    // const item = {
-    //     userid:req.params.id,
-    //     code:req.params.code
-    // }
-    req.session.userid = req.params.id;
-    req.session.code = req.params.code
-   
+
+    
+    var passwordSess = req.session.changepwd = [];
+    const item = {
+        code:req.params.code,
+        userid: req.params.id,
+        
+    }
+    passwordSess.push(item);
+    
     res.redirect("https://jupitapp.vercel.app/user/changepassword");
 })
+
+router.get('/getSession/data',(req,res)=>{
+    if(req.session.changepwd){
+        res.send({
+            'message':req.session.changepwd,
+            'status':true
+        })
+    }
+    else{
+        res.status(400).send("Session not Available");
+    }
+})
+
+
+
 
 
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
