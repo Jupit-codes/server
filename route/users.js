@@ -798,7 +798,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
         }
         else if(docs){
             console.log(docs)
-            if(docs.code === req.params.code && docs.status === "completed"){
+            if(docs.code === req.params.code && docs.status === "Completed"){
                 res.json({
                     message:"This Link has Expired",
                     status:false
