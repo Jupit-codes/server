@@ -844,7 +844,7 @@ router.post('/user/changepassword/data',async (req,res)=>{
                     res.status(400).send(err);
                 }
                 else{
-                    await Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
+                     Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
                         if(err){
                             res.status(400).send(err);
                         }
