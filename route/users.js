@@ -799,12 +799,13 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
     passwordSess.push(item);
 
     console.log('passwordSess',req.session)
-    
+    req.session.cookie.expires = false;
     res.redirect("https://jupitapp.vercel.app/user/changepassword");
 })
 
 router.get('/user/getSession/data',async (req,res)=>{
-    console.log("CheckSession",req.session)
+    console.log("CheckSession",req.session);
+    
     res.send(req.session)
     // if(req.session.changepwd){
     //     res.send({
