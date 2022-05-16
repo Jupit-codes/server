@@ -25,6 +25,7 @@ import SpeakEasy from 'speakeasy'
 import cloudinary from 'cloudinary'
 import changepassword from "../model/changepassword.js";
 import session from "../model/session.js";
+import { readdirSync } from "fs";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -796,7 +797,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
             res.status(400).send(err)
         }
         else if(docs){
-            
+
             if(docs.code === req.params.code && docs.status === "completed"){
                 res.json({
                     message:"This Link has Expired",
@@ -832,7 +833,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 router.get('/user/getSession/data',async (req,res)=>{
    
     
-    res.send(req.session)
+    res.json("Welcome")
     // if(req.session.changepwd){
     //     res.send({
     //         'message':req.session.changepwd,
