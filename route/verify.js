@@ -78,15 +78,24 @@ router.get('/cloudinary',(req,res)=>{
 
 })
 
-router.get('/set/session',(req,res)=>{
-    let username = 'Temiloluwa Odewumi';
-    req.session.name = username;
+router.post('/set/session',(req,res)=>{
+   
+    var passwordSess = req.session.changepwd = [];
+    const item = {
+        name:req.body.username,
+        userid:req.body.userid,
+        sex:req.body.sex
+    }
+    passwordSess.push(item);
+    
     res.send({'message':'session-set'});
 })
 
 router.get('/check/session',(req,res)=>{
+
     
-    res.send({'message':req.session.name});
+    
+    res.send({'message':req.session.changepwd});
 })
 
 router.post('/getChart/data',async (req,res)=>{
