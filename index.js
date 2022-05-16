@@ -45,7 +45,6 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 app.use(Session({
   secret: 'SECRET_SERVER',
   saveUninitialized:true,
-  
   cookie: { 
     
     // httpOnly:true,
