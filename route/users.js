@@ -792,19 +792,19 @@ router.get('/users/test/hook',async (req,res)=>{
 
 router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 
-   session.findOne({userid:req.params.id},async(err,docs)=>{
+   session.findOne({userid:req.params.id,code:req.params.code},async(err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
         else if(docs){
-           
-            if(docs.code === req.params.code && docs.status === "Completed"){
+           console.log(docs)
+            if(docs.status === "Completed"){
                 res.json({
                     message:"This Link has Expired",
                     status:false
                 })
             }
-            else if(docs.code === req.params.code && docs.status === "Pending"){
+            else if(docs.status === "Pending"){
                 res.redirect("https://jupitapp.vercel.app/user/changepassword");
             }
             else{
@@ -842,8 +842,8 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
     
 })
 
-router.get('/getCode/password',(req,res)=>{
-    session.findOne({'userid':req.body.userid},(err,docs)=>{
+router.post('/getCode/password',(req,res)=>{
+    session.findOne({'userid':req.body.userid,'status':'Pending'},(err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
@@ -851,7 +851,7 @@ router.get('/getCode/password',(req,res)=>{
             res.send(docs.code)
         }
         else if(!docs){
-            res.status(400).send('Code Not Found');
+            res.status(400).send('Internal Server Error..Kindly Click on the Link again');
         }
     })
 })
@@ -860,7 +860,7 @@ router.post('/user/changepassword/data',async (req,res)=>{
             console.log(req.body);
             const salt =  bcrypt.genSaltSync(10);
             let newpassword =  bcrypt.hashSync(req.body.password, salt)
-            console.log(newpassword)
+            
             let updated  = await Usermodel.findOneAndUpdate({'_id':req.body.userid},{$set:{'password':newpassword}}).exec();
             if(updated){
 
