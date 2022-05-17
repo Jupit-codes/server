@@ -1786,14 +1786,14 @@ async function middlewareVerify(req,res,next){
                     console.log('Wrong password');
                     res.sendStatus(403);
                 }
-                if(docs.SessionMonitor === "Active"){
-                    req.token = bearerHeader;
-                    next();
-                }
-                if(docs.SessionMonitor != "Active"){
-                    console.log('Account Blocked');
-                    res.sendStatus(403);
-                }
+                // if(docs.SessionMonitor === "Active"){
+                //     req.token = bearerHeader;
+                //     next();
+                // }
+                // if(docs.SessionMonitor != "Active"){
+                //     console.log('Account Blocked');
+                //     res.sendStatus(403);
+                // }
                 
                 // const validPassword = bcrypt.compareSync(password, docs.password);
             }
