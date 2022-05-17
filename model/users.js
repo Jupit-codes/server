@@ -40,6 +40,9 @@ const userSchema = mongoose.Schema({
         type:'Boolean',
         default:false
     },
+    SessionMonitor:{
+        type:'String'
+    },
     updated: { type: Date, default: Date.now },
 })
 
