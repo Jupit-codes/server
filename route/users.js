@@ -856,7 +856,7 @@ router.post('/getCode/password',(req,res)=>{
     })
 })
 
-router.post('/user/changepassword/data',middlewareVerify,async (req,res)=>{
+router.post('/user/changepassword/data',async (req,res)=>{
             console.log(req.body);
             const salt =  bcrypt.genSaltSync(10);
             let newpassword =  bcrypt.hashSync(req.body.password, salt)
