@@ -797,31 +797,23 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
             res.status(400).send(err)
         }
         else if(docs){
-            console.log(docs)
+           
             if(docs.code === req.params.code && docs.status === "Completed"){
                 res.json({
                     message:"This Link has Expired",
                     status:false
                 })
             }
-            else if(docs.code === req.params.code && docs.status === "pending"){
+            else if(docs.code === req.params.code && docs.status === "Pending"){
                 res.redirect("https://jupitapp.vercel.app/user/changepassword");
             }
-            else{
-                await session.create({
-                    userid:req.params.id,
-                    status:'pending',
-                    code:req.params.code
-                })
-    
-                res.redirect("https://jupitapp.vercel.app/user/changepassword");
-            }
+            
         }
         else if(!docs){
             console.log('HereSaved')
             await session.create({
                 userid:req.params.id,
-                status:'pending',
+                status:'Pending',
                 code:req.params.code
             })
 
@@ -841,60 +833,39 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 })
 
 router.post('/user/changepassword/data',async (req,res)=>{
-   console.log(req.body);
+            console.log(req.body);
             const salt =  bcrypt.genSaltSync(10);
-           
             let newpassword =  bcrypt.hashSync(req.body.password, salt)
-           
-    await Usermodel.findOneAndUpdate({_id: req.body.id}, {$set:{password:newpassword}}, {new: true},  async (err, doc)=>{
-        if(err){
-            res.status(400).send(err);
+            console.log(newpassword)
+            let updated  = await Usermodel.findOneAndUpdate({'_id':req.body.userid},{$set:{'password':newpassword}}).exec();
+            if(updated){
 
-        }
-        else{
-            await session.findOneAndUpdate({_id: req.body.userid}, {$set:{status:'completed'}}, {new: true},  async (err, doc)=>{
-                if(err){
-                    res.status(400).send(err);
+                let sessionUpdated = await session.findOneAndUpdate({'userid':req.body.userid},{$set:{'status':'Completed'}}).exec();
+                
+                if(sessionUpdated){
+                    res.send({
+                        "message":"Updated",
+                        "status":true
+                    })
                 }
                 else{
-                     Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
-                        if(err){
-                            res.status(400).send(err);
-                        }
-                        else if(docs){
-                            jwt.sign({user:docs},'secretkey',(err,token)=>{
-                                res.json({
-                                    token,
-                                    docs,
-                                    'status':true
-                                }),
-                               "Stack",{
-                                   expiresIn:"5s"
-                               }
-                            })
-                        }
-                    })
-                   
+
                     res.send({
-                        'Message':"Password Successfully Updated",
-                        'status':true
+                        "message":"Session was Not Updated",
+                        "status":false
                     })
+
                 }
-            }).clone().catch(function(err){ console.log(err);return [false,err]});
-        }
-        
-    }).clone().catch(function(err){ console.log(err);return [false,err]});
-    
-    // res.json("Welcome")
-    // if(req.session.changepwd){
-    //     res.send({
-    //         'message':req.session.changepwd,
-    //         'status':true
-    //     })
-    // }
-    // else{
-    //     res.status(400).send("Session not Available");
-    // }
+                
+            }
+            else{
+                res.send({
+                    "message":"Error",
+                    "status":false
+                })
+
+            }
+   
 })
 
 
