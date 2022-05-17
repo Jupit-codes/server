@@ -807,6 +807,16 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
             else if(docs.code === req.params.code && docs.status === "Pending"){
                 res.redirect("https://jupitapp.vercel.app/user/changepassword");
             }
+            else{
+                console.log('code not found')
+                await session.create({
+                    userid:req.params.id,
+                    status:'Pending',
+                    code:req.params.code
+                })
+    
+                res.redirect("https://jupitapp.vercel.app/user/changepassword");
+            }
             
         }
         else if(!docs){
@@ -832,6 +842,20 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
     
 })
 
+router.get('/getCode/password',(req,res)=>{
+    session.findOne({'userid':req.body.userid},(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            res.send(docs.code)
+        }
+        else if(!docs){
+            res.status(400).send('Code Not Found');
+        }
+    })
+})
+
 router.post('/user/changepassword/data',async (req,res)=>{
             console.log(req.body);
             const salt =  bcrypt.genSaltSync(10);
@@ -840,7 +864,7 @@ router.post('/user/changepassword/data',async (req,res)=>{
             let updated  = await Usermodel.findOneAndUpdate({'_id':req.body.userid},{$set:{'password':newpassword}}).exec();
             if(updated){
 
-                let sessionUpdated = await session.findOneAndUpdate({'userid':req.body.userid},{$set:{'status':'Completed'}}).exec();
+                let sessionUpdated = await session.findOneAndUpdate({'userid':req.body.userid,'code':req.body.code},{$set:{'status':'Completed'}}).exec();
                 
                 if(sessionUpdated){
                     res.send({
