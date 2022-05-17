@@ -827,7 +827,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
                 code:req.params.code
             })
 
-            res.redirect("https://jupitapp.vercel.app/user/changepassword");
+            res.redirect(`https://jupitapp.vercel.app/user/changepassword/${req.params.code}/${req.params.id}`);
         }
    })
     // const item = {
