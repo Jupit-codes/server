@@ -1753,9 +1753,9 @@ async function comparePassword(hashedPassword,requestPassword){
 //     }
 //   };
 
-  function parseJwt(token){
+  async function parseJwt(token){
     try {
-        return JSON.parse(atob(token.split(".")[1]));
+        return  JSON.parse(atob(token.split(".")[1]));
       } catch (e) {
         return null;
       }
@@ -1764,16 +1764,41 @@ async function comparePassword(hashedPassword,requestPassword){
 
 
 
-function middlewareVerify(req,res,next){
+async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         res.sendStatus(403);
     }
     else{
-        let decodedJwt = parseJwt(req.token);
-        console.log(decodedJwt);
-        req.token = bearerHeader;
-        next();
+        
+        let decodedJwt = await parseJwt(bearerHeader);
+        // console.log('Decoded',decodedJwt.user.password);
+        Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+            if(err){
+                console.log(err)
+            }
+            else{
+                if(docs.password === decodedJwt.user.password){
+                    req.token = bearerHeader;
+                    next();
+                }
+                if(docs.password != decodedJwt.user.password){
+                    console.log('Wrong password');
+                    res.sendStatus(403);
+                }
+                if(docs.SessionMonitor === "Active"){
+                    req.token = bearerHeader;
+                    next();
+                }
+                if(docs.SessionMonitor != "Active"){
+                    console.log('Account Blocked');
+                    res.sendStatus(403);
+                }
+                
+                // const validPassword = bcrypt.compareSync(password, docs.password);
+            }
+        })
+        
     }
 }
 
