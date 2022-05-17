@@ -1952,17 +1952,67 @@ async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress
 }
 
 
-function middlewareVerify(req,res,next){
+async function parseJwt(token){
+    try {
+        return  JSON.parse(atob(token.split(".")[1]));
+      } catch (e) {
+        return null;
+      }
+  }
+
+
+
+
+async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
-       
-        res.status(403).send('Token Not Found');
+        res.sendStatus(403);
     }
     else{
-        req.token = bearerHeader;
-        next();
+        
+        let decodedJwt = await parseJwt(bearerHeader);
+        // console.log('Decoded',decodedJwt.user.password);
+        Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+            if(err){
+                console.log(err)
+            }
+            else{
+                if(docs.password === decodedJwt.user.password){
+                    req.token = bearerHeader;
+                    next();
+                }
+                if(docs.password != decodedJwt.user.password){
+                    console.log('Wrong password');
+                    res.sendStatus(403);
+                }
+                // if(docs.SessionMonitor === "Active"){
+                //     req.token = bearerHeader;
+                //     next();
+                // }
+                // if(docs.SessionMonitor != "Active"){
+                //     console.log('Account Blocked');
+                //     res.sendStatus(403);
+                // }
+                
+                // const validPassword = bcrypt.compareSync(password, docs.password);
+            }
+        })
+        
     }
 }
+
+
+// function middlewareVerify(req,res,next){
+//     const bearerHeader = req.headers['authorization'];
+//     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+       
+//         res.status(403).send('Token Not Found');
+//     }
+//     else{
+//         req.token = bearerHeader;
+//         next();
+//     }
+// }
 
 //  async function  getautofee(){
     
