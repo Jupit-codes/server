@@ -856,7 +856,7 @@ router.post('/getCode/password',(req,res)=>{
     })
 })
 
-router.post('/user/changepassword/data',async (req,res)=>{
+router.post('/user/changepassword/data',middlewareVerify,async (req,res)=>{
             console.log(req.body);
             const salt =  bcrypt.genSaltSync(10);
             let newpassword =  bcrypt.hashSync(req.body.password, salt)
@@ -1745,12 +1745,33 @@ async function comparePassword(hashedPassword,requestPassword){
 
 }
 
+// const parseJwt = (token) => {
+//     try {
+//       return JSON.parse(atob(token.split(".")[1]));
+//     } catch (e) {
+//       return null;
+//     }
+//   };
+
+  function parseJwt(token){
+    try {
+        return JSON.parse(atob(token.split(".")[1]));
+      } catch (e) {
+        return null;
+      }
+  }
+
+
+
+
 function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         res.sendStatus(403);
     }
     else{
+        let decodedJwt = parseJwt(req.token);
+        console.log(decodedJwt);
         req.token = bearerHeader;
         next();
     }
