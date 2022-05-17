@@ -805,7 +805,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
                 })
             }
             else if(docs.status === "Pending"){
-                res.redirect("https://jupitapp.vercel.app/user/changepassword");
+                res.redirect(`https://jupitapp.vercel.app/user/changepassword/${req.params.code}/${req.params.id}`);
             }
             else{
                 console.log('code not found')
@@ -815,7 +815,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
                     code:req.params.code
                 })
     
-                res.redirect("https://jupitapp.vercel.app/user/changepassword");
+                res.redirect(`https://jupitapp.vercel.app/user/changepassword/${req.params.code}/${req.params.id}`);
             }
             
         }
