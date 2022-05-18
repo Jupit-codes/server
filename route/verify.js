@@ -233,27 +233,58 @@ router.get('/aggregate',async (req,res)=>{
 })
 
 router.post('/addCard',async(req,res)=>{
-    let createGiftcard = await giftcard.create({
-        cardname:req.body.cardname
-    })
+  
+
+   giftcard.findOne({brandname:req.body.brandname},async (err,docs)=>{
+       if(err){
+           res.status(400).send(err);
+       }
+       else if(docs){
+           res.status(400).send('Brand Name Already Exist');
+       }
+       else if(!docs){
+        let createGiftcard = await giftcard.create({
+            brandname:req.body.brandname
+        })
+        if(createGiftcard){
+            req.body.countries.forEach(d => {
+                
+                 giftcard.findOneAndUpdate({_id:createGiftcard._id},{$push:{
+                    countries:d
+                }},(err,docs)=>{
+                    if(err){
+                        res.send(err);
+                    }
+                    
+                })
+                
+            }); 
+
+            req.body.rate.forEach(d => {
+                
+                 giftcard.findOneAndUpdate({_id:createGiftcard._id},{$push:{
+                    rate:d
+                }},(err,docs)=>{
+                    if(err){
+                        res.send(err);
+                    }
+                    
+                })
+                
+            }); 
+            res.send('Updated');
+            
+        } 
+
+
+       }
+   })
+   
+    
    
    
     
-    if(createGiftcard){
-        giftcard.findOneAndUpdate({_id:createGiftcard._id},{$push:{
-            currency:req.body.currency,
-            rate:req.body.rate,
-            cardType:req.body.cardType,
-            // rate:req.body.rate
-        }},(err,docs)=>{
-            if(err){
-                res.send(err);
-            }
-            else if(docs){
-                res.send(docs);
-            }
-        })
-    }  
+     
     
 })
 

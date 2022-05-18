@@ -1,13 +1,14 @@
 import mongoose from 'mongoose'
 
 const giftcardSchema = mongoose.Schema({
-    cardname:{
+    brandname:{
         type:'String',
         unique:true,
         required: [true, "Required"],
     },
-    currency : [],
-    rate : [],
+    image_url:{type:'String'},
+    countries : {type:Array, default:[]},
+    rate : {type:Array,default:[]},
     date_created:{
         type:Date
 
