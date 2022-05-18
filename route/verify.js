@@ -302,21 +302,33 @@ router.get('/get/allgiftcards',middlewareVerify,(req,res)=>{
 })
 
 router.get('/giftCardApi',async (req,res)=>{
-    let url = 'https://api-testbed.giftbit.com/papi/v1/brands'
-    axios.get(url,{ 
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJTSEEyNTYifQ==.Q0hTcTR5YzUrT0JNWGNhMGxMdWZzY0xZYTZnb3VLOEpVWmVOZ2JmZEloTmdjQm1oTkF2cFE0bFFXcnAwM0ltRG50TnRxVDBOYnV3VmJDLzk0N1o3Q080OU5ZTktYV0U2ajNXdXIxMjlpN1BQNFVzUzU2SlE1ZnI1dGZEOWVsaUk=.AR/7iJ18146bDdaWRtFPbG4HEUJo50NWG3T17gtUJ3Q=',
-            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+
+    giftCardnew.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else if(docs){
+            res.send(docs);
+        }
+        else if(!docs){
+            res.status(400).send('No Card Found')
         }
     })
-    .then(result=>{
-        res.json(result.data)
+    // let url = 'https://api-testbed.giftbit.com/papi/v1/brands'
+    // axios.get(url,{ 
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJTSEEyNTYifQ==.Q0hTcTR5YzUrT0JNWGNhMGxMdWZzY0xZYTZnb3VLOEpVWmVOZ2JmZEloTmdjQm1oTkF2cFE0bFFXcnAwM0ltRG50TnRxVDBOYnV3VmJDLzk0N1o3Q080OU5ZTktYV0U2ajNXdXIxMjlpN1BQNFVzUzU2SlE1ZnI1dGZEOWVsaUk=.AR/7iJ18146bDdaWRtFPbG4HEUJo50NWG3T17gtUJ3Q=',
+    //         'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+    //     }
+    // })
+    // .then(result=>{
+    //     res.json(result.data)
         
-    })
-    .catch((error)=>{
-        res.json(error.response)
-    })
+    // })
+    // .catch((error)=>{
+    //     res.json(error.response)
+    // })
 })
 
 
