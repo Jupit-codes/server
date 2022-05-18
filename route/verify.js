@@ -13,6 +13,7 @@ import webhook from "../model/webhook.js";
 import giftcard from "../model/giftcard.js";
 import Crypto from 'crypto'
 import nodemailer from 'nodemailer';
+import giftCardnew from "../model/giftCardnew.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -235,7 +236,7 @@ router.get('/aggregate',async (req,res)=>{
 router.post('/addCard',async(req,res)=>{
   
 
-   giftcard.findOne({brandname:req.body.brandname},async (err,docs)=>{
+   giftCardnew.findOne({brandname:req.body.brandname},async (err,docs)=>{
        if(err){
            res.status(400).send(err);
        }
@@ -243,13 +244,13 @@ router.post('/addCard',async(req,res)=>{
            res.status(400).send('Brand Name Already Exist');
        }
        else if(!docs){
-        let createGiftcard = await giftcard.create({
+        let createGiftcard = await giftCardnew.create({
             brandname:req.body.brandname
         })
         if(createGiftcard){
             req.body.countries.forEach(d => {
                 
-                 giftcard.findOneAndUpdate({_id:createGiftcard._id},{$push:{
+                 giftCardnew.findOneAndUpdate({_id:createGiftcard._id},{$push:{
                     countries:d
                 }},(err,docs)=>{
                     if(err){
@@ -262,7 +263,7 @@ router.post('/addCard',async(req,res)=>{
 
             req.body.rate.forEach(d => {
                 
-                 giftcard.findOneAndUpdate({_id:createGiftcard._id},{$push:{
+                 giftCardnew.findOneAndUpdate({_id:createGiftcard._id},{$push:{
                     rate:d
                 }},(err,docs)=>{
                     if(err){
@@ -272,6 +273,7 @@ router.post('/addCard',async(req,res)=>{
                 })
                 
             }); 
+
             res.send('Updated');
             
         } 
