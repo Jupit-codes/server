@@ -442,6 +442,28 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
         "status":true,
         "data":req.body
     })
+    const {SelectedImage} = req.body
+    const myurls = [];
+    SelectedImage.forEach(async image=>{
+        cloudinary.v2.uploader.upload(image, {
+            overwrite: true,
+            invalidate: true
+        },
+            function (error, result) {
+                if(error){
+                    res.json(error)
+                }
+                //res.json(result.secure_url);
+                myurls.push(result.secure_url)
+            });
+    })
+
+    res.send({
+        "uploadedUrl":myurls,
+        "message":"Success",
+
+    })
+    
 })
 
 
