@@ -468,7 +468,7 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                             await giftcardImages.create({
                                 userid:req.body.userid,
                                 unique_id:req.body.unique_id,
-                                image_url:result.secure_url,
+                                image_url:'okay',
                                 status:'untreated'
                             })
                         }
