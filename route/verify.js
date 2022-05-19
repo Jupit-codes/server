@@ -453,7 +453,10 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                 console.log(result.secure_url)
                 myurls.push(result.secure_url)
             });
+
     })
+
+    console.log('url',myurls);
 
     res.send({
         "uploadedUrl":myurls,
