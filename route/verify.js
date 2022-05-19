@@ -466,7 +466,7 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                         }
                         else if(!docs){
                             await giftcardImages.create({
-                                userid:req.body.userid,
+                                userid:req.body.Userid,
                                 unique_id:req.body.unique_id,
                                 image_url:result.secure_url,
                                 status:'untreated'
