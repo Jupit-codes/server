@@ -214,7 +214,7 @@ router.post('/latest/transaction',(req,res)=>{
            res.send(docs)
        }
        
-   }).limit(5).sort({date_created: -1})
+   }).limit(4).sort({date_created: -1})
 })
 
 router.get('/aggregate',async (req,res)=>{
@@ -245,7 +245,8 @@ router.post('/addCard',async(req,res)=>{
        }
        else if(!docs){
         let createGiftcard = await giftCardnew.create({
-            brandname:req.body.brandname
+            brandname:req.body.brandname,
+            image_url:req.body.image_url
         })
         if(createGiftcard){
             req.body.countries.forEach(d => {
