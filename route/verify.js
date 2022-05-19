@@ -455,6 +455,7 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                 }
                 //res.json(result.secure_url);
                 if(result){
+                    console.log(result)
                     giftcardImages.findOne({unique_id:unique_id},async (err,docs)=>{
                         if(err){
                             res.status(400).send(err);
