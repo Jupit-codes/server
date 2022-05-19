@@ -17,4 +17,4 @@ const giftcardtransactionSchema = mongoose.Schema({
 })
 
 
-export default mongoose.model('Giftcardtransactions', giftcardSchema);
+export default mongoose.model('Giftcardtransactions', giftcardtransactionSchema);
