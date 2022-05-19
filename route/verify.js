@@ -436,5 +436,13 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
 })
 
 
+router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
+    res.send({
+        "message":'Saved',
+        "status":true,
+        "data":req.body
+    })
+})
+
 
 export default router
