@@ -14,6 +14,9 @@ import giftcard from "../model/giftcard.js";
 import Crypto from 'crypto'
 import nodemailer from 'nodemailer';
 import giftCardnew from "../model/giftCardnew.js";
+import { randomUUID } from 'crypto'
+import giftcardImages from "../model/giftcardImages.js";
+import giftcardtransactions from "../model/giftcardtransactions.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -439,7 +442,8 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
 router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
    
     const {SelectedImage} = req.body
-    const myurls = [];
+    let unique_id = randomUUID;
+
     SelectedImage.forEach(async image=>{
         cloudinary.v2.uploader.upload(image, {
             overwrite: true,
@@ -450,19 +454,65 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                     res.json(error)
                 }
                 //res.json(result.secure_url);
-                console.log(result.secure_url)
-                myurls.push(result.secure_url)
+               giftcardImages.findOne({unique_id:unique_id},(err,docs)=>{
+                   if(err){
+                       res.status(400).send(err);
+                   }
+                   else if(docs){
+                        res.status(400).send('No Uniqueness')
+                   }
+                   else if(!docs){
+                       await giftcardImages.create({
+                           userid:req.body.userid,
+                           unique_id:req.body.unique_id,
+                           image_url:result.secure_url,
+                           status:'untreated'
+                       })
+                   }
+               })
             });
 
     })
 
-    console.log('url',myurls);
+    giftcardtransactions.findOne({unique_id:unique_id},async (err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else if(docs){
+             res.status(400).send('No Uniqueness')
+        }
+        else if(!docs){
+            let savetransaction = await giftcardtransactions.create({
+                userid:req.body.Userid,
+                unique_id:req.body.unique_id,
+                image_url:result.secure_url,
+                country:req.body.Country,
+                total:req.body.Total,
+                status:'untreated'
+            })
 
-    res.send({
-        "uploadedUrl":myurls,
-        "message":"Success",
-
+            if(savetransaction){
+                req.body.SelectedAmount.forEach(d => {
+                
+                    giftcardtransactions.findOneAndUpdate({_id:savetransaction._id},{$push:{
+                        rate:d
+                   }},(err,docs)=>{
+                       if(err){
+                           res.send(err);
+                       }
+                       
+                   })
+                   
+               }); 
+               res.send({
+                   "message":'Successfully Submitted',
+                   "status":true
+               })
+            }
+        }
     })
+
+    
     
 })
 
