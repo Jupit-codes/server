@@ -454,22 +454,25 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                     res.json(error)
                 }
                 //res.json(result.secure_url);
-               giftcardImages.findOne({unique_id:unique_id},async (err,docs)=>{
-                   if(err){
-                       res.status(400).send(err);
-                   }
-                   else if(docs){
-                        res.status(400).send('No Uniqueness')
-                   }
-                   else if(!docs){
-                       await giftcardImages.create({
-                           userid:req.body.userid,
-                           unique_id:req.body.unique_id,
-                           image_url:result.secure_url,
-                           status:'untreated'
-                       })
-                   }
-               })
+                if(result){
+                    giftcardImages.findOne({unique_id:unique_id},async (err,docs)=>{
+                        if(err){
+                            res.status(400).send(err);
+                        }
+                        else if(docs){
+                             res.status(400).send('No Uniqueness')
+                        }
+                        else if(!docs){
+                            await giftcardImages.create({
+                                userid:req.body.userid,
+                                unique_id:req.body.unique_id,
+                                image_url:result.secure_url,
+                                status:'untreated'
+                            })
+                        }
+                    })
+                }
+              
             });
 
     })
