@@ -450,6 +450,7 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                     res.json(error)
                 }
                 //res.json(result.secure_url);
+                console.log(result)
                 myurls.push(result.secure_url)
             });
     })
