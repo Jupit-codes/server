@@ -65,13 +65,14 @@ router.post('/onboard/new',(req,res)=>{
             res.status(400).send('Username Already Exist');
         }
         else if(!docs){
-
-            if(docs.email === req.body.email){
-                res.status(400).send('Email Already In Use');
-                return false
-            }
-            else{
-                
+            admin.findOne({email:req.body.email},async (err,docs)=>{
+                if(err){
+                    res.status(400).send(err);
+                }
+                else if(docs){
+                    res.status(400).send('Email Already Exist');
+                }
+                else if(!docs){
                     let password = randomUUID();
                     const salt =  bcrypt.genSaltSync(10);
                     let createAdmin =   await admin.create({
@@ -81,16 +82,15 @@ router.post('/onboard/new',(req,res)=>{
                         username:req.body.username,
                         password:bcrypt.hashSync(password, salt),
                     });
-
+        
                     if(createAdmin){
                         await SendPasswordMail(password,req.body.email);
                     }
                     else{
                         res.status(400).send('Admin Creation was Unsuccessful..Contact Dev Team')
                     }
-
-            }
-
+                }
+            })
 
         }
     })
