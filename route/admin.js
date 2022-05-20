@@ -132,7 +132,8 @@ async function SendPasswordMail(passwordStr){
     transporter.sendMail(mailData, function (err, info) {
         if(err){
             console.log(err);
-            res.send({"message":"An Error Occurred","callback":err})
+            res.status(400).send(err)
+            // res.send({"message":"An Error Occurred","callback":err})
         }
         
         else{
