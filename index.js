@@ -6,6 +6,7 @@ import userRouter from './route/users.js'
 import thresholdRouter from './route/threshold.js'
 import twoFactorRouter from "./model/twoFactor.js";
 import Verify from './route/verify.js';
+import AdminRouter from './route/admin.js';
 import morgan from "morgan";
 import helmet from "helmet";
 import dotenv from 'dotenv'
@@ -62,4 +63,5 @@ app.use('/',userRouter);
 app.use('/threshold',thresholdRouter);
 app.use('/twofactor',twoFactorRouter);
 app.use('/verify',Verify);
+app.use('/admin',AdminRouter)
 app.listen(PORT, ()=>console.log(`App running on the localhost/${PORT}`))
