@@ -4,7 +4,8 @@ import cloudinary from 'cloudinary'
 import nodemailer from 'nodemailer';
 import admin from "../model/admin";
 import { randomUUID } from 'crypto'
-
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -27,7 +28,29 @@ router.get('/',(req,res)=>{
 });
 router.post('/checklogin',(req,res)=>{
 
-    res.send(req.body)
+    admin.findOne({username:req.body.username},(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            const validPassword = bcrypt.compareSync(req.body.password, docs.password);
+
+            if(validPassword){
+                jwt.sign({admin:docs},'secretkey',(err,token)=>{
+                    res.json({
+                        token,
+                        docs,
+                        'status':true
+                    }),
+                   "Stack",{
+                       expiresIn:"1h"
+                   }
+                })
+               
+            }
+            
+        }
+    })
     
     
 });
@@ -43,12 +66,13 @@ router.post('/onboard/new',(req,res)=>{
         }
         else if(!docs){
             let password = randomUUID();
+            const salt =  bcrypt.genSaltSync(10);
             let createAdmin =   await admin.create({
                 firstname:req.body.firstname,
                 lastname:req.body.lastname,
                 email:req.body.email,
                 username:req.body.username,
-                password:password
+                password:bcrypt.hashSync(password, salt),
             });
 
             if(createAdmin){
