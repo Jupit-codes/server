@@ -23,6 +23,12 @@ router.get('/',(req,res)=>{
     
     
 });
+router.post('/checklogin',(req,res)=>{
+
+    res.send(req.body)
+    
+    
+});
 
 
 
