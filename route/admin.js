@@ -2,7 +2,7 @@
 import express from "express";
 import cloudinary from 'cloudinary'
 import nodemailer from 'nodemailer';
-import admin from "../model/admin";
+import admin from "../model/admin.js";
 import { randomUUID } from 'crypto'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
