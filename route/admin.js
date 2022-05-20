@@ -76,7 +76,7 @@ router.post('/onboard/new',(req,res)=>{
             });
 
             if(createAdmin){
-                await SendPasswordMail(password);
+                await SendPasswordMail(password,req.body.email);
             }
             else{
                 res.status(400).send('Admin Creation was Unsuccessful..Contact Dev Team')
@@ -89,11 +89,11 @@ router.post('/onboard/new',(req,res)=>{
     
 });
 
-async function SendPasswordMail(passwordStr){
+async function SendPasswordMail(passwordStr,email){
     
     const mailData = {
         from: 'hello@jupitapp.co',  // sender address
-        to: req.body.email,   // list of receivers
+        to: email,   // list of receivers
         subject: 'Onboarding@jupitapp.co <One Time Password>',
         text: 'That was easy!',
         html: `
