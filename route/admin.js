@@ -12,7 +12,7 @@ import bcrypt from 'bcryptjs'
     host: "smtppro.zoho.com",
        auth: {
             user:'hello@jupitapp.co',
-            pass:'rVhjJ7SPzZ0z'
+            pass:'re84P3TdZxPA'
             // pass:'ii84NsMqT9Xv'
          },
     secure: true,
@@ -82,6 +82,8 @@ router.post('/onboard/new',(req,res)=>{
                         username:req.body.username,
                         password:bcrypt.hashSync(password, salt),
                     });
+
+                    console.log(req.body)
         
                     if(createAdmin){
                         // await SendPasswordMail(password,req.body.email);
@@ -127,7 +129,7 @@ router.post('/onboard/new',(req,res)=>{
                             if(err){
                                 console.log(err);
                                 // res.status(400).send(err)
-                                res.send({"message":"An Error Occurred","callback":err})
+                                res.status(400).send({"message":"An Error Occurred","callback":err})
                             }
                             
                             else{
