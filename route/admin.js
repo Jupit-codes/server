@@ -49,12 +49,12 @@ router.post('/checklogin',(req,res)=>{
                
             }
             else{
-                res.status(400).send('Incorrect Password');
+                res.status(400).send({"message":'Invalid Username',"status":false});
             }
             
         }
         else if(!docs){
-            res.status(400).send('Username not Found');
+            res.status(400).send({"message":'Invalid Password',"status":false});
         }
     })
     
