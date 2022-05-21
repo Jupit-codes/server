@@ -348,7 +348,7 @@ async function fetchbank(email){
     return result;
 }
 
-router.post('/manual/wallet/credit',(req,res)=>{
+router.post('/manual/wallet/credit',async (req,res)=>{
    
     if(req.body.title === "BTC Wallet Balance"){
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.$.balance':req.body.value}}).exec();
