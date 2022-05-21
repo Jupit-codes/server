@@ -199,12 +199,17 @@ async function middlewareVerify(req,res,next){
         
         let decodedJwt = await parseJwt(bearerHeader);
         // console.log('Decoded',decodedJwt.user.password);
+        if(!decodedJwt.admin){
+            res.status(403).send({"message":"Forbidden Request"});
+            return false;
+        }
         Usermodel.findOne({email:decodedJwt.admin.email},(err,docs)=>{
             if(err){
                 console.log(err)
                 res.status(403).send({"message":"Forbidden Request"});
             }
             else if(docs){
+                
                 if(docs.password === decodedJwt.admin.password){
                     req.token = bearerHeader;
                     next();
