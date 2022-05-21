@@ -204,7 +204,7 @@ async function middlewareVerify(req,res,next){
             res.status(403).send({"message":"Forbidden Request"});
             return false;
         }
-        Usermodel.findOne({email:decodedJwt.admin.email},(err,docs)=>{
+        admin.findOne({email:decodedJwt.admin.email},(err,docs)=>{
             if(err){
                 console.log(err)
                 res.status(403).send({"message":"Forbidden Request"});
