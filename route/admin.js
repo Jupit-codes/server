@@ -6,6 +6,7 @@ import admin from "../model/admin.js";
 import { randomUUID } from 'crypto'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import Usermodel from '../model/users'
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -158,10 +159,73 @@ router.post('/onboard/new',(req,res)=>{
     
 });
 
-async function SendPasswordMail(passwordStr,email){
-    
-   
+router.get('/get/all/users',middlewareVerify,(req,res)=>{
+    Usermodel.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            res.status({
+                "message":docs,
+                "status":true
+            })
+        }
+    })
+})
 
+
+
+
+async function parseJwt(token){
+    try {
+        return  JSON.parse(atob(token.split(".")[1]));
+      } catch (e) {
+        return null;
+      }
+  }
+
+
+
+
+async function middlewareVerify(req,res,next){
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+        res.status(403).send('Forbidden Request');
+    }
+    else{
+        
+        let decodedJwt = await parseJwt(bearerHeader);
+        // console.log('Decoded',decodedJwt.user.password);
+        Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+            if(err){
+                console.log(err)
+            }
+            else{
+                if(docs.password === decodedJwt.user.password){
+                    req.token = bearerHeader;
+                    next();
+                }
+                if(docs.password != decodedJwt.user.password){
+                    console.log('Wrong password');
+                    res.status(403).send('Password Expired');
+                }
+                // if(docs.SessionMonitor === "Active"){
+                //     req.token = bearerHeader;
+                //     next();
+                // }
+                // if(docs.SessionMonitor != "Active"){
+                //     console.log('Account Blocked');
+                //     res.sendStatus(403);
+                // }
+                
+                // const validPassword = bcrypt.compareSync(password, docs.password);
+            }
+        })
+        
+    }
 }
 
 
