@@ -348,5 +348,9 @@ async function fetchbank(email){
     return result;
 }
 
+router.post('/manual/wallet/credit',(req,res)=>{
+    console.log(req.body)
+})
+
 
 export default router
