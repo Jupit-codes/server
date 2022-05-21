@@ -6,7 +6,7 @@ import admin from "../model/admin.js";
 import { randomUUID } from 'crypto'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import Usermodel from '../model/users'
+import Usermodel from '../model/users.js'
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
