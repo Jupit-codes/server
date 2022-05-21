@@ -7,6 +7,9 @@ import { randomUUID } from 'crypto'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import Usermodel from '../model/users.js'
+import twoFactor from "../model/twoFactor.js";
+import kyc from "../model/kyc.js";
+import bank from "../model/bank.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -238,7 +241,98 @@ async function middlewareVerify(req,res,next){
     }
 }
 
+router.post('/get/all/users/id', async(req,res)=>{
 
+    let userdetails = await fetchUserDetails(req.body.id);
+
+    if(userdetails[1]){
+        let gettwofactor = await fetchtwofactor(req.body.id);
+    }
+    else{
+        res.status(400).send({"message":userdetails[0]})
+    }
+
+})
+
+async function fetchUserDetails(userid){
+   let result =  Usermodel.findOne({_id:userid},async(err,docs)=>{
+        if(err){
+            // res.status(400).send({"message":err})
+            return [err,false]
+        }
+        else if(docs){
+            // res.json(docs)
+            return [docs,true]
+        }
+        else if(!docs){
+            // res.status(400).send({"message":"Invalid Request"});
+            return ["Invalid Request",false]
+        }
+    
+    })
+
+    return result;
+
+    
+}
+
+async function fetchtwofactor(userid){
+    let result = await twoFactor.findOne({userid:userid},(err,docs)=>{
+        if(err){
+            // res.status(400).send({"message":err})
+            return [err,false]
+        }
+        else if(docs){
+            // res.json(docs)
+            return [docs,true]
+        }
+        else if(!docs){
+            // res.status(400).send({"message":"Invalid Request"});
+            return ["Not Activated",false]
+        }
+    })
+
+    return result;
+}
+
+async function fetchkyc(userid){
+    let result = await kyc.findOne({userid:userid},(err,docs)=>{
+        if(err){
+            // res.status(400).send({"message":err})
+            return [err,false]
+        }
+        else if(docs){
+            // res.json(docs)
+            return [docs,true]
+        }
+        else if(!docs){
+            // res.status(400).send({"message":"Invalid Request"});
+            return ["KYC Error",false]
+        }
+    })
+
+    return result;
+}
+
+
+async function fetchbank(userid){
+    let result = await bank.findOne({userid:userid},(err,docs)=>{
+        if(err){
+            // res.status(400).send({"message":err})
+            return [err,false]
+        }
+        else if(docs){
+            // res.json(docs)
+            return [docs,true]
+        }
+        else if(!docs){
+            // res.status(400).send({"message":"Invalid Request"});
+            return ["KYC Error",false]
+        }
+    })
+
+    return result;
+}
 
 
 export default router
