@@ -202,15 +202,16 @@ async function middlewareVerify(req,res,next){
         Usermodel.findOne({email:decodedJwt.admin.email},(err,docs)=>{
             if(err){
                 console.log(err)
+                res.status(403).send({"message":"Forbidden Request"});
             }
-            else{
+            else if(docs){
                 if(docs.password === decodedJwt.admin.password){
                     req.token = bearerHeader;
                     next();
                 }
                 if(docs.password != decodedJwt.admin.password){
                     console.log('Wrong password');
-                    res.status(403).send('Password Expired');
+                    res.status(403).send({"message":"Password Expired"});
                 }
                 // if(docs.SessionMonitor === "Active"){
                 //     req.token = bearerHeader;
@@ -222,6 +223,9 @@ async function middlewareVerify(req,res,next){
                 // }
                 
                 // const validPassword = bcrypt.compareSync(password, docs.password);
+            }
+            else if(!docs){
+                res.status(403).send({"message":"Forbidden Request"});
             }
         })
         
