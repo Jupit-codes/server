@@ -386,7 +386,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
     }
     else if(req.body.modalTitle === "Naira Wallet Balance"){
         console.log('naiara',req.body.userid)
-        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.$.balance':parseFloat(req.body.value).toFixed(6)}}).exec();
+        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':parseFloat(req.body.value).toFixed(6)}}).exec();
         if(AddFund){
             res.send({
                 "message":"Wallet Successfully Updated",
