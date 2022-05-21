@@ -349,7 +349,57 @@ async function fetchbank(email){
 }
 
 router.post('/manual/wallet/credit',(req,res)=>{
-    console.log(req.body)
+   
+    if(req.body.title === "BTC Wallet Balance"){
+        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.$.balance':req.body.value}}).exec();
+        if(AddFund){
+            res.send({
+                "message":"Wallet Successfully Updated",
+                "status":true
+            })
+        }
+        else{
+            res.send({
+                "message":"Wallet Update Error",
+                "status":false
+            })
+        }
+    
+    }
+    else if(req.body.title === "USDT Wallet Balance"){
+        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.$.balance':req.body.value}}).exec();
+        if(AddFund){
+            res.send({
+                "message":"Wallet Successfully Updated",
+                "status":true
+            })
+        }
+        else{
+            res.send({
+                "message":"Wallet Update Error",
+                "status":false
+            })
+        }
+    
+    }
+    else if(req.body.title === "Naira Wallet Balance"){
+        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.$.balance':req.body.value}}).exec();
+        if(AddFund){
+            res.send({
+                "message":"Wallet Successfully Updated",
+                "status":true
+            })
+        }
+        else{
+            res.send({
+                "message":"Wallet Update Error",
+                "status":false
+            })
+        }
+    
+    }
+    
+   
 })
 
 
