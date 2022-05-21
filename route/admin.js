@@ -199,16 +199,16 @@ async function middlewareVerify(req,res,next){
         
         let decodedJwt = await parseJwt(bearerHeader);
         // console.log('Decoded',decodedJwt.user.password);
-        Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+        Usermodel.findOne({email:decodedJwt.admin.email},(err,docs)=>{
             if(err){
                 console.log(err)
             }
             else{
-                if(docs.password === decodedJwt.user.password){
+                if(docs.password === decodedJwt.admin.password){
                     req.token = bearerHeader;
                     next();
                 }
-                if(docs.password != decodedJwt.user.password){
+                if(docs.password != decodedJwt.admin.password){
                     console.log('Wrong password');
                     res.status(403).send('Password Expired');
                 }
