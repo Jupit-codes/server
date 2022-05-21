@@ -350,7 +350,7 @@ async function fetchbank(email){
 
 router.post('/manual/wallet/credit',async (req,res)=>{
    
-    if(req.body.title === "BTC Wallet Balance"){
+    if(req.body.modalTitle === "BTC Wallet Balance"){
         console.log('btc',req.body.title)
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.$.balance':req.body.value}}).exec();
         if(AddFund){
@@ -367,7 +367,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
         }
     
     }
-    else if(req.body.title === "USDT Wallet Balance"){
+    else if(req.body.modalTitle === "USDT Wallet Balance"){
         console.log('usdt',req.body.title)
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.$.balance':req.body.value}}).exec();
         if(AddFund){
@@ -384,7 +384,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
         }
     
     }
-    else if(req.body.title === "Naira Wallet Balance"){
+    else if(req.body.modalTitle === "Naira Wallet Balance"){
         console.log('naiara',req.body.title)
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.$.balance':req.body.value}}).exec();
         if(AddFund){
