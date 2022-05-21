@@ -199,7 +199,8 @@ async function middlewareVerify(req,res,next){
         
         let decodedJwt = await parseJwt(bearerHeader);
         // console.log('Decoded',decodedJwt.user.password);
-        if(!decodedJwt.admin){
+        console.log(decodedJwt);
+        if(!decodedJwt){
             res.status(403).send({"message":"Forbidden Request"});
             return false;
         }
