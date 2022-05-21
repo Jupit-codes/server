@@ -168,7 +168,7 @@ router.get('/get/all/users',middlewareVerify,(req,res)=>{
             })
         }
         else if(docs){
-            res.status({
+            res.send({
                 "message":docs,
                 "status":true
             })
