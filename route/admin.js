@@ -244,12 +244,24 @@ async function middlewareVerify(req,res,next){
 router.post('/get/all/users/id', async(req,res)=>{
 
     let userdetails = await fetchUserDetails(req.body.id);
-
-    if(userdetails[1]){
+    
+    
+    if(userdetails){
         let gettwofactor = await fetchtwofactor(req.body.id);
+        let getkyc = await fetchkyc(req.body.id);
+        let getbank = await fetchbank(userdetails.email);
+
+        res.send({
+            "status":true,
+            "detail":userdetails,
+            "twofactor":gettwofactor,
+            "kyc":getkyc,
+            "bank":getbank
+            
+        })
     }
     else{
-        res.status(400).send({"message":userdetails[0]})
+        res.status(400).send({"message":"Invalid Request"})
     }
 
 })
@@ -258,10 +270,12 @@ async function fetchUserDetails(userid){
    let result =  Usermodel.findOne({_id:userid},async(err,docs)=>{
         if(err){
             // res.status(400).send({"message":err})
+            console.log(err)
             return [err,false]
         }
         else if(docs){
             // res.json(docs)
+            console.log(docs)
             return [docs,true]
         }
         else if(!docs){
@@ -269,7 +283,7 @@ async function fetchUserDetails(userid){
             return ["Invalid Request",false]
         }
     
-    })
+    }).clone().catch(function(err){ console.log(err)});
 
     return result;
 
@@ -290,7 +304,7 @@ async function fetchtwofactor(userid){
             // res.status(400).send({"message":"Invalid Request"});
             return ["Not Activated",false]
         }
-    })
+    }).clone().catch(function(err){ console.log(err)});
 
     return result;
 }
@@ -309,14 +323,14 @@ async function fetchkyc(userid){
             // res.status(400).send({"message":"Invalid Request"});
             return ["KYC Error",false]
         }
-    })
+    }).clone().catch(function(err){ console.log(err)});
 
     return result;
 }
 
 
-async function fetchbank(userid){
-    let result = await bank.findOne({userid:userid},(err,docs)=>{
+async function fetchbank(email){
+    let result = await bank.findOne({email:email},(err,docs)=>{
         if(err){
             // res.status(400).send({"message":err})
             return [err,false]
@@ -329,7 +343,7 @@ async function fetchbank(userid){
             // res.status(400).send({"message":"Invalid Request"});
             return ["KYC Error",false]
         }
-    })
+    }).clone().catch(function(err){ console.log(err)});
 
     return result;
 }
