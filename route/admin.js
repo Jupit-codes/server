@@ -258,7 +258,8 @@ router.post('/get/all/users/id', async(req,res)=>{
             "detail":userdetails,
             "twofactor":gettwofactor,
             "kyc":getkyc,
-            "bank":getbank
+            "bank":getbank,
+            "rate":rate
             
         })
     }
