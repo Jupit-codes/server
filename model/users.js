@@ -40,8 +40,9 @@ const userSchema = mongoose.Schema({
         type:'Boolean',
         default:false
     },
-    SessionMonitor:{
-        type:'String'
+    Status:{
+        type:'String',
+        default:'Active'
     },
     updated: { type: Date, default: Date.now },
 })

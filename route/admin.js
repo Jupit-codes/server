@@ -10,6 +10,7 @@ import Usermodel from '../model/users.js'
 import twoFactor from "../model/twoFactor.js";
 import kyc from "../model/kyc.js";
 import bank from "../model/bank.js";
+import rate from "../model/rate.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -403,6 +404,206 @@ router.post('/manual/wallet/credit',async (req,res)=>{
     }
     
    
+})
+
+router.get('/set/rate',async(req,res)=>{
+    let btc_rate=
+    [
+        {
+            "buy":0
+        },
+        {
+            "sell":0
+        }
+
+    ]
+
+    let usdt_rate=
+    [
+        {
+            "buy":0
+        },
+        {
+            "sell":0
+        }
+
+    ]
+    let giftcard_rate=
+    [
+        {
+            "buy":0
+        },
+        {
+            "sell":0
+        }
+
+    ]
+
+    
+    let initial = "JupitRateBard"
+    let initialiseRate = await rate.create({
+        initialization:initial
+    })
+    if (initialiseRate){
+        
+            btc_rate.forEach(d => {
+                    
+                rate.findOneAndUpdate({initialization:initial},{$push:{
+                btc:d
+            }},(err,docs)=>{
+                if(err){
+                    res.send(err);
+                }
+                
+            })
+            
+        }); 
+        usdt_rate.forEach(d => {
+                    
+                    rate.findOneAndUpdate({initialization:initial},{$push:{
+                    usdt:d
+                        }},(err,docs)=>{
+                            if(err){
+                                res.send(err);
+                            }
+                            
+                        })
+        
+            }); 
+        giftcard_rate.forEach(d => {
+                    
+            rate.findOneAndUpdate({initialization:initial},{$push:{
+            giftcard:d
+                }},(err,docs)=>{
+                    if(err){
+                        res.send(err);
+                    }
+                    
+                })
+        
+        }); 
+
+        res.send('Completed');
+
+
+    }
+    else{
+        res.send('An Error Occurred')
+    }
+})
+
+router.post('/set/rate/btc',middlewareVerify,(req,res)=>{
+    let btc_sell_rate = req.body.amount
+    let initial = "JupitRateBard"
+
+    if(req.body.type === "BTC_SELL"){
+        
+        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'btc.$.sell':req.body.btc_sell}},(err,docs)=>{
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send({
+                    "message":"BTC Sell Rate Successfully Saved",
+                    "docs":docs
+                })
+            }
+        })
+    }
+
+    if(req.body.type === "BTC_BUY"){
+        
+        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'btc.$.buy':req.body.btc_buy}},(err,docs)=>{
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send({
+                    "message":"BTC Buy Rate Successfully Saved",
+                    "docs":docs
+                })
+            }
+        })
+    }
+
+    
+})
+
+
+
+router.post('/set/rate/usdt',middlewareVerify,(req,res)=>{
+    let btc_sell_rate = req.body.amount
+    let initial = "JupitRateBard"
+
+    if(req.body.type === "USDT_SELL"){
+        
+        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'usdt.0.sell':req.body.usdt_sell}},(err,docs)=>{
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send({
+                    "message":"USDT Sell Rate Successfully Saved",
+                    "docs":docs
+                })
+            }
+        })
+    }
+
+    if(req.body.type === "USDT_BUY"){
+        
+        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'usdt.1.buy':req.body.usdt_buy}},(err,docs)=>{
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send({
+                    "message":"USDT Buy Rate Successfully Saved",
+                    "docs":docs
+                })
+            }
+        })
+    }
+
+    
+})
+
+
+router.post('/set/rate/giftcard',middlewareVerify,(req,res)=>{
+    let btc_sell_rate = req.body.amount
+    let initial = "JupitRateBard"
+
+    if(req.body.type === "GIFTCARD_SELL"){
+        
+        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'giftcard.1.sell':req.body.giftcard_sell}},(err,docs)=>{
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send({
+                    "message":"GIFTCARD Sell Rate Successfully Saved",
+                    "docs":docs
+                })
+            }
+        })
+    }
+
+    if(req.body.type === "GIFTCARD_BUY"){
+        
+        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'giftcard.0.buy':req.body.giftcard_buy}},(err,docs)=>{
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send({
+                    "message":"GIFTCARD Buy Rate Successfully Saved",
+                    "docs":docs
+                })
+            }
+        })
+    }
+
+    
 })
 
 
