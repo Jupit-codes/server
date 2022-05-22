@@ -251,6 +251,7 @@ router.post('/get/all/users/id', async(req,res)=>{
         let gettwofactor = await fetchtwofactor(req.body.id);
         let getkyc = await fetchkyc(req.body.id);
         let getbank = await fetchbank(userdetails.email);
+        let rate = await fetchrate();
 
         res.send({
             "status":true,
@@ -289,6 +290,18 @@ async function fetchUserDetails(userid){
     return result;
 
     
+}
+
+async function fetchrate (){
+    let result = await rate.find({},(err,docs)=>{
+        if(err){
+            return [err,false]
+        }
+        else{
+            return [docs,true]
+        }
+    }).clone().catch(function(err){ console.log(err)});
+    return result;
 }
 
 async function fetchtwofactor(userid){
