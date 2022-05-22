@@ -498,7 +498,7 @@ router.post('/set/rate/btc',middlewareVerify,(req,res)=>{
 
     if(req.body.type === "BTC_SELL"){
         
-        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'btc.$.sell':req.body.btc_sell}},(err,docs)=>{
+        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'btc.1.sell':req.body.btc_sell}},(err,docs)=>{
             if(err){
                 res.send(err);
             }
@@ -513,7 +513,7 @@ router.post('/set/rate/btc',middlewareVerify,(req,res)=>{
 
     if(req.body.type === "BTC_BUY"){
         
-        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'btc.$.buy':req.body.btc_buy}},(err,docs)=>{
+        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'btc.0.buy':req.body.btc_buy}},(err,docs)=>{
             if(err){
                 res.send(err);
             }
