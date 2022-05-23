@@ -12,6 +12,7 @@ import kyc from "../model/kyc.js";
 import bank from "../model/bank.js";
 import rate from "../model/rate.js";
 
+
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtppro.zoho.com",
@@ -618,6 +619,24 @@ router.post('/set/rate/giftcard',middlewareVerify,(req,res)=>{
     }
 
     
+})
+
+router.post('/set/password',(req,res)=>{
+
+    const salt =  bcrypt.genSaltSync(10);
+    let newpassword =  bcrypt.hashSync(req.body.password, salt)
+     
+   let x = admin.findOneAndUpdate({_id:req.body.userid},{$set:{password:newpassword,changepassword:true}},(err,docs)=>{
+       if(err){
+           res.status(400).send({"message":err,"status":false})
+       }
+       else if(docs){
+           res.send({"message":'Password Successfully Updated',"status":true})
+       }
+       else if(!docs){
+        res.status(400).send({"message":'Internal Server Error',"status":false})
+       }
+   })
 })
 
 

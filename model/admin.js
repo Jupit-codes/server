@@ -28,8 +28,11 @@ const adminSchema = mongoose.Schema({
         required: [true, "Required"],
     },
     
-    SessionMonitor:{
+    status:{
         type:'String'
+    },
+    changepassword:{
+        type:Boolean
     },
     updated: { type: Date, default: Date.now },
 })
