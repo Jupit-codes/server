@@ -631,7 +631,7 @@ router.post('/set/password',(req,res)=>{
            res.status(400).send({"message":err,"status":false})
        }
        else if(docs){
-           res.send({"message":'Password Successfully Updated',"status":true})
+           res.send({"message":'Password Successfully Updated',"status":true,"data":docs})
        }
        else if(!docs){
         res.status(400).send({"message":'Internal Server Error',"status":false})
