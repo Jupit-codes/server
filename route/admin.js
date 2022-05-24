@@ -11,6 +11,7 @@ import twoFactor from "../model/twoFactor.js";
 import kyc from "../model/kyc.js";
 import bank from "../model/bank.js";
 import rate from "../model/rate.js";
+import wallet_transactions from "../model/wallet_transactions.js";
 
 
   const transporter = nodemailer.createTransport({
@@ -637,6 +638,64 @@ router.post('/set/password',(req,res)=>{
         res.status(400).send({"message":'Internal Server Error',"status":false})
        }
    })
+})
+
+router.post('/user/wallet/transactions',(req,res)=>{
+    let x = Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+            "status":false            })
+        }
+        else if(docs){
+               
+                let btcaddress = docs.btc_wallet[0].address;
+                let usdtaddress = docs.usdt_wallet[0].address; 
+                wallet_transactions.find({
+                    $or:[
+                            {
+                                $or:[
+                                    {
+                                        from_address:btcaddress
+                                    },
+                                    {
+                                        to_address:btcaddress
+                                    }
+                                ]
+                            },
+                            {
+                                $or:[
+                                    {
+                                        from_address:usdtaddress
+                                    },
+                                    {
+                                        to_address:usdtaddress
+                                    }
+                                ]
+                                
+                                
+                            }
+                        ]
+                   },(err,docs)=>{
+                       if(err){
+                           res.status(400).send(err)
+                       }
+                       else if(docs){
+                           res.send({
+                               "message":docs,
+                               "status":true
+                           })
+                       }
+                       
+                   }).sort({date_created: -1})
+        }
+        else if(!docs){
+            res.status(400).send({
+                "message":"Invalid Request",
+                "status":false
+            })
+        }
+    })
 })
 
 
