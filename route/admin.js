@@ -640,7 +640,7 @@ router.post('/set/password',(req,res)=>{
    })
 })
 
-router.post('/user/wallet/transactions',(req,res)=>{
+router.post('/user/get/wallet/transactions',(req,res)=>{
     let x = Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
         if(err){
             res.status(400).send({
