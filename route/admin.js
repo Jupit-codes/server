@@ -13,6 +13,7 @@ import bank from "../model/bank.js";
 import rate from "../model/rate.js";
 import wallet_transactions from "../model/wallet_transactions.js";
 import idcardverification from "../model/idcardverification.js";
+import axios from "axios";
 
 
   const transporter = nodemailer.createTransport({
@@ -737,6 +738,70 @@ router.get('/get/awaiting/approval',(req,res)=>{
             })
         }
     })
+})
+
+router.post('/verify/idcard',async(req,res)=>{
+
+    idcardverification.findOne({_id:req.body._id},async (err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            const url = docs.imagepath
+            const image = await axios.get(url, {responseType: 'arraybuffer'});
+            const raw = Buffer.from(image.data).toString('base64');
+            const base64Image = "data:" + image.headers["content-type"] + ";base64,"+raw;
+            
+            
+
+            const params = {
+               
+                            "verificationType": "VIN-FACE-MATCH-VERIFICATION",
+                            "searchParameter":"A07011111",
+                            "selfie":base64Image,
+                            "country":"NG",
+                            "selfieToDatabaseMatch":false
+                        };
+              
+
+                let urls = "https://api.verified.africa/sfx-verify/v3/id-service"
+
+                let cust_code = await axios.post(urls,params,{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "userid":"1641124470949",
+                        "apiKey":"57tATVQShl9ZhLMxQ8FM",
+                    }
+                })
+                .then(result=>{
+                    // console.log(result.data)
+                    res.send({
+                        "message":result.data,
+                        "status":true
+                    })
+                    
+                })
+                .catch((err)=>{
+                    // console.log(err.response)
+                    res.status(400).send({
+                        "message":err.response,
+                        "status":false
+                    })
+                   
+                    
+                    
+                })
+        }
+    })
+    
+    
+    // res.json({
+    //     "message":base64Image,
+    //     "status":true
+    // })
 })
 
 
