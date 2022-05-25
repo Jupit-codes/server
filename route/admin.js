@@ -12,6 +12,7 @@ import kyc from "../model/kyc.js";
 import bank from "../model/bank.js";
 import rate from "../model/rate.js";
 import wallet_transactions from "../model/wallet_transactions.js";
+import idcardverification from "../model/idcardverification.js";
 
 
   const transporter = nodemailer.createTransport({
@@ -710,6 +711,29 @@ router.get('/get/all/transactions',(req,res)=>{
             res.send({
                 "message":docs,
                 "status":true
+            })
+        }
+    })
+})
+
+router.get('/get/awaiting/approval',(req,res)=>{
+    idcardverification.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            res.send({
+                "message":docs,
+                "status":true
+            })
+        }
+        else if(!docs){
+            res.status(400).send({
+                "message":"Not Found",
+                "status":false
             })
         }
     })
