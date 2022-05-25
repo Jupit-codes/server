@@ -751,49 +751,92 @@ router.post('/verify/idcard',async(req,res)=>{
         }
         else if(docs){
             const url = docs.imagepath
-            const image = await axios.get(url, {responseType: 'arraybuffer'});
-            const raw = Buffer.from(image.data).toString('base64');
-            const base64Image = "data:" + image.headers["content-type"] + ";base64,"+raw;
-            
-            
+                const image = await axios.get(url, {responseType: 'arraybuffer'});
+                const raw = Buffer.from(image.data).toString('base64');
+                const base64Image = "data:" + image.headers["content-type"] + ";base64,"+raw;
 
-            const params = {
-               
-                            "verificationType": "VIN-FACE-MATCH-VERIFICATION",
-                            "searchParameter":"A07011111",
-                            "selfie":base64Image,
-                            "country":"NG",
-                            "selfieToDatabaseMatch":true
-                        };
-              
+                
+             
+                
+                
+            if(docs.cardtype === "VoterCard"){
+                const params = {
+                
+                    "verificationType": "VIN-FACE-MATCH-VERIFICATION",
+                    "searchParameter":"A07011111",
+                    "selfie":base64Image,
+                    "country":"NG",
+                    "selfieToDatabaseMatch":true
+                };
 
-                let urls = "https://api.verified.africa/sfx-verify/v3/id-service"
-
-                let cust_code = await axios.post(urls,params,{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "userid":"1641124470949",
-                        "apiKey":"57tATVQShl9ZhLMxQ8FM",
-                    }
-                })
-                .then(result=>{
-                    // console.log(result.data)
+                
+                let voterCardCall = await voterscard(params);
+                if(voterCardCall[1]){
                     res.send({
-                        "message":result.data,
+                        "message":voterCardCall[0],
                         "status":true
                     })
-                    
-                })
-                .catch((err)=>{
-                    // console.log(err.response)
+                }
+                else {
                     res.status(400).send({
-                        "message":err.response,
-                        "status":false
+                        "message":voterCardCall[0],
+                        "status":true
                     })
-                   
-                    
-                    
-                })
+
+                }
+
+            }
+           
+            else if(docs.cardtype === "Driverslicense"){
+                 const Driverslicense_params = 
+                    {
+                        "idNo": "1234567890",
+                        "idBase64String": "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAA3NCSVQICAjb4U/gAgAAANlBMVEVHcEwpvVcpvFgqv1UpvVgpvVcpvVcpvFciulEmv1MovlgovVkovFcovlkpvVYnvlgpvFgqvldAzyl7AAAAEnRSTlMAyFcw8d6r/AoafWQmjHBOPZgGgldwAAAAAWJLR0QAiAUdSAAAAF96VFh0UmF3IHByb2ZpbGUgdHlwZSBBUFAxAAAImeNKT81LLcpMVigoyk/LzEnlUgADYxMuE0sTS6NEAwMDCwMIMDQwMDYEkkZAtjlUKNEABZiYm6UBoblZspkpiM8FAE+6FWgbLdiMAAABaUlEQVQokW1TW5LkMAgDGwzEz9z/sitnaqudnnHlIxUZIYRC9DmzqAhfTn+dzFZGSl0l/YFWK7EvuV92/UIvG0TRxVA67bu+WsVn0RHPXYl3311brTt5qo1c7xMNLZsSV5KIWqcqh/wQdloCQcMwFlq71A/syVF2b32JWqNS9nOyFzBSBxraN5ZO9i68yItMcmZ3HRTnbBfes2oGqoGxUHnVF/ttxakp0ARl4zX2LKZzTwVfKyzN1s5SKfORd5H3x3Dm9qrf7JypMeStgEw7e2eAiXwIN6+swiPnD1o2SEsFE7GUWm/Rg33hait74a78LCtYz9BEt+1M/b/K2O59bDN92Lv+BGVKG4etN0CHM81AAaXYz3t2SgpnmuXQFIoFhx3aEVNEJTI2gUZb1rQjUPOO3XEURiZk0+6386B39/UElnbw1ttVVXzIA/pgwv2ddUfKYNmaaiLPnN8n/1i2al2/QZhTfv19/wCHKQys+NpHhAAAAABJRU5ErkJggg==",
+                        "surname": "Alao",
+                        "firstname": "Nike",
+                        "passportBase64String": "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAA3NCSVQICAjb4U/gAgAAANlBMVEVHcEwpvVcpvFgqv1UpvVgpvVcpvVcpvFciulEmv1MovlgovVkovFcovlkpvVYnvlgpvFgqvldAzyl7AAAAEnRSTlMAyFcw8d6r/AoafWQmjHBOPZgGgldwAAAAAWJLR0QAiAUdSAAAAF96VFh0UmF3IHByb2ZpbGUgdHlwZSBBUFAxAAAImeNKT81LLcpMVigoyk/LzEnlUgADYxMuE0sTS6NEAwMDCwMIMDQwMDYEkkZAtjlUKNEABZiYm6UBoblZspkpiM8FAE+6FWgbLdiMAAABaUlEQVQokW1TW5LkMAgDGwzEz9z/sitnaqudnnHlIxUZIYRC9DmzqAhfTn+dzFZGSl0l/YFWK7EvuV92/UIvG0TRxVA67bu+WsVn0RHPXYl3311brTt5qo1c7xMNLZsSV5KIWqcqh/wQdloCQcMwFlq71A/syVF2b32JWqNS9nOyFzBSBxraN5ZO9i68yItMcmZ3HRTnbBfes2oGqoGxUHnVF/ttxakp0ARl4zX2LKZzTwVfKyzN1s5SKfORd5H3x3Dm9qrf7JypMeStgEw7e2eAiXwIN6+swiPnD1o2SEsFE7GUWm/Rg33hait74a78LCtYz9BEt+1M/b/K2O59bDN92Lv+BGVKG4etN0CHM81AAaXYz3t2SgpnmuXQFIoFhx3aEVNEJTI2gUZb1rQjUPOO3XEURiZk0+6386B39/UElnbw1ttVVXzIA/pgwv2ddUfKYNmaaiLPnN8n/1i2al2/QZhTfv19/wCHKQys+NpHhAAAAABJRU5ErkJggg==",
+                        "dob": "YYYY-MM-DD",
+                        "transactionRef": "SF|KYC|BS|UBN|1873874898470093"
+                      }
+
+                      let DriverslicenseCall = await DriverL(params_intlpassport);
+                 
+            }
+            else if(docs.cardtype === "Intlpassport"){
+                const params_intlpassport = 
+                    {
+                        "searchParameter": "A07011111",
+                        "lastName": "Doe",
+                        "firstName": "John",
+                        "dob": "1988-11-05",
+                        "gender": "Male",
+                        "selfie": base64Image,
+                        "phone": "07030000000",
+                        "email": "johndoe@email.com",
+                        "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
+                        "selfieToDatabaseMatch": "True"
+                   }
+                let IntlpassportCardCall = await InternationalPassport(params_intlpassport);
+                if(IntlpassportCardCall[1]){
+                    res.send({
+                        "message":IntlpassportCardCall[0],
+                        "status":true
+                    })
+                }
+                else {
+                    res.status(400).send({
+                        "message":IntlpassportCardCall[0],
+                        "status":true
+                    })
+
+                }
+            }
+            
+            
+            
+  
+
+                
         }
     })
     
@@ -805,4 +848,103 @@ router.post('/verify/idcard',async(req,res)=>{
 })
 
 
+async function voterscard(params){
+    let urls = "https://api.verified.africa/sfx-verify/v3/id-service"
+    
+
+    let callback = await axios.post(urls,params,{
+                headers: {
+                    "Content-Type": "application/json",
+                    "userid":"1641124470949",
+                    "apiKey":"57tATVQShl9ZhLMxQ8FM",
+                }
+            })
+        .then(result=>{
+            // console.log(result.data)
+            // res.send({
+            //     "message":result.data,
+            //     "status":true
+            // })
+            return [result.data,true]
+            
+        })
+        .catch((err)=>{
+            // console.log(err.response)
+            // res.status(400).send({
+            //     "message":err.response,
+            //     "status":false
+            // })
+            return [err.response,false]
+            
+        })
+
+    return callback;
+}
+
+
+async function InternationalPassport(params){
+    let urls = "https://api.verified.africa/sfx-verify/v3/id-service"
+    
+
+    let callback = await axios.post(urls,params,{
+                headers: {
+                    "Content-Type": "application/json",
+                    "userid":"1641124470949",
+                    "apiKey":"CPPLHMd6uQ5D4AhoWVMF",
+                }
+            })
+        .then(result=>{
+            // console.log(result.data)
+            // res.send({
+            //     "message":result.data,
+            //     "status":true
+            // })
+            return [result.data,true]
+            
+        })
+        .catch((err)=>{
+            // console.log(err.response)
+            // res.status(400).send({
+            //     "message":err.response,
+            //     "status":false
+            // })
+            return [err.response,false]
+            
+        })
+
+    return callback;
+}
+
+async function DriverL(Driverslicense_params){
+    let urls = "https://app.verified.ng/id-service/frsc"
+    
+
+    let callback = await axios.post(urls,params,{
+                headers: {
+                    "Content-Type": "application/json",
+                    "userid":"1641124470949",
+                    "apiKey":"CPPLHMd6uQ5D4AhoWVMF",
+                }
+            })
+        .then(result=>{
+            // console.log(result.data)
+            // res.send({
+            //     "message":result.data,
+            //     "status":true
+            // })
+            return [result.data,true]
+            
+        })
+        .catch((err)=>{
+            // console.log(err.response)
+            // res.status(400).send({
+            //     "message":err.response,
+            //     "status":false
+            // })
+            return [err.response,false]
+            
+        })
+
+    return callback;
+}
 export default router
