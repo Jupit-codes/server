@@ -763,7 +763,7 @@ router.post('/verify/idcard',async(req,res)=>{
                             "searchParameter":"A07011111",
                             "selfie":base64Image,
                             "country":"NG",
-                            "selfieToDatabaseMatch":false
+                            "selfieToDatabaseMatch":true
                         };
               
 
