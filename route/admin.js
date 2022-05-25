@@ -698,5 +698,22 @@ router.post('/get/user/wallet/transactions',(req,res)=>{
     })
 })
 
+router.get('/get/all/transactions',(req,res)=>{
+    let x = wallet_transactions.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else{
+            res.send({
+                "message":docs,
+                "status":true
+            })
+        }
+    })
+})
+
 
 export default router
