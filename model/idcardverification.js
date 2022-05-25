@@ -25,6 +25,9 @@ const idcardverification = mongoose.Schema({
     status:{
         type:'String'
     },
+    base64:{
+        type:'String'
+    },
     updated: { type: Date, default: Date.now },
 })
 
