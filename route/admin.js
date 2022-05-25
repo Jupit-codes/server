@@ -717,7 +717,7 @@ router.get('/get/all/transactions',(req,res)=>{
 })
 
 router.get('/get/awaiting/approval',(req,res)=>{
-    idcardverification.find({status:'pending'},(err,docs)=>{
+    idcardverification.find({status:'Pending'},(err,docs)=>{
         if(err){
             res.status(400).send({
                 "message":err,
