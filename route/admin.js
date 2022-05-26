@@ -14,6 +14,7 @@ import rate from "../model/rate.js";
 import wallet_transactions from "../model/wallet_transactions.js";
 import idcardverification from "../model/idcardverification.js";
 import axios from "axios";
+import giftcardtransactions from "../model/giftcardtransactions.js"
 
 
   const transporter = nodemailer.createTransport({
@@ -777,7 +778,7 @@ router.post('/drivers/licence/service',async (req,res)=>{
 
 })
 
-router.post('/verify/idcard',async(req,res)=>{
+router.post('/verify/idcard',middlewareVerify, async(req,res)=>{
 
     idcardverification.findOne({_id:req.body._id},async (err,docs)=>{
         if(err){
@@ -1016,4 +1017,22 @@ async function DriverL(Driverslicense_params){
 
     return callback;
 }
+
+
+router.get('/fetch/giftcard/sell',(req,res)=>{
+    giftcardtransactions.find({},(err,docs)=>{
+        if(err){
+            res.send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            res.send({
+                "message":docs,
+                "status":true
+            })
+        }
+    })
+})
 export default router
