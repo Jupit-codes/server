@@ -17,6 +17,7 @@ import giftCardnew from "../model/giftCardnew.js";
 import { randomUUID } from 'crypto'
 import giftcardImages from "../model/giftcardImages.js";
 import giftcardtransactions from "../model/giftcardtransactions.js";
+import { uuid } from 'uuidv4';
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
