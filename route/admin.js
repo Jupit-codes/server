@@ -889,7 +889,7 @@ router.post('/verify/idcard',async(req,res)=>{
                     "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
                      "email":"johndoe@email.com",
                      "phone": "07030000000",  
-                    "selfie": selfie,
+                    "selfie": base64Image,
                     "selfieToDatabaseMatch":"true"
                   }
                     let IntlpassportCardCall = await InternationalPassport(params_intlpassport);
