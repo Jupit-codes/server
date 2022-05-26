@@ -867,18 +867,31 @@ router.post('/verify/idcard',async(req,res)=>{
             else if(docs.cardtype === "Intlpassport"){
                 console.log(docs.cardtype)
                 const params_intlpassport = 
-                    {
-                        "searchParameter": docs.cardnumber,
-                        "lastName": docs.lastname,
-                        "firstName": docs.firstname,
-                        "dob": docs.dob,
-                        "gender": "Male",
-                        "selfie": raw,
-                        "phone": "07033300011",
-                        "email": "hhhh@gmail.com",
-                        "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
-                        "selfieToDatabaseMatch": "True"
-                   }
+                //     {
+                //         "searchParameter": docs.cardnumber,
+                //         "lastName": docs.lastname,
+                //         "firstName": docs.firstname,
+                //         "dob": docs.dob,
+                //         "gender": "Male",
+                //         "selfie": base64Image,
+                //         "phone": "07033300011",
+                //         "email": "hhhh@gmail.com",
+                //         "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
+                //         "selfieToDatabaseMatch": "True"
+                //    }
+                {
+                    "transactionReference": "",
+                    "searchParameter": "A07011111",
+                    "firstName": "John",
+                    "surname": "Doe",
+                    "gender": "Male",
+                    "dob": "1988-11-05",
+                    "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
+                     "email":"johndoe@email.com",
+                     "phone": "07030000000",  
+                    "selfie": selfie,
+                    "selfieToDatabaseMatch":"true"
+                  }
                     let IntlpassportCardCall = await InternationalPassport(params_intlpassport);
                     if(IntlpassportCardCall[1]){
                         res.send({
