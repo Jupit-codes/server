@@ -16,7 +16,7 @@ const giftcardtransactionSchema = mongoose.Schema({
     date_created:{
         type:Date
     },
-    
+    status:{type:'String'},
     updated: { type: Date, default: Date.now },
 })
 

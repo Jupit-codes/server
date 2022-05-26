@@ -1020,7 +1020,7 @@ async function DriverL(Driverslicense_params){
 
 
 router.get('/fetch/giftcard/sell',(req,res)=>{
-    giftcardtransactions.find({},(err,docs)=>{
+    giftcardtransactions.find({status:'untreated'},(err,docs)=>{
         if(err){
             res.send({
                 "message":err,
