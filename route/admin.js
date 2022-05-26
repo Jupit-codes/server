@@ -763,7 +763,7 @@ router.post('/verify/idcard',async(req,res)=>{
                 const params = {
                 
                     "verificationType": "VIN-FACE-MATCH-VERIFICATION",
-                    "searchParameter":"A07011111",
+                    "searchParameter":docs.cardnumber,
                     "selfie":base64Image,
                     "country":"NG",
                     "selfieToDatabaseMatch":true
@@ -796,36 +796,33 @@ router.post('/verify/idcard',async(req,res)=>{
                     "firstname": "John",
                     "surname": "Doe",
                     "phone": "07030000000",
-                    "email": "your@email.com",
                     "frsc": "FFF4028711111",
-                    "dob": "1993-11-06", 
-                    "callbackURL":"https://yoursite.com/callback"
-                }
-                    // {
-                    //     "idNo": "1234567890",
-                    //     "idBase64String": Buffer.from("1234567890").toString('base64'),
-                    //     "surname": "Alao",
-                    //     "firstname": "Nike",
-                    //     "passportBase64String": raw,
-                    //     "dob": "YYYY-MM-DD",
-                    //     "transactionRef": "SF|KYC|BS|UBN|1873874898470093"
-                    //   }
+                    "dob": "1993-11-06"
+               }
+                let urls = "https://app.verified.ng/sfx-verify/v2/frsc"
+                
 
-                      let DriverslicenseCall = await DriverL(Driverslicense_params);
-
-                      if(DriverslicenseCall){
-                          res.send({
-                              "message":DriverslicenseCall,
-                              "status":true
-                          })
-                      }
-                      else{
-                        res.status(400).send({
-                            "message":DriverslicenseCall,
-                            "status":true
+                let callback = await axios.post(urls,Driverslicense_params,{
+                            headers: {
+                                "Accept": "application/json",
+                                "Content-Type": "application/json",
+                                "userid":"1641124470949",
+                                "apiKey":"x7rCRKM0JMTAOEtGK0I5",
+                            }
                         })
-                      }
-                 
+                    .then(result=>{
+                        console.log(result)
+                      
+                        
+                    })
+                    .catch((err)=>{
+                      
+                        console.log('Eroor415',err.response)
+                        
+                    })
+            
+
+                      
             }
             else if(docs.cardtype === "Intlpassport"){
                 const params_intlpassport = 
