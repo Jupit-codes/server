@@ -788,36 +788,39 @@ router.post('/verify/idcard',async(req,res)=>{
             }
            
             else if(docs.cardtype === "Driverslicense"){
-                const image = await axios.get(url, {responseType: 'arraybuffer'});
-                const raw = Buffer.from(image.data).toString('base64');
-                const base64Image = "data:" + image.headers["content-type"] + ";base64,"+raw;
+                // const image = await axios.get(url, {responseType: 'arraybuffer'});
+                // const raw = Buffer.from(image.data).toString('base64');
+                // const base64Image = "data:" + image.headers["content-type"] + ";base64,"+raw;
                  const Driverslicense_params = 
                  {
-                    "firstname": "John",
-                    "surname": "Doe",
-                    "phone": "07030000000",
-                    "frsc": "FFF4028711111",
-                    "dob": "1993-11-06"
+                    "firstname": "Ebong",
+                    "surname": "Ibokette",
+                    "phone": "08167396655",
+                    "email": "ebong@company.com",
+                    "frsc":"FFF11111AA76",
+                    "dob": "1993-11-06",
+                    "callbackURL":"https://yoursite.com"
                }
                 let urls = "https://app.verified.ng/sfx-verify/v2/frsc"
                 
 
                 let callback = await axios.post(urls,Driverslicense_params,{
                             headers: {
-                                "Accept": "application/json",
-                                "Content-Type": "application/json",
+                                
+                                "Content-Type": "text/plain",
                                 "userid":"1641124470949",
                                 "apiKey":"x7rCRKM0JMTAOEtGK0I5",
                             }
                         })
                     .then(result=>{
                         console.log(result)
-                      
+                      res.send(result)
                         
                     })
                     .catch((err)=>{
                       
                         console.log('Eroor415',err.response)
+                        res.send(err.response)
                         
                     })
             
@@ -828,13 +831,13 @@ router.post('/verify/idcard',async(req,res)=>{
                 const params_intlpassport = 
                     {
                         "searchParameter": "A07011111",
-                        "lastName": "Doe",
-                        "firstName": "John",
-                        "dob": "1988-11-05",
+                        "lastName": docs.lastname,
+                        "firstName": docs.firstname,
+                        "dob": docs.dob,
                         "gender": "Male",
                         "selfie": base64Image,
-                        "phone": "07030000000",
-                        "email": "johndoe@email.com",
+                        "phone": "",
+                        "email": "",
                         "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
                         "selfieToDatabaseMatch": "True"
                    }
