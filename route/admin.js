@@ -830,7 +830,7 @@ router.post('/verify/idcard',async(req,res)=>{
             else if(docs.cardtype === "Intlpassport"){
                 const params_intlpassport = 
                     {
-                        "searchParameter": "A07011111",
+                        "searchParameter": docs.cardnumber,
                         "lastName": docs.lastname,
                         "firstName": docs.firstname,
                         "dob": docs.dob,
