@@ -1,6 +1,10 @@
 import mongoose from 'mongoose'
 
 const giftcardtransactionSchema = mongoose.Schema({
+    cardname:{
+        type:'String',
+        
+    },
     userid:{
         type:'String',
         

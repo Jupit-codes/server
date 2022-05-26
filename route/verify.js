@@ -470,7 +470,8 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                                 userid:req.body.Userid,
                                 unique_id:req.body.unique_id,
                                 image_url:result.secure_url,
-                                status:'untreated'
+                                status:'untreated',
+                                cardname:req.body.Cardname
                             })
                         }
                     })
@@ -493,6 +494,7 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                 unique_id:req.body.unique_id,
                 country:req.body.Country,
                 total:req.body.Total,
+                cardname:req.body.Cardname,
                 status:'untreated'
             })
 
