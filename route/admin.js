@@ -819,8 +819,8 @@ router.post('/verify/idcard',async(req,res)=>{
                     })
                     .catch((err)=>{
                       
-                        console.log('Eroor415',err.response)
-                        res.send(err.response)
+                        console.log('Eroor415',err.response.data)
+                        res.send(err.response.data)
                         
                     })
             
@@ -837,8 +837,8 @@ router.post('/verify/idcard',async(req,res)=>{
                         "dob": docs.dob,
                         "gender": "Male",
                         "selfie": base64Image,
-                        "phone": "",
-                        "email": "",
+                        "phone": "07033300011",
+                        "email": "hhhh@gmail.com",
                         "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
                         "selfieToDatabaseMatch": "True"
                    }
@@ -851,8 +851,8 @@ router.post('/verify/idcard',async(req,res)=>{
                     }
                     else {
                         res.status(400).send({
-                            "message":IntlpassportCardCall[0],
-                            "status":true
+                            "message":IntlpassportCardCall[0].data,
+                            "status":false
                         })
 
                 }
