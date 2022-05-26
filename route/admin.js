@@ -881,7 +881,8 @@ router.post('/verify/idcard',async(req,res)=>{
                 //    }
                 {
                     "transactionReference": "",
-                    "searchParameter": "A07011111",
+                    "searchParameter": docs.cardnumber,
+                    // "searchParameter": "A07011111",
                     "firstName": docs.firstname,
                     "lastName": docs.lastname,
                     "gender": "Male",
