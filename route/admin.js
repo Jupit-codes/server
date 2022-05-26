@@ -885,7 +885,7 @@ router.post('/verify/idcard',async(req,res)=>{
                     "firstName": "John",
                     "lastName": "Doe",
                     "gender": "Male",
-                    "dob": "1988-11-05",
+                    "dob": docs.dob,
                     "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
                      "email":"johndoe@email.com",
                      "phone": "07030000000",  
