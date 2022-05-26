@@ -883,7 +883,7 @@ router.post('/verify/idcard',async(req,res)=>{
                     "transactionReference": "",
                     "searchParameter": "A07011111",
                     "firstName": "John",
-                    "surname": "Doe",
+                    "lastName": "Doe",
                     "gender": "Male",
                     "dob": "1988-11-05",
                     "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
