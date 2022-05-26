@@ -919,7 +919,7 @@ async function InternationalPassport(params){
                 }
             })
         .then(result=>{
-            // console.log(result.data)
+            console.log(result.data)
             // res.send({
             //     "message":result.data,
             //     "status":true
@@ -928,7 +928,7 @@ async function InternationalPassport(params){
             
         })
         .catch((err)=>{
-            // console.log(err.response)
+            console.log(err.response)
             // res.status(400).send({
             //     "message":err.response,
             //     "status":false
