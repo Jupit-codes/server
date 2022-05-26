@@ -757,7 +757,7 @@ router.post('/drivers/licence/service',async (req,res)=>{
    let callback = await axios.post(urls,Driverslicense_params,{
                headers: {
                    
-                   "Content-Type": "text/plain",
+                   "Content-Type": "application/json",
                    "userid":"1641124470949",
                    "apiKey":"x7rCRKM0JMTAOEtGK0I5",
                }
@@ -882,8 +882,8 @@ router.post('/verify/idcard',async(req,res)=>{
                 {
                     "transactionReference": "",
                     "searchParameter": "A07011111",
-                    "firstName": "John",
-                    "lastName": "Doe",
+                    "firstName": docs.firstname,
+                    "lastName": docs.lastname,
                     "gender": "Male",
                     "dob": docs.dob,
                     "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
