@@ -740,6 +740,43 @@ router.get('/get/awaiting/approval',(req,res)=>{
     })
 })
 
+router.post('/drivers/licence/service',async (req,res)=>{
+    const Driverslicense_params = 
+    {
+       "firstname": req.body.firstname,
+       "surname": req.body.firstname,
+       "phone": req.body.phone,
+       "email": req.body.email,
+       "frsc":req.body.frsc,
+       "dob": req.body.dob,
+       "callbackURL":"https://yoursite.com"
+  }
+   let urls = "https://app.verified.ng/sfx-verify/v2/frsc"
+   
+
+   let callback = await axios.post(urls,Driverslicense_params,{
+               headers: {
+                   
+                   "Content-Type": "text/plain",
+                   "userid":"1641124470949",
+                   "apiKey":"x7rCRKM0JMTAOEtGK0I5",
+               }
+           })
+       .then(result=>{
+           console.log(result)
+         res.send(result)
+           
+       })
+       .catch((err)=>{
+         
+           console.log('Eroor415',err.response.data)
+           res.send(err.response.data)
+           
+       })
+
+
+})
+
 router.post('/verify/idcard',async(req,res)=>{
 
     idcardverification.findOne({_id:req.body._id},async (err,docs)=>{
@@ -836,7 +873,7 @@ router.post('/verify/idcard',async(req,res)=>{
                         "firstName": docs.firstname,
                         "dob": docs.dob,
                         "gender": "Male",
-                        "selfie": base64Image,
+                        "selfie": raw,
                         "phone": "07033300011",
                         "email": "hhhh@gmail.com",
                         "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
