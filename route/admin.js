@@ -788,18 +788,43 @@ router.post('/verify/idcard',async(req,res)=>{
             }
            
             else if(docs.cardtype === "Driverslicense"){
+                const image = await axios.get(url, {responseType: 'arraybuffer'});
+                const raw = Buffer.from(image.data).toString('base64');
+                const base64Image = "data:" + image.headers["content-type"] + ";base64,"+raw;
                  const Driverslicense_params = 
-                    {
-                        "idNo": "1234567890",
-                        "idBase64String": "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAA3NCSVQICAjb4U/gAgAAANlBMVEVHcEwpvVcpvFgqv1UpvVgpvVcpvVcpvFciulEmv1MovlgovVkovFcovlkpvVYnvlgpvFgqvldAzyl7AAAAEnRSTlMAyFcw8d6r/AoafWQmjHBOPZgGgldwAAAAAWJLR0QAiAUdSAAAAF96VFh0UmF3IHByb2ZpbGUgdHlwZSBBUFAxAAAImeNKT81LLcpMVigoyk/LzEnlUgADYxMuE0sTS6NEAwMDCwMIMDQwMDYEkkZAtjlUKNEABZiYm6UBoblZspkpiM8FAE+6FWgbLdiMAAABaUlEQVQokW1TW5LkMAgDGwzEz9z/sitnaqudnnHlIxUZIYRC9DmzqAhfTn+dzFZGSl0l/YFWK7EvuV92/UIvG0TRxVA67bu+WsVn0RHPXYl3311brTt5qo1c7xMNLZsSV5KIWqcqh/wQdloCQcMwFlq71A/syVF2b32JWqNS9nOyFzBSBxraN5ZO9i68yItMcmZ3HRTnbBfes2oGqoGxUHnVF/ttxakp0ARl4zX2LKZzTwVfKyzN1s5SKfORd5H3x3Dm9qrf7JypMeStgEw7e2eAiXwIN6+swiPnD1o2SEsFE7GUWm/Rg33hait74a78LCtYz9BEt+1M/b/K2O59bDN92Lv+BGVKG4etN0CHM81AAaXYz3t2SgpnmuXQFIoFhx3aEVNEJTI2gUZb1rQjUPOO3XEURiZk0+6386B39/UElnbw1ttVVXzIA/pgwv2ddUfKYNmaaiLPnN8n/1i2al2/QZhTfv19/wCHKQys+NpHhAAAAABJRU5ErkJggg==",
-                        "surname": "Alao",
-                        "firstname": "Nike",
-                        "passportBase64String": "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAA3NCSVQICAjb4U/gAgAAANlBMVEVHcEwpvVcpvFgqv1UpvVgpvVcpvVcpvFciulEmv1MovlgovVkovFcovlkpvVYnvlgpvFgqvldAzyl7AAAAEnRSTlMAyFcw8d6r/AoafWQmjHBOPZgGgldwAAAAAWJLR0QAiAUdSAAAAF96VFh0UmF3IHByb2ZpbGUgdHlwZSBBUFAxAAAImeNKT81LLcpMVigoyk/LzEnlUgADYxMuE0sTS6NEAwMDCwMIMDQwMDYEkkZAtjlUKNEABZiYm6UBoblZspkpiM8FAE+6FWgbLdiMAAABaUlEQVQokW1TW5LkMAgDGwzEz9z/sitnaqudnnHlIxUZIYRC9DmzqAhfTn+dzFZGSl0l/YFWK7EvuV92/UIvG0TRxVA67bu+WsVn0RHPXYl3311brTt5qo1c7xMNLZsSV5KIWqcqh/wQdloCQcMwFlq71A/syVF2b32JWqNS9nOyFzBSBxraN5ZO9i68yItMcmZ3HRTnbBfes2oGqoGxUHnVF/ttxakp0ARl4zX2LKZzTwVfKyzN1s5SKfORd5H3x3Dm9qrf7JypMeStgEw7e2eAiXwIN6+swiPnD1o2SEsFE7GUWm/Rg33hait74a78LCtYz9BEt+1M/b/K2O59bDN92Lv+BGVKG4etN0CHM81AAaXYz3t2SgpnmuXQFIoFhx3aEVNEJTI2gUZb1rQjUPOO3XEURiZk0+6386B39/UElnbw1ttVVXzIA/pgwv2ddUfKYNmaaiLPnN8n/1i2al2/QZhTfv19/wCHKQys+NpHhAAAAABJRU5ErkJggg==",
-                        "dob": "YYYY-MM-DD",
-                        "transactionRef": "SF|KYC|BS|UBN|1873874898470093"
-                      }
+                 {
+                    "firstname": "John",
+                    "surname": "Doe",
+                    "phone": "07030000000",
+                    "email": "your@email.com",
+                    "frsc": "FFF4028711111",
+                    "dob": "1993-11-06", 
+                    "callbackURL":"https://yoursite.com/callback"
+                }
+                    // {
+                    //     "idNo": "1234567890",
+                    //     "idBase64String": Buffer.from("1234567890").toString('base64'),
+                    //     "surname": "Alao",
+                    //     "firstname": "Nike",
+                    //     "passportBase64String": raw,
+                    //     "dob": "YYYY-MM-DD",
+                    //     "transactionRef": "SF|KYC|BS|UBN|1873874898470093"
+                    //   }
 
-                      let DriverslicenseCall = await DriverL(params_intlpassport);
+                      let DriverslicenseCall = await DriverL(Driverslicense_params);
+
+                      if(DriverslicenseCall){
+                          res.send({
+                              "message":DriverslicenseCall,
+                              "status":true
+                          })
+                      }
+                      else{
+                        res.status(400).send({
+                            "message":DriverslicenseCall,
+                            "status":true
+                        })
+                      }
                  
             }
             else if(docs.cardtype === "Intlpassport"){
@@ -919,7 +944,7 @@ async function DriverL(Driverslicense_params){
     let urls = "https://app.verified.ng/id-service/frsc"
     
 
-    let callback = await axios.post(urls,params,{
+    let callback = await axios.post(urls,Driverslicense_params,{
                 headers: {
                     "Content-Type": "application/json",
                     "userid":"1641124470949",
@@ -927,20 +952,12 @@ async function DriverL(Driverslicense_params){
                 }
             })
         .then(result=>{
-            // console.log(result.data)
-            // res.send({
-            //     "message":result.data,
-            //     "status":true
-            // })
-            return [result.data,true]
+           
+           return [result.data,true]
             
         })
         .catch((err)=>{
-            // console.log(err.response)
-            // res.status(400).send({
-            //     "message":err.response,
-            //     "status":false
-            // })
+          
             return [err.response,false]
             
         })
