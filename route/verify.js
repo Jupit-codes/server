@@ -5,7 +5,7 @@ import KycModel from '../model/kyc.js';
 import wallet_transactions from "../model/wallet_transactions.js";
 import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
-
+import rate from '../model/rate.js'
 import axios from "axios";
 import cloudinary from 'cloudinary'
 import notification from "../model/notification.js";
@@ -521,8 +521,23 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
         }
     })
 
-    
-    
+})
+
+router.get('/get/current/rate',(req,res)=>{
+    rate.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else{
+            res.send({
+                "message":docs,
+                "status":true
+            })
+        }
+    })
 })
 
 
