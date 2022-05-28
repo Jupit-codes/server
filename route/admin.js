@@ -1046,10 +1046,27 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
             })
         }
         else if(docs){
-            res.send({
-                "message":docs,
-                "status":true
+            giftcardtransactions.find({unique_id:docs.unique_id},(err,docs_gift)=>{
+                if(err){
+                    res.status(400).send({
+                        "message":err
+                    })
+                }
+                else if(docs_gift){
+                    res.send({
+                        "message":docs,
+                        "message2":docs_gift,
+                        "status":true
+                    })
+                }
+                else if(!docs){
+                    res.status(400).send({
+                        "message":"Internal Server Error"
+                    })
+                }
             })
+
+            
         }
         else if(!docs){
             res.status(400).send({
