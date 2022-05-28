@@ -1046,7 +1046,7 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
             })
         }
         else if(docs){
-            giftcardtransactions.find({unique_id:docs.unique_id},(err,docs_gift)=>{
+            giftcardtransactions.find({unique_id:req.body.id},(err,docs_gift)=>{
                 if(err){
                     res.status(400).send({
                         "message":err
