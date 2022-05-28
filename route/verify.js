@@ -5,6 +5,7 @@ import KycModel from '../model/kyc.js';
 import wallet_transactions from "../model/wallet_transactions.js";
 import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
+import Notification from "../model/notification.js";
 import rate from '../model/rate.js'
 import axios from "axios";
 import cloudinary from 'cloudinary'
