@@ -1055,7 +1055,7 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
                 else if(docs_gift){
                     res.send({
                         "message":docs,
-                        "message2":docs_gift,
+                        "message_details":docs_gift,
                         "status":true
                     })
                 }
