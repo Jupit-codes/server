@@ -540,5 +540,21 @@ router.get('/get/current/rate',(req,res)=>{
     })
 })
 
+router.post('/purchase/coin',(req,res)=>{
+    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.$.balance':-parseFloat(req.body.ngnamount),'btc_wallet.$.balance':parseFloat(btcamount)}},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err
+            })
+        }
+        else if(docs){
+            
+            res.send({
+                "message":'BTC Coin Successfully Purchased'
+            })
+        }
+    })
+})
+
 
 export default router
