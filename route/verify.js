@@ -550,24 +550,24 @@ router.post('/purchase/coin',(req,res)=>{
             })
         }
         else if(docs){
-            res.send(docs)
-            // let saveStatus =  await Notification.create({
-            //     type:5,
-            //     orderid:docs._id,
-            //     transfertype:'Buy',
-            //     asset:req.body.wallet_type,
-            //     from_address:req.body.ngnamount,
-            //     to_address:docs.btc_wallet[0].address,
-            //     status:'Completed',
-            //     read:'unread',
-            //     date_created:new Date(),
-            //     initiator:req.body.btcamount,
+            // res.send(docs)
+            let saveStatus =  await Notification.create({
+                type:5,
+                orderid:docs._id,
+                transfertype:'Buy',
+                asset:req.body.wallet_type,
+                from_address:req.body.ngnamount,
+                to_address:docs.btc_wallet[0].address,
+                status:'Completed',
+                read:'unread',
+                date_created:new Date(),
+                initiator:req.body.btcamount,
         
-            // })
+            })
 
-            // res.send({
-            //     "message":'BTC Coin Successfully Purchased'
-            // })
+            res.send({
+                "message":'BTC Coin Successfully Purchased'
+            })
         }
     })
 })
