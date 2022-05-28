@@ -13,6 +13,7 @@ import bank from "../model/bank.js";
 import rate from "../model/rate.js";
 import wallet_transactions from "../model/wallet_transactions.js";
 import idcardverification from "../model/idcardverification.js";
+import giftcardImages from '../model/giftcardImages.js'
 import axios from "axios";
 import giftcardtransactions from "../model/giftcardtransactions.js"
 
@@ -1033,6 +1034,30 @@ router.get('/fetch/giftcard/sell',(req,res)=>{
                 "status":true
             })
         }
+    })
+})
+
+router.post('/get/uploadedgiftcards',(err,docs)=>{
+    giftcardImages.find({unique_id:req.body.id},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            res.send({
+                "message":docs,
+                "status":true
+            })
+        }
+        else if(!docs){
+            res.status(400).send({
+                "message":"Empty",
+                "status":false
+            })
+        }
+       
     })
 })
 export default router
