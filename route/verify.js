@@ -542,7 +542,7 @@ router.get('/get/current/rate',(req,res)=>{
 
 router.post('/purchase/coin',(req,res)=>{
     console.log(req.body)
-    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.$.balance':-parseFloat(req.body.ngnamount),'btc_wallet.$.balance':parseFloat(req.body.btcamount)}},async(err,docs)=>{
+    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.btcamount)}},async(err,docs)=>{
         if(err){
             console.log(err)
             res.status(400).send({
