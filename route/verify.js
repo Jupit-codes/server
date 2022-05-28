@@ -543,34 +543,69 @@ router.get('/get/current/rate',(req,res)=>{
 
 router.post('/purchase/coin',(req,res)=>{
     // console.log(req.body)
-    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.ngnamount,'btc_wallet.0.balance':req.body.btcamount}},async (err,docs)=>{
-        if(err){
-            // console.log(err)
-            res.status(400).send({
-                "message":err
-            })
-        }
-        else if(docs){
-            // res.send(docs)
-            let saveStatus =  await Notification.create({
-                type:5,
-                orderid:docs._id,
-                transfertype:'Buy',
-                asset:req.body.wallet_type,
-                from_address:req.body.ngnamount,
-                to_address:docs.btc_wallet[0].address,
-                status:'Completed',
-                read:'unread',
-                date_created:new Date(),
-                initiator:req.body.btcamount,
-        
-            })
-
-            res.send({
-                "message":'BTC Coin Successfully Purchased'
-            })
-        }
-    })
+    if(req.body.wallet_type === "BTC"){
+        Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.ngnamount,'btc_wallet.0.balance':req.body.btcamount}},async (err,docs)=>{
+            if(err){
+                // console.log(err)
+                res.status(400).send({
+                    "message":err
+                })
+            }
+            else if(docs){
+                // res.send(docs)
+                let saveStatus =  await Notification.create({
+                    type:5,
+                    orderid:docs._id,
+                    transfertype:'Buy',
+                    asset:req.body.wallet_type,
+                    from_address:req.body.ngnamount,
+                    to_address:docs.btc_wallet[0].address,
+                    status:'Completed',
+                    read:'unread',
+                    date_created:new Date(),
+                    initiator:req.body.btcamount,
+            
+                })
+    
+                res.send({
+                    "message":'BTC Coin Successfully Purchased',
+                    "status":true
+                })
+            }
+        })
+    }
+    else if(req.body.wallet_type === "USDT"){
+        Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.ngnamount,'usdt_wallet.0.balance':req.body.btcamount}},async (err,docs)=>{
+            if(err){
+                // console.log(err)
+                res.status(400).send({
+                    "message":err
+                })
+            }
+            else if(docs){
+                // res.send(docs)
+                let saveStatus =  await Notification.create({
+                    type:5,
+                    orderid:docs._id,
+                    transfertype:'Buy',
+                    asset:req.body.wallet_type,
+                    from_address:req.body.ngnamount,
+                    to_address:docs.btc_wallet[0].address,
+                    status:'Completed',
+                    read:'unread',
+                    date_created:new Date(),
+                    initiator:req.body.btcamount,
+            
+                })
+    
+                res.send({
+                    "message":'USDT Coin Successfully Purchased',
+                    "status":true
+                })
+            }
+        })
+    }
+    
 })
 
 
