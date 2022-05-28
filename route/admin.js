@@ -1108,8 +1108,8 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
     })
 })
 
-router.post('/giftcard/markhastreated',(req,res)=>{
-    giftcardtransactions.findOneAndUpdate({unique_id:req.body.id},{$set:{status:'treated'}},(err,docs)=>{
+router.post('/giftcard/markhastreated',async(req,res)=>{
+    await giftcardtransactions.findOneAndUpdate({unique_id:req.body.id},{$set:{status:'treated'}},async (err,docs)=>{
         if(err){
             res.status(400).send({
                 "message":err,
@@ -1117,7 +1117,7 @@ router.post('/giftcard/markhastreated',(req,res)=>{
             })
         }
         else if(docs){
-            giftcardImages.findOneAndUpdate({unique_id:req.body.id},{$set:{status:'treated'}},(err,docs)=>{
+            await giftcardImages.updateMany({unique_id:req.body.id},{$set:{status:'treated'}},(err,docs)=>{
                 if(err){
                     res.status(400).send({
                         "message":err,
@@ -1130,8 +1130,8 @@ router.post('/giftcard/markhastreated',(req,res)=>{
                         "status":true
                     })
                 }
-            })
+            }).clone().catch(function(err){ console.log(err)});
         }
-    })
+    }).clone().catch(function(err){ console.log(err)});
 })
 export default router
