@@ -1053,11 +1053,41 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
                     })
                 }
                 else if(docs_gift){
-                    res.send({
-                        "message":docs,
-                        "message_details":docs_gift,
-                        "status":true
+                    // console.log(docs_gift[0].userid)
+                    Usermodel.findOne({_id:docs_gift[0].userid},(err,docs_user)=>{
+                        if(err){
+                            res.status(400).send({
+                                "message":err
+                            }) 
+                        }
+                        else if(docs_user){
+                            bank.findOne({email:docs_user.email},(err,docs_bank)=>{
+                                if(err){
+                                    res.status(400).send({
+                                        "message":err
+                                    }) 
+                                }else if(docs_bank){
+                                    res.send({
+                                        "message":docs,
+                                        "message_details":docs_gift,
+                                        "message_bank":docs_bank,
+                                        "status":true
+                                    })
+                                } 
+                                else if(!docs_bank){
+                                    res.status(400).send({
+                                        "message":"Internal Server Error Bank"
+                                    }) 
+                                }
+                            })
+                        }
+                        else if(!docs_user){
+                            res.status(400).send({
+                                "message":"Internal Server Error User"
+                            }) 
+                        }
                     })
+                   
                 }
                 else if(!docs){
                     res.status(400).send({
