@@ -1037,7 +1037,7 @@ router.get('/fetch/giftcard/sell',(req,res)=>{
     })
 })
 
-router.post('/get/uploadedgiftcards',(err,docs)=>{
+router.post('/get/uploadedgiftcards',(req,res)=>{
     giftcardImages.find({unique_id:req.body.id},(err,docs)=>{
         if(err){
             res.status(400).send({
