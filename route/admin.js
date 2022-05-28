@@ -1107,4 +1107,31 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
        
     })
 })
+
+router.post('/giftcard/markhastreated',(req,res)=>{
+    giftcardtransactions.findOneAndUpdate({unique_id:req.body.id},{$set:{status:'treated'}},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            giftcardImages.findOneAndUpdate({unique_id:req.body.id},{$set:{status:'treated'}},(err,docs)=>{
+                if(err){
+                    res.status(400).send({
+                        "message":err,
+                        "status":false
+                    })
+                }
+                else if(docs){
+                    res.send({
+                        "message":"Update was Successful",
+                        "status":true
+                    })
+                }
+            })
+        }
+    })
+})
 export default router
