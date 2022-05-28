@@ -541,32 +541,33 @@ router.get('/get/current/rate',(req,res)=>{
 })
 
 router.post('/purchase/coin',(req,res)=>{
-    console.log(req.body)
-    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.btcamount)}},async(err,docs)=>{
+    // console.log(req.body)
+    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.ngnamount,'btc_wallet.0.balance':req.body.btcamount}},(err,docs)=>{
         if(err){
-            console.log(err)
+            // console.log(err)
             res.status(400).send({
                 "message":err
             })
         }
         else if(docs){
-            let saveStatus =  await Notification.create({
-                type:5,
-                orderid:docs._id,
-                transfertype:'Buy',
-                asset:req.body.wallet_type,
-                from_address:req.body.ngnamount,
-                to_address:docs.btc_wallet[0].address,
-                status:'Completed',
-                read:'unread',
-                date_created:new Date(),
-                initiator:req.body.btcamount,
+            res.send(docs)
+            // let saveStatus =  await Notification.create({
+            //     type:5,
+            //     orderid:docs._id,
+            //     transfertype:'Buy',
+            //     asset:req.body.wallet_type,
+            //     from_address:req.body.ngnamount,
+            //     to_address:docs.btc_wallet[0].address,
+            //     status:'Completed',
+            //     read:'unread',
+            //     date_created:new Date(),
+            //     initiator:req.body.btcamount,
         
-            })
+            // })
 
-            res.send({
-                "message":'BTC Coin Successfully Purchased'
-            })
+            // res.send({
+            //     "message":'BTC Coin Successfully Purchased'
+            // })
         }
     })
 })
