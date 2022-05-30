@@ -10,6 +10,12 @@ const buynsellSchema = mongoose.Schema({
         required: [true, "Required"],
         
     },
+    type:{
+        type:'String',
+        required: [true, "Required"],
+        
+    },
+    
     currency:{
         type:'String',
         required: [true, "Required"],
