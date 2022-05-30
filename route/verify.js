@@ -18,6 +18,7 @@ import giftCardnew from "../model/giftCardnew.js";
 import { randomUUID } from 'crypto'
 import giftcardImages from "../model/giftcardImages.js";
 import giftcardtransactions from "../model/giftcardtransactions.js";
+import buy_n_sell from "../model/buy_n_sell.js";
 
 cloudinary.config({ 
     cloud_name: 'jupit', 
@@ -566,6 +567,14 @@ router.post('/purchase/coin',(req,res)=>{
                     initiator:req.body.btcamount,
             
                 })
+
+                await buy_n_sell.create({
+                    userid:docs._id,
+                    amount:req.body.ngnamount,
+                    currency:req.body.wallet_type,
+                    currency_worth:req.body.btcamount
+
+                })
     
                 res.send({
                     "message":'BTC Coin Successfully Purchased',
@@ -596,6 +605,13 @@ router.post('/purchase/coin',(req,res)=>{
                     date_created:new Date(),
                     initiator:req.body.btcamount,
             
+                })
+                await buy_n_sell.create({
+                    userid:docs._id,
+                    amount:req.body.ngnamount,
+                    currency:req.body.wallet_type,
+                    currency_worth:req.body.btcamount
+
                 })
     
                 res.send({
