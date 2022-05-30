@@ -626,5 +626,87 @@ router.post('/purchase/coin',(req,res)=>{
     
 })
 
+router.post('/sell/coin',(req,res)=>{
+    if(req.body.wallet_type === "BTC"){
+        Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance': req.body.ngnamount,'btc_wallet.0.balance':- req.body.btcamount}},async (err,docs)=>{
+            if(err){
+                // console.log(err)
+                res.status(400).send({
+                    "message":err
+                })
+            }
+            else if(docs){
+                // res.send(docs)
+                let saveStatus =  await Notification.create({
+                    type:5,
+                    orderid:docs._id,
+                    transfertype:'Sell',
+                    asset:req.body.wallet_type,
+                    from_address:req.body.ngnamount,
+                    to_address:docs.btc_wallet[0].address,
+                    status:'Completed',
+                    read:'unread',
+                    date_created:new Date(),
+                    initiator:req.body.btcamount,
+            
+                })
+
+                await buy_n_sell.create({
+                    userid:docs._id,
+                    amount:req.body.ngnamount,
+                    currency:req.body.wallet_type,
+                    currency_worth:req.body.btcamount,
+                    type:"Sell"
+
+                })
+    
+                res.send({
+                    "message":'BTC Coin Successfully Sold',
+                    "status":true
+                })
+            }
+        })
+    }
+    else if(req.body.wallet_type === "USDT"){
+        Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':req.body.ngnamount,'usdt_wallet.0.balance':- req.body.btcamount}},async (err,docs)=>{
+            if(err){
+                // console.log(err)
+                res.status(400).send({
+                    "message":err
+                })
+            }
+            else if(docs){
+                // res.send(docs)
+                let saveStatus =  await Notification.create({
+                    type:5,
+                    orderid:docs._id,
+                    transfertype:'Sell',
+                    asset:req.body.wallet_type,
+                    from_address:req.body.ngnamount,
+                    to_address:docs.btc_wallet[0].address,
+                    status:'Completed',
+                    read:'unread',
+                    date_created:new Date(),
+                    initiator:req.body.btcamount,
+            
+                })
+                await buy_n_sell.create({
+                    userid:docs._id,
+                    amount:req.body.ngnamount,
+                    currency:req.body.wallet_type,
+                    currency_worth:req.body.btcamount,
+                    type:"Sell"
+
+                })
+    
+                res.send({
+                    "message":'USDT Coin Successfully Sold',
+                    "status":true
+                })
+            }
+        })
+    }
+})
+
 
 export default router
