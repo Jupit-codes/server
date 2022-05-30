@@ -572,7 +572,8 @@ router.post('/purchase/coin',(req,res)=>{
                     userid:docs._id,
                     amount:req.body.ngnamount,
                     currency:req.body.wallet_type,
-                    currency_worth:req.body.btcamount
+                    currency_worth:req.body.btcamount,
+                    type:"Buy"
 
                 })
     
@@ -610,7 +611,8 @@ router.post('/purchase/coin',(req,res)=>{
                     userid:docs._id,
                     amount:req.body.ngnamount,
                     currency:req.body.wallet_type,
-                    currency_worth:req.body.btcamount
+                    currency_worth:req.body.btcamount,
+                    type:"Buy"
 
                 })
     
