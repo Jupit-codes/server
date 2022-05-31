@@ -1774,7 +1774,7 @@ async function middlewareVerify(req,res,next){
     else{
         
         let decodedJwt = await parseJwt(bearerHeader);
-        // console.log('Decoded',decodedJwt.user.password);
+        console.log('DecodedUsers',decodedJwt.user.password);
         Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
             if(err){
                 console.log(err)
