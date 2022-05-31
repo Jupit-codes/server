@@ -628,7 +628,7 @@ router.post('/purchase/coin',(req,res)=>{
 
 router.post('/sell/coin',(req,res)=>{
     if(req.body.wallet_type === "BTC"){
-        Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance': req.body.ngnamount,'btc_wallet.0.balance':- req.body.btcamount}},async (err,docs)=>{
+        Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance': req.body.ngnamount,'btc_wallet.0.balance': - req.body.btcamount}},async (err,docs)=>{
             if(err){
                 // console.log(err)
                 res.status(400).send({
@@ -706,6 +706,35 @@ router.post('/sell/coin',(req,res)=>{
             }
         })
     }
+})
+
+router.post('/change/wallet/pin',(req,res)=>{
+    Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            if(docs.wallet_pin === req.body.oldpin ){
+                Usermodel.findOneAndUpdate({_id:req.body.userid},{$set:{'wallet_pin':req.body.newpin}},(err,docs)=>{
+                    if(err){
+                        res.status(400).send({
+                            "message":"Change Pin Failed",
+                            "status":false
+                        })
+                    }
+                    else if(docs){
+                        res.status(400).send({
+                            "message":"Pin Has been Successfully Changed",
+                            "status":true
+                        })
+                    }
+                })
+            }
+        }
+    })
 })
 
 

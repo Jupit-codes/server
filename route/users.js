@@ -125,9 +125,10 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
             // console.log('Keeper',docs)
             if(docs.code === req.body.otp){
 
-                
+                const salt =  bcrypt.genSaltSync(10);
+                let encryptedpin =  bcrypt.hashSync(req.body.createdpin, salt)
                 //let update = Usermodel.findOneAndUpdate({_id:userid},[{'Pin_Created':true},{'wallet_pin':req.body.createdpin}]).exec();
-                let update = await Usermodel.updateMany({_id:userid},{ $set: { Pin_Created: true,wallet_pin:req.body.createdpin } });
+                let update = await Usermodel.updateMany({_id:userid},{ $set: { Pin_Created: true,wallet_pin:encryptedpin } });
                 if(update){
                     // console.log("Update Errr")
                     res.send({'message':'Pin Successfully Saved','status':true});
