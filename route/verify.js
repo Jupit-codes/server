@@ -718,7 +718,7 @@ router.post('/change/wallet/pin',(req,res)=>{
             })
         }
         else if(docs){
-            const validPin = bcrypt.compareSync(oldpin, docs.wallet_pin);
+            const validPin = bcrypt.compareSync(req.body.oldpin, docs.wallet_pin);
                 if(validPin){
                     Usermodel.findOneAndUpdate({_id:req.body.userid},{$set:{'wallet_pin':req.body.newpin}},(err,docs)=>{
                         if(err){
