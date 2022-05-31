@@ -699,6 +699,7 @@ router.post('/sell/coin',(req,res)=>{
 
                 })
     
+                
                 res.send({
                     "message":'USDT Coin Successfully Sold',
                     "status":true
