@@ -93,7 +93,7 @@ router.get('/sendmail',(req,res)=>{
 
     transporter.sendMail(mailData, function (err, info) {
         if(err){
-            console.log(err);
+            // console.log(err);
             res.send({"message":"An Error Occurred","callback":err})
         }
         
@@ -116,7 +116,7 @@ router.post('/save/pin',middlewareVerify,(req,res)=>{
     // console.log(req.body)
     PinCreation.findOne({userid:userid}, async function(err,docs){
         if(err){
-            console.log(err)
+            // console.log(err)
             res.status(400).send(err);
             
         
@@ -201,7 +201,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
     
                 transporter.sendMail(mailData, function (err, info) {
                     if(err){
-                        console.log(err);
+                        // console.log(err);
                         res.send({"message":"An Error Occurred","callback":err})
                     }
                     
@@ -266,7 +266,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
 
             transporter.sendMail(mailData, function (err, info) {
                 if(err){
-                    console.log(err);
+                    // console.log(err);
                     res.send({"message":"An Error Occurred","callback":err})
                 }
                 
@@ -370,7 +370,7 @@ router.post('/login/2FA',(req,res)=>{
                     await TwoFactor.findOne({userid:docs._id},function(err,fa_docs){
                         if(err){
                             res.status(400).send(err)
-                            console.log(err)
+                            // console.log(err)
                         }
                         else if(fa_docs){
                             let secret = fa_docs.base32;
@@ -390,7 +390,7 @@ router.post('/login/2FA',(req,res)=>{
                             }
                             else{
                                 res.status(403).send('Invalid Token...2FA Failed')
-                                console.log('Invalid Token...2FA Failed')
+                                // console.log('Invalid Token...2FA Failed')
                             }
                             
                         }
@@ -408,7 +408,7 @@ router.post('/login/2FA',(req,res)=>{
 
 router.get('/kyc',(req,res)=>{
     // console.log(path.basename(path.resolve(`${'./aws.json'}`)));
-    console.log(process.cwd())
+    // console.log(process.cwd())
     res.send('Welcome to jupit server');
 });
 
@@ -493,7 +493,7 @@ router.post('/users/idcardverification',(req,res)=>{
                     function (error, result) {
                         if(error){
                             // res.json(error)
-                            console.log(error)
+                            // console.log(error)
                             res.status(400).send('Upload Document Error...Pls try again')
                         }
                         if(result){
@@ -529,7 +529,7 @@ router.post('/users/idcardverification',(req,res)=>{
                 function (error, result) {
                     if(error){
                         // res.json(error)
-                        console.log('error',error)
+                        // console.log('error',error)
                         res.status(400).send('Upload Document Error...Pls try again')
                     }
                     if(result){
@@ -572,7 +572,7 @@ router.get('/users/test',middlewareVerify,(req,res)=>{
 router.get('/users',(req,res,next)=>{
     
     const bearerHeader = req.headers['authorization'];
-    console.log(bearerHeader)
+    // console.log(bearerHeader)
 
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         res.sendStatus(403)
@@ -645,7 +645,7 @@ router.post('/users/refresh',middlewareVerify,(req,res)=>{
 })
 
 router.post('/users/test',middlewareVerify,(req,res)=>{
-    console.log(req.body)
+    // console.log(req.body)
 })
 
 
@@ -735,7 +735,7 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
             res.status(400).send(err)
         }
         else if(docs){
-            console.log(docs)
+            // console.log(docs)
             res.send(docs)
         }
         else if(!docs){
@@ -779,7 +779,7 @@ router.get('/users/test/hook',async (req,res)=>{
     let callback_email = "hademylola@gmail.com";
      await KycModel.findOneAndUpdate({customercode:customer_code,'level2.email':callback_email},{'level2.$.event_status':"TEST SUCCESS"},null,(err,docs)=>{
         if(err){
-            console.log('Error',err)
+            // console.log('Error',err)
         }
         else{
             // console.log('Updated',docs)
@@ -799,7 +799,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
             res.status(400).send(err)
         }
         else if(docs){
-           console.log(docs)
+        //    console.log(docs)
             if(docs.status === "Completed"){
                 res.json({
                     message:"This Link has Expired",
@@ -810,7 +810,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
                 res.redirect(`https://jupitapp.vercel.app/user/changepassword/${req.params.code}/${req.params.id}`);
             }
             else{
-                console.log('code not found')
+                // console.log('code not found')
                 await session.create({
                     userid:req.params.id,
                     status:'Pending',
@@ -822,7 +822,7 @@ router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
             
         }
         else if(!docs){
-            console.log('HereSaved')
+            // console.log('HereSaved')
             await session.create({
                 userid:req.params.id,
                 status:'Pending',
@@ -859,7 +859,7 @@ router.post('/getCode/password',(req,res)=>{
 })
 
 router.post('/user/changepassword/data',async (req,res)=>{
-            console.log(req.body);
+            // console.log(req.body);
             const salt =  bcrypt.genSaltSync(10);
             let newpassword =  bcrypt.hashSync(req.body.password, salt)
             
@@ -900,7 +900,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
    
     Usermodel.findOne({_id: req.params.id },   async function (err, docs) {
         if (err){
-            console.log(err)
+            // console.log(err)
             res.send({"err":err})
         }
         else{
@@ -1083,7 +1083,7 @@ router.post('/users/register',(req,res)=>{
 
             transporter.sendMail(mailData, function (err, info) {
                 if(err){
-                    console.log(err);
+                    // console.log(err);
                     res.send({"message":"An Error Occurred","callback":err})
                 }
                 
@@ -1104,7 +1104,7 @@ router.post('/users/register',(req,res)=>{
       
        }
        catch(err){
-        console.log(err)
+        // console.log(err)
         res.send(err.message)
        }
   
@@ -1274,7 +1274,7 @@ async function createKyc(userid,email,phonenumber){
             "error":err,
             "status":false
         })
-        console.log(err)
+        // console.log(err)
     }
 }
 
@@ -1320,7 +1320,7 @@ function createCustomerCode(kyc_id,email,phonenumber){
         //     "error":err,
         //     "status":false
         // })
-        console.log(err)
+        // console.log(err)
     })
 }
 
@@ -1353,7 +1353,7 @@ router.post('/users/validate/acountnumber',middlewareVerify,(req,res)=>{
     })
     .catch((err)=>{
         res.status(400).send('Account Unresolved')
-        console.log(err)
+        // console.log(err)
     })
 
 
@@ -1433,7 +1433,7 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
                 res.send({
                     "err":err.response.data
                 })
-                err.response ? console.log("errData",err.response.data) :console.log("errAll",err)
+                // err.response ? console.log("errData",err.response.data) :console.log("errAll",err)
                 
             })
         }
@@ -1551,7 +1551,7 @@ async function updateWebHook(json){
 
     let res = await KycModel.findOneAndUpdate ({customercode:json.data.customer_code,'level2.email':json.data.email},{'level2.$.event_status':json.event},null,async(err)=>{
         if(err){
-            console.log('Error',err)
+            // console.log('Error',err)
             return [false,err]
         }
         
@@ -1714,7 +1714,7 @@ async function SendMail(address,status){
 }
 
 function verifyToken(res,req,next){
-    console.log(req.headers['authorization'])
+    // console.log(req.headers['authorization'])
     next();
     // const bearerHeader = req.headers['authorization'];
     // res.send({
@@ -1739,7 +1739,7 @@ async function comparePassword(hashedPassword,requestPassword){
        
       } else {
             
-        console.log('Password is Incorrect');
+        // console.log('Password is Incorrect');
         return false;
       }
 
@@ -1776,13 +1776,13 @@ async function middlewareVerify(req,res,next){
         let decodedJwt = await parseJwt(bearerHeader);
         if(decodedJwt){
 
-            console.log('DecodedUsers',decodedJwt.user.password);
+            // console.log('DecodedUsers',decodedJwt.user.password);
             Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
                 if(err){
-                    console.log(err)
+                    // console.log(err)
                 }
                 else if(docs){
-                    console.log(docs)
+                    // console.log(docs)
                     if(docs.password === decodedJwt.user.password){
                         req.token = bearerHeader;
                         next();

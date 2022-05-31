@@ -102,7 +102,7 @@ Router.post('/getautofee',(req,res)=>{
         
    })
    .catch((err)=>{
-       console.log(err)
+    //    console.log(err)
     //    res.send({
     //        "message":err,
     //        "status":false
@@ -151,7 +151,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     
                     let status = 'Processing';
                     let insert = await updateDepositStatus(req.body,status);
-                    console.log('Deposit-Processing')
+                    // console.log('Deposit-Processing')
                     if(insert[0]){
                         let saveNotificationx = await saveNotification(req.body,status)
                     }
@@ -177,7 +177,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     if(docs.processing_state !== 2){
                         let status = 'Transaction Completed';
                         let insert = await updateDepositStatus(req.body,status);
-                        console.log('Deposit-Completed1')
+                        // console.log('Deposit-Completed1')
                         if(insert[0]){
                             //NOtification
                             let saveNotificationx = await saveNotification(req.body,status)
@@ -194,7 +194,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                             await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
                             res.sendStatus(200);
                         }
-                        console.log('Deposit-Completed2')
+                        // console.log('Deposit-Completed2')
                       
                         
                         
@@ -202,7 +202,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     
                 }
                 else{
-                    console.log('Transaction Completed Already',req.body)
+                    // console.log('Transaction Completed Already',req.body)
                     // res.sendStatus(200);
                     
                    
@@ -238,7 +238,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         res.sendStatus(200);
                     }
                     else{
-                        console.log('Transaction Failed',req.body)
+                        // console.log('Transaction Failed',req.body)
                         res.sendStatus(200);
                         
                        
@@ -272,7 +272,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         res.sendStatus(200);
                     }
                     else{
-                        console.log('Transaction Cancelled',req.body)
+                        // console.log('Transaction Cancelled',req.body)
                         res.sendStatus(200);
                         
                        
@@ -341,7 +341,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         res.sendStatus(200);
                     }
                     else{
-                        console.log('Transaction Unsuccessful',req.body)
+                        // console.log('Transaction Unsuccessful',req.body)
                         res.sendStatus(200);
                         
                        
@@ -466,11 +466,11 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         })
    
                     }
-                    console.log('Transaction Completed',req.body)
+                    // console.log('Transaction Completed',req.body)
                     res.sendStatus(200); 
                 }
                 else{
-                    console.log('Transaction Completed Already',req.body)
+                    // console.log('Transaction Completed Already',req.body)
                     res.sendStatus(200);
                     
                    
@@ -529,7 +529,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         
                         let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
                         let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
-                        console.log('Transaction Failed',req.body)
+                        // console.log('Transaction Failed',req.body)
                         if(Reversal){
                             res.sendStatus(200);
                         }
@@ -541,7 +541,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         
                     }
                     else{
-                        console.log('Transaction Failed',req.body)
+                        // console.log('Transaction Failed',req.body)
                         res.sendStatus(200);
                         
                        
@@ -590,7 +590,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         }
                         let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
                         let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
-                        console.log('Transaction Failed',req.body)
+                        // console.log('Transaction Failed',req.body)
                         if(Reversal){
                             res.sendStatus(200);
                         }
@@ -602,7 +602,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         
                     }
                     else{
-                        console.log('Transaction Cancelled',req.body)
+                        // console.log('Transaction Cancelled',req.body)
                         res.sendStatus(200);
                         
                        
@@ -651,7 +651,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         }
                         let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
                         let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
-                        console.log('Transaction Failed',req.body)
+                        // console.log('Transaction Failed',req.body)
                         if(Reversal){
                             res.sendStatus(200);
                         }
@@ -663,7 +663,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         
                     }
                     else{
-                        console.log('Transaction Dropped',req.body)
+                        // console.log('Transaction Dropped',req.body)
                         res.sendStatus(200);
                         
                        
@@ -708,11 +708,11 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             
                             
                         }
-                        console.log('Transaction Unsuccessful',req.body)
+                        // console.log('Transaction Unsuccessful',req.body)
                         res.sendStatus(200);
                     }
                     else{
-                        console.log('Transaction Unsuccessful',req.body)
+                        // console.log('Transaction Unsuccessful',req.body)
                         res.sendStatus(200);
                         
                        
@@ -748,7 +748,7 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     let CheckAddressValidityVar = await CheckAddressValidity(receipentAddress,wallet_type);
 
     if(CheckAddressValidityVar[0] && CheckAddressValidityVar[1] ){
-        console.log('Hello',CheckAddressValidityVar)
+        // console.log('Hello',CheckAddressValidityVar)
         let jupitAddress = await JupitCustomerCheck(receipentAddress,wallet_type);
         
         if(jupitAddress.length > 0){
@@ -759,7 +759,7 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
         }
     }
     else{
-        console.log('Hello',CheckAddressValidityVar)
+        // console.log('Hello',CheckAddressValidityVar)
         res.status(403).send('Invalid Wallet Address');
     }
    
@@ -874,7 +874,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     })
                 }
                 else{
-                    console.log(WalletCallback[0]);
+                    // console.log(WalletCallback[0]);
                     res.status(403).send("Internal Server Error..")
                     // res.json({
                     //     "Message":"Internal Server Error..",
@@ -909,7 +909,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     })
                 }
                 else{
-                    console.log(WalletCallback[0]);
+                    // console.log(WalletCallback[0]);
                     res.status(403).send("Internal Server Error..")
                     // res.json({
                     //     "Message":"Internal Server Error..",
@@ -940,7 +940,7 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
     const userid = req.body.userid;
     const email= req.body.email
     //{$and:[{read:'unread'}]}
-    console.log(req.body)
+    // console.log(req.body)
     Notification.find({ 
         $and:[
             {
@@ -1094,7 +1094,7 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                 // return false;
                 let fee = parseFloat(auto_fee * 226 * 0.00000001 ).toFixed(8);
                 let totalAmount  = parseFloat(fee + amount).toFixed(8)
-                console.log(totalAmount)
+                // console.log(totalAmount)
                 
                 if(docs.btc_wallet[0].balance > totalAmount ){
                     
@@ -1106,12 +1106,12 @@ Router.post('/transfer/asset',middlewareVerify,(req,res)=>{
                         if(jupitAddress[0]=== "JupitCustomer"){
                             let SubFundToWallet = await SubFund(docs._id,parseFloat(amount).toFixed(8),wallets_type,fee,docs.btc_wallet[0].address,recipentAddress);
                             
-                            console.log('SubFundWallet',SubFundToWallet)
+                            // console.log('SubFundWallet',SubFundToWallet)
                             
                             if(SubFundToWallet){
-                                console.log('SubFundWalletII',SubFundToWallet)
+                                // console.log('SubFundWalletII',SubFundToWallet)
                                 let AddFundToWallet = await AddFund(recipentAddress,parseFloat(amount).toFixed(8));
-                                console.log(AddFundToWallet)
+                                // console.log(AddFundToWallet)
                                 if(AddFundToWallet[0]){
                                     res.json({
                                         "Message":'Transaction Was Successful',
@@ -1215,7 +1215,7 @@ Router.post('/update/read',middlewareVerify,(req,res)=>{
     req.body.forEach(d=>{
         Notification.findByIdAndUpdate(d,{"read":"read"},function(err,result){
             if(err){
-                console.log('MyError',err);
+                // console.log('MyError',err);
                 res.status(403).send(err)
 
             }
@@ -1326,7 +1326,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
         
    })
    .catch((err)=>{
-    console.log(err)
+    // console.log(err)
     // return new Promise(function(resolve,reject){
     //     resolve(err.response.data);
     // })
@@ -1462,7 +1462,7 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
         
    })
    .catch((err)=>{
-    console.log(err)
+    // console.log(err)
     // return new Promise(function(resolve,reject){
     //     resolve(err.response.data);
     // })
@@ -1660,13 +1660,13 @@ async function CheckAddressValidity (address,walletType){
         }
     })
     .then(res=>{
-        console.log('Data',res.data)
-        console.log('Data',res.data.result[0].valid)
+        // console.log('Data',res.data)
+        // console.log('Data',res.data.result[0].valid)
         return[true,res.data.result[0].valid]
        
     })
     .catch((error)=>{
-        console.log('Error',error)
+        // console.log('Error',error)
         return [false,error.response? error.response.data.message: 'No Connection' ]
     })
     return x;
@@ -1796,9 +1796,9 @@ async function SubFund(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress
                         
                         let oldValue = docs.btc_wallet[0].balance;
                         let newValue =   parseFloat(oldValue) - parseFloat(amount);
-                        console.log('oldValue',oldValue);
+                        // console.log('oldValue',oldValue);
                         
-                        console.log('newValue',newValue);
+                        // console.log('newValue',newValue);
                        let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8),'address':fromAddress}}},function(err,docs){
                            if(err){
                                 return [err,false]
@@ -1975,7 +1975,7 @@ async function middlewareVerify(req,res,next){
 
             Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
                 if(err){
-                    console.log(err)
+                    // console.log(err)
                 }
                 else if(docs){
                     if(docs.password === decodedJwt.user.password){
@@ -1983,7 +1983,7 @@ async function middlewareVerify(req,res,next){
                         next();
                     }
                     if(docs.password != decodedJwt.user.password){
-                        console.log('Wrong password');
+                        // console.log('Wrong password');
                         res.sendStatus(403);
                     }
                     // if(docs.SessionMonitor === "Active"){
@@ -2096,7 +2096,7 @@ async function middlewareVerify(req,res,next){
 //    return generateAutoFee;
 // }
 async function JupitCustomerCheck(addr,wallet){
-    console.log('wallet_type',wallet)
+    // console.log('wallet_type',wallet)
     let result = [];
     if(wallet === "BTC"){
         return  await Usermodel.find({'btc_wallet.address':addr},function(err,docs){
@@ -2180,7 +2180,7 @@ const options = {
 }
 
 const req = https.request(options, res => {
-  console.log(`statusCode: ${res.statusCode}`)
+//   console.log(`statusCode: ${res.statusCode}`)
   
 
   res.on('data', d => {
@@ -2242,11 +2242,11 @@ async function activateUSDTToken(){
         }
         })
         .then(res=>{
-            console.log(res.data)
+            // console.log(res.data)
             return [res.data]
         })
         .catch((error)=>{
-        console.log('Error',error.response)
+        // console.log('Error',error.response)
         return [error.response.data]
 
     })

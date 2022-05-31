@@ -40,7 +40,7 @@ cloudinary.config({
 const router = express.Router();
 
 router.get('/me',(req,res)=>{
-    console.log('Welcome to Verify me');
+    // console.log('Welcome to Verify me');
     
     const url = "https://api.verified.africa/sfx-verify/v3/id-service/"
     var params = {
@@ -166,7 +166,7 @@ router.post('/getChart/data',async (req,res)=>{
     ])
 
      res.json(dateToken);
-      console.log(dateToken);
+    //   console.log(dateToken);
          
         
   
@@ -236,7 +236,7 @@ router.get('/aggregate',async (req,res)=>{
       ]);
     
       res.json(docs);
-      console.log(docs);
+    //   console.log(docs);
 })
 
 router.post('/addCard',async(req,res)=>{
@@ -351,12 +351,12 @@ router.post('/giftCardApi/brandname',async (req,res)=>{
         }
     })
     .then(result=>{
-        console.log(result.data)
+        // console.log(result.data)
         res.json(result.data)
         
     })
     .catch((error)=>{
-        console.log(error.response)
+        // console.log(error.response)
         res.json(error.response)
     })
 })
@@ -423,7 +423,7 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
 
             transporter.sendMail(mailData, function (err, info) {
                 if(err){
-                    console.log(err);
+                    // console.log(err);
                     res.send({"message":"An Error Occurred","callback":err})
                 }
                 
@@ -457,9 +457,9 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                     res.json(error)
                 }
                 //res.json(result.secure_url);
-                console.log('Result',result)
+                // console.log('Result',result)
                 if(result){
-                    console.log('myResult',result)
+                    // console.log('myResult',result)
                     giftcardImages.findOne({unique_id:unique_id},async (err,docs)=>{
                         if(err){
                             res.status(400).send(err);
@@ -710,10 +710,10 @@ router.post('/sell/coin',(req,res)=>{
 })
 
 router.post('/change/wallet/pin',(req,res)=>{
-    console.log(req.body)
+    // console.log(req.body)
     Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
         if(err){
-            console.log(err)
+            // console.log(err)
             res.status(400).send({
                 "message":err,
                 "status":false
