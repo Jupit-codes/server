@@ -1780,6 +1780,7 @@ async function middlewareVerify(req,res,next){
                 console.log(err)
             }
             else if(docs){
+                console.log(docs)
                 if(docs.password === decodedJwt.user.password){
                     req.token = bearerHeader;
                     next();
