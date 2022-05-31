@@ -763,7 +763,7 @@ router.post('/check/pin',(req,res)=>{
                 })
             }
             else{
-                res.send({
+                res.status(400).send({
                     "message":"Invalid Pin",
                     "status":false
                 })
