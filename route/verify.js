@@ -733,7 +733,7 @@ router.post('/change/wallet/pin',(req,res)=>{
                             })
                         }
                         else if(docs){
-                            res.status(400).send({
+                            res.send({
                                 "message":"Pin Has been Successfully Changed",
                                 "status":true
                             })
