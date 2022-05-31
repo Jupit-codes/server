@@ -1779,13 +1779,13 @@ async function middlewareVerify(req,res,next){
             if(err){
                 console.log(err)
             }
-            else{
+            else if(docs){
                 if(docs.password === decodedJwt.user.password){
                     req.token = bearerHeader;
                     next();
                 }
                 if(docs.password != decodedJwt.user.password){
-                    console.log('Wrong password');
+                   
                     res.sendStatus(403);
                 }
                 // if(docs.SessionMonitor === "Active"){
@@ -1798,6 +1798,9 @@ async function middlewareVerify(req,res,next){
                 // }
                 
                 // const validPassword = bcrypt.compareSync(password, docs.password);
+            }
+            else if(!docs){
+                res.sendStatus(403);
             }
         })
         
