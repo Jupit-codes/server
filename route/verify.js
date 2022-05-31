@@ -710,17 +710,22 @@ router.post('/sell/coin',(req,res)=>{
 })
 
 router.post('/change/wallet/pin',(req,res)=>{
+    console.log(req.body)
     Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
         if(err){
+            console.log(err)
             res.status(400).send({
                 "message":err,
                 "status":false
             })
         }
         else if(docs){
-            const validPin = bcrypt.compareSync(req.body.oldpin, docs.wallet_pin);
+            console.log(docs.wallet_pin)
+            let validPin = bcrypt.compareSync(req.body.oldpin, docs.wallet_pin);
                 if(validPin){
-                    Usermodel.findOneAndUpdate({_id:req.body.userid},{$set:{'wallet_pin':req.body.newpin}},(err,docs)=>{
+                    const salt =  bcrypt.genSaltSync(10);
+                    let new_pin =  bcrypt.hashSync(req.body.newpin, salt)
+                    Usermodel.findOneAndUpdate({_id:req.body.userid},{$set:{'wallet_pin':new_pin}},(err,docs)=>{
                         if(err){
                             res.status(400).send({
                                 "message":"Change Pin Failed",
@@ -733,6 +738,12 @@ router.post('/change/wallet/pin',(req,res)=>{
                                 "status":true
                             })
                         }
+                    })
+                }
+                else{
+                    res.status(400).send({
+                        "message":'Invalid Old Pin',
+                        "status":false
                     })
                 }
             
