@@ -720,7 +720,7 @@ router.post('/change/wallet/pin',(req,res)=>{
             })
         }
         else if(docs){
-            console.log(docs.wallet_pin)
+            // console.log(docs.wallet_pin)
             let validPin = bcrypt.compareSync(req.body.oldpin, docs.wallet_pin);
                 if(validPin){
                     const salt =  bcrypt.genSaltSync(10);
