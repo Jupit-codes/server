@@ -699,7 +699,7 @@ router.post('/sell/coin',(req,res)=>{
 
                 })
     
-                
+
                 res.send({
                     "message":'USDT Coin Successfully Sold',
                     "status":true
@@ -718,22 +718,24 @@ router.post('/change/wallet/pin',(req,res)=>{
             })
         }
         else if(docs){
-            if(docs.wallet_pin === req.body.oldpin ){
-                Usermodel.findOneAndUpdate({_id:req.body.userid},{$set:{'wallet_pin':req.body.newpin}},(err,docs)=>{
-                    if(err){
-                        res.status(400).send({
-                            "message":"Change Pin Failed",
-                            "status":false
-                        })
-                    }
-                    else if(docs){
-                        res.status(400).send({
-                            "message":"Pin Has been Successfully Changed",
-                            "status":true
-                        })
-                    }
-                })
-            }
+            const validPin = bcrypt.compareSync(walletpin, docs.wallet_pin);
+                if(validPin){
+                    Usermodel.findOneAndUpdate({_id:req.body.userid},{$set:{'wallet_pin':req.body.newpin}},(err,docs)=>{
+                        if(err){
+                            res.status(400).send({
+                                "message":"Change Pin Failed",
+                                "status":false
+                            })
+                        }
+                        else if(docs){
+                            res.status(400).send({
+                                "message":"Pin Has been Successfully Changed",
+                                "status":true
+                            })
+                        }
+                    })
+                }
+            
         }
     })
 })
