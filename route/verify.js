@@ -737,5 +737,38 @@ router.post('/change/wallet/pin',(req,res)=>{
     })
 })
 
+router.post('/check/pin',(res,req)=>{
+    // if(err){
+    //     res.status(400).send({
+    //         "message":err,
+    //         "status":false
+    //     })
+    // }
+    Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            const validPassword = bcrypt.compareSync(req.body.walletpin, docs.wallet_pin);
+            if(validPassword){
+                res.send({
+                    "message":"Pin Verified",
+                    "status":true
+                })
+            }
+            else{
+                res.send({
+                    "message":"Invalid Pin",
+                    "status":false
+                })
+            }
+        }
+    })
+
+})
+
 
 export default router
