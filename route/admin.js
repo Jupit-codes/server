@@ -183,6 +183,12 @@ router.get('/get/all/users',middlewareVerify,(req,res)=>{
                 "status":true
             })
         }
+        else if(!docs){
+            res.status(400).send({
+                "message":"No User Found",
+                "status":false
+            })
+        }
     })
 })
 
