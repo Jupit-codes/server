@@ -737,7 +737,7 @@ router.post('/change/wallet/pin',(req,res)=>{
     })
 })
 
-router.post('/check/pin',(res,req)=>{
+router.post('/check/pin',(req,res)=>{
     // if(err){
     //     res.status(400).send({
     //         "message":err,
