@@ -19,7 +19,7 @@ import { randomUUID } from 'crypto'
 import giftcardImages from "../model/giftcardImages.js";
 import giftcardtransactions from "../model/giftcardtransactions.js";
 import buy_n_sell from "../model/buy_n_sell.js";
-
+import bcrypt from 'bcryptjs'
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
