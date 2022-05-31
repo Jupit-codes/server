@@ -1971,36 +1971,42 @@ async function middlewareVerify(req,res,next){
     else{
         
         let decodedJwt = await parseJwt(bearerHeader);
-        console.log('Decoded',decodedJwt.user.password);
-        Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
-            if(err){
-                console.log(err)
-            }
-            else if(docs){
-                if(docs.password === decodedJwt.user.password){
-                    req.token = bearerHeader;
-                    next();
+        if(decodedJwt){
+
+            Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+                if(err){
+                    console.log(err)
                 }
-                if(docs.password != decodedJwt.user.password){
-                    console.log('Wrong password');
+                else if(docs){
+                    if(docs.password === decodedJwt.user.password){
+                        req.token = bearerHeader;
+                        next();
+                    }
+                    if(docs.password != decodedJwt.user.password){
+                        console.log('Wrong password');
+                        res.sendStatus(403);
+                    }
+                    // if(docs.SessionMonitor === "Active"){
+                    //     req.token = bearerHeader;
+                    //     next();
+                    // }
+                    // if(docs.SessionMonitor != "Active"){
+                    //     console.log('Account Blocked');
+                    //     res.sendStatus(403);
+                    // }
+                    
+                    // const validPassword = bcrypt.compareSync(password, docs.password);
+                }
+                else if(!docs){
                     res.sendStatus(403);
                 }
-                // if(docs.SessionMonitor === "Active"){
-                //     req.token = bearerHeader;
-                //     next();
-                // }
-                // if(docs.SessionMonitor != "Active"){
-                //     console.log('Account Blocked');
-                //     res.sendStatus(403);
-                // }
-                
-                // const validPassword = bcrypt.compareSync(password, docs.password);
-            }
-            else if(!docs){
-                res.sendStatus(403);
-            }
-        })
-        
+            })
+
+        }
+        else{
+            res.sendStatus(403)
+        }
+  
     }
 }
 
