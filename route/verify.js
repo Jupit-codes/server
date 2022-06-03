@@ -846,15 +846,16 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
 
 
 function verifyResponse(req,res,next){
-    const bearerHeader = req.headers['authorization'];
+    const bearerHeader = req.headers['Authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         console.log('A false Webhook Forbidden')
         res.sendStatus(403);
 
     }
     else{
-        let splitToken = bearerHeader.split(" ");
-        if(process.env.MY_TEST_TOKEN  === splitToken[1]){
+        console.log(process.env.MY_TEST_TOKEN)
+        const bearerToken = bearerHeader.split(' ')[1];
+        if(process.env.MY_TEST_TOKEN  === bearerToken){
             req.token = splitToken;
             next();
         }

@@ -1783,7 +1783,7 @@ async function middlewareVerify(req,res,next){
         // console.log(bearerHeader);
         
         
-        jwt.verify(bearerToken,'secretkey',async(err,authData)=>{
+        jwt.verify(bearerHeader,'secretkey',async(err,authData)=>{
             if(err){
                 
                 res.sendStatus(403);
