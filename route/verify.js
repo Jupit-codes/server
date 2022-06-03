@@ -20,6 +20,7 @@ import giftcardImages from "../model/giftcardImages.js";
 import giftcardtransactions from "../model/giftcardtransactions.js";
 import buy_n_sell from "../model/buy_n_sell.js";
 import bcrypt from 'bcryptjs'
+import deposit_webhook from "../model/deposit_webhook.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -788,13 +789,46 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
 
     //res.status(200).end();
 
-    res.send({
-        'status': true,
-        'message': "",
-        "response_code": "00"
+    
+
+    deposit_webhook.findOne({reference:req.body.reference},async (err,docs)=>{
+        if(err){
+            // res.status(400).send({
+            //     "message":err,
+            //     "status":false
+            // })
+            res.send({
+                'status': true,
+                'message': "",
+                "response_code": "02"
+            })
+        }
+        else if(docs){
+            res.send({
+                'status': true,
+                'message': "",
+                "response_code": "01"
+            })
+        }
+        else if(!docs){
+            await deposit_webhook.create({
+                reference:req.body.reference,
+                account_number:req.body.account_number,
+                amount:req.body.amount,
+
+            })
+
+            res.send({
+                'status': true,
+                'message': "",
+                "response_code": "00"
+            })
+
+        }
     })
 
     
+
 
     
    
