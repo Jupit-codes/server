@@ -854,7 +854,7 @@ function verifyResponse(req,res,next){
     }
     else{
         let splitToken = bearerHeader.split(" ");
-        if(process.env.TEST_TOKEN === splitToken[1]){
+        if(process.env.MY_TEST_TOKEN  === splitToken[1]){
             req.token = splitToken;
             next();
         }
