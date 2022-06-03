@@ -865,8 +865,9 @@ function verifyResponse(req,res,next){
             next();
         }
         else{
-            res.sendStatus(403);
             console.log('Not Equals')
+            res.sendStatus(403);
+            
         }
         
     }
