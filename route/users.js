@@ -378,7 +378,7 @@ router.post('/login/2FA',(req,res)=>{
                             const verified = SpeakEasy.totp.verify({secret,encoding:'base32',token:token,window:1})
                             
                             if(verified){
-                                jwt.sign({user:docs},'secretkey',(err,token)=>{
+                                jwt.sign({user:docs},'secretkey',{expiresIn:'1h'},(err,token)=>{
                                     res.json({
                                         token,
                                         docs,
@@ -1780,6 +1780,12 @@ async function middlewareVerify(req,res,next){
         res.sendStatus(403);
     }
     else{
+        jwt.verify(bearerHeader,'secretkey',(err,authData)=>{
+            if(err){
+                res.sendStatus(403);
+            }
+            
+        })
         
         let decodedJwt = await parseJwt(bearerHeader);
         if(decodedJwt){

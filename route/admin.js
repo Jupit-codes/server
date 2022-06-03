@@ -62,7 +62,7 @@ router.post('/checklogin',(req,res)=>{
                             }
                             else if(document){
                                   
-                                jwt.sign({admin:document},'secretkey',(err,token)=>{
+                                jwt.sign({admin:document},'secretkey',{expiresIn:1200},(err,token)=>{
                                     res.json({
                                         token,
                                         document,
@@ -235,10 +235,14 @@ async function middlewareVerify(req,res,next){
         res.status(403).send('Forbidden Request');
     }
     else{
-        
+        jwt.verify(bearerHeader,'secretkey',(err,authData)=>{
+            if(err){
+                res.sendStatus(403);
+            }
+            
+        })
         let decodedJwt = await parseJwt(bearerHeader);
-        // console.log('Decoded',decodedJwt.user.password);
-        console.log(decodedJwt);
+      
         if(!decodedJwt){
             res.status(403).send({"message":"Forbidden Request"});
             return false;
