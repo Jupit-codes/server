@@ -368,16 +368,8 @@ function middlewareVerify(req,res,next){
         res.sendStatus(403);
     }
     else{
-        jwt.verify(bearerHeader,'secretkey',(err,authData)=>{
-            if(err){
-                res.sendStatus(403);
-            }
-            else{
-                req.token = bearerHeader;
+        req.token = bearerHeader;
                 next();
-            }
-            
-        })
        
     }
 }

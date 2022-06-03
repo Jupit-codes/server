@@ -235,12 +235,7 @@ async function middlewareVerify(req,res,next){
         res.status(403).send('Forbidden Request');
     }
     else{
-        jwt.verify(bearerHeader,'secretkey',(err,authData)=>{
-            if(err){
-                res.sendStatus(403);
-            }
-            
-        })
+        
         let decodedJwt = await parseJwt(bearerHeader);
       
         if(!decodedJwt){

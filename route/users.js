@@ -570,49 +570,50 @@ router.get('/users/test',middlewareVerify,(req,res)=>{
 
     })
 })
-router.get('/users',(req,res,next)=>{
+router.get('/users',async(req,res,next)=>{
     
     const bearerHeader = req.headers['authorization'];
-    // console.log(bearerHeader)
+    
 
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         res.sendStatus(403)
     }
     else{
-        const bearerToken = bearerHeader.split(' ')[1];
-        
-        
-        jwt.verify(bearerToken,(err,authData)=>{
+        Usermodel.find({},(err,users)=>{
             if(err){
-                res.sendStatus(403);
+                res.json({
+                    'message':err,
+                    'status':false
+                })
+            }
+            else if(users){
+                res.send({
+                    'message':users,
+                    'status':true,
+                    authData
+                })
             }
             else{
-
-                Usermodel.find({},(err,users)=>{
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    else if(users){
-                        res.send({
-                            'message':users,
-                            'status':true,
-                            authData
-                        })
-                    }
-                    else{
-                        res.send({
-                            'message':'NO User Found',
-                            'status':true,
-                            authData
-                        })
-                    }
+                res.send({
+                    'message':'NO User Found',
+                    'status':true,
+                    authData
                 })
-                
             }
         })
+        
+        
+    //   jwt.verify(bearerHeader,'secretkey',(err,authData)=>{
+    //         if(err){
+    //             console.log(err)
+    //             res.sendStatus(403);
+    //         }
+    //         else{
+
+                
+                
+    //         }
+    //     })
 
     }
     
@@ -1780,57 +1781,84 @@ async function middlewareVerify(req,res,next){
         res.sendStatus(403);
     }
     else{
-        // console.log(bearerHeader);
-        
-        
-        jwt.verify(bearerHeader,'secretkey',async(err,authData)=>{
+        Usermodel.find({},(err,users)=>{
             if(err){
-                
-                res.sendStatus(403);
+                res.json({
+                    'message':err,
+                    'status':false
+                })
+            }
+            else if(users){
+                res.send({
+                    'message':users,
+                    'status':true,
+                    authData
+                })
             }
             else{
-                let decodedJwt = await parseJwt(bearerHeader);
-                if(decodedJwt){
+                res.send({
+                    'message':'NO User Found',
+                    'status':true,
+                    authData
+                })
+            }
+        })
+        // console.log(bearerHeader);
+        // try {
+        //     var decoded = jwt.verify(bearerHeader, 'secretkey');
+        //     res.send(decoded)
+        //   } catch(err) {
+        //    res.send(err)
+        //   }
         
-                    Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
-                        if(err){
-                            // console.log(err)
-                        }
-                        else if(docs){
-                            // console.log(docs)
-                            if(docs.password === decodedJwt.user.password){
-                                req.token = bearerHeader;
-                                next();
-                            }
-                            if(docs.password != decodedJwt.user.password){
+        // jwt.verify(bearerHeader,'secretkey',(err,authData)=>{
+        //     if(err){
+                
+        //         res.sendStatus(403);
+        //     }
+        //     else{
+        //         let decodedJwt =  parseJwt(bearerHeader);
+        //         if(decodedJwt){
+        
+        //             Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+        //                 if(err){
+        //                     // console.log(err)
+        //                 }
+        //                 else if(docs){
+        //                     // console.log(docs)
+        //                     if(docs.password === decodedJwt.user.password){
+        //                         req.token = bearerHeader;
+        //                         next();
+        //                     }
+        //                     if(docs.password != decodedJwt.user.password){
                                
-                                res.sendStatus(403);
-                            }
-                            // if(docs.SessionMonitor === "Active"){
-                            //     req.token = bearerHeader;
-                            //     next();
-                            // }
-                            // if(docs.SessionMonitor != "Active"){
-                            //     console.log('Account Blocked');
-                            //     res.sendStatus(403);
-                            // }
+        //                         res.sendStatus(403);
+        //                     }
+        //                     // if(docs.SessionMonitor === "Active"){
+        //                     //     req.token = bearerHeader;
+        //                     //     next();
+        //                     // }
+        //                     // if(docs.SessionMonitor != "Active"){
+        //                     //     console.log('Account Blocked');
+        //                     //     res.sendStatus(403);
+        //                     // }
                             
-                            // const validPassword = bcrypt.compareSync(password, docs.password);
-                        }
-                        else if(!docs){
-                            res.sendStatus(403);
-                        }
-                    })
+        //                     // const validPassword = bcrypt.compareSync(password, docs.password);
+        //                 }
+        //                 else if(!docs){
+        //                     res.sendStatus(403);
+        //                 }
+        //             })
                     
         
-                }
-                else{
-                    res.sendStatus(403);
-                }
+        //         }
+        //         else{
+        //             res.sendStatus(403);
+        //         }
                 
-            }
+        //     }
             
-        })
+        // })
     }
 }
 
