@@ -427,7 +427,7 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
 
 router.post('/users/bank',middlewareVerify,(req,res)=>{
    
-    Bankmodel.findOne({email:req.body.email},function(err,docs){
+    Bankmodel.findOne({email:req.body.email},(err,docs)=>{
         if(err){
             res.status(403).send(err);
         }
@@ -1780,53 +1780,57 @@ async function middlewareVerify(req,res,next){
         res.sendStatus(403);
     }
     else{
-        jwt.verify(bearerHeader,'secretkey',(err,authData)=>{
+        // console.log(bearerHeader);
+        
+        
+        jwt.verify(bearerToken,'secretkey',async(err,authData)=>{
             if(err){
+                
                 res.sendStatus(403);
+            }
+            else{
+                let decodedJwt = await parseJwt(bearerHeader);
+                if(decodedJwt){
+        
+                    Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+                        if(err){
+                            // console.log(err)
+                        }
+                        else if(docs){
+                            // console.log(docs)
+                            if(docs.password === decodedJwt.user.password){
+                                req.token = bearerHeader;
+                                next();
+                            }
+                            if(docs.password != decodedJwt.user.password){
+                               
+                                res.sendStatus(403);
+                            }
+                            // if(docs.SessionMonitor === "Active"){
+                            //     req.token = bearerHeader;
+                            //     next();
+                            // }
+                            // if(docs.SessionMonitor != "Active"){
+                            //     console.log('Account Blocked');
+                            //     res.sendStatus(403);
+                            // }
+                            
+                            // const validPassword = bcrypt.compareSync(password, docs.password);
+                        }
+                        else if(!docs){
+                            res.sendStatus(403);
+                        }
+                    })
+                    
+        
+                }
+                else{
+                    res.sendStatus(403);
+                }
+                
             }
             
         })
-        
-        let decodedJwt = await parseJwt(bearerHeader);
-        if(decodedJwt){
-
-            // console.log('DecodedUsers',decodedJwt.user.password);
-            Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
-                if(err){
-                    // console.log(err)
-                }
-                else if(docs){
-                    // console.log(docs)
-                    if(docs.password === decodedJwt.user.password){
-                        req.token = bearerHeader;
-                        next();
-                    }
-                    if(docs.password != decodedJwt.user.password){
-                       
-                        res.sendStatus(403);
-                    }
-                    // if(docs.SessionMonitor === "Active"){
-                    //     req.token = bearerHeader;
-                    //     next();
-                    // }
-                    // if(docs.SessionMonitor != "Active"){
-                    //     console.log('Account Blocked');
-                    //     res.sendStatus(403);
-                    // }
-                    
-                    // const validPassword = bcrypt.compareSync(password, docs.password);
-                }
-                else if(!docs){
-                    res.sendStatus(403);
-                }
-            })
-            
-
-        }
-        else{
-            res.sendStatus(403);
-        }
-        
     }
 }
 
