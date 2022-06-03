@@ -859,12 +859,14 @@ function verifyResponse(req,res,next){
         const bearerToken = bearerHeader.split(' ')[1];
         console.log('Bearer',bearerToken);
         console.log('process',process.env.TEST_TOKEN);
-        if(process.env.TEST_TOKEN === bearerToken){
+        let token = "29A492021F4B709A8D1152C3EF4D32DC5A7092723ECAC4C511781003584B48873CCBFEBDEAE89CF22ED1CB1A836213549BC6638A3B563CA7FC009BEB3BC30CF8"
+        if(token == bearerToken){
             req.token = splitToken;
             next();
         }
         else{
             res.sendStatus(403);
+            console.log('Not Equals')
         }
         
     }
