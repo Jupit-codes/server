@@ -582,7 +582,7 @@ router.get('/users',(req,res,next)=>{
         const bearerToken = bearerHeader.split(' ')[1];
         
         
-        jwt.verify(bearerToken,'secretkey',(err,authData)=>{
+        jwt.verify(bearerToken,(err,authData)=>{
             if(err){
                 res.sendStatus(403);
             }
