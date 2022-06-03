@@ -16,7 +16,7 @@ import idcardverification from "../model/idcardverification.js";
 import giftcardImages from '../model/giftcardImages.js'
 import axios from "axios";
 import giftcardtransactions from "../model/giftcardtransactions.js"
-
+import NodeDateTime from 'node-datetime';
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -39,7 +39,7 @@ router.get('/',(req,res)=>{
 });
 router.post('/checklogin',(req,res)=>{
 
-    admin.findOne({username:req.body.username},(err,docs)=>{
+    admin.findOne({username:req.body.username},async (err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
@@ -47,16 +47,39 @@ router.post('/checklogin',(req,res)=>{
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
 
             if(validPassword){
-                jwt.sign({admin:docs},'secretkey',(err,token)=>{
-                    res.json({
-                        token,
-                        docs,
-                        'status':true
-                    }),
-                   "Stack",{
-                       expiresIn:"1h"
-                   }
-                })
+                    var dt = NodeDateTime.create();
+                    var formatted = dt.format('Y-m-d H:M:S');
+                    
+                    let updateAdminLogin = await admin.findOneAndUpdate({_id:docs._id},{$set:{'loginTime':formatted}})
+                    
+                    if(updateAdminLogin){
+                       // console.log('updateAdmin',updateAdminLogin)
+                        admin.findOne({_id:docs._id},(err,document)=>{
+                            if(err){
+                                res.status(400).send({
+                                    "message":err
+                                })
+                            }
+                            else if(document){
+                                  
+                                jwt.sign({admin:document},'secretkey',(err,token)=>{
+                                    res.json({
+                                        token,
+                                        document,
+                                        'status':true
+                                    }),
+                                   "Stack",{
+                                       expiresIn:"1h"
+                                   }
+                                })
+                            }
+                        })
+                    }
+                    else{
+                        res.status(400).send({"message":'Internal Server Error',"status":false});
+                    }
+                  
+                  
                
             }
             else{

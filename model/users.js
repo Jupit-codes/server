@@ -44,6 +44,9 @@ const userSchema = mongoose.Schema({
         type:'String',
         default:'Active'
     },
+    loginTime:{
+        type:'String'
+    },
     updated: { type: Date, default: Date.now },
 })
 

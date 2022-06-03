@@ -784,5 +784,45 @@ router.post('/check/pin',(req,res)=>{
 
 })
 
+router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
+
+    //res.status(200).end();
+
+    res.send({
+        'status': true,
+        'message': "",
+        "response_code": "00"
+    })
+
+    
+
+    
+   
+
+})
+
+
+function verifyResponse(req,res,next){
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+        console.log('A false Webhook Forbidden')
+        res.sendStatus(403);
+
+    }
+    else{
+        let splitToken = bearerHeader.split(" ");
+        if(process.env.TEST_TOKEN === splitToken[1]){
+            req.token = splitToken;
+            next();
+        }
+        else{
+            res.sendStatus(403);
+        }
+        
+    }
+}
+
+
+
 
 export default router

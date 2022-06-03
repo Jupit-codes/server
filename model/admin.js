@@ -34,6 +34,9 @@ const adminSchema = mongoose.Schema({
     changepassword:{
         type:Boolean
     },
+    loginTime:{
+        type:'String'
+    },
     updated: { type: Date, default: Date.now },
 })
 

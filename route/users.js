@@ -26,6 +26,7 @@ import cloudinary from 'cloudinary'
 import changepassword from "../model/changepassword.js";
 import session from "../model/session.js";
 import { readdirSync } from "fs";
+import NodeDateTime from 'node-datetime';
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -669,6 +670,12 @@ router.post('/users/login',(req,res)=>{
                     res.send('Token is Required')
                 }
                 else{
+                    
+                    var dt = NodeDateTime.create();
+                    var formatted = dt.format('Y-m-d H:M:S');
+                    console.log(formatted)
+                    Usermodel.findOneAndUpdate({_id:docs._id},{$set:{loginTime:formatted}})
+
                     jwt.sign({user:docs},'secretkey',{expiresIn:'1h'},(err,token)=>{
                         res.json({
                             token,
