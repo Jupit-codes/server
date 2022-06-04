@@ -21,6 +21,7 @@ import giftcardtransactions from "../model/giftcardtransactions.js";
 import buy_n_sell from "../model/buy_n_sell.js";
 import bcrypt from 'bcryptjs'
 import deposit_webhook from "../model/deposit_webhook.js";
+import bank from "../model/bank.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -174,7 +175,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    notification.deleteMany({},(err,docs)=>{
+    Usermodel.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }

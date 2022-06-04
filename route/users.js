@@ -1406,11 +1406,11 @@ function createCustomerCode(kyc_id,email,phonenumber){
         }
     })
     .then(res=>{
-        // console.log('CustomerCode',res.data.data.customer_code);
+         console.log('CustomerCode',res.data.data.customer_code);
         // console.log('res',res)
         KycModel.findByIdAndUpdate(kyc_id, { 
             $push: { 
-                    naira_wallet: {"balance":0,"address":"00000"},
+                   
                     level1:{
                         "email":email,
                         "status":"Verified"
@@ -1431,7 +1431,7 @@ function createCustomerCode(kyc_id,email,phonenumber){
                     
                 } 
             }).exec();
-            // console.log('Kyc Successfully Created')
+             console.log('Kyc Successfully Created')
             // res.send({"SuccessMessage":"EmailAddress Verified","status":true});
     })
     .catch((err)=>{
