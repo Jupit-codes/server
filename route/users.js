@@ -1201,7 +1201,7 @@ async function createUSDTWalletAddress(userid){
 
 async function createvirtualaccount(userid){
     console.log('userid',userid)
-    let result = await Usermodel.findOne({_id:userid},async (err,docs)=>{
+    let result = await Usermodel.findOne({_id:userid}, (err,docs)=>{
         if(err){
             return [false,'Internal Server Error..V']
         }
@@ -1213,7 +1213,7 @@ async function createvirtualaccount(userid){
                 "bvn":""
             }
 
-            await axios.post(url,params,{ 
+             axios.post(url,params,{ 
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'bearer 29A492021F4B709A8D1152C3EF4D32DC5A7092723ECAC4C511781003584B48873CCBFEBDEAE89CF22ED1CB1A836213549BC6638A3B563CA7FC009BEB3BC30CF8'
@@ -1242,7 +1242,7 @@ async function createvirtualaccount(userid){
         else if(!docs){
             return[false, 'User not found'];
         }
-    }).clone().catch(function(err){ console.log(err);return [false,err]});
+    });
 
     return result;
 }
