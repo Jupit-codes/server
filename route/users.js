@@ -1420,8 +1420,11 @@ function createCustomerCode(kyc_id,email,phonenumber){
                         "event_status":"undefined"
                     },
                     level3:{
-                        "email":email,
-                        "status":"Not Verified"
+                        "idcard_type":'undefined',
+                        "uniqueNumber":'undefined', 
+                        "callbackStatus":'undefined',
+                        "status":false
+                        
                     }
                     
                 } 
