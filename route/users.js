@@ -1518,7 +1518,7 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
                         bvn:req.body.bvn,
                         account_number:req.body.account_number,
                         account_name:req.body.account_name,
-                        bankcode:req.body.bankcode
+                        bank_code:req.body.bankcode
                         
                     })
                 }
