@@ -1200,7 +1200,7 @@ async function createUSDTWalletAddress(userid){
 }
 
 async function createvirtualaccount(userid){
-
+    console.log('userid',userid)
     let result = await Usermodel.findOne({_id:userid},async (err,docs)=>{
         if(err){
             return [false,'Internal Server Error..V']
