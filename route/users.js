@@ -1242,7 +1242,7 @@ async function createvirtualaccount(userid){
         else if(!docs){
             return[false, 'User not found'];
         }
-    })
+    }).clone().catch(function(err){ console.log(err);return [false,err]});
 
     return result;
 }
