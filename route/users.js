@@ -938,7 +938,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                         if(vitualaccount[0]){
                                             console.log(docs._id)
                                             console.log(vitualaccount[1])
-                                               let update =  Usermodel.findOneAndUpdate({_id:docs._id},{$set:{'virtual_account':vitualaccount[1],'email_verification':true}},{new: true},(err,documents)=>{
+                                               let update =  Usermodel.findOneAndUpdate({_id:docs._id},{$set:{'virtual_account':vitualaccount[1],'email_verification':true}},{new: true},async (err,documents)=>{
                                                     if(err){
                                                        res.send({
                                                            "UpdateError":err
@@ -946,7 +946,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                                     }
                                                     else if(documents){
 
-                                                        createKyc(documents._id,documents.email,documents.phonenumber);
+                                                       await createKyc(documents._id,documents.email,documents.phonenumber);
                                                         res.redirect('https://jupitapp.vercel.app/client/signin')
                                                     
                                                             // res.send({
