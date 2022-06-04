@@ -924,7 +924,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                             // console.log('btc_add',btc_add);
                             if(btc_add[0]){
                                 const vitualaccount = await createvirtualaccount(req.params.id);
-                                
+                                console.log("veee",vitualaccount);
                                 if(vitualaccount[0]){
                                     Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
                                         if (err) {
