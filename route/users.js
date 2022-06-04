@@ -429,7 +429,8 @@ router.post('/users/bank',middlewareVerify,(req,res)=>{
    
     Bankmodel.findOne({email:req.body.email},(err,docs)=>{
         if(err){
-            res.status(403).send(err);
+            console.log(err)
+            res.status(400).send(err);
         }
         else if(docs){
             res.send(docs)
