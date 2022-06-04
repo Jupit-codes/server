@@ -968,7 +968,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                      
             }
         }
-    });
+    }).clone().catch(function(err){ console.log(err);return [false,err]});
 })
 
 router.post('/users/register',(req,res)=>{
