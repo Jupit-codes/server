@@ -1028,7 +1028,9 @@ router.post('/users/register',(req,res)=>{
             email:req.body.email,
             password: bcrypt.hashSync(req.body.password, salt),
             phonenumber:req.body.phonenumber,
-            email_verification:false
+            email_verification:false,
+            firstname:req.body.firstname,
+            lastname:req.body.lastname
             
         })
         

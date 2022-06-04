@@ -6,6 +6,19 @@ const userSchema = mongoose.Schema({
         unique:true,
         required: [true, "Required"],
     },
+    firstname:{
+        type:'String',
+        unique:true,
+        required: [true, "Required"],
+    },
+    lastname:{
+        type:'String',
+        unique:true,
+        required: [true, "Required"],
+    },
+    vitual_account:{
+        type:'String',
+    },
     email:{
         type:'String',
         required: [true, "Required"],
