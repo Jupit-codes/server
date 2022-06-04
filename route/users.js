@@ -923,17 +923,24 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                             const btc_add = await createBTCWalletAddress(req.params.id);
                             // console.log('btc_add',btc_add);
                             if(btc_add[0]){
-
-                                Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
-                                            if (err) {
-                                                res.send({"Errormessage":err,"status":false});
-                                            }
-                                            else{
-                                                createKyc(docs._id,docs.email,docs.phonenumber);
-                                                res.redirect('https://jupitapp.vercel.app/client/signin')
-                                            }
-                                            
-                                });
+                                const vitualaccount = await createvirtualaccount(req.params.id)
+                                
+                                if(virtualaccount[0]){
+                                    Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
+                                        if (err) {
+                                            res.send({"Errormessage":err,"status":false});
+                                        }
+                                        else{
+                                            createKyc(docs._id,docs.email,docs.phonenumber);
+                                            res.redirect('https://jupitapp.vercel.app/client/signin')
+                                        }
+                                        
+                                    });
+                                }
+                                else{
+                                    res.send({"ErrorMessage":vitual_account[1],"status":false});
+                                }
+                                
                                
                             }
                             else{
@@ -1191,6 +1198,55 @@ async function createUSDTWalletAddress(userid){
 
     return result;
 }
+
+async function createvirtualaccount(userid){
+
+    let result = await Usermodel.findOne({_id:userid},async (err,docs)=>{
+        if(err){
+            return [false,'Internal Server Error..V']
+        }
+        else if(docs){
+            const url = "https://api.purplepayapp.com/dev_api/v1/test/deposit/create_new_account_number";
+            const params ={
+                "first_name":docs.firstname,
+                "last_name":docs.lastname,
+                "bvn":""
+            }
+
+            await axios.post(url,params,{ 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'bearer 29A492021F4B709A8D1152C3EF4D32DC5A7092723ECAC4C511781003584B48873CCBFEBDEAE89CF22ED1CB1A836213549BC6638A3B563CA7FC009BEB3BC30CF8'
+                }
+                })
+                .then(res=>{
+                    console.log(res.data.data.account_number)
+                    Usermodel.findOneAndUpdate({_id:userid},{$set:{'virtual_account':res.data.data.account_number}},(err,docs)=>{
+                        if(err){
+                            return [false,'Virtual Account Cannot Be Created'];
+                        }
+                        else if(docs){
+                            return [true,'account created'];
+                        }
+                    })
+                    
+                })
+                .catch((error)=>{
+                    // console.log('error',error.response)
+                    return [false,error.response];
+                    
+                    
+                })
+            
+        }
+        else if(!docs){
+            return[false, 'User not found'];
+        }
+    })
+
+    return result;
+}
+
 async function createBTCWalletAddress(userid){
         
     let rand = random(option_rand);
@@ -1318,6 +1374,10 @@ function createCustomerCode(kyc_id,email,phonenumber){
                         "customer_code":res.data.data.customer_code,
                         "integration":res.data.data.integration,
                         "event_status":"undefined"
+                    },
+                    level3:{
+                        "email":email,
+                        "status":"Not Verified"
                     }
                     
                 } 
