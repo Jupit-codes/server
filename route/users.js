@@ -417,7 +417,7 @@ router.post('/users/kyc',middlewareVerify,(req,res)=>{
    
     Kyc.findOne({userid:req.body.userid},function(err,docs){
         if(err){
-            res.status(403).send(err);
+            res.status(400).send(err);
         }
         else if(docs){
             res.send(docs)
