@@ -1975,11 +1975,12 @@ async function middlewareVerify(req,res,next){
 
             Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
                 if(err){
-                    // console.log(err)
+                    console.log(err)
                 }
                 else if(docs){
                     if(docs.password === decodedJwt.user.password){
                         req.token = bearerHeader;
+                        console.log('passed')
                         next();
                     }
                     if(docs.password != decodedJwt.user.password){
