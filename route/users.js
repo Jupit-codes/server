@@ -923,23 +923,78 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                             const btc_add = await createBTCWalletAddress(req.params.id);
                             // console.log('btc_add',btc_add);
                             if(btc_add[0]){
-                                const vitualaccount = await createvirtualaccount(req.params.id);
-                                console.log("veee",vitualaccount);
-                                if(vitualaccount[0]){
-                                    Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
-                                        if (err) {
-                                            res.send({"Errormessage":err,"status":false});
-                                        }
-                                        else{
-                                            createKyc(docs._id,docs.email,docs.phonenumber);
-                                            res.redirect('https://jupitapp.vercel.app/client/signin')
-                                        }
+                                let userid = req.params.id;
+                                Usermodel.findOne({_id:userid},async (err,docs)=>{
+                                    if(err){
+                                        res.send({
+                                            "Errormessage":err
+                                        })
+                                    }
+                                    else if(docs){
+                                        const vitualaccount = await createvirtualaccount(docs.firstname,docs.lastname,docs._id);
                                         
-                                    });
-                                }
-                                else{
-                                    res.send({"ErrorMessage":vitualaccount[1],"status":false});
-                                }
+                                        if(vitualaccount[0]){
+                                            console.log(docs._id)
+                                            console.log(vitualaccount[1])
+                                               let update =  Usermodel.findOneAndUpdate({_id:docs._id},{$set:{'virtual_account':vitualaccount[1],'email_verification':true}},{new: true},(err,documents)=>{
+                                                    if(err){
+                                                       res.send({
+                                                           "UpdateError":err
+                                                       })
+                                                    }
+                                                    else if(documents){
+
+                                                        createKyc(documents._id,documents.email,documents.phonenumber);
+                                                        res.redirect('https://jupitapp.vercel.app/client/signin')
+                                                    
+                                                            // res.send({
+                                                            //     "message":"Virtual Acct Successfully Updated",
+                                                            //     "status":documents
+                                                            // })
+                                                      
+                                                    }
+                                                    else if(!documents){
+                                                        res.send({
+                                                            "message":"Virtual Acct Update Failed ",
+                                                            "status":false
+                                                        })
+                                                    }
+                                                })
+                                            }
+                                            else{
+                                                res.send({
+                                                    "Errormessage":"Account Generation Error",
+                                                    "status":false
+                                                })
+                                            }
+                                   
+                                        }
+                                        else if(!docs){
+                                            res.send({
+                                                "Errormessage":"Forbidden",
+                                                "status":false
+                                            })
+                                        }
+                                })
+                                
+
+                                
+                                // return false;
+                                // if(vitualaccount[0]){
+                                //     Usermodel.findOneAndUpdate({_id: req.params.id}, {$set:{email_verification:true}}, {new: true},  async (err, doc) => {
+                                //         if (err) {
+                                //             res.send({"Errormessage":err,"status":false});
+                                //         }
+                                //         else{
+                                //             createKyc(docs._id,docs.email,docs.phonenumber);
+                                //             res.redirect('https://jupitapp.vercel.app/client/signin')
+                                //         }
+                                        
+                                //     });
+                                // }
+                                // else{
+                                //     res.send({"ErrorMessage":vitualaccount[1],"status":false});
+                                // }
                                 
                                
                             }
@@ -1037,7 +1092,8 @@ router.post('/users/register',(req,res)=>{
             phonenumber:req.body.phonenumber,
             email_verification:false,
             firstname:req.body.firstname,
-            lastname:req.body.lastname
+            lastname:req.body.lastname,
+            virtual_account:"pending"
             
         })
         
@@ -1199,53 +1255,41 @@ async function createUSDTWalletAddress(userid){
     return result;
 }
 
-async function createvirtualaccount(userid){
-    console.log('userid',userid)
-    let result = await Usermodel.findOne({_id:userid}, (err,docs)=>{
-        if(err){
-            return [false,'Internal Server Error..V']
-        }
-        else if(docs){
-            const url = "https://api.purplepayapp.com/dev_api/v1/test/deposit/create_new_account_number";
+
+
+async function createvirtualaccount(firstname,lastname,userid){
+    const url = "https://api.purplepayapp.com/dev_api/v1/test/deposit/create_new_account_number";
             const params ={
-                "first_name":docs.firstname,
-                "last_name":docs.lastname,
+                "first_name":firstname,
+                "last_name":lastname,
                 "bvn":""
             }
-
-             axios.post(url,params,{ 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'bearer 29A492021F4B709A8D1152C3EF4D32DC5A7092723ECAC4C511781003584B48873CCBFEBDEAE89CF22ED1CB1A836213549BC6638A3B563CA7FC009BEB3BC30CF8'
-                }
+            let response = [];
+             let endresult  = await axios.post(url,params,{ 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'bearer 29A492021F4B709A8D1152C3EF4D32DC5A7092723ECAC4C511781003584B48873CCBFEBDEAE89CF22ED1CB1A836213549BC6638A3B563CA7FC009BEB3BC30CF8'
+                    }
                 })
                 .then(res=>{
-                    console.log(res.data.data.account_number)
-                    Usermodel.findOneAndUpdate({_id:userid},{$set:{'virtual_account':res.data.data.account_number}},(err,docs)=>{
-                        if(err){
-                            return [false,'Virtual Account Cannot Be Created'];
-                        }
-                        else if(docs){
-                            return [true,'account created'];
-                        }
-                    })
-                    
+                    console.log("acct",res.data.data.account_number)
+                    if(res.data.data.account_number){
+                        return [ true,res.data.data.account_number];
+                    }
+                    else{
+                        return [ false,"No Account"];
+                    } 
                 })
                 .catch((error)=>{
                     // console.log('error',error.response)
-                    return [false,error.response];
-                    
-                    
+                    return [false,error];
                 })
-            
-        }
-        else if(!docs){
-            return[false, 'User not found'];
-        }
-    }).clone().catch(function(err){ console.log(err);return [false,err]});
 
-    return result;
+                return endresult;
+
+            
 }
+
 
 async function createBTCWalletAddress(userid){
         

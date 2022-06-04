@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
         unique:true,
         required: [true, "Required"],
     },
-    vitual_account:{
+    virtual_account:{
         type:'String',
     },
     email:{
