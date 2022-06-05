@@ -175,7 +175,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    Usermodel.deleteMany({},(err,docs)=>{
+    webhook.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }

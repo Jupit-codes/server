@@ -121,6 +121,8 @@ router.post('/onboard/new',(req,res)=>{
                         email:req.body.email,
                         username:req.body.username,
                         password:bcrypt.hashSync(password, salt),
+                        role:'Super Admin',
+                        roleid:1
                     });
 
                     console.log(req.body)

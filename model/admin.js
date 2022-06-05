@@ -27,6 +27,13 @@ const adminSchema = mongoose.Schema({
         type:'String',
         required: [true, "Required"],
     },
+    role:{
+        type:'String'
+
+    },
+    roleid:{
+        type:Number
+    },
     
     status:{
         type:'String'
