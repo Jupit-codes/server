@@ -122,10 +122,11 @@ router.post('/onboard/new',(req,res)=>{
                         username:req.body.username,
                         password:bcrypt.hashSync(password, salt),
                         role:'Super Admin',
-                        roleid:1
+                        roleid:1,
+                        status:'active'
                     });
 
-                    console.log(req.body)
+                   
         
                     if(createAdmin){
                         // await SendPasswordMail(password,req.body.email);

@@ -34,7 +34,7 @@ const adminSchema = mongoose.Schema({
     roleid:{
         type:Number
     },
-    
+
     status:{
         type:'String'
     },
