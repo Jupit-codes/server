@@ -257,7 +257,7 @@ async function middlewareVerify(req,res,next){
                 }
                 if(docs.password != decodedJwt.admin.password){
                     console.log('Wrong password');
-                    res.status(403).send({"message":"Password Expired"});
+                    res.status(403).send({"message":"Password Expired","doc_password":docs.password,"tokenpassword":decodedJwt.admin.password});
                 }
                 // if(docs.SessionMonitor === "Active"){
                 //     req.token = bearerHeader;
