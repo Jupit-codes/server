@@ -1183,4 +1183,14 @@ router.get('/all/admin',(req,res)=>{
         }
     })
 })
+router.get('/all/staff',middlewareVerify,(req,res)=>{
+    admin.find({},(err,docs)=>{
+        if(err){
+            res.send(err)
+        }
+        else{
+            res.send(docs)
+        }
+    })
+})
 export default router
