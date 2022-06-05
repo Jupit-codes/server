@@ -666,7 +666,15 @@ router.post('/set/password',(req,res)=>{
            res.status(400).send({"message":err,"status":false})
        }
        else if(docs){
-           res.send({"message":'Password Successfully Updated',"status":true,"data":docs})
+           admin.findById(req.body.userid,'-password',(err,doc)=>{
+               if(err){
+                   res.status(400).send(err)
+               }
+               else{
+                res.send({"message":'Password Successfully Updated',"status":true,"data":doc})
+               }
+           })
+           
        }
        else if(!docs){
         res.status(400).send({"message":'Internal Server Error',"status":false})
@@ -1163,5 +1171,16 @@ router.post('/giftcard/markhastreated',async(req,res)=>{
             }).clone().catch(function(err){ console.log(err)});
         }
     }).clone().catch(function(err){ console.log(err)});
+})
+
+router.get('/all/admin',(req,res)=>{
+    admin.find({},'-password',(err,docs)=>{
+        if(err){
+            res.send(err)
+        }
+        else{
+            res.send(docs)
+        }
+    })
 })
 export default router
