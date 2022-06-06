@@ -1271,7 +1271,7 @@ router.post('/staff/creation',(req,res)=>{
                                                 <hr style="background-color:#f5f5f5;width:95%"/>
                                             <div>
                                                 <div style="width:100%; text-align:center">
-                                                    <p style="font-family:candara;padding:10px;font-size:16px">Dear Admin,<br/> Congratulations on the creation of your administrative account on the jupit platform.</p>
+                                                    <p style="font-family:candara;padding:10px;font-size:16px">Dear ${role},<br/> Congratulations on the creation of your administrative account on the jupit platform.</p>
                                                     <p style="font-family:candara;padding:10px;font-size:16px>Kindly find below your One Time Password, which should be change upon your successful login to your dashboard.</p>
                                                     <p style="font-family:candara;padding:10px;font-size:20px">OTP:<b>${password}</b><p>
                                                     <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">If you did not make this request, then ignore the email</p>
