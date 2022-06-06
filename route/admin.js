@@ -1317,4 +1317,40 @@ router.post('/staff/creation',(req,res)=>{
     
 });
 
+router.post('/delete/staff',(req,res)=>{
+    admin.deleteOne({_id:req.body.userid},(err,docs)=>{
+        if(err){
+            res.json(err)
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        if(docs){
+            res.send({
+                "message":"Staff Successfully Deleted",
+                "status":true
+            })
+        }
+    })
+})
+
+router.post('/deactivate/staff',(req,res)=>{
+    admin.findOneAndUpdate({_id:req.body.userid},{$set:{status:'non-active'}},(err,docs)=>{
+        if(err){
+            res.json(err)
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        if(docs){
+            res.send({
+                "message":"Staff Successfully Deactivated",
+                "status":true
+            })
+        }
+    })
+})
+
 export default router
