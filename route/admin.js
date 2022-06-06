@@ -1238,8 +1238,8 @@ router.post('/staff/creation',(req,res)=>{
                         }
 
                     let createAdmin =   await admin.create({
-                        firstname:req.body.firstname,
-                        lastname:req.body.lastname,
+                        firstname:req.body.fname,
+                        lastname:req.body.lname,
                         email:req.body.email,
                         username:req.body.username,
                         password:bcrypt.hashSync(password, salt),
