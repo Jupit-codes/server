@@ -664,6 +664,13 @@ router.post('/users/login',(req,res)=>{
             })
         }
         else if(docs){
+
+    
+    
+        if(docs.email_verification){
+            res.status(400).send('Email Verification is pending on this account');
+            return false;
+        }
             
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
             // console.log(validPassword)
