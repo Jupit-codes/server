@@ -1335,8 +1335,9 @@ router.post('/delete/staff',(req,res)=>{
     })
 })
 
-router.post('/deactivate/staff',(req,res)=>{
-    admin.findOneAndUpdate({_id:req.body.userid},{$set:{status:'non-active'}},(err,docs)=>{
+router.post('/activate/deactivate/staff',(req,res)=>{
+    
+    admin.findOneAndUpdate({_id:req.body.userid},{$set:{status:req.body.statusUpdate}},(err,docs)=>{
         if(err){
             res.json(err)
             res.status(400).send({
