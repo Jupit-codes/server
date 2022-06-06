@@ -33,7 +33,7 @@ cloudinary.config({
     host: "smtppro.zoho.com",
        auth: {
             user:'hello@jupitapp.co',
-            pass:'re84P3TdZxPA'
+            pass:'w6vBmv6624eW'
             // pass:'ii84NsMqT9Xv'
          },
     secure: true,
