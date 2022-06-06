@@ -1159,7 +1159,7 @@ router.post('/users/register',(req,res)=>{
 
             transporter.sendMail(mailData, function (err, info) {
                 if(err){
-                    // console.log(err);
+                    console.log(err);
                     res.send({"message":"An Error Occurred","callback":err})
                 }
                 
