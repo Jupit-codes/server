@@ -75,7 +75,7 @@ router.post('/checklogin',(req,res)=>{
                     // return false;
 
                     // const x = currentDate.getTime() +20*60000;
-                    const x = new Date().getTime() + 20*60000;
+                    const x = new Date().getTime() + 1*60000;
                     // res.json({
                     //     "x":x
                     // })
