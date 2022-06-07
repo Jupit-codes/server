@@ -1912,24 +1912,28 @@ async function middlewareVerify(req,res,next){
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
                 res.sendStatus(403).send('Token Expired');
-                return false;
+                return ;
             }
         }
         
         Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
            if(err){
                 res.status(403).send({"message":"Internal Server Error"});
+                return
            } 
            else if(docs){
                 if(docs.password != decodedJwt.user.password ){
                     res.status(403).send("Password Expired");
+                    return
                 }
                 if(docs.Status != "Active"){
                     res.status(403).send("Account Blocked");
+                    return
                 }
            }
            else if(!docs){
                 res.status(403).send({"message":"Internal Server Error"});
+                return;
            }
         })
 
