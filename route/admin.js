@@ -283,6 +283,7 @@ async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         res.status(403).send('Forbidden Request');
+        return;
     }
     else{
        
@@ -290,7 +291,7 @@ async function middlewareVerify(req,res,next){
       
         if(!decodedJwt){
             res.status(403).send({"message":"Forbidden Request."});
-            return false;
+            return;
         }
         if(decodedJwt){
             const expiration = new Date(decodedJwt.exp * 1000);
@@ -298,24 +299,28 @@ async function middlewareVerify(req,res,next){
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
                 res.sendStatus(403).send('Token Expired');
-                return false;
+                return ;
             }
         }
         
         admin.findOne({email:decodedJwt.admin.email},(err,docs)=>{
            if(err){
                 res.status(403).send({"message":"Internal Server Error"});
+                return
            } 
            else if(docs){
                 if(docs.password != decodedJwt.admin.password ){
                     res.status(403).send("Password Expired");
+                    return
                 }
                 if(docs.status != "active"){
                     res.status(403).send("Account Blocked");
+                    return
                 }
            }
            else if(!docs){
                 res.status(403).send({"message":"Internal Server Error"});
+                return
            }
         })
 
