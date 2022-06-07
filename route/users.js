@@ -652,8 +652,6 @@ router.post('/users/test',middlewareVerify,(req,res)=>{
 })
 
 
-
-
 router.post('/users/login',(req,res)=>{
 //   console.log(req.body)
     Usermodel.findOne({email:req.body.email},async (err,docs)=>{
@@ -665,7 +663,10 @@ router.post('/users/login',(req,res)=>{
         }
         else if(docs){
 
-    
+            if(docs.Status !== "Active"){
+                res.status(400).send("Account Blocked");
+                return false;
+            }
             
             if(!docs.email_verification){
                 res.status(400).send('Email Verification is pending on this account');
