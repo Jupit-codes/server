@@ -39,6 +39,8 @@ router.get('/',(req,res)=>{
 });
 router.post('/checklogin',(req,res)=>{
 
+   
+
     admin.findOne({username:req.body.username},async (err,docs)=>{
         if(err){
             res.status(400).send(err)
@@ -51,10 +53,24 @@ router.post('/checklogin',(req,res)=>{
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
 
             if(validPassword){
+
+
                     var dt = NodeDateTime.create();
                     var formatted = dt.format('Y-m-d H:M:S');
+                    var reauth_time = ""
+
+                    var currentDate = new Date();
+                    var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
                     
-                    let updateAdminLogin = await admin.findOneAndUpdate({_id:docs._id},{$set:{'loginTime':formatted}})
+                    res.send({
+                        "1":currentDate ,
+                        "2":futureDate,
+                        "3":currentDate.getTime()
+                    })
+
+                    
+    
+                    let updateAdminLogin = await admin.findOneAndUpdate({_id:docs._id},{$set:{'loginTime':formatted,'reauthorization':reauth_time}})
                     
                     if(updateAdminLogin){
                        // console.log('updateAdmin',updateAdminLogin)

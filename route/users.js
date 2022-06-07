@@ -664,7 +664,7 @@ router.post('/users/login',(req,res)=>{
         else if(docs){
 
             if(docs.Status !== "Active"){
-                res.status(400).send("Account Blocked");
+                res.status(400).send("Account Blocked...Contact Administrator");
                 return false;
             }
             
