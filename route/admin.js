@@ -64,6 +64,7 @@ router.post('/checklogin',(req,res)=>{
                     var futureDate = new Date(currentDate.getTime() + 20*60000);
                     
                     // res.send({
+                    //     "0":currentDate.getTime() +20*60000,
                     //     "1":currentDate ,
                     //     "2":futureDate,
                     //     "3":new Date(currentDate.getTime()),
@@ -72,9 +73,11 @@ router.post('/checklogin',(req,res)=>{
                     // })
 
                     // return false;
+
+                    const x = currentDate.getTime() +20*60000;
                     
     
-                    let updateAdminLogin = await admin.findOneAndUpdate({_id:docs._id},{$set:{'loginTime':formatted,'reauthorization':moment(futureDate).format("h:m:s")}})
+                    let updateAdminLogin = await admin.findOneAndUpdate({_id:docs._id},{$set:{'loginTime':formatted,'reauthorization':x}})
                     
                     if(updateAdminLogin){
                        // console.log('updateAdmin',updateAdminLogin)
