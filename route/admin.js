@@ -1405,7 +1405,7 @@ router.post('/activate/deactivate/staff',(req,res)=>{
 router.get('/admit/staff',(req,res)=>{
     Logger.find({status:'pending'},(err,docs)=>{
         if(err){
-            res.status(400).send('A Err Occurred')
+            res.status(400).send('A Error Occurred')
         }
         else if(docs){
             res.send(docs);
