@@ -273,7 +273,7 @@ async function middlewareVerify(req,res,next){
         let decodedJwt = await parseJwt(bearerHeader);
       
         if(!decodedJwt){
-            res.status(403).send({"message":"Forbidden Request"});
+            res.status(403).send({"message":"Forbidden Request."});
             return false;
         }
         else if(decodedJwt){
@@ -312,6 +312,7 @@ async function middlewareVerify(req,res,next){
                   
                 }
                 else if(!docs){
+                    console.log(decodedJwt.admin.email)
                     res.status(403).send({"message":"Forbidden Request"});
                 }
             })
