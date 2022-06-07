@@ -1972,6 +1972,15 @@ async function middlewareVerify(req,res,next){
         
         let decodedJwt = await parseJwt(bearerHeader);
         if(decodedJwt){
+            const expiration = new Date(decodedJwt.exp * 1000);
+            const now = new Date();
+            const Oneminute = 1000 * 60 * 1;
+            console.log(expiration)
+            if( expiration.getTime() - now.getTime() < Oneminute ){
+                console.log('Expired');
+            
+                res.sendStatus(403).send('Token Expired');
+            }
 
             Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
                 if(err){
@@ -1980,12 +1989,12 @@ async function middlewareVerify(req,res,next){
                 else if(docs){
                     if(docs.password === decodedJwt.user.password){
                         req.token = bearerHeader;
-                        console.log('passed')
+                      
                         next();
                     }
                     if(docs.password != decodedJwt.user.password){
                         // console.log('Wrong password');
-                        res.sendStatus(403);
+                        res.sendStatus(403).send('Invalid Password');
                     }
                     // if(docs.SessionMonitor === "Active"){
                     //     req.token = bearerHeader;
@@ -1999,13 +2008,13 @@ async function middlewareVerify(req,res,next){
                     // const validPassword = bcrypt.compareSync(password, docs.password);
                 }
                 else if(!docs){
-                    res.sendStatus(403);
+                    res.sendStatus(403).send('Invalid Session');
                 }
             })
 
         }
         else{
-            res.sendStatus(403)
+            res.sendStatus(403).send('ForBidden')
         }
   
     }

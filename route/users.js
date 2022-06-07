@@ -1901,6 +1901,15 @@ async function middlewareVerify(req,res,next){
     else{
         let decodedJwt = await parseJwt(bearerHeader);
         if(decodedJwt){
+            const expiration = new Date(decodedJwt.exp * 1000);
+            const now = new Date();
+            const Oneminute = 1000 * 60 * 1;
+            console.log(expiration)
+            if( expiration.getTime() - now.getTime() < Oneminute ){
+                console.log('Expired');
+            
+                res.sendStatus(403).send('Token Expired');
+            }
 
             Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
                 if(err){
@@ -1913,12 +1922,13 @@ async function middlewareVerify(req,res,next){
                     }
                     if(docs.password != decodedJwt.user.password){
                         // console.log('Wrong password');
-                        res.sendStatus(403);
+                        res.sendStatus(403).send('Invalid Password');
                     }
                     
                 }
                 else if(!docs){
-                    res.sendStatus(403);
+
+                    res.sendStatus(403).send('Invalid Session');
                 }
             })
         }

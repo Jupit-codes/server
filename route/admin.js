@@ -245,6 +245,16 @@ async function middlewareVerify(req,res,next){
             res.status(403).send({"message":"Forbidden Request"});
             return false;
         }
+        const expiration = new Date(decodedJwt.exp * 1000);
+        const now = new Date();
+        const Oneminute = 1000 * 60 * 1;
+        console.log(expiration)
+        if( expiration.getTime() - now.getTime() < Oneminute ){
+            console.log('Expired');
+        
+            res.sendStatus(403).send('Token Expired');
+        }
+
         admin.findOne({email:decodedJwt.admin.email},(err,docs)=>{
             if(err){
                 console.log(err)
