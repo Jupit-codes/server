@@ -44,6 +44,9 @@ const adminSchema = mongoose.Schema({
     loginTime:{
         type:'String'
     },
+    reauthorization:{
+        type:'String'
+    },
     updated: { type: Date, default: Date.now },
 })
 

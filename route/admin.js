@@ -44,6 +44,10 @@ router.post('/checklogin',(req,res)=>{
             res.status(400).send(err)
         }
         else if(docs){
+            if(docs.status !="active"){
+                res.status(403).send('User Account Blocked..Contact Administrator');
+            }
+
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
 
             if(validPassword){
@@ -250,7 +254,7 @@ async function middlewareVerify(req,res,next){
         const Oneminute = 1000 * 60 * 1;
         console.log(expiration)
         if( expiration.getTime() - now.getTime() < Oneminute ){
-            console.log('Expired');
+           
         
             res.sendStatus(403).send('Token Expired');
             return false;
@@ -268,8 +272,8 @@ async function middlewareVerify(req,res,next){
                     next();
                 }
                 if(docs.password != decodedJwt.admin.password){
-                    console.log('Wrong password');
-                    res.status(403).send({"message":"Password Expired"});
+                    
+                    res.status(403).send("Password Expired");
                 }
                 // if(docs.SessionMonitor === "Active"){
                 //     req.token = bearerHeader;
