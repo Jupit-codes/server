@@ -15,9 +15,11 @@ import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid';
 import cors from 'cors';
 import { NoncurrentVersionTransition } from "@aws-sdk/client-s3";
+import timeout from 'connect-timeout'
 const oneDay = 1000 * 60 * 60 * 24;
 const app = express();
 const PORT = process.env.PORT || 5000;
+
 dotenv.config();
 
 const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/jupit_app?retryWrites=true&w=majority&useNewUrlParser=true&useUnifiedTopology=true'
