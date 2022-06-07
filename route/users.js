@@ -1917,7 +1917,7 @@ async function middlewareVerify(req,res,next){
                     // console.log(err)
                 }
                 else if(docs){
-                    if(docs.Status === "Active"){
+                    if(docs.Status !== "Active"){
                         res.status(403).send("Account Blocked");
                         return false;
                     }
