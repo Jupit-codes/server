@@ -1980,6 +1980,7 @@ async function middlewareVerify(req,res,next){
                 console.log('Expired');
             
                 res.sendStatus(403).send('Token Expired');
+                return false;
             }
 
             Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
