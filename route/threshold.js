@@ -1986,12 +1986,12 @@ async function middlewareVerify(req,res,next){
             }
         }
         
-        Usermodel.findOne({email:decodedJwt.admin.email},(err,docs)=>{
+        Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
            if(err){
                 res.status(403).send({"message":"Internal Server Error"});
            } 
            else if(docs){
-                if(docs.password != decodedJwt.admin.password ){
+                if(docs.password != decodedJwt.user.password ){
                     res.status(403).send("Password Expired");
                 }
                 if(docs.Status != "Active"){
