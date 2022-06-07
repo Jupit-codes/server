@@ -45,7 +45,7 @@ const adminSchema = mongoose.Schema({
         type:'String'
     },
     reauthorization:{
-        type:'String'
+        type:Date
     },
     updated: { type: Date, default: Date.now },
 })
