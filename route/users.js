@@ -413,7 +413,7 @@ router.get('/kyc',(req,res)=>{
     res.send('Welcome to jupit server');
 });
 
-router.post('/users/kyc',middlewareVerify,(req,res)=>{
+router.post('/users/kyc',(req,res)=>{
    
     Kyc.findOne({userid:req.body.userid},function(err,docs){
         if(err){
