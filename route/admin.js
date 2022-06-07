@@ -253,6 +253,7 @@ async function middlewareVerify(req,res,next){
             console.log('Expired');
         
             res.sendStatus(403).send('Token Expired');
+            return false;
         }
 
         admin.findOne({email:decodedJwt.admin.email},(err,docs)=>{
