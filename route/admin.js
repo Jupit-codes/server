@@ -227,6 +227,7 @@ router.post('/onboard/new',(req,res)=>{
 });
 
 router.get('/get/all/users',middlewareVerify,(req,res)=>{
+    console.log('kjkjkjk')
     Usermodel.find({},(err,docs)=>{
         if(err){
             res.status(400).send({
@@ -269,54 +270,43 @@ async function middlewareVerify(req,res,next){
         res.status(403).send('Forbidden Request');
     }
     else{
-        
+        console.log('eehjhghg')
         let decodedJwt = await parseJwt(bearerHeader);
       
         if(!decodedJwt){
             res.status(403).send({"message":"Forbidden Request."});
             return false;
         }
-        else if(decodedJwt){
+        if(decodedJwt){
             const expiration = new Date(decodedJwt.exp * 1000);
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
-           
                 res.sendStatus(403).send('Token Expired');
                 return false;
             }
+        }
+        console.log(decodedJwt.admin.email)
+        admin.findOne({email:decodedJwt.admin.email},(err,docs)=>{
+           if(err){
+                res.status(403).send({"message":"Internal Server Error"});
+           } 
+           else if(docs){
+                if(docs.password != decodedJwt.admin.password ){
+                    res.status(403).send("Password Expired");
+                }
+                if(docs.status != "active"){
+                    res.status(403).send("Account Blocked");
+                }
+           }
+           else if(!docs){
+                res.status(403).send({"message":"Internal Server Error"});
+           }
+        })
 
-        }
-        else{
-            admin.findOne({email:decodedJwt.admin.email},(err,docs)=>{
-                if(err){
-                    console.log(err)
-                    res.status(403).send({"message":"Internal Server Error"});
-                }
-                else if(docs){
-    
-                    if(docs.status === "active"){
-                        res.status(403).send("Account Blocked");
-                        return false;
-                    }
-                    
-                    if(docs.password === decodedJwt.admin.password){
-                        req.token = bearerHeader;
-                        next();
-                    }
-                    if(docs.password != decodedJwt.admin.password){
-                        
-                        res.status(403).send("Password Expired");
-                        return false;
-                    }
-                  
-                }
-                else if(!docs){
-                    console.log(decodedJwt.admin.email)
-                    res.status(403).send({"message":"Forbidden Request"});
-                }
-            })
-        }
+        req.token = bearerHeader;
+        next();
+        
         
         
     }
