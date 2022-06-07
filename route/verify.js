@@ -370,46 +370,41 @@ async function middlewareVerify(req,res,next){
     }
     else{
         let decodedJwt = await parseJwt(bearerHeader);
+      
+        if(!decodedJwt){
+            res.status(403).send({"message":"Forbidden Request."});
+            return false;
+        }
         if(decodedJwt){
             const expiration = new Date(decodedJwt.exp * 1000);
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
-            console.log(expiration)
             if( expiration.getTime() - now.getTime() < Oneminute ){
-                console.log('Expired');
-            
                 res.sendStatus(403).send('Token Expired');
+                return false;
             }
-
-            Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
-                if(err){
-                    // console.log(err)
-                }
-                else if(docs){
-                    if(docs.Status === "Active"){
-                        res.status(403).send("Account Blocked");
-                        return false;
-                    }
-                    if(docs.password === decodedJwt.user.password){
-                        req.token = bearerHeader;
-                        next();
-                    }
-                    if(docs.password != decodedJwt.user.password){
-                        // console.log('Wrong password');
-                        res.sendStatus(403).send('Invalid Password');
-                    }
-                    
-                }
-                else if(!docs){
-
-                    res.sendStatus(403).send('Invalid Session');
-                }
-            })
         }
-        else{
-            res.sendStatus(403);
-        }
+        
+        Usermodel.findOne({email:decodedJwt.admin.email},(err,docs)=>{
+           if(err){
+                res.status(403).send({"message":"Internal Server Error"});
+           } 
+           else if(docs){
+                if(docs.password != decodedJwt.admin.password ){
+                    res.status(403).send("Password Expired");
+                }
+                if(docs.Status != "Active"){
+                    res.status(403).send("Account Blocked");
+                }
+           }
+           else if(!docs){
+                res.status(403).send({"message":"Internal Server Error"});
+           }
+        })
 
+        req.token = bearerHeader;
+        next();
+        
     
     }
 }

@@ -285,7 +285,7 @@ async function middlewareVerify(req,res,next){
         res.status(403).send('Forbidden Request');
     }
     else{
-        console.log('eehjhghg')
+       
         let decodedJwt = await parseJwt(bearerHeader);
       
         if(!decodedJwt){
@@ -301,7 +301,7 @@ async function middlewareVerify(req,res,next){
                 return false;
             }
         }
-        console.log(decodedJwt.admin.email)
+        
         admin.findOne({email:decodedJwt.admin.email},(err,docs)=>{
            if(err){
                 res.status(403).send({"message":"Internal Server Error"});

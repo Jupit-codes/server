@@ -1969,147 +1969,48 @@ async function middlewareVerify(req,res,next){
         res.sendStatus(403);
     }
     else{
-        
+       
         let decodedJwt = await parseJwt(bearerHeader);
+      
+        if(!decodedJwt){
+            res.status(403).send({"message":"Forbidden Request."});
+            return false;
+        }
         if(decodedJwt){
             const expiration = new Date(decodedJwt.exp * 1000);
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
-            console.log(expiration)
             if( expiration.getTime() - now.getTime() < Oneminute ){
-                console.log('Expired');
-            
                 res.sendStatus(403).send('Token Expired');
                 return false;
             }
-
-            Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
-                if(err){
-                    console.log(err)
-                }
-                else if(docs){
-                    if(docs.Status === "Active"){
-                        res.status(403).send("Account Blocked");
-                        return false;
-                    }
-                    if(docs.password === decodedJwt.user.password){
-                        req.token = bearerHeader;
-                      
-                        next();
-                    }
-                    if(docs.password != decodedJwt.user.password){
-                        // console.log('Wrong password');
-                        res.sendStatus(403).send('Invalid Password');
-                    }
-                    // if(docs.SessionMonitor === "Active"){
-                    //     req.token = bearerHeader;
-                    //     next();
-                    // }
-                    // if(docs.SessionMonitor != "Active"){
-                    //     console.log('Account Blocked');
-                    //     res.sendStatus(403);
-                    // }
-                    
-                    // const validPassword = bcrypt.compareSync(password, docs.password);
-                }
-                else if(!docs){
-                    res.sendStatus(403).send('Invalid Session');
-                }
-            })
-
         }
-        else{
-            res.sendStatus(403).send('ForBidden')
-        }
+        
+        Usermodel.findOne({email:decodedJwt.admin.email},(err,docs)=>{
+           if(err){
+                res.status(403).send({"message":"Internal Server Error"});
+           } 
+           else if(docs){
+                if(docs.password != decodedJwt.admin.password ){
+                    res.status(403).send("Password Expired");
+                }
+                if(docs.Status != "Active"){
+                    res.status(403).send("Account Blocked");
+                }
+           }
+           else if(!docs){
+                res.status(403).send({"message":"Internal Server Error"});
+           }
+        })
+
+        req.token = bearerHeader;
+        next();
+        
   
     }
 }
 
 
-// function middlewareVerify(req,res,next){
-//     const bearerHeader = req.headers['authorization'];
-//     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
-       
-//         res.status(403).send('Token Not Found');
-//     }
-//     else{
-//         req.token = bearerHeader;
-//         next();
-//     }
-// }
-
-//  async function  getautofee(){
-    
-//     let rand = random(option_rand);
-//     var option_rand = {
-//             min: 48886
-//             , max: 67889
-//             , integer: true
-//         }
-//     function build(params, secret, t, r, postData) {
-//         const p = params || [];
-//         p.push(`t=${t}`, `r=${r}`);
-//         if (!!postData) {
-//             if (typeof postData === 'string') {
-//                     p.push(postData);
-//             } else {
-//                     p.push(JSON.stringify(postData));
-//             }
-//         }
-//         p.sort();
-//         p.push(`secret=${secret}`);
-//         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
-//     }
-
-//     var secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
-//     var time = Math.floor(new Date().getTime() / 1000)
-//     // var postData = [{ "block_num": [1] }]
-//     const params = ['{"block_nums":[1,50,100]}'];
-
-//     var CHECKSUM = build(params,secret,time,rand);
-
-
-//     const parameters = {
-//         t:time,
-//         r:rand,
-//     }
-    
-//     const get_request_args = querystring.stringify(parameters);
-   
-//     const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/autofees?'+ get_request_args
-    
-//     const new_params = {
-//         "block_nums": [1,50,100]
-//     }
-//     let generateAutoFee = await axios.post(url,new_params,{
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-API-CODE':'4PiVpdbyLJZatLBwR',
-//             'X-CHECKSUM':CHECKSUM,
-//             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
-//         }
-//    })
-//    .then((result)=>{
-//        console.log('GetAuto',result.data)
-        
-//         // res.send({
-//         //    "message":result.data,
-//         //     "status":true
-//         // })
-//         return [result.data,true]
-        
-//    })
-  
-//    .catch((err)=>{
-//     //    console.log(err)
-//     //    res.send({
-//     //        "message":err,
-//     //        "status":false
-//     //    })
-//     return [err,false]
-//    })
-//    return generateAutoFee;
-// }
 async function JupitCustomerCheck(addr,wallet){
     // console.log('wallet_type',wallet)
     let result = [];
