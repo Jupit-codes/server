@@ -46,7 +46,7 @@ router.post('/checklogin',(req,res)=>{
             res.status(400).send(err)
         }
         else if(docs){
-            console.log('Here')
+           
             if(docs.status !="active"){
                 res.status(400).send('User Account Blocked..Contact Administrator');
             }
