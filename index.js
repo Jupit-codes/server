@@ -42,7 +42,7 @@ const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/j
 // app.use(bodyParser.json());
 
 // app.set("trust proxy",1);
-app.use(timeout('5s'))
+app.use(timeout('20s'))
 app.use(haltOnTimedout);
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
