@@ -15,6 +15,9 @@ const loggerSchema = mongoose.Schema({
     status:{
         type:'String'
     },
+    time:{
+        type:Date
+    },
     updated: { type: Date, default: Date.now },
 })
 

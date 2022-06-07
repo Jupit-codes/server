@@ -18,6 +18,7 @@ import axios from "axios";
 import giftcardtransactions from "../model/giftcardtransactions.js"
 import NodeDateTime from 'node-datetime';
 import moment from "moment";
+import Logger from '../model/logger.js'
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -75,7 +76,7 @@ router.post('/checklogin',(req,res)=>{
                     // return false;
 
                     // const x = currentDate.getTime() +20*60000;
-                    const x = new Date().getTime() + 1*60000;
+                    const x = new Date().getTime() + 20*60000;
                     // res.json({
                     //     "x":x
                     // })
@@ -92,6 +93,20 @@ router.post('/checklogin',(req,res)=>{
                                 })
                             }
                             else if(document){
+                                let statuskey="";
+                                if(document.roleid === 1){
+                                    statuskey = "successful";
+                                }
+                                else{
+                                    statuskey = "pending"
+                                }
+                                    Logger.create({
+                                        userid:document._id,
+                                        username:document.username,
+                                        roleid:document.roleid,
+                                        status:statuskey,
+                                        time:x
+                                    })
                                   
                                 jwt.sign({admin:document},'secretkey',{expiresIn:1200},(err,token)=>{
                                     res.json({
