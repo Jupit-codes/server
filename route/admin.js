@@ -269,6 +269,7 @@ async function middlewareVerify(req,res,next){
 
                 if(docs.status === "active"){
                     res.status(403).send("Account Blocked");
+                    return false;
                 }
                 
                 if(docs.password === decodedJwt.admin.password){
@@ -278,17 +279,9 @@ async function middlewareVerify(req,res,next){
                 if(docs.password != decodedJwt.admin.password){
                     
                     res.status(403).send("Password Expired");
+                    return false;
                 }
-                // if(docs.SessionMonitor === "Active"){
-                //     req.token = bearerHeader;
-                //     next();
-                // }
-                // if(docs.SessionMonitor != "Active"){
-                //     console.log('Account Blocked');
-                //     res.sendStatus(403);
-                // }
-                
-                // const validPassword = bcrypt.compareSync(password, docs.password);
+              
             }
             else if(!docs){
                 res.status(403).send({"message":"Forbidden Request"});

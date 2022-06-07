@@ -386,6 +386,10 @@ async function middlewareVerify(req,res,next){
                     // console.log(err)
                 }
                 else if(docs){
+                    if(docs.Status === "active"){
+                        res.status(403).send("Account Blocked");
+                        return false;
+                    }
                     if(docs.password === decodedJwt.user.password){
                         req.token = bearerHeader;
                         next();
