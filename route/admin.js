@@ -17,6 +17,7 @@ import giftcardImages from '../model/giftcardImages.js'
 import axios from "axios";
 import giftcardtransactions from "../model/giftcardtransactions.js"
 import NodeDateTime from 'node-datetime';
+import moment from "moment";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -39,13 +40,13 @@ router.get('/',(req,res)=>{
 });
 router.post('/checklogin',(req,res)=>{
 
-   
 
     admin.findOne({username:req.body.username},async (err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
         else if(docs){
+            console.log('Here')
             if(docs.status !="active"){
                 res.status(400).send('User Account Blocked..Contact Administrator');
             }
@@ -60,17 +61,20 @@ router.post('/checklogin',(req,res)=>{
                     var reauth_time = ""
 
                     var currentDate = new Date();
-                    var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
+                    var futureDate = new Date(currentDate.getTime() + 20*60000);
                     
-                    res.send({
-                        "1":currentDate ,
-                        "2":futureDate,
-                        "3":currentDate.getTime()
-                    })
+                    // res.send({
+                    //     "1":currentDate ,
+                    //     "2":futureDate,
+                    //     "3":new Date(currentDate.getTime()),
+                    //     "4":moment(futureDate).format("h:m:s"),
+                    //     "5":moment(currentDate).format("h:m:s")
+                    // })
 
+                    // return false;
                     
     
-                    let updateAdminLogin = await admin.findOneAndUpdate({_id:docs._id},{$set:{'loginTime':formatted,'reauthorization':reauth_time}})
+                    let updateAdminLogin = await admin.findOneAndUpdate({_id:docs._id},{$set:{'loginTime':formatted,'reauthorization':moment(futureDate).format("h:m:s")}})
                     
                     if(updateAdminLogin){
                        // console.log('updateAdmin',updateAdminLogin)
