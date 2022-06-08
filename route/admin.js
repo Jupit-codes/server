@@ -1429,7 +1429,7 @@ router.get('/admit/staff',(req,res)=>{
         else if(docs){
             res.send(docs);
         }
-    })
+    }).limit(1).sort({updated: -1})
 })
 
 export default router
