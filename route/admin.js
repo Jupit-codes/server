@@ -1432,4 +1432,15 @@ router.get('/admit/staff',(req,res)=>{
     }).limit(1).sort({updated: -1})
 })
 
+router.post('/check/login/approval/status',(req,res)=>{
+    Logger.find({userid:req.body.userid},(err,docs)=>{
+        if(err){
+            res.status(400).send('A Error Occurred')
+        }
+        else if(docs){
+            res.send(docs);
+        }
+    }).limit(1).sort({updated: -1})
+})
+
 export default router
