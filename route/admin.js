@@ -100,13 +100,42 @@ router.post('/checklogin',(req,res)=>{
                                 else{
                                     statuskey = "pending"
                                 }
-                                    Logger.create({
-                                        userid:document._id,
-                                        username:document.username,
-                                        roleid:document.roleid,
-                                        status:statuskey,
-                                        time:x
-                                    })
+                                console.log(document._id)
+                                Logger.findOne({userid:document._id},(err,docx)=>{
+                                    if(err){
+                                        res.status(400).send(err);
+                                    }
+                                    else if(docx){
+                                        if(docx.status === "pending"){
+                                            Logger.findOneAndUpdate({_id:docx._id},{$set:{time:x}},(err,doce)=>{
+                                                if(err){
+                                                    res.status(400).send(err);
+                                                }
+                                            })
+                                        }
+                                        else if(docx.status === "approved"){
+                                            Logger.create({
+                                                userid:document._id,
+                                                username:document.username,
+                                                roleid:document.roleid,
+                                                status:statuskey,
+                                                time:x
+                                            })
+                                        }
+
+                                    }
+                                    else if(!docx){
+                                        Logger.create({
+                                            userid:document._id,
+                                            username:document.username,
+                                            roleid:document.roleid,
+                                            status:statuskey,
+                                            time:x
+                                        })
+
+                                    }
+                                })
+                                   
                                   
                                 jwt.sign({admin:document},'secretkey',{expiresIn:1200},(err,token)=>{
                                     res.json({
