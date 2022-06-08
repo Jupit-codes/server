@@ -270,10 +270,10 @@ router.post('/handle/staff/login',middlewareVerify,(req,res)=>{
    
     Logger.findOneAndUpdate({_id:req.body.id},{$set:{status:req.body.status}},(err,docs)=>{
         if(err){
-
+            res.status(400).send(err)
         }
         else if(docs){
-            res
+            res.send(docs)
         }
 
     })
