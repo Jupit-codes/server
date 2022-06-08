@@ -122,6 +122,15 @@ router.post('/checklogin',(req,res)=>{
                                                 time:x
                                             })
                                         }
+                                        else if(docx.status === "disapproved"){
+                                            Logger.create({
+                                                userid:document._id,
+                                                username:document.username,
+                                                roleid:document.roleid,
+                                                status:statuskey,
+                                                time:x
+                                            })
+                                        }
 
                                     }
                                     else if(!docx){
@@ -271,7 +280,7 @@ router.post('/onboard/new',(req,res)=>{
 });
 
 router.get('/get/all/users',middlewareVerify,(req,res)=>{
-    console.log('kjkjkjk')
+    
     Usermodel.find({},(err,docs)=>{
         if(err){
             res.status(400).send({
