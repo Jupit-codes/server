@@ -282,7 +282,7 @@ router.post('/onboard/new',(req,res)=>{
     
 });
 
-router.get('/get/all/users',middlewareVerify,(req,res)=>{
+router.get('/get/all/users',(req,res)=>{
     
     Usermodel.find({},(err,docs)=>{
         if(err){
