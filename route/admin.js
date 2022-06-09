@@ -19,6 +19,8 @@ import giftcardtransactions from "../model/giftcardtransactions.js"
 import NodeDateTime from 'node-datetime';
 import moment from "moment";
 import Logger from '../model/logger.js'
+import buy_n_sell from "../model/buy_n_sell.js";
+import withdrawal from "../model/withdrawal.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -1481,4 +1483,76 @@ router.post('/check/login/approval/status',(req,res)=>{
     }).limit(1).sort({updated: -1})
 })
 
+
+router.get('/all/for/card',async (req,res)=>{
+    const allusers = await getusersCount();
+    const deposit = await getalldeposit();
+    const withdrawal = await getallwithdrawal();
+    const transactioncount = await gettransactioncount();
+
+    res.send({
+        "allusers":allusers,
+        "deposit":deposit,
+        "withdrawal":withdrawal,
+        "transaction":transactioncount
+    })
+    
+})
+
+async function getusersCount(){
+   let result = await Usermodel.find({},(err,docs)=>{
+       if(err){
+            return [false,'Internal Server'];
+       }
+       else{
+           return [true,docs];
+       }
+   }).clone().catch(function(err){ console.log(err)});
+
+   return result;
+}
+
+
+async function getalldeposit(){
+    let result = buy_n_sell.find({},(err,docs)=>{
+        if(err){
+             return [false,'Internal Server'];
+        }
+        else{
+            return [true,docs];
+        }
+    }).clone().catch(function(err){ console.log(err)});
+ 
+    return result;
+ }
+
+ async function getallwithdrawal(){
+    let result = await withdrawal.find({},(err,docs)=>{
+        if(err){
+             return [false,'Internal Server'];
+        }
+        else{
+            return [true,docs];
+        }
+    }).clone().catch(function(err){ console.log(err)});
+ 
+    return result;
+ }
+
+
+ async function gettransactioncount(){
+    let result = await wallet_transactions.find({},(err,docs)=>{
+        if(err){
+             return [false,'Internal Server'];
+        }
+        else{
+            return [true,docs];
+        }
+    }).clone().catch(function(err){ console.log(err)});
+ 
+    return result;
+ }
+
+
+ 
 export default router
