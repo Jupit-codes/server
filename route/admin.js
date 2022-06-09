@@ -52,6 +52,7 @@ router.post('/checklogin',(req,res)=>{
            
             if(docs.status !="active"){
                 res.status(400).send('User Account Blocked..Contact Administrator');
+                return false
             }
 
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
