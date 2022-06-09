@@ -651,7 +651,7 @@ router.get('/set/rate',async(req,res)=>{
     }
 })
 
-router.post('/set/rate/btc',middlewareVerify,(req,res)=>{
+router.post('/set/rate/btc',(req,res)=>{
     let btc_sell_rate = req.body.amount
     let initial = "JupitRateBard"
 
@@ -690,7 +690,7 @@ router.post('/set/rate/btc',middlewareVerify,(req,res)=>{
 
 
 
-router.post('/set/rate/usdt',middlewareVerify,(req,res)=>{
+router.post('/set/rate/usdt',(req,res)=>{
     let btc_sell_rate = req.body.amount
     let initial = "JupitRateBard"
 
@@ -728,7 +728,7 @@ router.post('/set/rate/usdt',middlewareVerify,(req,res)=>{
 })
 
 
-router.post('/set/rate/giftcard',middlewareVerify,(req,res)=>{
+router.post('/set/rate/giftcard',(req,res)=>{
     let btc_sell_rate = req.body.amount
     let initial = "JupitRateBard"
 
