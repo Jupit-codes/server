@@ -1292,7 +1292,7 @@ router.get('/all/admin',(req,res)=>{
         }
     })
 })
-router.get('/all/staff',middlewareVerify,(req,res)=>{
+router.get('/all/staff',(req,res)=>{
     admin.find({},(err,docs)=>{
         if(err){
             res.send(err);
