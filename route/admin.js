@@ -1565,6 +1565,18 @@ async function getalldeposit(){
      })
  })
 
+ router.post('/deactivate/2fa',(req,res)=>{
+   
+     Usermodel.findOneAndUpdate({_id:req.body.id},{$set:{TWOFA:false}},(err,docs)=>{
+         if(err){
+             res.status(400).send(err);
+         }
+         else if(docs){
+             res.send(docs.Status)
+         }
+     })
+ })
+
 
  
 export default router
