@@ -1553,6 +1553,17 @@ async function getalldeposit(){
     return result;
  }
 
+ router.post('/deactivate/user/profile',(req,res)=>{
+     Usermodel.findOneAndUpdate({_id:req.body.userid},{$set:{Status:'Non-Active'}},(err,docs)=>{
+         if(docs){
+             res.status(400).send(err);
+         }
+         else if(docs){
+             res.send('Updated')
+         }
+     })
+ })
+
 
  
 export default router
