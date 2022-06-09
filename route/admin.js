@@ -1295,10 +1295,12 @@ router.get('/all/admin',(req,res)=>{
 router.get('/all/staff',middlewareVerify,(req,res)=>{
     admin.find({},(err,docs)=>{
         if(err){
-            res.send(err)
+            res.send(err);
+            return
         }
         else{
-            res.send(docs)
+            res.send(docs);
+            return
         }
     })
 })
