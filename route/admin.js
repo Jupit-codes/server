@@ -1572,7 +1572,7 @@ async function getalldeposit(){
              res.status(400).send(err);
          }
          else if(docs){
-             res.send(docs.Status)
+             res.send(docs)
          }
      })
  })
