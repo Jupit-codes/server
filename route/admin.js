@@ -1554,8 +1554,9 @@ async function getalldeposit(){
  }
 
  router.post('/deactivate/user/profile',(req,res)=>{
-     Usermodel.findOneAndUpdate({_id:req.body.id},{$set:{Status:'Non-Active'}},(err,docs)=>{
-         if(docs){
+    let status = req.body.updatestatus;
+     Usermodel.findOneAndUpdate({_id:req.body.id},{$set:{Status:status}},(err,docs)=>{
+         if(err){
              res.status(400).send(err);
          }
          else if(docs){
