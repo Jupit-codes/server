@@ -1296,11 +1296,11 @@ router.get('/all/staff',middlewareVerify,(req,res)=>{
     admin.find({},(err,docs)=>{
         if(err){
             res.send(err);
-            return
+            return false
         }
         else{
             res.send(docs);
-            return
+            return true;
         }
     })
 })
