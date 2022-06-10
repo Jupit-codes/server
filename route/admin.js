@@ -1581,7 +1581,7 @@ async function getalldeposit(){
      })
  })
 
- router.post('/all/deposit',(req,res)=>{
+ router.get('/all/deposit',(req,res)=>{
    
     deposit_webhook.find({},(err,docs)=>{
         if(err){
@@ -1593,7 +1593,7 @@ async function getalldeposit(){
     })
 })
 
-router.post('/all/withdrawal',(req,res)=>{
+router.get('/all/withdrawal',(req,res)=>{
    
     withdrawal.find({},(err,docs)=>{
         if(err){
