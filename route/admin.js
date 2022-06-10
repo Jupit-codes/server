@@ -415,6 +415,60 @@ router.post('/get/all/users/id', async(req,res)=>{
 
 })
 
+
+router.post('/get/all/users/account', async(req,res)=>{
+
+    let userdetails = await fetchAccountDetails(req.body.account);
+
+    if(userdetails){
+        let gettwofactor = await fetchtwofactor(userdetails._id);
+        let getkyc = await fetchkyc(userdetails._id);
+        let getbank = await fetchbank(userdetails.email);
+        let rate = await fetchrate();
+
+        res.send({
+            "status":true,
+            "detail":userdetails,
+            "twofactor":gettwofactor,
+            "kyc":getkyc,
+            "bank":getbank,
+            "rate":rate
+            
+        })
+    }
+    else{
+        res.status(400).send({"message":"Invalid Request"})
+    }
+
+})
+
+
+async function fetchAccountDetails(account){
+    let result =  Usermodel.findOne({virtual_account:account},async(err,docs)=>{
+         if(err){
+             // res.status(400).send({"message":err})
+             console.log(err)
+             return [err,false]
+         }
+         else if(docs){
+             // res.json(docs)
+             console.log(docs)
+             return [docs,true]
+         }
+         else if(!docs){
+             // res.status(400).send({"message":"Invalid Request"});
+             return ["Invalid Request",false]
+         }
+     
+     }).clone().catch(function(err){ console.log(err)});
+ 
+     return result;
+ 
+     
+ }
+
+
+
 async function fetchUserDetails(userid){
    let result =  Usermodel.findOne({_id:userid},async(err,docs)=>{
         if(err){
