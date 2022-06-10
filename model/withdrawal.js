@@ -10,6 +10,10 @@ const withdrawalSchema = mongoose.Schema({
         required: [true, "Required"],
         
     },
+    email:{
+        type:'String',
+
+    },
     type:{
         type:'String',
         required: [true, "Required"],

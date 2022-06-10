@@ -21,6 +21,7 @@ import moment from "moment";
 import Logger from '../model/logger.js'
 import buy_n_sell from "../model/buy_n_sell.js";
 import withdrawal from "../model/withdrawal.js";
+import deposit_webhook from "../model/deposit_webhook.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -1579,6 +1580,30 @@ async function getalldeposit(){
          }
      })
  })
+
+ router.post('/all/deposit',(req,res)=>{
+   
+    deposit_webhook.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+})
+
+router.post('/all/withdrawal',(req,res)=>{
+   
+    withdrawal.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+})
 
 
  
