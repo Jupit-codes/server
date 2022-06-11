@@ -338,45 +338,45 @@ async function parseJwt(token){
 async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
-        res.status(403).send('Forbidden Request');
-        return;
+       return  res.status(403).send('Forbidden Request');
+        
     }
     else{
        
         let decodedJwt = await parseJwt(bearerHeader);
       
         if(!decodedJwt){
-            res.status(403).send({"message":"Forbidden Request."});
-            return;
+            return res.status(403).send({"message":"Forbidden Request."});
+            
         }
         if(decodedJwt){
             const expiration = new Date(decodedJwt.exp * 1000);
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
-                res.sendStatus(403).send('Token Expired');
-                return ;
+                return res.sendStatus(403).send('Token Expired');
+                
             }
         }
         
         admin.findOne({email:decodedJwt.admin.email},(err,docs)=>{
            if(err){
-                res.status(403).send({"message":"Internal Server Error"});
-                return
+              return  res.status(403).send({"message":"Internal Server Error"});
+            
            } 
            else if(docs){
                 if(docs.password != decodedJwt.admin.password ){
-                    res.status(403).send("Password Expired");
-                    return
+                    return res.status(403).send("Password Expired");
+                    
                 }
                 if(docs.status != "active"){
-                    res.status(403).send("Account Blocked");
-                    return
+                   return res.status(403).send("Account Blocked");
+                    
                 }
            }
            else if(!docs){
-                res.status(403).send({"message":"Internal Server Error"});
-                return
+               return  res.status(403).send({"message":"Internal Server Error"});
+                
            }
         })
 
@@ -419,6 +419,8 @@ router.post('/get/all/users/id', async(req,res)=>{
 router.post('/get/all/users/account', async(req,res)=>{
 
     let userdetails = await fetchAccountDetails(req.body.account);
+
+    console.log(req.body.acount);
 
     if(userdetails){
         let gettwofactor = await fetchtwofactor(userdetails._id);
