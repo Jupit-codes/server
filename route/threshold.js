@@ -1966,7 +1966,8 @@ async function parseJwt(token){
 async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
-        return res.sendStatus(403);
+       res.sendStatus(403);
+       return false;
     }
     else{
        
@@ -1981,25 +1982,30 @@ async function middlewareVerify(req,res,next){
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
-               return res.sendStatus(403).send('Token Expired');
+               res.sendStatus(403).send('Token Expired');
+               return false;
                 
             }
         }
         
         Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
            if(err){
-                return res.status(403).send({"message":"Internal Server Error"});
+                res.status(403).send({"message":"Internal Server Error"});
+                return false;
            } 
            else if(docs){
                 if(docs.password != decodedJwt.user.password ){
-                   return res.status(403).send("Password Expired");
+                   res.status(403).send("Password Expired");
+                   return false;
                 }
                 if(docs.Status != "Active"){
-                   return res.status(403).send("Account Blocked");
+                   res.status(403).send("Account Blocked");
+                   return false;
                 }
            }
            else if(!docs){
-                return res.status(403).send({"message":"Internal Server Error"});
+                res.status(403).send({"message":"Internal Server Error"});
+                return false;
            }
         })
 
