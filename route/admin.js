@@ -1661,6 +1661,17 @@ router.get('/all/withdrawal',(req,res)=>{
     })
 })
 
+router.post('/edit/user/email',(req,res)=>{
+    Usermodel.findOneAndUpdate({_id:req.body.id},{$set:{'email':req.body.email}},(err,docs)=>{
+        if(err){
+            res.status(400).send('Internal Server Error');
+        }
+        else{
+            res.send('Updated')
+        }
+    })
+})
+
 
  
 export default router
