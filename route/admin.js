@@ -814,7 +814,7 @@ router.post('/set/rate/giftcard',(req,res)=>{
             }
             else if(docs){
                 res.send({
-                    "message":"GIFTCARD Buy Rate Successfully Sav",
+                    "message":"GIFTCARD Buy Rate Successfully Saved",
                     "docs":docs
                 })
             }
