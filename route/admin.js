@@ -792,13 +792,14 @@ router.post('/set/rate/giftcard',(req,res)=>{
 
     if(req.body.type === "GIFTCARD_SELL"){
         
-        let x = rate.findOneAndUpdate({initialization:initial},{$set:{'giftcard.1.sell':req.body.giftcard_sell}},(err,docs)=>{
+        giftCardnew.findOneAndUpdate({brandname:req.body.cardtype},{$set:{'sellrate':req.body.giftcard_sell}},(err,docs)=>{
             if(err){
-                res.send(err);
+                res.status(400).send('Internal Server Error')
+
             }
-            else{
+            else if(docs){
                 res.send({
-                    "message":"GIFTCARD Sell Rate Successfully Saved",
+                    "message":"GIFTCARD Buy Rate Successfully Saved",
                     "docs":docs
                 })
             }
@@ -806,7 +807,7 @@ router.post('/set/rate/giftcard',(req,res)=>{
     }
 
     if(req.body.type === "GIFTCARD_BUY"){
-        console.log(req.body);
+        
         giftCardnew.findOneAndUpdate({brandname:req.body.cardtype},{$set:{'buyrate':req.body.giftcard_buy}},(err,docs)=>{
             if(err){
                 res.status(400).send('Internal Server Error')
