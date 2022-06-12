@@ -1,3 +1,4 @@
+import double from '@mongoosejs/double';
 import mongoose from 'mongoose'
 
 const giftcardSchema = mongoose.Schema({
@@ -12,7 +13,8 @@ const giftcardSchema = mongoose.Schema({
         type:Date
 
     },
-    
+    buyrate:{type:double},
+    sellrate:{type:double},
     updated: { type: Date, default: Date.now },
 })
 
