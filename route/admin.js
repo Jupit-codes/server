@@ -22,6 +22,7 @@ import Logger from '../model/logger.js'
 import buy_n_sell from "../model/buy_n_sell.js";
 import withdrawal from "../model/withdrawal.js";
 import deposit_webhook from "../model/deposit_webhook.js";
+import giftCardnew from "../model/giftCardnew.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -1668,6 +1669,17 @@ router.post('/edit/user/email',(req,res)=>{
         }
         else{
             res.send('Updated')
+        }
+    })
+})
+
+router.get('/all/giftcard',(req,res)=>{
+    giftCardnew.find({},'brandname',(err,docs)=>{
+        if(err){
+            res.status(400).send('Internal Server Error');
+        }
+        else {
+            res.send(docs);
         }
     })
 })
