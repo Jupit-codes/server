@@ -806,7 +806,7 @@ router.post('/set/rate/giftcard',(req,res)=>{
     }
 
     if(req.body.type === "GIFTCARD_BUY"){
-        
+        console.log(req.body);
         giftCardnew.findOneAndUpdate({brandname:req.body.cardtype},{$set:{'buyrate':req.body.giftcard_buy}},(err,docs)=>{
             if(err){
                 res.status(400).send('Internal Server Error')
