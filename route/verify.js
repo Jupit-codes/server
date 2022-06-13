@@ -954,16 +954,18 @@ router.post('/client/withdrawal',(req,res)=>{
                 }
             })
             .then(result=>{
-                console.log(result)
-                res.json(
-                    "Withdrawal Was Successfull Made"
-                );
+                // console.log(result)
+                // res.json(
+                //     "Withdrawal Was Successfull Made"
+                // );
+                res.send('Endpoint Reached')
                 
                 
             })
             .catch((error)=>{
-                console.log(error)
-                res.json("An Error Occurreds")
+                // console.log(error)
+                // res.json("An Error Occurreds")
+                res.send('Endpoint Reached')
             })
         }
         else if(!docs){
