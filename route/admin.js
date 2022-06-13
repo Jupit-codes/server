@@ -1704,8 +1704,8 @@ router.post('/kyclevel3/action',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else{ 
-            console.log(req.body._id);
-            console.log('Status',status)
+            
+           
             await idcardverification.findOneAndUpdate({userid:req.body._id,status:'Pending'},{$set:{'status':status}},(err,docv)=>{
                 if(err){
                     res.send(400).send('Internal Sever Error');
