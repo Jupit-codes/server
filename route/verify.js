@@ -365,6 +365,13 @@ router.post('/giftCardApi/brandname',async (req,res)=>{
         res.json(error.response)
     })
 })
+async function parseJwt(token){
+    try {
+        return  JSON.parse(atob(token.split(".")[1]));
+      } catch (e) {
+        return null;
+      }
+  }
 
 async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
