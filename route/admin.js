@@ -1711,7 +1711,7 @@ router.post('/kyclevel3/action',(req,res)=>{
                     res.send(400).send('Internal Sever Error');
                 }
                 else{
-                    console.log(docv)
+                   
                 }
             }).clone().catch(function(err){ console.log(err)});
             await notification.create({
