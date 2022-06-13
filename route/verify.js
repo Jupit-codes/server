@@ -24,6 +24,7 @@ import deposit_webhook from "../model/deposit_webhook.js";
 import bank from "../model/bank.js";
 import logger from "../model/logger.js";
 import kyc from "../model/kyc.js";
+import withdrawal from "../model/withdrawal.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -964,7 +965,30 @@ router.post('/client/withdrawal',(req,res)=>{
                         res.status(400).send('Internal Server Error')
                     }
                     else if(docs){
-                        re.send('Withdrawal Success');
+                        let saveStatus =  await Notification.create({
+                            type:7,
+                            orderid:req.body.phonenumber,
+                            transfertype:'Withdrawal',
+                            asset:'Naira',
+                            from_address:req.body.firsname,
+                            to_address:req.body.lastname,
+                            status:'Completed',
+                            read:'unread',
+                            date_created:new Date(),
+                            initiator:req.body.email,
+                        })
+                        await withdrawal.create({
+                            userid:req.body.userid,
+                            amount:req.body.amount,
+                            account_number:docs.account_number,
+                            account_name:docs.account_name,
+                            bank_code:docs.bank_code,
+                            email:req.body.email,
+                            type:'Withdrawal',
+                            currency_worth:req.body.amount
+                        })
+
+                        res.send('Withdrawal Success');
                     }
                 })
                 
@@ -978,8 +1002,31 @@ router.post('/client/withdrawal',(req,res)=>{
                     if(err){
                         res.status(400).send('Internal Server Error')
                     }
-                    else if(docs){
-                        re.send('Withdrawal Success');
+                    else if(document){
+                        let saveStatus =  await Notification.create({
+                            type:7,
+                            orderid:req.body.phonenumber,
+                            transfertype:'Withdrawal',
+                            asset:'Naira',
+                            from_address:req.body.firsname,
+                            to_address:req.body.lastname,
+                            status:'Completed',
+                            read:'unread',
+                            date_created:new Date(),
+                            initiator:req.body.email,
+                        })
+                        await withdrawal.create({
+                            userid:req.body.userid,
+                            amount:req.body.amount,
+                            account_number:docs.account_number,
+                            account_name:docs.account_name,
+                            bank_code:docs.bank_code,
+                            email:req.body.email,
+                            type:'Withdrawal',
+                            currency_worth:req.body.amount
+                        })
+                        res.send('Withdrawal Success');
+                        
                     }
                 })
             })

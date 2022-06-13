@@ -10,6 +10,15 @@ const withdrawalSchema = mongoose.Schema({
         required: [true, "Required"],
         
     },
+    account_number:{
+        type:'String'
+    },
+    account_name:{
+        type:'String'
+    },
+    bank_code:{
+        type:'String'
+    },
     email:{
         type:'String',
 
