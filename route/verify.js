@@ -936,7 +936,7 @@ router.post('/client/withdrawal',(req,res)=>{
             const url = "https://api.purplepayapp.com/dev_api/v1/test/transfer/"
             var params = {
                 
-                    "account_number": docsaccount_number,
+                    "account_number": docs.account_number,
                     "account_name": docs.account_name,
                     "bank_code": docs.bank_code,
                     "amount": req.body.amount,
