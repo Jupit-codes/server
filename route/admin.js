@@ -23,6 +23,7 @@ import buy_n_sell from "../model/buy_n_sell.js";
 import withdrawal from "../model/withdrawal.js";
 import deposit_webhook from "../model/deposit_webhook.js";
 import giftCardnew from "../model/giftCardnew.js";
+import notification from "../model/notification.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -1698,11 +1699,23 @@ router.post('/kyclevel3/action',(req,res)=>{
          status = "rejected";
          statustype = false
     }
-    kyc.findOneAndUpdate({userid:req.body._id},{$set:{'level3.0.idcard_type':req.body.cardtype,'level3.0.uniqueNumber':req.body.cardnumber,'level3.0.callbackStatus':status,'level3.0.status':statustype}},(err,docs)=>{
+    kyc.findOneAndUpdate({userid:req.body._id},{$set:{'level3.0.idcard_type':req.body.cardtype,'level3.0.uniqueNumber':req.body.cardnumber,'level3.0.callbackStatus':status,'level3.0.status':statustype}},async (err,docs)=>{
         if(err){
             res.status(400).send('Internal Server Error');
         }
         else{ 
+            await notification.create({
+                type:3,
+                orderid:'0000',
+                transfertype:status,
+                asset:'KYC LEvel 3',
+                from_address:req.body.cardtype,
+                to_address:req.body.cardnumber,
+                status:'Completed',
+                read:'unread',
+                date_created:new Date(),
+                initiator:req.body.email,
+            })
             res.send('Update was Successful');
         }
     })

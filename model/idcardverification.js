@@ -22,6 +22,9 @@ const idcardverification = mongoose.Schema({
     userid:{
         type:'String'
     },
+    email:{
+        type:'String'
+    },
     status:{
         type:'String'
     },

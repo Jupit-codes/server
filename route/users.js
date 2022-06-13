@@ -508,7 +508,8 @@ router.post('/users/idcardverification',(req,res)=>{
                                 lastname:req.body.items.lastname,
                                 dob:req.body.items.dob,
                                 status:'Pending',
-                                base64:uploadStr
+                                base64:uploadStr,
+                                email:req.body.items.email
                             })
                             res.send("Verification Successfully Submitted")
                         }
