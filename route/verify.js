@@ -960,11 +960,11 @@ router.post('/client/withdrawal',(req,res)=>{
                 //     "Withdrawal Was Successfull Made"
                 // );
                 // res.send('Endpoint Reached')
-                Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},async (err,docs)=>{
+                Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},async (err,document)=>{
                     if(err){
                         res.status(400).send('Internal Server Error')
                     }
-                    else if(docs){
+                    else if(document){
                         let saveStatus =  await Notification.create({
                             type:7,
                             orderid:req.body.phonenumber,
@@ -998,7 +998,7 @@ router.post('/client/withdrawal',(req,res)=>{
                 console.log("An Erorr Occurreds")
                 // res.json("An Error Occurreds")
                 // res.send('Endpoint Reached');
-                Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},async(err,docs)=>{
+                Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},async(err,document)=>{
                     if(err){
                         res.status(400).send('Internal Server Error')
                     }
