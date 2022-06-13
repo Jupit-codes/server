@@ -954,7 +954,13 @@ router.post('/client/withdrawal',(req,res)=>{
                 }
             })
             .then(result=>{
-                res.json(result.data);
+
+                res.json(
+                    {
+                        "data":result.data,
+                        "status":result
+                    }
+                );
                 
                 
             })
