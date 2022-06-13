@@ -954,18 +954,16 @@ router.post('/client/withdrawal',(req,res)=>{
                 }
             })
             .then(result=>{
-
+                console.log(result)
                 res.json(
-                    {
-                        "data":result.data,
-                        "status":result
-                    }
+                    "Withdrawal Was Successfull Made"
                 );
                 
                 
             })
             .catch((error)=>{
-                res.json(error.response)
+                console.log(error)
+                res.json("An Error Occurreds")
             })
         }
         else if(!docs){
