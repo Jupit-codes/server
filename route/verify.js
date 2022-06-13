@@ -958,14 +958,30 @@ router.post('/client/withdrawal',(req,res)=>{
                 // res.json(
                 //     "Withdrawal Was Successfull Made"
                 // );
-                res.send('Endpoint Reached')
+                // res.send('Endpoint Reached')
+                Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},(err,docs)=>{
+                    if(err){
+                        res.status(400).send('Internal Server Error')
+                    }
+                    else if(docs){
+                        re.send('Withdrawal Success');
+                    }
+                })
                 
                 
             })
             .catch((error)=>{
                 // console.log(error)
                 // res.json("An Error Occurreds")
-                res.send('Endpoint Reached')
+                // res.send('Endpoint Reached');
+                Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},(err,docs)=>{
+                    if(err){
+                        res.status(400).send('Internal Server Error')
+                    }
+                    else if(docs){
+                        re.send('Withdrawal Success');
+                    }
+                })
             })
         }
         else if(!docs){
