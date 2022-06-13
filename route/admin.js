@@ -1705,28 +1705,27 @@ router.post('/kyclevel3/action',(req,res)=>{
         }
         else{ 
             
-           
-            await idcardverification.findOneAndUpdate({userid:req.body._id,status:'Pending'},{$set:{'status':status}},async (err,docv)=>{
+            await idcardverification.findOneAndUpdate({userid:req.body._id,status:'Pending'},{$set:{'status':status}},(err,docv)=>{
                 if(err){
                     res.send(400).send('Internal Sever Error');
                 }
-                else if(docv){
-                    await notification.create({
-                        type:3,
-                        orderid:'0000',
-                        transfertype:status,
-                        asset:'KYC LEvel 3',
-                        from_address:req.body.cardtype,
-                        to_address:req.body.cardnumber,
-                        status:'Completed',
-                        read:'unread',
-                        date_created:new Date(),
-                        initiator:req.body.email,
-                    })
-                    res.send('Update was Successful');
+                else{
+                   
                 }
             }).clone().catch(function(err){ console.log(err)});
-            
+            await notification.create({
+                type:3,
+                orderid:'0000',
+                transfertype:status,
+                asset:'KYC LEvel 3',
+                from_address:req.body.cardtype,
+                to_address:req.body.cardnumber,
+                status:'Completed',
+                read:'unread',
+                date_created:new Date(),
+                initiator:req.body.email,
+            })
+            res.send('Update was Successful');
         }
     })
 })

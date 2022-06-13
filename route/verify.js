@@ -926,6 +926,50 @@ function verifyResponse(req,res,next){
     }
 }
 
+router.post('/client/withdrawal',(req,res)=>{
+
+    bank.findOne({email:req.body.email},(err,docs)=>{
+        if(err){
+            res.status(400).send('Internal Server Error');
+        }
+        else if(docs){
+            const url = "https://api.purplepayapp.com/dev_api/v1/test/transfer/"
+            var params = {
+                
+                    "account_number": docsaccount_number,
+                    "account_name": docs.account_name,
+                    "bank_code": docs.bank_code,
+                    "amount": req.body.amount,
+                    "first_name": req.body.firstname,
+                    "last_name": req.body.lastname,
+                    "email": req.body.email,
+                    "phone_number": req.body.phonenumber,
+                    "msg": "Jupit Customer Withdrawal"
+                    
+            }
+            axios.post(url,params,{ 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'bearer 29A492021F4B709A8D1152C3EF4D32DC5A7092723ECAC4C511781003584B48873CCBFEBDEAE89CF22ED1CB1A836213549BC6638A3B563CA7FC009BEB3BC30CF8'
+                }
+            })
+            .then(result=>{
+                res.json(result.data);
+                
+                
+            })
+            .catch((error)=>{
+                res.json(error.response)
+            })
+        }
+        else if(!docs){
+            res.status(400).send('Bank Details not found..Complete your KYC Level 2');
+        }
+    })
+
+    
+})
+
 
 
 
