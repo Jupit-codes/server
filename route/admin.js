@@ -1708,7 +1708,7 @@ router.post('/kyclevel3/action',(req,res)=>{
                 if(err){
                     res.send(400).send('Internal Sever Error');
                 }
-            })
+            }).clone().catch(function(err){ console.log(err)});
             await notification.create({
                 type:3,
                 orderid:'0000',
