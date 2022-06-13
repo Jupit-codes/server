@@ -970,7 +970,7 @@ router.post('/client/withdrawal',(req,res)=>{
                             orderid:req.body.phonenumber,
                             transfertype:'Withdrawal',
                             asset:'Naira',
-                            from_address:req.body.firsname,
+                            from_address:req.body.firstname,
                             to_address:req.body.lastname,
                             status:'Completed',
                             read:'unread',
@@ -995,7 +995,7 @@ router.post('/client/withdrawal',(req,res)=>{
                 
             })
             .catch((error)=>{
-                // console.log(error)
+                console.log("An Erorr Occurreds")
                 // res.json("An Error Occurreds")
                 // res.send('Endpoint Reached');
                 Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},async(err,docs)=>{
@@ -1008,7 +1008,7 @@ router.post('/client/withdrawal',(req,res)=>{
                             orderid:req.body.phonenumber,
                             transfertype:'Withdrawal',
                             asset:'Naira',
-                            from_address:req.body.firsname,
+                            from_address:req.body.firstname,
                             to_address:req.body.lastname,
                             status:'Completed',
                             read:'unread',
