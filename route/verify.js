@@ -23,6 +23,7 @@ import bcrypt from 'bcryptjs'
 import deposit_webhook from "../model/deposit_webhook.js";
 import bank from "../model/bank.js";
 import logger from "../model/logger.js";
+import kyc from "../model/kyc.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -862,6 +863,23 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
 
             })
 
+            await notification.create({
+                type:6,
+                orderid:req.body.reference,
+                transfertype:'Naira Wallet Deposit',
+                asset:"Naira",
+                from_address:req.body.amount,
+                to_address:req.body.account_number,
+                status:'Completed',
+                read:'unread',
+                date_created:new Date(),
+                initiator:req.body.reference,
+        
+            })
+
+
+
+
             res.send({
                 'status': true,
                 'message': "",
@@ -907,6 +925,27 @@ function verifyResponse(req,res,next){
         
     }
 }
+
+router.post('/kyclevel3/action',(req,res)=>{
+    let status=""
+    statustype = false;
+    if(req.body.option == "approve"){
+         status = "Verified";
+         statustype = true
+    }
+    else if(req.body.option == "disapprove"){
+         status = "rejected";
+         statustype = false
+    }
+    kyc.findOneAndUpdate({userid:req.body._id},{$set:{'level3.0.idcard_type':req.body.cardtype,'level3.0.uniqueNumber':req.body.cardnumber,'level3.0.callbackStatus':status,'level3.0.status':statustype}},(err,docs)=>{
+        if(err){
+            res.status(400).send('Internal Server Error');
+        }
+        else{ 
+            res.send('Update was Successful');
+        }
+    })
+})
 
 
 
