@@ -1704,6 +1704,11 @@ router.post('/kyclevel3/action',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else{ 
+            idcardverification.findOneAndUpdate({userid:req.body._id},{$set:{'status':status}},(err,docv)=>{
+                if(err){
+                    res.send(400).send('Internal Sever Error');
+                }
+            })
             await notification.create({
                 type:3,
                 orderid:'0000',
