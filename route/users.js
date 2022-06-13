@@ -486,7 +486,7 @@ router.post('/users/idcardverification',(req,res)=>{
             if(docs.status === "Pending"){
                 res.status(400).send("Your IDCard Verification Is Already In Progress")
             }
-            else if(docs.status === "Rejected"){
+            else if(docs.status === "rejected"){
 
                 cloudinary.v2.uploader.upload(uploadStr, {
                     overwrite: true,
