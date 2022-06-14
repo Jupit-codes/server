@@ -1211,6 +1211,177 @@ router.post('/filter/deposit',(req,res)=>{
 
 
 
+router.post('/filter/tradelogs',(req,res)=>{
+  
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
+    let status = req.body.status;
+    let currency= req.body.asset;
+    let userid= req.body.getUserid
+    let query = [];
+
+    
+    if(startDate && endDate ){
+        query.push({
+            date_created: {
+                // $gte: new Date(new Date(startDate)),
+                // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                  $gte: new Date(startDate),
+                $lt: new Date(endDate).setHours(23, 59, 59)
+            }
+        })  
+
+    }
+
+    
+
+    if(status){
+        query.push(
+            {
+                status:req.body.status
+            }
+            )
+    }
+
+    if(currency){
+        query.push({
+            currency:req.body.asset
+        })
+    }
+
+    if(type){
+        query.push({
+            type:req.body.type
+        })
+    }
+
+    console.log('Query',query);
+    console.log('Body',req.body)
+    console.log('Body',query.length)
+
+
+    let x = Usermodel.findOne({_id:userid},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+            "status":false            })
+        }
+        else if(docs){
+               
+                let btcaddress = docs.btc_wallet[0].address;
+                let usdtaddress = docs.usdt_wallet[0].address; 
+                wallet_transactions.find({
+                    $or:[
+                            {
+                                $or:[
+                                    {
+                                        from_address:btcaddress
+                                    },
+                                    {
+                                        to_address:btcaddress
+                                    }
+                                ]
+                            },
+                            {
+                                $or:[
+                                    {
+                                        from_address:usdtaddress
+                                    },
+                                    {
+                                        to_address:usdtaddress
+                                    }
+                                ]
+                                
+                                
+                            },
+                            {
+                                $and:query
+                            }
+
+                        ]
+                   },(err,docs)=>{
+                       if(err){
+                           res.status(400).send(err)
+                       }
+                       else if(docs){
+                           res.send({
+                               "message":docs,
+                               "status":true
+                           })
+                       }
+                       
+                   }).sort({date_created: -1})
+        }
+        else if(!docs){
+            res.status(400).send({
+                "message":"Invalid Request",
+                "status":false
+            })
+        }
+    })
+
+    // let query = [];
+
+    // if(startDate && endDate ){
+    //     query.push({
+    //         updated: {
+    //             // $gte: new Date(new Date(startDate)),
+    //             // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+    //               $gte: new Date(startDate),
+    //             $lt: new Date(endDate).setHours(23, 59, 59)
+    //         }
+    //     })  
+
+    // }
+
+    // if(virtual_account){
+    //     query.push(
+    //         {
+    //             account_number:req.body.virtualacct
+    //         }
+    //         )
+    // }
+
+    // if(status){
+    //     query.push(
+    //         {
+    //             status:req.body.status
+    //         }
+    //         )
+    // }
+
+   
+    // if(query.length > 0){
+        
+    // const x = deposit_webhook.find({
+    //     $and:query
+      
+    //    },(err,docs)=>{
+    //        if(err){
+    //            res.send(err)
+    //        }
+    //        else{
+    //            res.send(docs)
+    //        }
+    //    }).sort({ date_created: 'asc'})
+
+    // }
+    // else{
+    //     const x = deposit_webhook.find({},(err,docs)=>{
+    //            if(err){
+    //                res.send(err)
+    //            }
+    //            else{
+    //                res.send(docs)
+    //            }
+    //        }).sort({ date_created: 'asc'})
+    // }
+    
+        
+})
+
+
+
 
 
 
