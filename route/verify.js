@@ -1046,6 +1046,57 @@ router.post('/client/withdrawal',(req,res)=>{
     
 })
 
+router.post('/filter',(req,res)=>{
+    // wallet_transactions.find({"date_created": {"$gte": new Date(2022, 1, 1), "$lt": new Date(2022, 6, 14)}},(err,docs)=>{
+    //     if(err){
+    //         res.send(err)
+    //     }
+    //     else{
+    //         res.send(docs)
+    //     }
+    // })
+    let startDate = "";
+    let endDate = "";
+
+    
+    let type = "";
+    let currency = "";
+    let status = ""
+    let userid=""
+    const x = wallet_transactions.find({
+         $and:[
+             {
+                date_created: {
+                        $gte: new Date(new Date(startDate)),
+                        $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                     }
+             },
+             {
+                 type:type
+             },
+             {
+                 orderid:userid
+             },
+             {
+                 currency:currency
+             },
+             {
+                 status:status
+             }
+         ]
+       
+        },(err,docs)=>{
+            if(err){
+                res.send(err)
+            }
+            else{
+                res.send(docs)
+            }
+        }).sort({ date_created: 'asc'})
+
+        
+})
+
 
 
 
