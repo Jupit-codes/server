@@ -1055,12 +1055,14 @@ router.post('/filter',(req,res)=>{
     //         res.send(docs)
     //     }
     // })
-    let startdate = req.body.startdate;
+    let startDate = req.body.startdate;
     let endDate = req.body.enddate;
     let type = req.body.type;
     let currency = req.body.asset;
     let status = req.body.status;
     let userid= req.body.userid;
+
+    console.log(req.body)
     const x = wallet_transactions.find({
          $and:[
              {
