@@ -1107,6 +1107,8 @@ router.post('/filter',(req,res)=>{
         })
     }
 
+    console.log('Query',query);
+    console.log('Body',req.body)
     if(query.length > 0){
         
     const x = wallet_transactions.find({
