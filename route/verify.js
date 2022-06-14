@@ -1258,7 +1258,7 @@ router.post('/filter/tradelogs',(req,res)=>{
 
     console.log('Query',query);
     console.log('Body',req.body)
-    console.log('Body',query.length)
+    console.log('Query',query.length)
 
 
     let x = Usermodel.findOne({_id:userid},(err,docs)=>{
