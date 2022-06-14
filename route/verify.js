@@ -1268,11 +1268,13 @@ router.post('/filter/tradelogs',(req,res)=>{
             "status":false            })
         }
         else if(docs){
-               
+
+            if(query.length > 0){
+
                 let btcaddress = docs.btc_wallet[0].address;
                 let usdtaddress = docs.usdt_wallet[0].address; 
                 wallet_transactions.find({
-                    $and:[
+                    $or:[
                             {
                                 $or:[
                                     {
@@ -1309,6 +1311,51 @@ router.post('/filter/tradelogs',(req,res)=>{
                        }
                        
                    }).sort({date_created: -1})
+
+            }
+            else{
+                let btcaddress = docs.btc_wallet[0].address;
+                let usdtaddress = docs.usdt_wallet[0].address; 
+                wallet_transactions.find({
+                    $or:[
+                            {
+                                $or:[
+                                    {
+                                        from_address:btcaddress
+                                    },
+                                    {
+                                        to_address:btcaddress
+                                    }
+                                ]
+                            },
+                            {
+                                $or:[
+                                    {
+                                        from_address:usdtaddress
+                                    },
+                                    {
+                                        to_address:usdtaddress
+                                    }
+                                ]
+                                
+                                
+                            }
+                            
+
+                        ]
+                   },(err,docs)=>{
+                       if(err){
+                           res.status(400).send(err)
+                       }
+                       else if(docs){
+                           res.send(docs)
+                       }
+                       
+                   }).sort({date_created: -1})
+
+            }
+               
+               
         }
         else if(!docs){
             res.status(400).send({
