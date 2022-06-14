@@ -1153,7 +1153,7 @@ router.post('/filter/deposit',(req,res)=>{
 
     if(startDate && endDate ){
         query.push({
-            date_created: {
+            updated: {
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
                   $gte: new Date(startDate),
@@ -1180,9 +1180,6 @@ router.post('/filter/deposit',(req,res)=>{
     }
 
    
-
-    
-  
     if(query.length > 0){
         
     const x = deposit_webhook.find({
