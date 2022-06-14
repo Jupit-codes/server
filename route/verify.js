@@ -1064,6 +1064,7 @@ router.post('/filter',(req,res)=>{
     let userid= req.body.userid;
 
     console.log(req.body)
+    console.log(new Date(new Date(startDate)));
     const x = wallet_transactions.find({
          $and:[
              {
