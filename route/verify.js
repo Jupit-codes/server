@@ -1067,7 +1067,7 @@ router.post('/filter',(req,res)=>{
 
     let query = [];
 
-    if(startDate !== "" && endDate!="" ){
+    if(startDate && endDate ){
         query.push({
             date_created: {
                 // $gte: new Date(new Date(startDate)),
@@ -1079,7 +1079,7 @@ router.post('/filter',(req,res)=>{
 
     }
 
-    if(userid != ""){
+    if(userid){
         query.push(
             {
                 order_id:req.body.userid
@@ -1087,7 +1087,7 @@ router.post('/filter',(req,res)=>{
             )
     }
 
-    if(status != ""){
+    if(status){
         query.push(
             {
                 status:req.body.status
@@ -1095,13 +1095,13 @@ router.post('/filter',(req,res)=>{
             )
     }
 
-    if(currency !==""){
+    if(currency){
         query.push({
             currency:req.body.asset
         })
     }
 
-    if(type !== ""){
+    if(type){
         query.push({
             type:req.body.type
         })
@@ -1109,6 +1109,7 @@ router.post('/filter',(req,res)=>{
 
     console.log('Query',query);
     console.log('Body',req.body)
+    console.log('Body',query.length)
     if(query.length > 0){
         
     const x = wallet_transactions.find({
