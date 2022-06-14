@@ -1063,29 +1063,50 @@ router.post('/filter',(req,res)=>{
     let status = req.body.status;
     let userid= req.body.userid;
 
-    console.log(req.body)
-    console.log(new Date(new Date(startDate)));
+    let query = [];
+
+    if(startDate !== "" ){
+        query.push({
+            date_created: {
+                $gte: new Date(new Date(startDate)),
+                $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+            }
+        })
+        
+
+    }
+
+    if(userid != ""){
+        query.push(
+            {
+                order_id:req.body.userid
+            }
+            )
+    }
+
+    if(status != ""){
+        query.push(
+            {
+                status:req.body.status
+            }
+            )
+    }
+
+    if(currency !==""){
+        query.push({
+            currency:req.body.asset
+        })
+    }
+
+    if(type !== ""){
+        query.push({
+            type:req.body.type
+        })
+    }
+
+    
     const x = wallet_transactions.find({
-         $and:[
-             {
-                date_created: {
-                        $gte:new Date(new Date(startDate)),
-                        $lt: new Date(new Date(endDate).setHours(23, 59, 59))
-                     }
-             },
-             {
-                 type:type
-             },
-             {
-                 orderid:userid
-             },
-             {
-                 currency:currency
-             },
-             {
-                 status:status
-             }
-         ]
+         $and:query
        
         },(err,docs)=>{
             if(err){
