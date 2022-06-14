@@ -1274,7 +1274,7 @@ router.post('/filter/tradelogs',(req,res)=>{
                 let btcaddress = docs.btc_wallet[0].address;
                 let usdtaddress = docs.usdt_wallet[0].address; 
                 wallet_transactions.find({
-                    $or:[
+                    $and:[
                             {
                                 $or:[
                                     {
