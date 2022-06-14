@@ -1057,17 +1057,15 @@ router.post('/filter',(req,res)=>{
     // })
     let startDate = "";
     let endDate = "";
-
-    
     let type = "";
     let currency = "";
-    let status = ""
-    let userid=""
+    let status = "";
+    let userid="";
     const x = wallet_transactions.find({
          $and:[
              {
                 date_created: {
-                        $gte: new Date(new Date(startDate)),
+                        $gte:new Date(new Date(startDate)),
                         $lt: new Date(new Date(endDate).setHours(23, 59, 59))
                      }
              },
