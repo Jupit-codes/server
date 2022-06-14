@@ -1145,7 +1145,6 @@ router.post('/filter/deposit',(req,res)=>{
   
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
-    
     let status = req.body.status;
     let virtual_account= req.body.virtualacct;
 
@@ -1179,18 +1178,9 @@ router.post('/filter/deposit',(req,res)=>{
     //         )
     // }
 
-    if(currency){
-        query.push({
-            currency:req.body.asset
-        })
-    }
+   
 
-    if(type){
-        query.push({
-            type:req.body.type
-        })
-    }
-
+    
   
     if(query.length > 0){
         
