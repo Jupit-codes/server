@@ -1217,6 +1217,7 @@ router.post('/filter/tradelogs',(req,res)=>{
     let endDate = req.body.enddate;
     let status = req.body.status;
     let currency= req.body.asset;
+    let type= req.body.type;
     let userid= req.body.getUserid
     let query = [];
 
