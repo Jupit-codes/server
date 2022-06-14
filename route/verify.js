@@ -1272,7 +1272,7 @@ router.post('/filter/tradelogs',(req,res)=>{
                 let btcaddress = docs.btc_wallet[0].address;
                 let usdtaddress = docs.usdt_wallet[0].address; 
                 wallet_transactions.find({
-                    $or:[
+                    $and:[
                             {
                                 $or:[
                                     {
@@ -1305,10 +1305,7 @@ router.post('/filter/tradelogs',(req,res)=>{
                            res.status(400).send(err)
                        }
                        else if(docs){
-                           res.send({
-                               "message":docs,
-                               "status":true
-                           })
+                           res.send(docs)
                        }
                        
                    }).sort({date_created: -1})
