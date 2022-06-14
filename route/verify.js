@@ -1056,8 +1056,10 @@ router.post('/filter',(req,res)=>{
     //     }
     // })
     
-    let startDate = '2022-06-01';
-    let endDate = '2022-06-14';
+    // let startDate = '2022-06-01';
+    // let endDate = '2022-06-14';
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
     let type = req.body.type;
     let currency = req.body.asset;
     let status = req.body.status;
@@ -1065,14 +1067,15 @@ router.post('/filter',(req,res)=>{
 
     let query = [];
 
-    if(startDate !== "" ){
+    if(startDate !== "" && endDate!="" ){
         query.push({
             date_created: {
-                $gte: new Date(new Date(startDate)),
-                $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                // $gte: new Date(new Date(startDate)),
+                // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                  $gte: new Date(startDate),
+                $lt: new Date(endDate).setHours(23, 59, 59)
             }
-        })
-        
+        })  
 
     }
 
@@ -1104,19 +1107,32 @@ router.post('/filter',(req,res)=>{
         })
     }
 
-    
+    if(query.length > 0){
+        
     const x = wallet_transactions.find({
-         $and:query
-       
-        },(err,docs)=>{
-            if(err){
-                res.send(err)
-            }
-            else{
-                res.send(docs)
-            }
-        }).sort({ date_created: 'asc'})
+        $and:query
+      
+       },(err,docs)=>{
+           if(err){
+               res.send(err)
+           }
+           else{
+               res.send(docs)
+           }
+       }).sort({ date_created: 'asc'})
 
+    }
+    else{
+        const x = wallet_transactions.find({},(err,docs)=>{
+               if(err){
+                   res.send(err)
+               }
+               else{
+                   res.send(docs)
+               }
+           }).sort({ date_created: 'asc'})
+    }
+    
         
 })
 
