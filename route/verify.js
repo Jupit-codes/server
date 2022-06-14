@@ -1141,6 +1141,90 @@ router.post('/filter',(req,res)=>{
 
 
 
+router.post('/filter/deposit',(req,res)=>{
+  
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
+    
+    let status = req.body.status;
+    let virtual_account= req.body.virtualacct;
+
+    let query = [];
+
+    if(startDate && endDate ){
+        query.push({
+            date_created: {
+                // $gte: new Date(new Date(startDate)),
+                // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                  $gte: new Date(startDate),
+                $lt: new Date(endDate).setHours(23, 59, 59)
+            }
+        })  
+
+    }
+
+    if(virtual_account){
+        query.push(
+            {
+                account_number:req.body.virtualacct
+            }
+            )
+    }
+
+    // if(status){
+    //     query.push(
+    //         {
+    //             status:req.body.status
+    //         }
+    //         )
+    // }
+
+    if(currency){
+        query.push({
+            currency:req.body.asset
+        })
+    }
+
+    if(type){
+        query.push({
+            type:req.body.type
+        })
+    }
+
+  
+    if(query.length > 0){
+        
+    const x = deposit_webhook.find({
+        $and:query
+      
+       },(err,docs)=>{
+           if(err){
+               res.send(err)
+           }
+           else{
+               res.send(docs)
+           }
+       }).sort({ date_created: 'asc'})
+
+    }
+    else{
+        const x = deposit_webhook.find({},(err,docs)=>{
+               if(err){
+                   res.send(err)
+               }
+               else{
+                   res.send(docs)
+               }
+           }).sort({ date_created: 'asc'})
+    }
+    
+        
+})
+
+
+
+
+
 
 
 
