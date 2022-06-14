@@ -13,6 +13,9 @@ const deposit_webhookSchema = mongoose.Schema({
         type:'String',
         
     },
+    status:{
+        type:'String'
+    },
     date_created:{
         type:Date
 

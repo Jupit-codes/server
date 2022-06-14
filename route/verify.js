@@ -868,6 +868,7 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
                 reference:req.body.reference,
                 account_number:req.body.account_number,
                 amount:req.body.amount,
+                status:'successful'
 
             })
 
@@ -1170,13 +1171,13 @@ router.post('/filter/deposit',(req,res)=>{
             )
     }
 
-    // if(status){
-    //     query.push(
-    //         {
-    //             status:req.body.status
-    //         }
-    //         )
-    // }
+    if(status){
+        query.push(
+            {
+                status:req.body.status
+            }
+            )
+    }
 
    
 
