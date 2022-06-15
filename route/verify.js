@@ -553,7 +553,8 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                 total:req.body.Total,
                 cardname:req.body.Cardname,
                 amount_in_usd:req.body.amountInusd,
-                status:'untreated'
+                status:'untreated',
+                type:'Sell'
             })
 
             if(savetransaction){
@@ -1500,6 +1501,48 @@ router.post('/filter/withdrawal',(req,res)=>{
     }
     
         
+})
+
+
+router.post('addgiftcard/buy/request',middlewareVerify,(req,res)=>{
+   
+    const {SelectedImage} = req.body
+    let unique_id = randomUUID;
+
+    let savetransaction = await giftcardtransactions.create({
+        userid:req.body.Userid,
+        unique_id:req.body.unique_id,
+        country:req.body.Country,
+        total:req.body.Total,
+        cardname:req.body.Cardname,
+        amount_in_usd:req.body.amountInusd,
+        status:'untreated',
+        type:'Buy'
+    })
+
+    if(savetransaction){
+        req.body.SelectedAmount.forEach(d => {
+        
+            giftcardtransactions.findOneAndUpdate({_id:savetransaction._id},{$push:{
+                rate:d
+           }},(err,docs)=>{
+               if(err){
+                   res.send(err);
+               }
+               else {
+                    res.send({
+                        "message":'Successfully Submitted',
+                        "status":true
+                    })
+               }
+               
+           })
+           
+       }); 
+       
+     }
+
+
 })
 
 
