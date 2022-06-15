@@ -1049,17 +1049,7 @@ router.post('/client/withdrawal',(req,res)=>{
 })
 
 router.post('/filter',(req,res)=>{
-    // wallet_transactions.find({"date_created": {"$gte": new Date(2022, 1, 1), "$lt": new Date(2022, 6, 14)}},(err,docs)=>{
-    //     if(err){
-    //         res.send(err)
-    //     }
-    //     else{
-    //         res.send(docs)
-    //     }
-    // })
-    
-    // let startDate = '2022-06-01';
-    // let endDate = '2022-06-14';
+   
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
     let type = req.body.type;
@@ -1109,9 +1099,6 @@ router.post('/filter',(req,res)=>{
         })
     }
 
-    console.log('Query',query);
-    console.log('Body',req.body)
-    console.log('Body',query.length)
     if(query.length > 0){
         
     const x = wallet_transactions.find({
@@ -1259,9 +1246,7 @@ router.post('/filter/tradelogs',(req,res)=>{
         })
     }
 
-    console.log('Query',query);
-    console.log('Body',req.body)
-    console.log('Query',query.length)
+   
 
 
     let x = Usermodel.findOne({_id:userid},(err,docs)=>{
@@ -1434,6 +1419,89 @@ router.post('/filter/tradelogs',(req,res)=>{
     
         
 })
+
+
+router.post('/filter/withdrawal',(req,res)=>{
+   
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
+    let userid = req.body.userid;
+    let email = req.body.email;
+    let accountnumber = req.body.accountnumber;
+    let status = req.body.status;
+  
+
+    let query = [];
+
+    if(startDate && endDate ){
+        query.push({
+            updated: {
+                // $gte: new Date(new Date(startDate)),
+                // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                  $gte: new Date(startDate),
+                $lt: new Date(endDate).setHours(23, 59, 59)
+            }
+        })  
+
+    }
+
+    if(userid){
+        query.push(
+            {
+                userid:req.body.userid
+            }
+            )
+    }
+
+    if(status){
+        query.push(
+            {
+                type:req.body.status
+            }
+            )
+    }
+
+    if(email){
+        query.push({
+            email:req.body.email
+        })
+    }
+
+    if(accountnumber){
+        query.push({
+            account_number:req.body.accountnumber
+        })
+    }
+
+    if(query.length > 0){
+        
+    const x = withdrawal.find({
+        $and:query
+      
+       },(err,docs)=>{
+           if(err){
+               res.send(err)
+           }
+           else{
+               res.send(docs)
+           }
+       }).sort({ date_created: 'asc'})
+
+    }
+    else{
+        const x = withdrawal.find({},(err,docs)=>{
+               if(err){
+                   res.send(err)
+               }
+               else{
+                   res.send(docs)
+               }
+           }).sort({ date_created: 'asc'})
+    }
+    
+        
+})
+
 
 
 
