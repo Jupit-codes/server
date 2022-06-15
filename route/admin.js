@@ -1353,6 +1353,7 @@ router.post('/get/uploadedgiftcards/buy',(req,res)=>{
                     }) 
                 }
                 else if(docs_user){
+                    console.log('userzzz',docs_user)
                     bank.findOne({email:docs_user.email},(err,docs_bank)=>{
                         if(err){
                             res.status(400).send({
