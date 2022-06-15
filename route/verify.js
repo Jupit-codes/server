@@ -986,6 +986,7 @@ router.post('/client/withdrawal',(req,res)=>{
                             initiator:req.body.email,
                         })
                         await withdrawal.create({
+                            username:document.username,
                             userid:req.body.userid,
                             amount:req.body.amount,
                             account_number:docs.account_number,

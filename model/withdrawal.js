@@ -1,6 +1,9 @@
 import mongoose from 'mongoose'
 
 const withdrawalSchema = mongoose.Schema({
+    username:{
+        type:'String'
+    },
     userid:{
         type:'String',
         required: [true, "Required"],
