@@ -775,7 +775,7 @@ router.post('/customer_webhook', (req,res)=>{
                             type:"3",
                             orderid:req.body.data.customer_id,
                             transfertype:req.body.event,
-                            asset:'Webhook CallBack',
+                            asset:'WebhookCallBack',
                             from_address:req.body.data.identification.account_number,
                             to_address:req.body.data.identification.bvn,
                             status:'Transaction Completed',

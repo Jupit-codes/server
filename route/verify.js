@@ -1215,6 +1215,8 @@ router.post('/filter/tradelogs',(req,res)=>{
   
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
+    // let startDate = '2022-06-11';
+    // let endDate = '2022-06-13';
     let status = req.body.status;
     let currency= req.body.asset;
     let type= req.body.type;
@@ -1282,11 +1284,7 @@ router.post('/filter/tradelogs',(req,res)=>{
                                     },
                                     {
                                         to_address:btcaddress
-                                    }
-                                ]
-                            },
-                            {
-                                $or:[
+                                    },
                                     {
                                         from_address:usdtaddress
                                     },
@@ -1294,12 +1292,23 @@ router.post('/filter/tradelogs',(req,res)=>{
                                         to_address:usdtaddress
                                     }
                                 ]
-                                
-                                
                             },
                             {
                                 $and:query
                             }
+                            // {
+                            //     $or:[
+                            //         {
+                            //             from_address:usdtaddress
+                            //         },
+                            //         {
+                            //             to_address:usdtaddress
+                            //         }
+                            //     ]
+                                
+                                
+                            // }
+                           
 
                         ]
                    },(err,docs)=>{
