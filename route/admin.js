@@ -1361,7 +1361,7 @@ router.post('/get/uploadedgiftcards/buy',(req,res)=>{
                             }) 
                         }else if(docs_bank){
                             res.send({
-                                "message":docs,
+                               
                                 "message_details":docs_gift,
                                 "message_bank":docs_bank,
                                 "status":true
