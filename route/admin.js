@@ -1346,7 +1346,7 @@ router.post('/get/uploadedgiftcards/buy',(req,res)=>{
         }
         else if(docs_gift){
             
-            Usermodel.findOne({_id:docs_gift[0].userid},(err,docs_user)=>{
+            Usermodel.findOne({_id:docs_gift.userid},(err,docs_user)=>{
                 if(err){
                     res.status(400).send({
                         "message":err
