@@ -1805,7 +1805,7 @@ router.post('/kyclevel3/action',(req,res)=>{
 })
 
 
-router.get('get/all/buy/transaction',(req,res)=>{
+router.get('/get/all/buy/transaction',(req,res)=>{
     buy_n_sell.find({type:'Buy'},(err,docs)=>{
         if(err){
             res.status(400).send(err)
@@ -1816,7 +1816,7 @@ router.get('get/all/buy/transaction',(req,res)=>{
     })
 })
 
-router.get('get/all/sell/transaction',(req,res)=>{
+router.get('/get/all/sell/transaction',(req,res)=>{
     buy_n_sell.find({type:'Sell'},(err,docs)=>{
         if(err){
             res.status(400).send(err)
