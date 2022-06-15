@@ -1524,6 +1524,8 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
                 status:'untreated',
                 type:'Buy'
             })
+            console.log('Savetransaction',savetransaction);
+            console.log(req.body);
             if(savetransaction){
                 req.body.SelectedAmount.forEach(d => {
                 
@@ -1550,12 +1552,6 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
              }
         }
     })
-
-   
-    console.log("savetransactions",savetransaction);
-    console.log(req.body)
-
-   
 
 
 })
