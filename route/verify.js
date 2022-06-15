@@ -1538,7 +1538,7 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
            
        }); 
         res.send({
-            "message":'Successfully Submitted',
+            "message":'GiftCard Buy Request Successfully Submitted',
             "status":true
          })
        
