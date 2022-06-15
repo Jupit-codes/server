@@ -1504,7 +1504,7 @@ router.post('/filter/withdrawal',(req,res)=>{
 })
 
 
-router.post('addgiftcard/buy/request',middlewareVerify,(req,res)=>{
+router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
    
     const {SelectedImage} = req.body
     let unique_id = randomUUID;
