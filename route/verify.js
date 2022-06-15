@@ -1516,7 +1516,7 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
         else if(docs){
             let savetransaction =  await giftcardtransactions.create({
                 userid:req.body.Userid,
-                unique_id:req.body.unique_id,
+                unique_id:"Uni00012",
                 country:req.body.Country,
                 total:req.body.Total,
                 cardname:req.body.Cardname,
