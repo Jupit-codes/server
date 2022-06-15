@@ -1335,6 +1335,79 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
     })
 })
 
+
+
+router.post('/get/uploadedgiftcards/buy',(req,res)=>{
+    giftcardImages.find({unique_id:req.body.id},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            giftcardtransactions.find({unique_id:req.body.id},(err,docs_gift)=>{
+                if(err){
+                    res.status(400).send({
+                        "message":err
+                    })
+                }
+                else if(docs_gift){
+                    // console.log(docs_gift[0].userid)
+                    Usermodel.findOne({_id:docs_gift[0].userid},(err,docs_user)=>{
+                        if(err){
+                            res.status(400).send({
+                                "message":err
+                            }) 
+                        }
+                        else if(docs_user){
+                            bank.findOne({email:docs_user.email},(err,docs_bank)=>{
+                                if(err){
+                                    res.status(400).send({
+                                        "message":err
+                                    }) 
+                                }else if(docs_bank){
+                                    res.send({
+                                        "message":docs,
+                                        "message_details":docs_gift,
+                                        "message_bank":docs_bank,
+                                        "status":true
+                                    })
+                                } 
+                                else if(!docs_bank){
+                                    res.status(400).send({
+                                        "message":"Internal Server Error Bank"
+                                    }) 
+                                }
+                            })
+                        }
+                        else if(!docs_user){
+                            res.status(400).send({
+                                "message":"Internal Server Error User"
+                            }) 
+                        }
+                    })
+                   
+                }
+                else if(!docs){
+                    res.status(400).send({
+                        "message":"Internal Server Error"
+                    })
+                }
+            })
+
+            
+        }
+        else if(!docs){
+            res.status(400).send({
+                "message":"Empty",
+                "status":false
+            })
+        }
+       
+    })
+})
+
 router.post('/giftcard/markhastreated',async(req,res)=>{
     await giftcardtransactions.findOneAndUpdate({unique_id:req.body.id},{$set:{status:'treated'}},async (err,docs)=>{
         if(err){
