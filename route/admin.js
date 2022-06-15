@@ -1338,73 +1338,54 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
 
 
 router.post('/get/uploadedgiftcards/buy',(req,res)=>{
-    giftcardImages.find({unique_id:req.body.id},(err,docs)=>{
+    giftcardtransactions.findOne({userid:req.body.id},(err,docs_gift)=>{
         if(err){
             res.status(400).send({
-                "message":err,
-                "status":false
+                "message":err
             })
         }
-        else if(docs){
-            giftcardtransactions.find({unique_id:req.body.id},(err,docs_gift)=>{
+        else if(docs_gift){
+            
+            Usermodel.findOne({_id:docs_gift[0].userid},(err,docs_user)=>{
                 if(err){
                     res.status(400).send({
                         "message":err
-                    })
+                    }) 
                 }
-                else if(docs_gift){
-                    // console.log(docs_gift[0].userid)
-                    Usermodel.findOne({_id:docs_gift[0].userid},(err,docs_user)=>{
+                else if(docs_user){
+                    bank.findOne({email:docs_user.email},(err,docs_bank)=>{
                         if(err){
                             res.status(400).send({
                                 "message":err
                             }) 
-                        }
-                        else if(docs_user){
-                            bank.findOne({email:docs_user.email},(err,docs_bank)=>{
-                                if(err){
-                                    res.status(400).send({
-                                        "message":err
-                                    }) 
-                                }else if(docs_bank){
-                                    res.send({
-                                        "message":docs,
-                                        "message_details":docs_gift,
-                                        "message_bank":docs_bank,
-                                        "status":true
-                                    })
-                                } 
-                                else if(!docs_bank){
-                                    res.status(400).send({
-                                        "message":"Internal Server Error Bank"
-                                    }) 
-                                }
+                        }else if(docs_bank){
+                            res.send({
+                                "message":docs,
+                                "message_details":docs_gift,
+                                "message_bank":docs_bank,
+                                "status":true
                             })
-                        }
-                        else if(!docs_user){
+                        } 
+                        else if(!docs_bank){
                             res.status(400).send({
-                                "message":"Internal Server Error User"
+                                "message":"Internal Server Error Bank"
                             }) 
                         }
                     })
-                   
                 }
-                else if(!docs){
+                else if(!docs_user){
                     res.status(400).send({
-                        "message":"Internal Server Error"
-                    })
+                        "message":"Internal Server Error User"
+                    }) 
                 }
             })
-
-            
+           
         }
         else if(!docs){
             res.status(400).send({
-                "message":"Empty",
-                "status":false
+                "message":"Internal Server Error"
             })
         }
-       
     })
 })
 
