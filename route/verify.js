@@ -1509,7 +1509,7 @@ router.post('addgiftcard/buy/request',middlewareVerify,(req,res)=>{
     const {SelectedImage} = req.body
     let unique_id = randomUUID;
 
-    let savetransaction = await giftcardtransactions.create({
+    let savetransaction =  giftcardtransactions.create({
         userid:req.body.Userid,
         unique_id:req.body.unique_id,
         country:req.body.Country,
