@@ -571,7 +571,7 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                    
                }); 
                res.send({
-                   "message":'Successfully Submitted',
+                   "message":'Sell Giftcard Request Successfully Submitted',
                    "status":true
                })
             }
