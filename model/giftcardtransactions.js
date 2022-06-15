@@ -13,6 +13,9 @@ const giftcardtransactionSchema = mongoose.Schema({
     unique_id:{type:'String'},
     rate : {type:Array,"default":[]},
     total:{type:Number},
+    type:{
+        type:'String'
+    },
     amount_in_usd:{type:Number},
     date_created:{
         type:Date
