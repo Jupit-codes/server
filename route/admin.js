@@ -1229,7 +1229,7 @@ async function DriverL(Driverslicense_params){
 
 
 router.get('/fetch/giftcard/sell',(req,res)=>{
-    giftcardtransactions.find({status:'untreated'},(err,docs)=>{
+    giftcardtransactions.find({$and:[{status:'untreated'},{type:'Sell'}]},(err,docs)=>{
         if(err){
             res.send({
                 "message":err,
@@ -1244,6 +1244,25 @@ router.get('/fetch/giftcard/sell',(req,res)=>{
         }
     })
 })
+
+
+router.get('/fetch/giftcard/buy',(req,res)=>{
+    giftcardtransactions.find({$and:[{status:'untreated'},{type:'Buy'}]},(err,docs)=>{
+        if(err){
+            res.send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            res.send({
+                "message":docs,
+                "status":true
+            })
+        }
+    })
+})
+
 
 router.post('/get/uploadedgiftcards',(req,res)=>{
     giftcardImages.find({unique_id:req.body.id},(err,docs)=>{
