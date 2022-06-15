@@ -1528,17 +1528,17 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
            }},(err,docs)=>{
                if(err){
                    res.send(err);
+                   return false
                }
-               else {
-                    res.send({
-                        "message":'Successfully Submitted',
-                        "status":true
-                    })
-               }
+               
                
            })
            
        }); 
+        res.send({
+            "message":'Successfully Submitted',
+            "status":true
+         })
        
      }
 
