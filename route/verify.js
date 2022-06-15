@@ -1509,40 +1509,53 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
     const {SelectedImage} = req.body
     let unique_id = randomUUID;
 
-    let savetransaction =  giftcardtransactions.create({
-        userid:req.body.Userid,
-        unique_id:req.body.unique_id,
-        country:req.body.Country,
-        total:req.body.Total,
-        cardname:req.body.Cardname,
-        amount_in_usd:req.body.amountInusd,
-        status:'untreated',
-        type:'Buy'
+    Usermodel.findOne({_id:req.body.Userid},async(err,docs)=>{
+        if(err){
+            res.status(400).send('User Not Found');
+        }
+        else if(docs){
+            let savetransaction =  await giftcardtransactions.create({
+                userid:req.body.Userid,
+                unique_id:req.body.unique_id,
+                country:req.body.Country,
+                total:req.body.Total,
+                cardname:req.body.Cardname,
+                amount_in_usd:req.body.amountInusd,
+                status:'untreated',
+                type:'Buy'
+            })
+            if(savetransaction){
+                req.body.SelectedAmount.forEach(d => {
+                
+                    giftcardtransactions.findOneAndUpdate({_id:savetransaction._id},{$push:{
+                        rate:d
+                   }},(err,docs)=>{
+                       if(err){
+                           res.send(err);
+                           return false
+                       }
+                       
+                       
+                   })
+                   
+               }); 
+                res.send({
+                    "message":'GiftCard Buy Request Successfully Submitted',
+                    "status":true
+                 })
+               
+             }
+             else{
+                res.status(400).send('Internal Server Error')
+             }
+        }
     })
+
+   
     console.log("savetransactions",savetransaction);
     console.log(req.body)
 
-    if(savetransaction){
-        req.body.SelectedAmount.forEach(d => {
-        
-            giftcardtransactions.findOneAndUpdate({_id:savetransaction._id},{$push:{
-                rate:d
-           }},(err,docs)=>{
-               if(err){
-                   res.send(err);
-                   return false
-               }
-               
-               
-           })
-           
-       }); 
-        res.send({
-            "message":'GiftCard Buy Request Successfully Submitted',
-            "status":true
-         })
-       
-     }
+   
 
 
 })
