@@ -1773,6 +1773,7 @@ router.post('/kyclevel3/action',(req,res)=>{
          status = "rejected";
          statustype = false
     }
+    console.log("body",req.body)
     kyc.findOneAndUpdate({userid:req.body._id},{$set:{'level3.0.idcard_type':req.body.cardtype,'level3.0.uniqueNumber':req.body.cardnumber,'level3.0.callbackStatus':status,'level3.0.status':statustype}},async (err,docs)=>{
         if(err){
             res.status(400).send('Internal Server Error');
