@@ -1118,11 +1118,6 @@ router.post('/verify/idcard',middlewareVerify, async(req,res)=>{
 
                 }
             }
-            
-            
-            
-  
-
                 
         }
     })
@@ -1779,7 +1774,7 @@ router.post('/kyclevel3/action',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else{ 
-            res.send(docs)
+            
             
             await idcardverification.findOneAndUpdate({userid:req.body._id,status:'Pending'},{$set:{'status':status}},(err,docv)=>{
                 if(err){
