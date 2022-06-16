@@ -432,13 +432,16 @@ router.post('/users/kyc',(req,res)=>{
 
 router.post('/users/getIdcardverification',middlewareVerify,(req,res)=>{
    
-    IdCardVerification.findOne({$and:[{userid:req.body.userid},{status:'Verified'}]},(err,docs)=>{
+    IdCardVerification.find({$and:[{userid:req.body.userid},{status:'Verified'}]},(err,docs)=>{
         if(err){
             console.log(err)
             res.status(400).send(err);
         }
         else if(docs){
             res.send(docs)
+        }
+        else if(!docs){
+            res.send('Unverified')
         }
     })
 })
@@ -539,7 +542,7 @@ router.post('/users/idcardverification',(req,res)=>{
                     });
  
             }
-            else if(docs.status === "Resolved"){
+            else if(docs.status === "Verified"){
                 res.status(400).send("Previous Submission Has Already been Resolved")
             }
         }
