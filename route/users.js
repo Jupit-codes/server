@@ -27,6 +27,7 @@ import changepassword from "../model/changepassword.js";
 import session from "../model/session.js";
 import { readdirSync } from "fs";
 import NodeDateTime from 'node-datetime';
+import idcardverification from "../model/idcardverification.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -424,6 +425,26 @@ router.post('/users/kyc',(req,res)=>{
         }
     })
 })
+
+
+
+
+
+router.post('/users/getIdcardverification',middlewareVerify,(req,res)=>{
+   
+    idcardverification.findOne({$and:[{userid:req.body.userid},{status:'Verified'}]},(err,docs)=>{
+        if(err){
+            console.log(err)
+            res.status(400).send(err);
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+})
+
+
+
 
 router.post('/users/bank',middlewareVerify,(req,res)=>{
    
