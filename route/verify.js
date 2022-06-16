@@ -1557,6 +1557,71 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
 })
 
 
+router.post('/filter/transactionlog',(req,res)=>{
+   
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
+    let type = req.body.type;
+    let currency = req.body.asset;
+    
+
+    let query = [];
+
+    if(startDate && endDate ){
+        query.push({
+            updated: {
+                // $gte: new Date(new Date(startDate)),
+                // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                  $gte: new Date(startDate),
+                  $lt: new Date(endDate).setHours(23, 59, 59)
+            }
+        })  
+
+    }
+
+    
+    if(currency){
+        query.push({
+            currency:req.body.asset
+        })
+    }
+
+    if(type){
+        query.push({
+            type:req.body.type
+        })
+    }
+
+    if(query.length > 0){
+        
+    const x = buy_n_sell.find({
+        $and:query
+      
+       },(err,docs)=>{
+           if(err){
+               res.send(err)
+           }
+           else{
+               res.send(docs)
+           }
+       }).sort({ updated: 'asc'})
+
+    }
+    else{
+        const x = buy_n_sell.find({},(err,docs)=>{
+               if(err){
+                   res.send(err)
+               }
+               else{
+                   res.send(docs)
+               }
+           }).sort({ updated: 'asc'})
+    }
+    
+        
+})
+
+
 
 
 
