@@ -432,7 +432,7 @@ router.post('/users/kyc',(req,res)=>{
 
 router.post('/users/getIdcardverification',middlewareVerify,(req,res)=>{
    
-    idcardverification.findOne({$and:[{userid:req.body.userid},{status:'Verified'}]},(err,docs)=>{
+    IdCardVerification.findOne({$and:[{userid:req.body.userid},{status:'Verified'}]},(err,docs)=>{
         if(err){
             console.log(err)
             res.status(400).send(err);
