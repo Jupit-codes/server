@@ -1800,7 +1800,7 @@ router.post('/kyclevel3/action',(req,res)=>{
                 date_created:new Date(),
                 initiator:req.body.email,
             })
-            res.send('Update was Successful');
+            res.send('Update was Successfully');
         }
     })
 })
