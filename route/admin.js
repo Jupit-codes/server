@@ -1826,6 +1826,16 @@ router.get('/get/all/sell/transaction',(req,res)=>{
         }
     })
 })
+router.get('/get/all/buy_n_sell/transaction',(req,res)=>{
+    buy_n_sell.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else{
+            res.send(docs)
+        }
+    })
+})
 
 
  
