@@ -1986,7 +1986,7 @@ async function middlewareVerify(req,res,next){
                return false;
                 
             }
-            return 
+            return false
         }
         
         Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
