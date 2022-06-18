@@ -1942,32 +1942,36 @@ async function middlewareVerify(req,res,next){
                  return false;
                 
             }
+            else{
+                Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+                    if(err){
+                     res.status(403).send({"message":"Internal Server Error"});
+                     return false;
+                         
+                    } 
+                    else if(docs){
+                         if(docs.password != decodedJwt.user.password ){
+                             res.status(403).send("Password Expired");
+                             return false;
+                             
+                         }
+                         if(docs.Status != "Active"){
+                             res.status(403).send("Account Blocked");
+                             return false;
+                            
+                         }
+                    }
+                    else if(!docs){
+                     res.status(403).send({"message":"Internal Server Error"});
+                     return false;
+                        
+                    }
+                 })
+
+            }
         }
         
-        Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
-           if(err){
-            res.status(403).send({"message":"Internal Server Error"});
-            return false;
-                
-           } 
-           else if(docs){
-                if(docs.password != decodedJwt.user.password ){
-                    res.status(403).send("Password Expired");
-                    return false;
-                    
-                }
-                if(docs.Status != "Active"){
-                    res.status(403).send("Account Blocked");
-                    return false;
-                   
-                }
-           }
-           else if(!docs){
-            res.status(403).send({"message":"Internal Server Error"});
-            return false;
-               
-           }
-        })
+        
 
         req.token = bearerHeader;
         next();
