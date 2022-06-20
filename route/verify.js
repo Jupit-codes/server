@@ -631,7 +631,8 @@ router.post('/purchase/coin',(req,res)=>{
                     amount:req.body.ngnamount,
                     currency:req.body.wallet_type,
                     currency_worth:req.body.btcamount,
-                    type:"Buy"
+                    type:"Buy",
+                    status:'Successful'
 
                 })
     
@@ -714,7 +715,8 @@ router.post('/sell/coin',(req,res)=>{
                     amount:req.body.ngnamount,
                     currency:req.body.wallet_type,
                     currency_worth:req.body.btcamount,
-                    type:"Sell"
+                    type:"Sell",
+                    status:"Successful"
 
                 })
     

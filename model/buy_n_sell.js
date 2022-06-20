@@ -28,6 +28,9 @@ const buynsellSchema = mongoose.Schema({
     dateofcreation:{
         type:Date
     },
+    status:{
+        type:'String'
+    },
     updated: { type: Date, default: Date.now },
 })
 
