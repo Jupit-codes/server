@@ -1568,6 +1568,7 @@ router.post('/filter/transactionlog',(req,res)=>{
     let endDate = req.body.enddate;
     let type = req.body.type;
     let currency = req.body.asset;
+    let status = req.body.status
     
 
     let query = [];
@@ -1594,6 +1595,11 @@ router.post('/filter/transactionlog',(req,res)=>{
     if(type){
         query.push({
             type:req.body.type
+        })
+    }
+    if(status){
+        query.push({
+            status:req.body.status
         })
     }
 
