@@ -1626,7 +1626,7 @@ router.post('/filter/transactionlog',(req,res)=>{
                else{
                    res.send(docs)
                }
-           }).sort({ updated: 'asc'})
+        }).sort({ updated: 'asc'})
     }
     
         
