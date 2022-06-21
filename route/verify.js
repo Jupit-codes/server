@@ -948,7 +948,7 @@ router.post('/client/withdrawal',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else if(docs){
-            const url = "https://api.purplepayapp.com/dev_api/v1/test/transfer/"
+            const url = "https://sandbox.purplepayapp.com/dev_api/v1/test/transfer/"
             var params = {
                 
                     "account_number": docs.account_number,
