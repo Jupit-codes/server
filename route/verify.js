@@ -392,7 +392,7 @@ async function middlewareVerify(req,res,next){
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
-                res.sendStatus(403).send('Token Expired');
+                res.status(403).send('Token Expired');
                 return false;
                 
             }
