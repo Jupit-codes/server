@@ -999,7 +999,8 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                             else{
                                                 res.send({
                                                     "Errormessage":"Account Generation Error",
-                                                    "status":false
+                                                    "status":false,
+                                                    "error":vitualaccount[1]
                                                 })
                                             }
                                    
@@ -1319,7 +1320,7 @@ async function createvirtualaccount(firstname,lastname,userid){
                     } 
                 })
                 .catch((error)=>{
-                    // console.log('error',error.response)
+                    console.log('error',error.response)
                     return [false,error];
                 })
 
