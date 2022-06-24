@@ -25,6 +25,7 @@ import bank from "../model/bank.js";
 import logger from "../model/logger.js";
 import kyc from "../model/kyc.js";
 import withdrawal from "../model/withdrawal.js";
+import moment from 'moment'
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -1630,6 +1631,37 @@ router.post('/filter/transactionlog',(req,res)=>{
     }
     
         
+})
+
+router.post('/getwithrawal/count',(req,res)=>{
+    let currentdate = new Date();
+// res.send(new Date(currentDate));
+// return false;
+const today = moment().startOf('day')
+const endofday = moment(today).endOf('day').toDate();
+console.log(today.toDate())
+console.log(endofday)
+
+    withdrawal.find({
+        $and:[
+            {
+                userid:req.body._id
+            },
+            {
+                updated: {$gte: today.toDate(),$lte: moment(today).endOf('day').toDate()}
+            }
+        ]
+    },(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            res.send(docs)
+        }
+        else if(!docs){
+            res.send(docs)
+        }
+    })
 })
 
 
