@@ -1314,6 +1314,11 @@ router.post('/login/2FA',(req,res)=>{
                             const verified = SpeakEasy.totp.verify({secret,encoding:'base32',token:token,window:1})
                             
                             if(verified){
+                                var dt = NodeDateTime.create();
+                                var formatted = dt.format('Y-m-d H:M:S');
+                                
+                                Usermodel.findOneAndUpdate({_id:docs._id},{$set:{loginTime:formatted}})
+                        await signsuccessmail(docs.email,docs.username,formatted);
                                 jwt.sign({user:docs},'secretkey',{expiresIn:'1h'},(err,token)=>{
                                     res.json({
                                         token,
