@@ -85,7 +85,7 @@ router.get('/sendmail',(req,res)=>{
                         </div>
 
                         <div >
-                        <p style="color:#9DA8B6">If you have any questions, please contact support@jupit.app</p>
+                        <p style="color:#9DA8B6">If you have any questions, please contact support@jupitapp.co</p>
                         </div>
                     </div>
         
@@ -522,7 +522,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                                         <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                                             <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
                                                             <p style="font-size: 14px; line-height: 160%;">+2348088213177</p>
-                                                            <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupit.com" target="_blank">support@jupit.com</a></span></p>
+                                                            <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupitapp.co" target="_blank">support@jupitapp.co</a></span></p>
                                                             <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">https://www.jupitapp.co</span></p>
                                                         </div>
                             
@@ -622,7 +622,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                             
                                                         <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                                            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp.co</span></p>
+                                                            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp</span></p>
                                                         </div>
                             
                                                         </td>
@@ -1046,7 +1046,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                                     <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                                         <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
                                                         <p style="font-size: 14px; line-height: 160%;">+2348088213177</p>
-                                                        <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupit.com" target="_blank">support@jupit.com</a></span></p>
+                                                        <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupitapp.co" target="_blank">support@jupitapp.co</a></span></p>
                                                         <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">https://www.jupitapp.co</span></p>
                                                     </div>
                         
@@ -1166,7 +1166,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                                     <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                         
                                                     <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                                        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp.co</span></p>
+                                                        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp</span></p>
                                                     </div>
                         
                                                     </td>
@@ -2465,7 +2465,7 @@ router.post('/users/register',(req,res)=>{
                                             <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
                                                 <p style="font-size: 14px; line-height: 160%;">+2348088213177</p>
-                                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupit.com" target="_blank">support@jupit.com</a></span></p>
+                                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupitapp.co" target="_blank">support@jupitapp.co</a></span></p>
                                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">https://www.jupitapp.co</span></p>
                                             </div>
                 
@@ -2565,7 +2565,7 @@ router.post('/users/register',(req,res)=>{
                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                 
                                             <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp.co</span></p>
+                                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp</span></p>
                                             </div>
                 
                                             </td>
@@ -3183,7 +3183,7 @@ async function SendMail(address,status){
                         </div>
 
                         <div >
-                        <p style="color:#9DA8B6">If you have any questions, please contact support@jupit.app</p>
+                        <p style="color:#9DA8B6">If you have any questions, please contact support@jupitapp.co</p>
                         </div>
                     </div>
                     
@@ -3253,7 +3253,7 @@ async function SendMail(address,status){
                         </div>
 
                             <div >
-                            <p style="color:#9DA8B6">If you have any questions, please contact support@jupit.app</p>
+                            <p style="color:#9DA8B6">If you have any questions, please contact support@jupitapp.co</p>
                             </div>
                         </div>
                         

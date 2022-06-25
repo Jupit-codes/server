@@ -833,7 +833,7 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
                                                         <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                                             <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
                                                             <p style="font-size: 14px; line-height: 160%;">+2348088213177</p>
-                                                            <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupit.com" target="_blank">support@jupit.com</a></span></p>
+                                                            <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupitapp.co" target="_blank">support@jupitapp.co</a></span></p>
                                                             <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">https://www.jupitapp.co</span></p>
                                                         </div>
                             
@@ -933,7 +933,7 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                             
                                                         <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                                            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp.co</span></p>
+                                                            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp</span></p>
                                                         </div>
                             
                                                         </td>
@@ -2562,7 +2562,7 @@ router.get('/sendmail',(req,res)=>{
                                             <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
                                                 <p style="font-size: 14px; line-height: 160%;">+2348088213177</p>
-                                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupit.com" target="_blank">support@jupit.com</a></span></p>
+                                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupitapp.co" target="_blank">support@jupitapp.co</a></span></p>
                                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">https://www.jupitapp.co</span></p>
                                             </div>
                 
@@ -2662,7 +2662,7 @@ router.get('/sendmail',(req,res)=>{
                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                 
                                             <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp.co</span></p>
+                                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp</span></p>
                                             </div>
                 
                                             </td>
