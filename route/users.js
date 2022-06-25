@@ -1984,7 +1984,7 @@ async function signsuccessmail(email,username,time){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi Temiloluwa,</span></p>
+                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi ${username},</span></p>
                                                     <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">You have successfully logged In to your jupit app&nbsp; wallet @ ${time}.</span></p>
                                                     <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">Feel free to relate any thing you have has a challenge with us. </span></p>
                                                 </div>
