@@ -1645,7 +1645,7 @@ router.post('/users/login',(req,res)=>{
                     var formatted = dt.format('Y-m-d H:M:S');
                     console.log(formatted)
                     Usermodel.findOneAndUpdate({_id:docs._id},{$set:{loginTime:formatted}})
-                        await signsuccessmail(docs.username);
+                        await signsuccessmail(docs.email,docs.username,formatted);
                     jwt.sign({user:docs},'secretkey',{expiresIn:'1h'},(err,token)=>{
                         res.json({
                             token,
@@ -1682,14 +1682,15 @@ router.post('/users/login',(req,res)=>{
 
 
 
-async function signsuccessmail(email,username){
+async function signsuccessmail(email,username,time){
     
     const mailData = {
         from: 'hello@jupitapp.co',  // sender address
         to: email,   // list of receivers
-        subject: 'Log In Success Notification<jupit.app>',
+        subject: 'LogIn Success Notification<jupit.app>',
         text: 'That was easy!',
         html: `
+                  
                     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
                     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
                     
@@ -1822,7 +1823,7 @@ async function signsuccessmail(email,username){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div style="color: #afb0c7; line-height: 170%; text-align: center; word-wrap: break-word;">
-                                                    <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 14px; line-height: 23.8px;"></span></p>
+                    
                                                 </div>
                     
                                                 </td>
@@ -1864,10 +1865,8 @@ async function signsuccessmail(email,username){
                                                     <tr>
                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
                     
-                                                      
-
-                                                        <object style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px; type="image/svg+xml" data="https://res.cloudinary.com/jupit/image/upload/v1656115771/Jupit_Logo_Wordmark_mkhimf.svg" width="179.2"></object>
-
+                                                        <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656115771/Jupit_Logo_Wordmark_mkhimf.svg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
+                                                        width="179.2" />
                     
                                                     </td>
                                                     </tr>
@@ -1930,7 +1929,7 @@ async function signsuccessmail(email,username){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                    <p style="font-size: 14px; line-height: 140%;"><strong>YOUR CHANGE PASSWORD REQUEST HAS BEEN RECEIVED !</strong></p>
+                                                    <p style="font-size: 14px; line-height: 140%;"><strong>LOGIN SUCCESS NOTIFICATION !</strong></p>
                                                 </div>
                     
                                                 </td>
@@ -1944,7 +1943,7 @@ async function signsuccessmail(email,username){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 31px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.2px;"><strong><span style="line-height: 39.2px; font-size: 28px;">Change Password</span></strong>
+                                                    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.2px;"><strong><span style="line-height: 39.2px; font-size: 28px;">Log In Success Notification</span></strong>
                                                     </span>
                                                     </p>
                                                 </div>
@@ -1985,9 +1984,25 @@ async function signsuccessmail(email,username){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Dear ${docs.username},</span></p>
-                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Kindly click on the button below to effect the new password as requested by you.</span></p>
-                                                    <p style="font-size: 14px; line-height: 160%;">&nbsp;</p>
+                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi Temiloluwa,</span></p>
+                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">You have successfully logged In to your jupit app&nbsp; wallet @ ${time}.</span></p>
+                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">Feel free to relate any thing you have has a challenge with us. </span></p>
+                                                </div>
+                    
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                    
+                                        <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                            <tbody>
+                                            <tr>
+                                                <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
+                    
+                                                <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
+                                                    <p style="line-height: 160%; font-size: 14px;"><span style="line-height: 22.4px; font-size: 14px;"><em><span style="color: #e03e2d;">If you did not authorize this logging process, kindly click on the button below to engage our support team.</span></em>
+                                                    </span>
+                                                    </p>
                                                 </div>
                     
                                                 </td>
@@ -2001,11 +2016,9 @@ async function signsuccessmail(email,username){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div align="center">
-                                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/" style="height:46px; v-text-anchor:middle; width:209px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
-                                                    <a href="https://myjupit.herokuapp.com/users/jupit/changepassword/${code}/qvrse/${docs._id}" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                                    <span style="display:block;padding:14px 44px 13px;line-height:120%;"><span style="font-size: 16px; line-height: 19.2px;"><strong><span style="line-height: 19.2px; font-size: 16px;">Change Password</span></strong>
-                                                    </span>
-                                                    </span>
+                                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/" style="height:46px; v-text-anchor:middle; width:193px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
+                                                    <a href="mailto:support@jupitapp.co" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
+                                                    <span style="display:block;padding:14px 44px 13px;line-height:120%;"><span style="font-size: 16px; line-height: 19.2px;">MAIL US NOW.</span></span>
                                                     </a>
                                                     <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->
                                                 </div>
@@ -2014,22 +2027,6 @@ async function signsuccessmail(email,username){
                                             </tr>
                                             </tbody>
                                         </table>
-
-                                        <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                        <tbody>
-                                        <tr>
-                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
-                
-                                            <div align="center">
-                                               
-                                              If this request was not initiated by you please ignore or contact support@jupitapp.co
-                                               
-                                            </div>
-                
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
                     
                                         <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                                             <tbody>
@@ -2038,7 +2035,7 @@ async function signsuccessmail(email,username){
                     
                                                 <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                                     <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Thanks,</span></p>
-                                                    <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">The Jupit Support Team</span></p>
+                                                    <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">The Support Team</span></p>
                                                 </div>
                     
                                                 </td>
@@ -2079,7 +2076,7 @@ async function signsuccessmail(email,username){
                                                 <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                                     <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
                                                     <p style="font-size: 14px; line-height: 160%;">+2348088213177</p>
-                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupitapp.co" target="_blank">support@jupitapp.co</a></span></p>
+                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;"><a rel="noopener" href="mailto:support@jupit.com" target="_blank">support@jupitapp.co</a></span></p>
                                                     <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">https://www.jupitapp.co</span></p>
                                                 </div>
                     
@@ -2094,34 +2091,22 @@ async function signsuccessmail(email,username){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 33px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div align="center">
-                                                    <div style="display: table; max-width:244px;">
-                                                    <!--[if (mso)|(IE)]><table width="244" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:244px;"><tr><![endif]-->
+                                                    <div style="display: table; max-width:97px;">
+                                                    <!--[if (mso)|(IE)]><table width="97" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:97px;"><tr><![endif]-->
                     
-                    
-                                                    <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 17px;" valign="top"><![endif]-->
-                                                   
-                                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                    
-                                                    <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 17px;" valign="top"><![endif]-->
-                                                   
-                                                    <!--[if (mso)|(IE)]></td><![endif]-->
                     
                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 17px;" valign="top"><![endif]-->
                                                     <table align="left" border="0" cellspacing="0" cellpadding="0" width="32" height="32" style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 17px">
                                                         <tbody>
                                                         <tr style="vertical-align: top">
                                                             <td align="left" valign="middle" style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                                            <a href="https://instagram.com/jupit.app" title="Instagram" target="_blank">
+                                                            <a href="https://www.instagram.com/jupit.app/" title="Instagram" target="_blank">
                                                                 <img src="https://cdn.tools.unlayer.com/social/icons/circle-black/instagram.png" alt="Instagram" title="Instagram" width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                             </a>
                                                             </td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                    
-                                                    <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 17px;" valign="top"><![endif]-->
-                                                    
                                                     <!--[if (mso)|(IE)]></td><![endif]-->
                     
                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 0px;" valign="top"><![endif]-->
@@ -2209,7 +2194,6 @@ async function signsuccessmail(email,username){
                     </body>
                     
                     </html>
-
 
 
             `
