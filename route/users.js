@@ -1304,7 +1304,7 @@ router.post('/login/2FA',(req,res)=>{
             else if(docs){
                 const validPassword = bcrypt.compareSync(password, docs.password);
                 if(validPassword){
-                    await TwoFactor.findOne({userid:docs._id},function(err,fa_docs){
+                    await TwoFactor.findOne({userid:docs._id},async function(err,fa_docs){
                         if(err){
                             res.status(400).send(err)
                             // console.log(err)
