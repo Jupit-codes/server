@@ -768,6 +768,22 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
                                                     </tr>
                                                     </tbody>
                                                 </table>
+
+                                                <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                                <tbody>
+                                                <tr>
+                                                    <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
+                        
+                                                    <div align="center">
+                                                       
+                                                      If this request was not initiated by you please ignore or contact support@jupitapp.co
+                                                       
+                                                    </div>
+                        
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
                             
                                                 <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                                                     <tbody>
