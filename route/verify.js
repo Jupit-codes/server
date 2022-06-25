@@ -620,8 +620,7 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
                                                             <tr>
                                                             <td style="padding-right: 0px;padding-left: 0px;" align="center">
                             
-                                                                <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656115771/Jupit_Logo_Wordmark_mkhimf.svg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
-                                                                width="179.2" />
+                                                              
 
                                                                 <object style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px; type="image/svg+xml" data="https://res.cloudinary.com/jupit/image/upload/v1656115771/Jupit_Logo_Wordmark_mkhimf.svg" width="179.2"></object>
 
