@@ -300,7 +300,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                             
                                                         <div style="color: #afb0c7; line-height: 170%; text-align: center; word-wrap: break-word;">
-                                                            <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 14px; line-height: 23.8px;">View Email in Browser</span></p>
+                                                            <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 14px; line-height: 23.8px;"></span></p>
                                                         </div>
                             
                                                         </td>
@@ -824,7 +824,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                                     <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                         
                                                     <div style="color: #afb0c7; line-height: 170%; text-align: center; word-wrap: break-word;">
-                                                        <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 14px; line-height: 23.8px;">View Email in Browser</span></p>
+                                                        <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 14px; line-height: 23.8px;"></span></p>
                                                     </div>
                         
                                                     </td>
@@ -2227,7 +2227,7 @@ router.post('/users/register',(req,res)=>{
                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                 
                                             <div style="color: #afb0c7; line-height: 170%; text-align: center; word-wrap: break-word;">
-                                                <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 14px; line-height: 23.8px;">View Email in Browser</span></p>
+                                                <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 14px; line-height: 23.8px;"></span></p>
                                             </div>
                 
                                             </td>
