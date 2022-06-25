@@ -1685,9 +1685,9 @@ router.post('/users/login',(req,res)=>{
 async function signsuccessmail(email,username,time){
     
     const mailData = {
-        from: 'hello@jupitapp.co',  // sender address
+        from: 'Jupit',  // sender address
         to: email,   // list of receivers
-        subject: 'LogIn Success Notification<jupit.app>',
+        subject: 'LogIn Successful',
         text: 'That was easy!',
         html: `
                   
@@ -1987,7 +1987,7 @@ async function signsuccessmail(email,username,time){
                     
                                                 <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                                     <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi ${username},</span></p>
-                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">You have successfully logged In to your jupit app&nbsp;wallet @ ${time}.</span></p>
+                                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">You have successfully logged In to your jupit account&nbsp;wallet @ ${time}.</span></p>
                                                     <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">Feel free to relate any thing you have as a challenge with us. </span></p>
                                                 </div>
                     
