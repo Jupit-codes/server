@@ -933,7 +933,7 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                             
                                                         <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                                            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; Compan</span></p>
+                                                            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp.co</span></p>
                                                         </div>
                             
                                                         </td>
@@ -2662,7 +2662,7 @@ router.get('/sendmail',(req,res)=>{
                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                 
                                             <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupit</span></p>
+                                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy; jupitapp.co</span></p>
                                             </div>
                 
                                             </td>
