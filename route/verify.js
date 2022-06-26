@@ -179,7 +179,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    buy_n_sell.deleteMany({},(err,docs)=>{
+    giftCardnew.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }
@@ -326,7 +326,7 @@ router.get('/giftCardApi',async (req,res)=>{
         else if(!docs){
             res.status(400).send('No Card Found')
         }
-    })
+    }).sort({ brandname: 'asc'})
     // let url = 'https://api-testbed.giftbit.com/papi/v1/brands'
     // axios.get(url,{ 
     //     headers: {
