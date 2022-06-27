@@ -1024,7 +1024,8 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                                 image_url:result.secure_url,
                                 status:'untreated',
                                 cardname:req.body.Cardname,
-                                amount_in_usd:req.body.amountInusd,
+                                amount_in_usd:req.body.amountInusd
+                            
                             })
                         }
                     })
@@ -1050,11 +1051,12 @@ router.post('/addgiftcard/sell/request',middlewareVerify,(req,res)=>{
                 cardname:req.body.Cardname,
                 amount_in_usd:req.body.amountInusd,
                 status:'untreated',
+                email:req.body.Email,
                 type:'Sell'
             })
 
             if(savetransaction){
-                req.body.SelectedAmount.forEach(d => {
+                req.body.Cart.forEach(d => {
                 
                     giftcardtransactions.findOneAndUpdate({_id:savetransaction._id},{$push:{
                         rate:d
