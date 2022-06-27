@@ -163,7 +163,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
             if(updateCode){
 
                 const mailData = {
-                    from: 'hello@jupitapp.co',  // sender address
+                    from: 'Jupit <hello@jupitapp.co>',  // sender address
                     to: req.body.email,   // list of receivers
                     subject: 'WALLET PIN CREATION CODE <jupitapp.co>',
                     text: 'That was easy!',
@@ -342,8 +342,8 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                                             <tr>
                                                             <td style="padding-right: 0px;padding-left: 0px;" align="center">
                             
-                                                                <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656115771/Jupit_Logo_Wordmark_mkhimf.svg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
-                                                                width="179.2" />
+                                                            <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656160429/JUPIT-Logo-Wordmark_1_jo6ivd.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
+                                                            width="179.2" />
                             
                                                             </td>
                                                             </tr>
@@ -687,7 +687,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
 
 
             const mailData = {
-                from: 'hello@jupitapp.co',  // sender address
+                from: 'Jupit <hello@jupitapp.co>',  // sender address
                 to: req.body.email,   // list of receivers
                 subject: 'WALLET PIN CREATION <jupit.app>',
                 text: 'That was easy!',
@@ -866,8 +866,8 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                                                         <tr>
                                                         <td style="padding-right: 0px;padding-left: 0px;" align="center">
                         
-                                                            <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656115771/Jupit_Logo_Wordmark_mkhimf.svg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
-                                                            width="179.2" />
+                                                        <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656160429/JUPIT-Logo-Wordmark_1_jo6ivd.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
+                                                        width="179.2" />
                         
                                                         </td>
                                                         </tr>
@@ -2623,7 +2623,7 @@ router.post('/users/register',(req,res)=>{
             }).exec();
 
             const mailData = {
-                from: 'hello@jupitapp.co',  // sender address
+                from: 'Jupit <hello@jupitapp.co>',  // sender address
                 to: req.body.email,   // list of receivers
                 subject: 'Email Verification <jupit.app>',
                 text: 'That was easy!',
@@ -2804,8 +2804,8 @@ router.post('/users/register',(req,res)=>{
                                                 <tr>
                                                 <td style="padding-right: 0px;padding-left: 0px;" align="center">
                 
-                                                    <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656115771/Jupit_Logo_Wordmark_mkhimf.svg" alt="logo" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
-                                                    width="179.2" />
+                                                <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656160429/JUPIT-Logo-Wordmark_1_jo6ivd.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
+                                                width="179.2" />
                 
                                                 </td>
                                                 </tr>
@@ -3668,7 +3668,7 @@ async function updateWebHook(json){
 async function SendMail(address,status){
     if(status === "customeridentification.success"){
         const mailData = {
-            from: 'hello@jupit.app',  // sender address
+            from: 'Jupit <hello@jupitapp.co>',  // sender address
             to: address,   // list of receivers
             subject: 'Account  Verification <jupit.app>',
             text: 'That was easy!',
