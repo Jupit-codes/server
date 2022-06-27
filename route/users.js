@@ -1690,7 +1690,7 @@ router.post('/users/login',(req,res)=>{
 async function signsuccessmail(email,username,time){
     
     const mailData = {
-        from: 'hello@jupitapp.co',  // sender address
+        from: 'Jupit <hello@jupitapp.co>',  // sender address
         to: email,   // list of receivers
         subject: 'LogIn Successful',
         text: 'That was easy!',
