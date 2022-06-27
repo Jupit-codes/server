@@ -5,6 +5,9 @@ const giftcardtransactionSchema = mongoose.Schema({
         type:'String',
         
     },
+    email:{
+        type:'String'
+    },
     userid:{
         type:'String',
         
