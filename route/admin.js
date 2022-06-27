@@ -1333,7 +1333,7 @@ router.post('/get/uploadedgiftcards',(req,res)=>{
 
 
 router.post('/get/uploadedgiftcards/buy',(req,res)=>{
-    giftcardtransactions.findOne({userid:req.body.id},(err,docs_gift)=>{
+    giftcardtransactions.findOne({_id:req.body.id},(err,docs_gift)=>{
         if(err){
             res.status(400).send({
                 "message":err
