@@ -2014,6 +2014,7 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
         else if(docs){
             let savetransaction =  await giftcardtransactions.create({
                 userid:req.body.Userid,
+                email:req.body.Email,
                 unique_id:"Uni00012",
                 country:req.body.Country,
                 total:req.body.Total,
@@ -2022,10 +2023,10 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
                 status:'untreated',
                 type:'Buy'
             })
-            console.log('Savetransaction',savetransaction);
-            console.log(req.body);
+            // console.log('Savetransaction',savetransaction);
+            // console.log(req.body);
             if(savetransaction){
-                req.body.SelectedAmount.forEach(d => {
+                req.body.Cart.forEach(d => {
                 
                     giftcardtransactions.findOneAndUpdate({_id:savetransaction._id},{$push:{
                         rate:d
