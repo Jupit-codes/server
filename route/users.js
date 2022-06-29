@@ -2307,7 +2307,7 @@ router.get('/users/test/hook',async (req,res)=>{
 router.get('/users/jupit/resetpassword/:id/resetpword/:code',(req,res)=>{
    console.log("code",req.params.code)
    console.log("userid",req.params.id)
-    session.findOne({$and:[{userid:req.params.id},{code:req.params.code}]},async(err,docs)=>{
+    session.find({$and:[{userid:req.params.id},{code:req.params.code}]},async(err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
@@ -2349,7 +2349,7 @@ router.get('/users/jupit/resetpassword/:id/resetpword/:code',(req,res)=>{
 
 router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 
-   session.findOne({$and:[{userid:req.params.id},{code:req.params.code}]},async(err,docs)=>{
+   session.find({$and:[{userid:req.params.id},{code:req.params.code}]},async(err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
@@ -3858,7 +3858,9 @@ async function SendMail(address,status){
 }
 
 router.post('/users/resetpassword',(req,res)=>{
+
    const random = Math.floor(1000 + Math.random() * 9000);
+
     Usermodel.findOne({email:req.body.email},(err,docs)=>{
         if(err){
             res.status(400).send({"message":err,"status":false})
@@ -4379,8 +4381,6 @@ router.post('/users/resetpassword',(req,res)=>{
                     `
               };
 
-            
-        
             transporter.sendMail(mailData, function (err, info) {
                 if(err){
                     res.status(400).send({message:"Mailer Error",status:false})
