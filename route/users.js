@@ -3189,7 +3189,7 @@ async function createUSDTWalletAddress(userid){
         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
 
-    var secret="3QGkFozHQAGeT5bJxvVejB4uMWeE";
+    var secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
@@ -3211,7 +3211,7 @@ async function createUSDTWalletAddress(userid){
      let result = await axios.post(url,params,{ 
         headers: {
             'Content-Type': 'application/json',
-            'X-API-CODE':'5GRhmr9GsjQ758bCH',
+            'X-API-CODE':'WtjgBd7JbpeBTHCF',
             'X-CHECKSUM':buildUSDT,
             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
         }

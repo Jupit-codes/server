@@ -39,8 +39,8 @@ Router.post('/getautofee',(req,res)=>{
     }
     else if(req.body.walletType === "USDT"){
         wallet_id="488433"
-        secret="3QGkFozHQAGeT5bJxvVejB4uMWeE"
-        Api="5GRhmr9GsjQ758bCH"
+        secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2"
+        Api="WtjgBd7JbpeBTHCF"
     }
         
     let rand = random(option_rand);
@@ -1366,8 +1366,8 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
     
     let isTrue ;
    
-    let secret="3v1aXdYguESktWRrJVd63ChuhmAu";
-    let  apikey="4Jr1WR58zR97LHTUH"
+    let secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
+    let  apikey="WtjgBd7JbpeBTHCF"
     let wallet_id="201075"
     
 
@@ -1512,7 +1512,8 @@ async function checkJupitAddress(address,wallet_type){
         apikey = "4PiVpdbyLJZatLBwR";
     }
     else if(wallet_type === "USDT"){
-
+        secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
+        apikey = "WtjgBd7JbpeBTHCF";
     }
     else{
         return ["Invalid Wallet Type",false]
@@ -1600,8 +1601,8 @@ async function CheckAddressValidity (address,walletType){
             
         }
         else if(walletType === "USDT"){
-            Api="5GRhmr9GsjQ758bCH";
-            secret = "3QGkFozHQAGeT5bJxvVejB4uMWeE";
+            Api="WtjgBd7JbpeBTHCF";
+            secret = "3EXdWbtVAiMb5BGVF7utbXnCDGb2";
             walletId="488433"
         }
 
