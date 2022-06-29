@@ -2304,6 +2304,10 @@ router.get('/users/test/hook',async (req,res)=>{
     
 })
 
+router.get('/users/jupit/resetpassword/:id/resetpword/:code',(req,res)=>{
+    res.redirect(`https://app-rust-one.vercel.app/user/resetpassword/${req.params.code}/${req.params.id}`);
+})
+
 
 router.get('/users/jupit/changepassword/:code/qvrse/:id',(req,res)=>{
 
@@ -3816,6 +3820,7 @@ async function SendMail(address,status){
 }
 
 router.post('/users/resetpassword',(req,res)=>{
+   const random = Math.floor(1000 + Math.random() * 9000);
     Usermodel.findOne({email:req.body.email},(err,docs)=>{
         if(err){
             res.status(400).send({"message":err,"status":false})
@@ -4124,7 +4129,8 @@ router.post('/users/resetpassword',(req,res)=>{
                                                         <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Dear User, </span></p>
                                                         <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">Trust this mail meets you well?</span></p>
                                                         <p style="font-size: 14px; line-height: 160%;">&nbsp;</p>
-                                                        <p style="font-size: 14px; line-height: 160%;"><span style="font-family: 'arial black', 'avant garde', arial; font-size: 14px; line-height: 22.4px;"><strong><span style="font-size: 24px; line-height: 38.4px;"> Kindly click on the button below to reset your password.</span></strong>
+                                                        <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">Kindly click on the button below to reset your password.</span></p>
+                                                        <a href="https://myjupit.herokuapp.com/users/jupit/resetpassword/${docs._id}/resetpword/${random}" style="cursor:pointer"><button style="width:100%;height:40px;font-family:candara;font-size:18px;font-weight:bold;cursor:pointer;background-color:#ffc857;border:1px solid #ffc857">Reset Password</button></a>
                                                         </span>
                                                         </p>
                                                     </div>
