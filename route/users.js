@@ -2305,7 +2305,42 @@ router.get('/users/test/hook',async (req,res)=>{
 })
 
 router.get('/users/jupit/resetpassword/:id/resetpword/:code',(req,res)=>{
-    res.redirect(`https://app-rust-one.vercel.app/user/resetpassword/${req.params.code}/${req.params.id}`);
+   
+    session.findOne({userid:req.params.id,code:req.params.code},async(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+        //    console.log(docs)
+            if(docs.status === "Completed"){
+                res.json({
+                    message:"This Link has Expired",
+                    status:false
+                })
+            }
+            else if(docs.status === "Pending"){
+                res.redirect(`https://app-rust-one.vercel.app/user/resetpassword/${req.params.code}/${req.params.id}`);
+            }
+            else{
+                // console.log('code not found')
+                await session.create({
+                    userid:req.params.id,
+                    status:'Pending',
+                    code:req.params.code
+                })
+    
+                res.redirect(`https://app-rust-one.vercel.app/user/resetpassword/${req.params.code}/${req.params.id}`);
+            }
+        }
+        else if(!docs){
+            res.json({
+                message:"Internal Server Error....Revist the Link and retry",
+                status:false
+            })
+        }
+  
+    })
+
 })
 
 
