@@ -2305,7 +2305,8 @@ router.get('/users/test/hook',async (req,res)=>{
 })
 
 router.get('/users/jupit/resetpassword/:id/resetpword/:code',(req,res)=>{
-   
+   console.log("code",req.params.code)
+   console.log("userid",req.params.id)
     session.findOne({userid:req.params.id,code:req.params.code},async(err,docs)=>{
         if(err){
             res.status(400).send(err)
