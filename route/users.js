@@ -3209,92 +3209,75 @@ router.post('/users/register',(req,res)=>{
   
 })
 
-router.post('/tester',(req,res)=>{
-    let x = createBTCWalletAddress(req.body.userid);
-    res.send(x)
-})
-
 async function createUSDTWalletAddress(userid){
-
-       let result = Usermodel.findOne({_id:userid},async (err,docs)=>{
-            if(err){
-                return [false,'UserId Check Error'];
+    
+    let rand = random(option_rand);
+    var option_rand = {
+            min: 48886
+            , max: 67889
+            , integer: true
+        }
+    function buildChecksumUSDT(params, secret, t, r, postData) {
+        const p = params || [];
+        p.push(`t=${t}`, `r=${r}`);
+        if (!!postData) {
+            if (typeof postData === 'string') {
+                    p.push(postData);
+            } else {
+                    p.push(JSON.stringify(postData));
             }
-            else if(docs){
-                if(docs.usdt_wallet.length > 0){
-                    let rand = random(option_rand);
-                    var option_rand = {
-                            min: 48886
-                            , max: 67889
-                            , integer: true
-                        }
-                    function buildChecksumUSDT(params, secret, t, r, postData) {
-                        const p = params || [];
-                        p.push(`t=${t}`, `r=${r}`);
-                        if (!!postData) {
-                            if (typeof postData === 'string') {
-                                    p.push(postData);
-                            } else {
-                                    p.push(JSON.stringify(postData));
-                            }
-                        }
-                        p.sort();
-                        p.push(`secret=${secret}`);
-                        return crypto.createHash('sha256').update(p.join('&')).digest('hex');
-                    }
-                
-                    var secret="51bEgEHrotG69PFScrPTt1gR8Wv";
-                    var time = Math.floor(new Date().getTime() / 1000)
-                    var postData = {"count":1};
-                
-                    var buildUSDT = buildChecksumUSDT(null,secret,time,rand,postData);
-                    const params ={
-                        "count": 1,}
-                    
-                    
-                        const parameters = {
-                            t:time,
-                            r:rand,
-                        }
-                        const get_request_args = querystring.stringify(parameters);
-                        
-                        // const base_url = "http://demo.thresh0ld.com"
-                        const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/488433/addresses?'+get_request_args
-                    
-                        
-                     await axios.post(url,params,{ 
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-API-CODE':'2C38687sm5kTnyFWD',
-                            'X-CHECKSUM':buildUSDT,
-                            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
-                        }
-                    })
-                    .then(res=>{
-                        Usermodel.findByIdAndUpdate(userid, { 
-                            $push: { 
-                                    
-                                    usdt_wallet: {"balance":0,"address":res.data.addresses[0]},
-                                } 
-                            }).exec();
-                
-                            return [true,'successful'];
-                        
-                    })
-                    .catch((error)=>{
-                        // console.log('error_usdt',console.log(error.response))
-                        return [false,error.response];
-                       
-                    })
-                
-                    
-                
-                }
-                
-            }
-        })
-        return result;
+        }
+        p.sort();
+        p.push(`secret=${secret}`);
+        return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
+
+    var secret="51bEgEHrotG69PFScrPTt1gR8Wv";
+    var time = Math.floor(new Date().getTime() / 1000)
+    var postData = {"count":1};
+
+    var buildUSDT = buildChecksumUSDT(null,secret,time,rand,postData);
+    const params ={
+        "count": 1,}
+    
+    
+        const parameters = {
+            t:time,
+            r:rand,
+        }
+        const get_request_args = querystring.stringify(parameters);
+        
+        // const base_url = "http://demo.thresh0ld.com"
+        const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/488433/addresses?'+get_request_args
+    
+        
+     let result = await axios.post(url,params,{ 
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-CODE':'2C38687sm5kTnyFWD',
+            'X-CHECKSUM':buildUSDT,
+            'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
+        }
+    })
+    .then(res=>{
+        Usermodel.findByIdAndUpdate(userid, { 
+            $push: { 
+                    
+                    usdt_wallet: {"balance":0,"address":res.data.addresses[0]},
+                } 
+            }).exec();
+
+            return [true,'successful'];
+        
+    })
+    .catch((error)=>{
+        // console.log('error_usdt',console.log(error.response))
+        return [false,error.response];
+       
+    })
+
+    return result;
+}
 
 
 
