@@ -2208,8 +2208,8 @@ async function signsuccessmail(email,username,time){
 
     transporter.sendMail(mailData, function (err, info) {
         if(err){
-            // console.log(err);
-            res.status(400).send({"message":"An Error Occurred","callback":err})
+            console.log(err);
+            //res.status(400).send({"message":"An Error Occurred","callback":err})
         }
         
     })
