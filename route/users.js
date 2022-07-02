@@ -55,7 +55,7 @@ const router = express.Router();
 
 router.get('/sendmail',(req,res)=>{
     const mailData = {
-        from: 'hello@jupitapp.co',  // sender address
+        from: '<Jupit>hello@jupitapp.co',  // sender address
         to: 'hademylola@gmail.com',   // list of receivers
         subject: 'Email Verification <jupit.app>',
         text: 'That was easy!',
@@ -3207,6 +3207,12 @@ router.post('/users/register',(req,res)=>{
   
    }
   
+})
+
+router.post('/tester',async (req,res)=>{
+
+    let x = await createUSDTWalletAddress(req.body.userid)
+    res.send(x)
 })
 
 async function createUSDTWalletAddress(userid){
