@@ -1247,6 +1247,26 @@ router.post('/sell/coin',(req,res)=>{
                     status:"Successful"
 
                 })
+
+                await wallet_transactions.create({
+                            type:'Sell',
+                            serial:req.body.userid,
+                            order_id:req.body.userid,
+                            currency:req.body.wallet_type,
+                            amount:req.body.btcamount,
+                            from_address:req.body.from_address,
+                            fees:"0",
+                            to_address:randomUUID(),
+                            wallet_id:req.body.userid,
+                            usdvalue:req.body.usdamount,
+                            nairavalue:req.body.ngnamount,
+                            marketprice:req.body.currentRate,
+                            rateInnaira:req.body.sellrate,
+                            status:'Transaction Completed' 
+                })
+
+
+
     
                 res.send({
                     "message":'BTC Coin Successfully Sold',
@@ -1286,6 +1306,24 @@ router.post('/sell/coin',(req,res)=>{
                     type:"Sell"
 
                 })
+
+                await wallet_transactions.create({
+                    type:'Sell',
+                    serial:req.body.userid,
+                    order_id:req.body.userid,
+                    currency:req.body.wallet_type,
+                    amount:req.body.btcamount,
+                    from_address:req.body.from_address,
+                    fees:"0",
+                    to_address:randomUUID(),
+                    wallet_id:req.body.userid,
+                    usdvalue:req.body.usdamount,
+                    nairavalue:req.body.ngnamount,
+                    marketprice:req.body.currentRate,
+                    rateInnaira:req.body.sellrate,
+                    status:'Transaction Completed' 
+        })
+
     
 
                 res.send({
