@@ -1130,6 +1130,20 @@ router.post('/purchase/coin',(req,res)=>{
                     status:'Successful'
 
                 })
+                await wallet_transactions.create({
+                            type:'Buy',
+                            serial:req.body.userid,
+                            order_id:req.body.userid,
+                            currency:req.body.wallet_type,
+                            amount:req.body.ngnamount,
+                            from_address:req.body.userid,
+                            to_address:req.body.to_address,
+                            wallet_id:req.body.userid,
+                            usdvalue:req.body.usdamount,
+                            marketprice:req.body.currentrate,
+                            rateInnaira:req.body.buyrate,
+                            status:'Transaction Completed' 
+                })
     
                 res.send({
                     "message":'BTC Coin Successfully Purchased',
@@ -1169,6 +1183,20 @@ router.post('/purchase/coin',(req,res)=>{
                     type:"Buy"
 
                 })
+                await wallet_transactions.create({
+                    type:'Buy',
+                    serial:req.body.userid,
+                    order_id:req.body.userid,
+                    currency:req.body.wallet_type,
+                    amount:req.body.ngnamount,
+                    from_address:req.body.userid,
+                    to_address:req.body.to_address,
+                    wallet_id:req.body.userid,
+                    usdvalue:req.body.usdamount,
+                    marketprice:req.body.currentrate,
+                    rateInnaira:req.body.buyrate,
+                    status:'Transaction Completed' 
+        })
     
                 res.send({
                     "message":'USDT Coin Successfully Purchased',
