@@ -1693,7 +1693,7 @@ router.post('/filter',(req,res)=>{
             type:req.body.type
         })
     }
-
+    console.log('QueryII',query)
     if(query.length > 0){
         console.log('Query',query)
     const x = wallet_transactions.find({
