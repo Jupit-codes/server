@@ -1683,9 +1683,26 @@ router.post('/filter',(req,res)=>{
     }
 
     if(currency){
-        query.push({
-            currency:req.body.asset
-        })
+        if(currency !== "All"){
+            query.push({
+                currency:req.body.asset
+            })
+        }
+        else{
+            query.push(
+                {
+                    $or:[
+                        {
+                            type:'BTC'
+                        },
+                        {
+                            type:'USDT'
+                        }  
+                    ]
+                }
+            )
+        }
+        
     }
 
     if(type){
@@ -1693,9 +1710,9 @@ router.post('/filter',(req,res)=>{
             type:req.body.type
         })
     }
-    console.log('QueryII',query)
+    
     if(query.length > 0){
-        console.log('Query',query)
+       
     const x = wallet_transactions.find({
         $and:query
       
