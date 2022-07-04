@@ -1652,11 +1652,34 @@ router.post('/filter',(req,res)=>{
     }
 
     if(status){
-        query.push(
-            {
-                type:req.body.status
-            }
+         if(status !== "All"){
+            query.push(
+                {
+                    type:req.body.status
+                }
+                )
+         }
+         else{
+            query.push(
+                {
+                    $or:[
+                        {
+                            type:'Sell'
+                        },
+                        {
+                            type:'Buy'
+                        },
+                        {
+                            type:'Receive'
+                        },
+                        {
+                            type:'Send'
+                        }
+                    ]
+                }
             )
+         }
+        
     }
 
     if(currency){
