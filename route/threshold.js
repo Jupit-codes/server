@@ -1251,8 +1251,8 @@ Router.post('/update/read',middlewareVerify,(req,res)=>{
 async function creditWalletAddress(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
     
     let isTrue ;
-    let secret="44bJugkgbvhzqaMiQ3inE8Hebeka";
-    let apikey = "4W1Pg2CeHQMS8hHGr";
+    let secret="3QdPXcmt7RYeMKBQy9eM281N7gMD";
+    let apikey = "N5zrXLSLpfbxC3BX";
     let wallet_id="678693"
    
     
