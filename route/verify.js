@@ -179,7 +179,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    giftCardnew.deleteMany({},(err,docs)=>{
+    wallet_transactions.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }
@@ -1140,7 +1140,7 @@ router.post('/purchase/coin',(req,res)=>{
                             to_address:req.body.to_address,
                             wallet_id:req.body.userid,
                             usdvalue:req.body.usdamount,
-                            marketprice:req.body.currentrate,
+                            marketprice:req.body.currentRate,
                             rateInnaira:req.body.buyrate,
                             status:'Transaction Completed' 
                 })
@@ -1193,7 +1193,7 @@ router.post('/purchase/coin',(req,res)=>{
                     to_address:req.body.to_address,
                     wallet_id:req.body.userid,
                     usdvalue:req.body.usdamount,
-                    marketprice:req.body.currentrate,
+                    marketprice:req.body.currentRate,
                     rateInnaira:req.body.buyrate,
                     status:'Transaction Completed' 
         })
