@@ -1188,19 +1188,19 @@ router.post('/purchase/coin',(req,res)=>{
                 
                 await wallet_transactions.create({
                     type:'Buy',
-                    serial:req.body.userid,
-                    order_id:req.body.userid,
-                    currency:req.body.wallet_type,
-                    amount:req.body.ngnamount,
-                    fees:"0",
-                    from_address:randomUUID(),
-                    to_address:req.body.to_address,
-                    wallet_id:req.body.userid,
-                    usdvalue:req.body.usdamount,
-                    nairavalue:req.body.ngnamount,
-                    marketprice:req.body.currentRate,
-                    rateInnaira:req.body.buyrate,
-                    status:'Transaction Completed' 
+                            serial:req.body.userid,
+                            order_id:req.body.userid,
+                            currency:req.body.wallet_type,
+                            amount:req.body.btcamount,
+                            from_address:randomUUID(),
+                            fees:"0",
+                            to_address:req.body.to_address,
+                            wallet_id:req.body.userid,
+                            usdvalue:req.body.usdamount,
+                            nairavalue:req.body.ngnamount,
+                            marketprice:req.body.currentRate,
+                            rateInnaira:req.body.buyrate,
+                            status:'Transaction Completed' 
         })
     
                 res.send({
