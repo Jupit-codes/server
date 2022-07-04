@@ -372,8 +372,374 @@ Router.post('/incoming/depositcallback',(req,res)=>{
 
 
 Router.post('/incoming/withdrawalcallback',(req,res)=>{
+    res.sendStatus(200);
     
-    console.log(req.body)
+    if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
+        console.log(req.body)
+        if(req.body.processing_state === 1){
+            Walletmodel.findOne({txtid:req.body.txid}, async function(err,docs){
+                if(err){
+                    res.json({
+                        'message':'An Error'+err,
+                        'status':false
+                    })
+                }
+                if(docs){
+
+                }
+                else{
+                   
+                    let status = "Processing"
+                    let insert = await updateDepositStatus(req.body,status);
+
+                    if(insert[0]){
+                        let saveNotificationx = saveNotification(req.body,status)
+                    }
+
+                   
+                    
+                }
+            })
+
+            
+            
+        }
+        if(req.body.processing_state === 2){
+
+            Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
+                if(err){
+                    res.json({
+                        'message':err,
+                        'status':false
+                    })
+                }
+                if(docs){
+                    if(docs.processing_state !== 2){
+
+                        let newAmount;
+
+                        if(req.body.currency === "BTC"){
+                            newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                        }
+                        else if(req.body.currency === "USDT"){
+                            newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
+                        }
+
+                        Walletmodel.create({
+                            type:req.body.type,
+                            serial:req.body.serial,
+                            order_id:req.body.order_id,
+                            currency:req.body.currency,
+                            txtid:req.body.txid,
+                            block_height:req.body.block_height,
+                            tindex:req.body.tindex,
+                            vout_index:req.body.vout_index,
+                            amount:newAmount,
+                            fees:req.body.fees,
+                            memo:req.body.memo,
+                            broadcast_at:req.body.broadcast_at,
+                            chain_at:req.body.chain_at,
+                            from_address:req.body.from_address,
+                            to_address:req.body.to_address,
+                            wallet_id:req.body.wallet_id,
+                            state:req.body.state,
+                            confirm_blocks:req.body.confirm_blocks,
+                            processing_state:req.body.processing_state,
+                            decimal:req.body.decimal,
+                            currency_bip44:req.body.currency_bip44,
+                            token_address:req.body.token_address,
+                            status:'Transaction Completed'
+                        });
+
+                        Notification.create({
+                            type:req.body.type,
+                            orderid:req.body.orderid,
+                            transfertype:'BlockChain Transfer',
+                            asset:req.body.currency,
+                            from_address:req.body.from_address,
+                            to_address:req.body.to_address,
+                            amount:req.body.amount,
+                            status:'Transaction Completed',
+                            read:'unread',
+                            initiator:'sender',
+                            date_created:new Date(),
+                            senderaddress:req.body.orderid,
+                            // senderaddress:req.body.from_address,
+                        })
+   
+                    }
+                    // console.log('Transaction Completed',req.body)
+                    res.sendStatus(200); 
+                }
+                else{
+                    // console.log('Transaction Completed Already',req.body)
+                    res.sendStatus(200);
+                    
+                   
+                }
+            })
+            
+            // res.sendStatus(200);
+            // res.json({
+            //     'message':'Transaction Completed',
+            //     'status':true,
+            //     'completed':true
+            // })
+            
+        }
+        if(req.body.processing_state === -1){
+            
+            // res.sendStatus(200)
+            if(req.body.state === 5){
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    if(docs){
+                        if(docs.processing_state !== -1){
+                            Walletmodel.create({
+                                type:req.body.type,
+                                serial:req.body.serial,
+                                order_id:req.body.order_id,
+                                currency:req.body.currency,
+                                txtid:req.body.txid,
+                                block_height:req.body.block_height,
+                                tindex:req.body.tindex,
+                                vout_index:req.body.vout_index,
+                                amount:req.body.amount,
+                                fees:req.body.fees,
+                                memo:req.body.memo,
+                                broadcast_at:req.body.broadcast_at,
+                                chain_at:req.body.chain_at,
+                                from_address:req.body.from_address,
+                                to_address:req.body.to_address,
+                                wallet_id:req.body.wallet_id,
+                                state:req.body.state,
+                                confirm_blocks:req.body.confirm_blocks,
+                                processing_state:req.body.processing_state,
+                                decimal:req.body.decimal,
+                                currency_bip44:req.body.currency_bip44,
+                                token_address:req.body.token_address,
+                                status:'Transaction Failed'
+                            });
+                            
+                            
+                        }
+                        
+                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
+                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
+                        // console.log('Transaction Failed',req.body)
+                        if(Reversal){
+                            res.sendStatus(200);
+                        }
+                        else{
+                            let subject = "Failed Reversal Update On Premises"
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
+                            res.sendStatus(200);
+                        }
+                        
+                    }
+                    else{
+                        // console.log('Transaction Failed',req.body)
+                        res.sendStatus(200);
+                        
+                       
+                    }
+                })
+               
+            }
+            else if(req.body.state === 8 ){
+
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    if(docs){
+                        if(docs.processing_state !== -1){
+                            Walletmodel.create({
+                                type:req.body.type,
+                                serial:req.body.serial,
+                                order_id:req.body.order_id,
+                                currency:req.body.currency,
+                                txtid:req.body.txid,
+                                block_height:req.body.block_height,
+                                tindex:req.body.tindex,
+                                vout_index:req.body.vout_index,
+                                amount:req.body.amount,
+                                fees:req.body.fees,
+                                memo:req.body.memo,
+                                broadcast_at:req.body.broadcast_at,
+                                chain_at:req.body.chain_at,
+                                from_address:req.body.from_address,
+                                to_address:req.body.to_address,
+                                wallet_id:req.body.wallet_id,
+                                state:req.body.state,
+                                confirm_blocks:req.body.confirm_blocks,
+                                processing_state:req.body.processing_state,
+                                decimal:req.body.decimal,
+                                currency_bip44:req.body.currency_bip44,
+                                token_address:req.body.token_address,
+                                status:'Transaction Cancelled'
+                            });
+                            
+                            
+                        }
+                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
+                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
+                        // console.log('Transaction Failed',req.body)
+                        if(Reversal){
+                            res.sendStatus(200);
+                        }
+                        else{
+                            let subject = "Failed Reversal Update On Premises"
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
+                            res.sendStatus(200);
+                        }
+                        
+                    }
+                    else{
+                        // console.log('Transaction Cancelled',req.body)
+                        res.sendStatus(200);
+                        
+                       
+                    }
+                })
+                
+            }
+            else if(req.body.state ===  10){
+
+                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    if(docs){
+                        if(docs.processing_state !== -1){
+                            Walletmodel.create({
+                                type:req.body.type,
+                                serial:req.body.serial,
+                                order_id:req.body.order_id,
+                                currency:req.body.currency,
+                                txtid:req.body.txid,
+                                block_height:req.body.block_height,
+                                tindex:req.body.tindex,
+                                vout_index:req.body.vout_index,
+                                amount:req.body.amount,
+                                fees:req.body.fees,
+                                memo:req.body.memo,
+                                broadcast_at:req.body.broadcast_at,
+                                chain_at:req.body.chain_at,
+                                from_address:req.body.from_address,
+                                to_address:req.body.to_address,
+                                wallet_id:req.body.wallet_id,
+                                state:req.body.state,
+                                confirm_blocks:req.body.confirm_blocks,
+                                processing_state:req.body.processing_state,
+                                decimal:req.body.decimal,
+                                currency_bip44:req.body.currency_bip44,
+                                token_address:req.body.token_address,
+                                status:'Transaction Dropped'
+                            });
+                            
+                            
+                        }
+                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
+                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
+                        // console.log('Transaction Failed',req.body)
+                        if(Reversal){
+                            res.sendStatus(200);
+                        }
+                        else{
+                            let subject = "Failed Reversal Update On Premises"
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
+                            res.sendStatus(200);
+                        }
+                        
+                    }
+                    else{
+                        // console.log('Transaction Dropped',req.body)
+                        res.sendStatus(200);
+                        
+                       
+                    }
+                })      
+            }
+            else{
+                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
+                    if(err){
+                        res.json({
+                            'message':err,
+                            'status':false
+                        })
+                    }
+                    if(docs){
+                        if(docs.processing_state !== -1){
+                            Walletmodel.create({
+                                type:req.body.type,
+                                serial:req.body.serial,
+                                order_id:req.body.order_id,
+                                currency:req.body.currency,
+                                txtid:req.body.txtid,
+                                block_height:req.body.block_height,
+                                tindex:req.body.tindex,
+                                vout_index:req.body.vout_index,
+                                amount:req.body.amount,
+                                fees:req.body.fees,
+                                memo:req.body.memo,
+                                broadcast_at:req.body.broadcast_at,
+                                chain_at:req.body.chain_at,
+                                from_address:req.body.from_address,
+                                to_address:req.body.to_address,
+                                wallet_id:req.body.wallet_id,
+                                state:req.body.state,
+                                confirm_blocks:req.body.confirm_blocks,
+                                processing_state:req.body.processing_state,
+                                decimal:req.body.decimal,
+                                currency_bip44:req.body.currency_bip44,
+                                token_address:req.body.token_address,
+                                status:'Transaction Unsuccessful'
+                            });
+                            
+                            
+                        }
+                        // console.log('Transaction Unsuccessful',req.body)
+                        res.sendStatus(200);
+                    }
+                    else{
+                        // console.log('Transaction Unsuccessful',req.body)
+                        res.sendStatus(200);
+                        
+                       
+                    }
+                })
+                
+
+
+                res.json({
+                    'message':'Transaction Unsuccessful',
+                    'status':false,
+                    'completed':false
+                }) 
+            }
+            
+            
+        }
+    }
+    else{
+        res.json({
+            'message':'Forbidden',
+            'status':false,
+            'completed':false
+        }) 
+    }
 })
 
 Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
