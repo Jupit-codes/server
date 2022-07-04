@@ -1136,7 +1136,7 @@ router.post('/purchase/coin',(req,res)=>{
                             order_id:req.body.userid,
                             currency:req.body.wallet_type,
                             amount:req.body.btcamount,
-                            from_address:req.body.userid,
+                            from_address:randomUUID(),
                             to_address:req.body.to_address,
                             wallet_id:req.body.userid,
                             usdvalue:req.body.usdamount,
@@ -1184,13 +1184,14 @@ router.post('/purchase/coin',(req,res)=>{
                     type:"Buy"
 
                 })
+                
                 await wallet_transactions.create({
                     type:'Buy',
                     serial:req.body.userid,
                     order_id:req.body.userid,
                     currency:req.body.wallet_type,
                     amount:req.body.ngnamount,
-                    from_address:req.body.userid,
+                    from_address:randomUUID(),
                     to_address:req.body.to_address,
                     wallet_id:req.body.userid,
                     usdvalue:req.body.usdamount,
