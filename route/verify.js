@@ -1693,10 +1693,10 @@ router.post('/filter',(req,res)=>{
                 {
                     $or:[
                         {
-                            type:'BTC'
+                            currency:'BTC'
                         },
                         {
-                            type:'USDT'
+                            currency:'USDT'
                         }  
                     ]
                 }
