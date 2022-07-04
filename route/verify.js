@@ -1654,7 +1654,7 @@ router.post('/filter',(req,res)=>{
     if(status){
         query.push(
             {
-                status:req.body.status
+                type:req.body.status
             }
             )
     }
