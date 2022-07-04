@@ -1672,7 +1672,7 @@ router.post('/filter',(req,res)=>{
     }
 
     if(query.length > 0){
-        
+        console.log('Query',query)
     const x = wallet_transactions.find({
         $and:query
       
