@@ -776,19 +776,6 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const networkFee = req.body.networkFee
     const block_average_fee = req.body.block_average;
 
-
-    
-    
-    // console.log("sender",sender);
-    // console.log("user_id",user_id);
-    // console.log("wallet_type",wallet_type);
-    // console.log("amount",amount);
-    // console.log("reciepentaddress",recipentaddress);
-//     console.log('BlockAverage',block_average_fee)
-  
-//    console.log(req.body);
-
- 
     
     if(tranfertype === "Internal Transfer"){
         let newamount = 0;
@@ -821,6 +808,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     date_created:new Date(),
                     senderaddress:sender,
                 })
+
+               
                 
                 res.send({
                     "Message":'Transaction Was Successful',
@@ -866,6 +855,38 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         read:'unread',
                         initiator:'sender',
                         senderaddress:sender,
+                    })
+
+                    Walletmodel.create({
+                        usdvalue: req.body.usdequivalent,
+                        marketprice: req.body.current_usd_rate,
+                        nairaRate:'580',
+                        txtid:req.body.txid,
+                        currency:req.body.currency,
+                        type:req.body.type,
+                        serial:req.body.serial,
+                        order_id:req.body.order_id,
+                        to_address:req.body.to_address,
+                        amount:amount,
+                        
+                        // block_height:req.body.block_height,
+                        // tindex:req.body.tindex,
+                        // vout_index:req.body.vout_index,
+                        
+                        // fees:req.body.fees,
+                        // memo:req.body.memo,
+                        // broadcast_at:req.body.broadcast_at,
+                        // chain_at:req.body.chain_at,
+                        // from_address:req.body.from_address,
+                        // to_address:req.body.to_address,
+                        // wallet_id:req.body.wallet_id,
+                        // state:req.body.state,
+                        // confirm_blocks:req.body.confirm_blocks,
+                        // processing_state:req.body.processing_state,
+                        // decimal:req.body.decimal,
+                        // currency_bip44:req.body.currency_bip44,
+                        // token_address:req.body.token_address,
+                        
                     })
                     
                     res.send({
@@ -1331,7 +1352,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     //     resolve(err.response.data);
     // })
     //    console.log('err',err.response.data)
-    // console.log(err.response.data)
+    console.log(err.response.data)
     return [err.response.data,false]
     
 
