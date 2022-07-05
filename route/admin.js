@@ -1854,7 +1854,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                             date_created: {
               
                                 $gte: new Date(startDate),
-                                $lt: new Date(endDate).setHours(23, 59, 59)
+                                $lt: new Date(endDate)
                           }
                         },
                         {
@@ -1897,7 +1897,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                                 date_created: {
                 
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate).setHours(23, 59, 59)
+                                    $lt: new Date(endDate)
                             }
                         },
                         {
@@ -1940,7 +1940,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                                 date_created: {
                 
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate).setHours(23, 59, 59)
+                                    $lt: new Date(endDate)
                             }
                         },
                         {
@@ -1983,7 +1983,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                                 date_created: {
                     
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate).setHours(23, 59, 59)
+                                    $lt: new Date(endDate)
                                 }
                         },
                         {
