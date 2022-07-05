@@ -1835,7 +1835,7 @@ router.get('/get/all/buy_n_sell/transaction',(req,res)=>{
 })
 
 
-router.get('/get/cryptoasset/set',async (req,res)=>{
+router.post('/get/cryptoasset/set',async (req,res)=>{
     
     let startDate = req.body.startDate;
     let endDate = req.body.endDate;
