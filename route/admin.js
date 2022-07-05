@@ -2787,20 +2787,39 @@ router.post('/get/transaction/count',async(req,res)=>{
     if(Buy.length >0){
         BuyCount = Buy[0].type
     }
-    if(Sell.length >0){
+    else{
+        BuyCount=0
+    }
+    if(Sell.length > 0){
         SellCount = Sell[0].type
+    }
+    else{
+        SellCount
     }
     if(Send.length >0){
         SendCount = Send[0].type
     }
+    else{
+        SendCount = 0
+    }
     if(Receive.length >0){
         ReceiveCount = Receive[0].type
+    }
+    else{
+        ReceiveCount = 0
     }
     if(Deposit.length >0){
         DepositCount = Deposit[0].amount
     }
-    if(Deposit.length >0){
+    else{
+        DepositCount=0
+    }
+
+    if(Withdrawal.length >0){
         WithdrawalCount = Withdrawal[0].amount
+    }
+    else{
+        WithdrawalCount=0
     }
    
    res.send({
