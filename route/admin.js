@@ -1841,11 +1841,11 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
     let endDate = req.body.enddate;
 
     let BTC_IN ,BTC_OUT,USDT_IN,USDT_OUT
-    console.log("startDate",startDate)
-    console.log("endDate",endDate)
+    
     if(startDate && endDate ){
         
-
+        console.log(new Date(startDate))
+        console.log(new Date(endDate))
         BTC_IN = await wallet_transactions.aggregate([
         
             { $match: {
@@ -1853,11 +1853,14 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                   $and:[
                         {
                             updated: {
-              
+                
                                 $gte: new Date(startDate),
-                                $lt: new Date(endDate).setHours(23, 59, 59)
-                          }
+                                $lte:new Date(endDate)
+                                
+                            }
+
                         },
+                       
                         {
                             currency:'BTC'
                         },
@@ -1881,7 +1884,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             },
             { 
                 $group : { 
-                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address",updatted:"$updated"},
                     amount: { $sum : "$amount"} 
                 },
                 
@@ -1898,7 +1901,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                                 updated: {
                 
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate).setHours(23, 59, 59)
+                                    $lt: new Date(endDate)
                             }
                         },
                         {
@@ -1941,7 +1944,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                                 updated: {
                 
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate).setHours(23, 59, 59)
+                                    $lt: new Date(endDate)
                             }
                         },
                         {
@@ -1984,7 +1987,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                                 updated: {
                     
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate).setHours(23, 59, 59)
+                                    $lt: new Date(endDate)
                                 }
                         },
                         {
@@ -2214,7 +2217,8 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
 
     res.send({
         'BTC_BALANCE':btc_asset_balance.toFixed(8),
-        'USDT_BALANCE':usdt_asset_balance.toFixed(8)
+        'USDT_BALANCE':usdt_asset_balance.toFixed(8),
+        'BTC_IN':BTC_IN,
     });
     
     //  res.json({
