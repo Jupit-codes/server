@@ -573,10 +573,29 @@ router.post('/manual/wallet/credit',async (req,res)=>{
         console.log('btc',req.body.title)
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':parseFloat(req.body.value).toFixed(8)}}).exec();
         if(AddFund){
-            res.send({
-                "message":"Wallet Successfully Updated",
-                "status":true
-            })
+            Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+                if(err){
+                    res.status(400).send(err)
+                }
+                else if(docs){
+                    await deposit_webhook.create({
+                        reference:'Manual Deposit',
+                        account_number:docs.virtual_account,
+                        amount:parseFloat(req.body.value).toFixed(8)
+                    })
+                    res.send({
+                        "message":"Wallet Successfully Updated",
+                        "status":true
+                    })
+                }
+                else{
+                    res.send({
+                        "message":"Commit Not Completed",
+                        "status":false
+                    })
+                }
+            }).clone().catch(function(err){ return [err,false]});
+           
         }
         else{
             res.send({
@@ -607,29 +626,10 @@ router.post('/manual/wallet/credit',async (req,res)=>{
         console.log('naiara',req.body.userid)
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':parseFloat(req.body.value)}}).exec();
         if(AddFund){
-             Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
-                if(err){
-                    res.status(400).send('An Error Occurred')
-                }
-                else if(docs){
-                    await deposit_webhook.create({
-                        reference:'Manual Deposit',
-                        account_number:docs.virtual_account,
-                        amount:parseFloat(req.body.value)
-                    })
-                    res.send({
-                        "message":"Wallet Successfully Updated",
-                        "status":true
-                    })
-                }
-                else{
-                    res.send({
-                        "message":"Commit Not Completed",
-                        "status":false
-                    })
-                }
-            }).clone().catch(function(err){ return [err,false]});
-           
+            res.send({
+                "message":"Wallet Successfully Updated",
+                "status":true
+            })
         }
         else{
             res.send({
@@ -1851,6 +1851,410 @@ router.get('/get/all/buy_n_sell/transaction',(req,res)=>{
             res.send(docs)
         }
     })
+})
+
+
+router.post('/get/cryptoasset/set',async (req,res)=>{
+    
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
+
+    let BTC_IN ,BTC_OUT,USDT_IN,USDT_OUT
+    
+    if(startDate && endDate ){
+        
+        console.log(new Date(startDate))
+        console.log(new Date(endDate))
+        BTC_IN = await wallet_transactions.aggregate([
+        
+            { $match: {
+                
+                  $and:[
+                        {
+                            updated: {
+                
+                                $gte: new Date(startDate),
+                                $lte:new Date(endDate)
+                                
+                            }
+
+                        },
+                       
+                        {
+                            currency:'BTC'
+                        },
+                        {
+                            $or:[
+                                {
+                                    type:'Buy'
+                                },
+                                {
+                                    type:'Receive'
+                                }
+            
+                            ]
+                        }
+                    
+            
+                    ]
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address",updatted:"$updated"},
+                    amount: { $sum : "$amount"} 
+                },
+                
+            }, 
+          
+        ])
+    
+        BTC_OUT = await wallet_transactions.aggregate([
+            
+            { $match: {
+                
+                  $and:[
+                        {
+                                updated: {
+                
+                                    $gte: new Date(startDate),
+                                    $lt: new Date(endDate)
+                            }
+                        },
+                        {
+                            currency:'BTC'
+                        },
+                        {
+                            $or:[
+                                {
+                                    type:'Sell'
+                                },
+                                {
+                                    type:'Send'
+                                }
+            
+                            ]
+                        }
+                    
+            
+                    ]
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
+                    amount: { $sum : "$amount"} 
+                },
+                
+            }, 
+          
+        ])
+    
+        USDT_IN = await wallet_transactions.aggregate([
+            
+            { $match: {
+                
+                  $and:[
+                        {
+                                updated: {
+                
+                                    $gte: new Date(startDate),
+                                    $lt: new Date(endDate)
+                            }
+                        },
+                        {
+                            currency:'USDT'
+                        },
+                        {
+                            $or:[
+                                {
+                                    type:'Buy'
+                                },
+                                {
+                                    type:'Receive'
+                                }
+            
+                            ]
+                        }
+                    
+            
+                    ]
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
+                    amount: { $sum : "$amount"} 
+                },
+                
+            }, 
+          
+        ])
+    
+        USDT_OUT = await wallet_transactions.aggregate([
+            
+            { $match: {
+                
+                  $and:[
+                        {
+                                updated: {
+                    
+                                    $gte: new Date(startDate),
+                                    $lt: new Date(endDate)
+                                }
+                        },
+                        {
+                            currency:'USDT'
+                        },
+                        {
+                            $or:[
+                                {
+                                    type:'Sell'
+                                },
+                                {
+                                    type:'Send'
+                                }
+            
+                            ]
+                        }
+                    
+            
+                    ]
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
+                    amount: { $sum : "$amount"} 
+                },
+                
+            }, 
+          
+        ])
+            
+    }
+    else{
+        BTC_IN = await wallet_transactions.aggregate([
+        
+            { $match: {
+                
+                  $and:[
+                        {
+                            currency:'BTC'
+                        },
+                        {
+                            $or:[
+                                {
+                                    type:'Buy'
+                                },
+                                {
+                                    type:'Receive'
+                                }
+            
+                            ]
+                        }
+                    
+            
+                    ]
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
+                    amount: { $sum : "$amount"} 
+                },
+                
+            }, 
+          
+        ])
+    
+        BTC_OUT = await wallet_transactions.aggregate([
+            
+            { $match: {
+                
+                  $and:[
+                        {
+                            currency:'BTC'
+                        },
+                        {
+                            $or:[
+                                {
+                                    type:'Sell'
+                                },
+                                {
+                                    type:'Send'
+                                }
+            
+                            ]
+                        }
+                    
+            
+                    ]
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
+                    amount: { $sum : "$amount"} 
+                },
+                
+            }, 
+          
+        ])
+    
+        USDT_IN = await wallet_transactions.aggregate([
+            
+            { $match: {
+                
+                  $and:[
+                        {
+                            currency:'USDT'
+                        },
+                        {
+                            $or:[
+                                {
+                                    type:'Buy'
+                                },
+                                {
+                                    type:'Receive'
+                                }
+            
+                            ]
+                        }
+                    
+            
+                    ]
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
+                    amount: { $sum : "$amount"} 
+                },
+                
+            }, 
+          
+        ])
+    
+        USDT_OUT = await wallet_transactions.aggregate([
+            
+            { $match: {
+                
+                  $and:[
+                        {
+                            currency:'USDT'
+                        },
+                        {
+                            $or:[
+                                {
+                                    type:'Sell'
+                                },
+                                {
+                                    type:'Send'
+                                }
+            
+                            ]
+                        }
+                    
+            
+                    ]
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
+                    amount: { $sum : "$amount"} 
+                },
+                
+            }, 
+          
+        ])
+    }
+
+
+    
+    let btc_asset_balance = 0;
+    let usdt_asset_balance=0
+    let btc_in = 0;
+    let btc_out = 0;
+    let usdt_in = 0;
+    let usdt_out=0;
+    let sum_amt_btc_in = 0
+    let sum_amt_btc_out = 0
+    let sum_amt_usdt_in = 0
+    let sum_amt_usdt_out = 0
+    
+    if(BTC_IN.length > 0){
+       BTC_IN.forEach((d)=>{
+        sum_amt_btc_in += d.amount 
+       })
+       btc_in = sum_amt_btc_in;
+       
+    }
+    if(BTC_OUT.length > 0){
+        BTC_OUT.forEach((d)=>{
+            sum_amt_btc_out += d.amount 
+        })
+        btc_out = sum_amt_btc_out;
+    }
+
+    if(USDT_IN.length > 0 ){
+        USDT_IN.forEach((d)=>{
+            sum_amt_usdt_in += d.amount 
+           })
+            usdt_in = sum_amt_usdt_in;
+        // usdt_in = USDT_IN[0].amount;
+        
+    }
+    if(USDT_OUT.length > 0 ){
+        // usdt_out = USDT_OUT[0].amount;
+        //usdt_asset_balance = parseFloat(USDT_IN[0].amount) - parseFloat(USDT_OUT[0].amount)
+        USDT_OUT.forEach((d)=>{
+            sum_amt_usdt_out += d.amount 
+           })
+            usdt_out = sum_amt_usdt_out;
+    }
+
+    btc_asset_balance = parseFloat(btc_in) - parseFloat(btc_out)
+    usdt_asset_balance = parseFloat(usdt_in) - parseFloat(usdt_out)
+
+    res.send({
+        'BTC_BALANCE':btc_asset_balance.toFixed(8),
+        'USDT_BALANCE':usdt_asset_balance.toFixed(8),
+        'BTC_IN':BTC_IN,
+    });
+    
+    //  res.json({
+    //     'BTC_IN':btc_in,
+    //     'BTC_OUT':btc_out,
+    //     'USDT_IN':usdt_in,
+    //     'USDT_OUT':usdt_out,
+    //     // 'USDT_IN':USDT_IN[0]?.amount,
+    //     // 'BTC_OUT':BTC_OUT[0]?.amount,
+    //     // 'USDT_OUT':USDT_OUT[0]?.amount,
+    //     'btc_asset_balance':btc_asset_balance.toFixed(8),
+    //     'usdt_asset_balance':usdt_asset_balance.toFixed(8)
+    //  });
+    //   console.log(dateToken);
+         
+        
+  
 })
 
 
