@@ -1851,10 +1851,10 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                 
                   $and:[
                         {
-                            date_created: {
+                            updated: {
               
                                 $gte: new Date(startDate),
-                                $lt: new Date(endDate)
+                                $lt: new Date(endDate).setHours(23, 59, 59)
                           }
                         },
                         {
@@ -1894,10 +1894,10 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                 
                   $and:[
                         {
-                                date_created: {
+                                updated: {
                 
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate)
+                                    $lt: new Date(endDate).setHours(23, 59, 59)
                             }
                         },
                         {
@@ -1937,10 +1937,10 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                 
                   $and:[
                         {
-                                date_created: {
+                                updated: {
                 
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate)
+                                    $lt: new Date(endDate).setHours(23, 59, 59)
                             }
                         },
                         {
@@ -1980,10 +1980,10 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                 
                   $and:[
                         {
-                                date_created: {
+                                updated: {
                     
                                     $gte: new Date(startDate),
-                                    $lt: new Date(endDate)
+                                    $lt: new Date(endDate).setHours(23, 59, 59)
                                 }
                         },
                         {
