@@ -628,7 +628,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                         "status":false
                     })
                 }
-            })clone().catch(function(err){ return [err,false]});
+            }).clone().catch(function(err){ return [err,false]});
            
         }
         else{
