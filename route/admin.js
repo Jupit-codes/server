@@ -2160,7 +2160,7 @@ router.post('/get/fiatasset/set',async (req,res)=>{
     ngn_asset_balance_out = parseFloat(ngn_out) + parseFloat(ngn_out_II)
     ngn_asset_balance = parseFloat(ngn_asset_balance_in) - parseFloat(ngn_asset_balance_out)
     res.send({
-        'NGN_BALANCE':ngn_asset_balance.toFixed(8),
+        'NGN_BALANCE':ngn_asset_balance,
         'NGN_BALANCE_IN':ngn_asset_balance_in,
         'NGN_BALANCE_OUT':ngn_asset_balance_out,
         
