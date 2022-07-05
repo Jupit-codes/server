@@ -617,12 +617,19 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                         account_number:docs.virtual_number,
                         amount:parseFloat(req.body.value)
                     })
+                    res.send({
+                        "message":"Wallet Successfully Updated",
+                        "status":true
+                    })
+                }
+                else{
+                    res.send({
+                        "message":"Commit Not Completed",
+                        "status":false
+                    })
                 }
             })
-            res.send({
-                "message":"Wallet Successfully Updated",
-                "status":true
-            })
+           
         }
         else{
             res.send({
