@@ -1,3 +1,4 @@
+import { Double } from 'mongodb';
 import mongoose from 'mongoose'
 
 const deposit_webhookSchema = mongoose.Schema({
@@ -10,7 +11,7 @@ const deposit_webhookSchema = mongoose.Schema({
         
     },
     amount:{
-        type:'String',
+        type:Double,
         
     },
     status:{

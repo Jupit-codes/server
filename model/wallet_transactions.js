@@ -26,7 +26,7 @@ const wallet_transactions = mongoose.Schema({
         type:'String'
     },
     nairavalue:{
-        type:'String'
+        type:Double
     },
     rateInnaira:{
         type:'String'

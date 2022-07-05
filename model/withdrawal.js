@@ -1,3 +1,4 @@
+import { Double } from 'mongodb';
 import mongoose from 'mongoose'
 
 const withdrawalSchema = mongoose.Schema({
@@ -9,7 +10,7 @@ const withdrawalSchema = mongoose.Schema({
         required: [true, "Required"],
     },
     amount:{
-        type:'String',
+        type:Double,
         required: [true, "Required"],
         
     },
