@@ -1863,8 +1863,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
     
     if(startDate && endDate ){
         
-        console.log(new Date(startDate))
-        console.log(new Date(endDate))
+      
         BTC_IN = await wallet_transactions.aggregate([
         
             { $match: {
@@ -2574,18 +2573,227 @@ router.post('/get/fiatasset/set',async (req,res)=>{
   
 })
 
-router.get('/get/cryptoasset/asset',(req,res)=>{
-    let btc  = 0;
-    let usdt = 0;
+router.get('/get/transaction/count',async(req,res)=>{
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;   
+    let Buy,Sell,Send,Receive,Deposit,Withdrawal
+    if(startDate && endDate){
+        Buy = await wallet_transactions.aggregate([
+            { 
+                $match: {
+                    $and:[
+                        {
+                            type:'Buy'
+                        },
+                        {
+                            updated: {
+                
+                                $gte: new Date(startDate),
+                                $lte:new Date(endDate)
+                                
+                            }
+                        }
+                    ]
+                    
+                }
+            
+            },
+            {
+                $count: "type"
+            }
+           ])
+        
+           Sell = await wallet_transactions.aggregate([
+            { 
+                $match: {
+                    $and:[
+                        {
+                            type:'Sell'
+                        },
+                        {
+                            updated: {
+                
+                                $gte: new Date(startDate),
+                                $lte:new Date(endDate)
+                                
+                            }
+                        }
+                    ]
+                }
+            
+            },
+            {
+                $count: "type"
+            }
+           ])
+           Send = await wallet_transactions.aggregate([
+            { 
+                $match: {
+                    $and:[
+                        {
+                            type:'Send'
+                        },
+                        {
+                            updated: {
+                
+                                $gte: new Date(startDate),
+                                $lte:new Date(endDate)
+                                
+                            }
+                        }
+                    ]
+                }
+            
+            },
+            {
+                $count: "type"
+            }
+           ])
+            Receive = await wallet_transactions.aggregate([
+            { 
+                $match: {
+                    $and:[
+                        {
+                            type:'Receive'
+                        },
+                        {
+                            updated: {
+                
+                                $gte: new Date(startDate),
+                                $lte:new Date(endDate)
+                                
+                            }
+                        }
+                    ]
+                }
+            
+            },
+            {
+                $count: "type"
+            }
+           ])
+        
+            Deposit = await deposit_webhook.aggregate([
+            { 
+                $match: {
+                    updated: {
+                
+                        $gte: new Date(startDate),
+                        $lte:new Date(endDate)
+                        
+                    }
+                }
+            
+            },
+            {
+                $count: "amount"
+            }
+           ])
+        
+            Withdrawal = await withdrawal.aggregate([
+            { 
+                $match: {
 
-    wallet_transactions.find({},(err,docs)=>{
-        if(err){
-            res.status(400).send(err);
-        }
-        else if(docs){
-            res.send(docs);
-        }
-    })
+                    updated: {
+                
+                        $gte: new Date(startDate),
+                        $lte:new Date(endDate)
+                        
+                    }
+                }
+            
+            },
+            {
+                $count: "amount"
+            }
+           ])
+        
+    }
+    else{
+
+        Buy = await wallet_transactions.aggregate([
+            { 
+                $match: {
+                    type:'Buy'
+                }
+            
+            },
+            {
+                $count: "type"
+            }
+           ])
+        
+           Sell = await wallet_transactions.aggregate([
+            { 
+                $match: {
+                    type:'Sell'
+                }
+            
+            },
+            {
+                $count: "type"
+            }
+           ])
+           Send = await wallet_transactions.aggregate([
+            { 
+                $match: {
+                    type:'Send'
+                }
+            
+            },
+            {
+                $count: "type"
+            }
+           ])
+            Receive = await wallet_transactions.aggregate([
+            { 
+                $match: {
+                    type:'Receive'
+                }
+            
+            },
+            {
+                $count: "type"
+            }
+           ])
+        
+            Deposit = await deposit_webhook.aggregate([
+            { 
+                $match: {
+                    
+                }
+            
+            },
+            {
+                $count: "amount"
+            }
+           ])
+        
+            Withdrawal = await withdrawal.aggregate([
+            { 
+                $match: {
+                    
+                }
+            
+            },
+            {
+                $count: "amount"
+            }
+           ])
+        
+
+    }
+
+   
+   res.send({
+    "Buy":Buy,
+    "Sell":Sell,
+    "Send":Send,
+    "Receive":Receive,
+    "Withdrawal":Withdrawal,
+    "Deposit":Deposit
+   })
+   
 
 })
 
