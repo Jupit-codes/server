@@ -2573,7 +2573,7 @@ router.post('/get/fiatasset/set',async (req,res)=>{
   
 })
 
-router.get('/get/transaction/count',async(req,res)=>{
+router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;   
     let Buy,Sell,Send,Receive,Deposit,Withdrawal
