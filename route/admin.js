@@ -607,7 +607,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
         console.log('naiara',req.body.userid)
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':parseFloat(req.body.value)}}).exec();
         if(AddFund){
-            await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+             Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
                 if(err){
                     res.status(400).send('An Error Occurred')
                 }
@@ -628,7 +628,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                         "status":false
                     })
                 }
-            })
+            })clone().catch(function(err){ return [err,false]});
            
         }
         else{
