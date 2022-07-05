@@ -614,7 +614,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                 else if(docs){
                     await deposit_webhook.create({
                         reference:'Manual Deposit',
-                        account_number:docs.virtual_number,
+                        account_number:docs.virtual_account,
                         amount:parseFloat(req.body.value)
                     })
                     res.send({
