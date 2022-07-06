@@ -55,7 +55,7 @@ const userSchema = mongoose.Schema({
         type:'String',
         default:'Active'
     },
-    suspend:{
+    suspension:{
         type:Boolean,
         default:false
     },
