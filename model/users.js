@@ -55,6 +55,14 @@ const userSchema = mongoose.Schema({
         type:'String',
         default:'Active'
     },
+    suspend:{
+        type:Boolean,
+        default:false
+    },
+    blacklist:{
+        type:Boolean,
+        default:false
+    },
     loginTime:{
         type:'String'
     },
