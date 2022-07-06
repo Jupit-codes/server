@@ -574,7 +574,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':parseFloat(req.body.valuex).toFixed(8)}}).exec();
         if(AddFund){
 
-            await Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
+            await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
                     if(err){
                         res.status(400).send('Inter Server Error')
                     }
