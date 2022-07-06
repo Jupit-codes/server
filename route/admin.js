@@ -570,7 +570,7 @@ async function fetchbank(email){
 router.post('/manual/wallet/credit',async (req,res)=>{
    
     if(req.body.modalTitle === "BTC Wallet Balance"){
-        console.log('btc',req.body.title)
+       
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':parseFloat(req.body.valuex).toFixed(8)}}).exec();
         if(AddFund){
             res.send({
