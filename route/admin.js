@@ -571,31 +571,13 @@ router.post('/manual/wallet/credit',async (req,res)=>{
    
     if(req.body.modalTitle === "BTC Wallet Balance"){
         console.log('btc',req.body.title)
-        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':parseFloat(req.body.value).toFixed(8)}}).exec();
+        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':parseFloat(req.body.valuex).toFixed(8)}}).exec();
         if(AddFund){
-            Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
-                if(err){
-                    res.status(400).send(err)
-                }
-                else if(docs){
-                    await deposit_webhook.create({
-                        reference:'Manual Deposit',
-                        account_number:docs.virtual_account,
-                        amount:parseFloat(req.body.value).toFixed(8)
-                    })
-                    res.send({
-                        "message":"Wallet Successfully Updated",
-                        "status":true
-                    })
-                }
-                else{
-                    res.send({
-                        "message":"Commit Not Completed",
-                        "status":false
-                    })
-                }
-            }).clone().catch(function(err){ return [err,false]});
-           
+            res.send({
+                "message":"Wallet Successfully Updated",
+                "status":true
+            })
+            
         }
         else{
             res.send({
@@ -607,7 +589,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
     }
     else if(req.body.modalTitle === "USDT Wallet Balance"){
         console.log('usdt',req.body.title)
-        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.0.balance':parseFloat(req.body.value).toFixed(6)}}).exec();
+        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.0.balance':parseFloat(req.body.valuex).toFixed(6)}}).exec();
         if(AddFund){
             res.send({
                 "message":"Wallet Successfully Updated",
@@ -624,12 +606,32 @@ router.post('/manual/wallet/credit',async (req,res)=>{
     }
     else if(req.body.modalTitle === "Naira Wallet Balance"){
         console.log('naiara',req.body.userid)
-        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':parseFloat(req.body.value)}}).exec();
+        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':parseFloat(req.body.valuex)}}).exec();
         if(AddFund){
-            res.send({
-                "message":"Wallet Successfully Updated",
-                "status":true
-            })
+
+            Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+                if(err){
+                    res.status(400).send(err)
+                }
+                else if(docs){
+                    await deposit_webhook.create({
+                        reference:'Manual Deposit',
+                        account_number:docs.virtual_account,
+                        amount:parseFloat(req.body.valuex).toFixed(8)
+                    })
+                    res.send({
+                        "message":"Wallet Successfully Updated",
+                        "status":true
+                    })
+                }
+                else{
+                    res.send({
+                        "message":"Commit Not Completed",
+                        "status":false
+                    })
+                }
+            }).clone().catch(function(err){ return [err,false]});
+           
         }
         else{
             res.send({
