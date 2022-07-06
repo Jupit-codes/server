@@ -179,7 +179,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    deposit_webhook.deleteMany({},(err,docs)=>{
+    notification.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }

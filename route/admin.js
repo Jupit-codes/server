@@ -650,7 +650,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                         amount:req.body.valuex,
                         from_address:randomUUID(),
                         fees:"0",
-                        to_address:docs.btc_wallet[0].address,
+                        to_address:docs.usdt_wallet[0].address,
                         wallet_id:req.body.userid,
                         usdvalue:req.body.usdvaluex,
                         nairavalue:req.body.nairavaluex,

@@ -3290,7 +3290,8 @@ async function createUSDTWalletAddress(userid){
 async function createvirtualaccount(firstname,lastname,userid){
 
     
-    const url = "https://sandbox.purplepayapp.com/dev_api/v1/test/deposit/create_new_account_number";
+    //const url = "https://sandbox.purplepayapp.com/dev_api/v1/test/deposit/create_new_account_number";
+    const url = "https://live.purplepayapp.com/v1/deposit/create_new_account_number";
     // const url = "https://api.purplepayapp.com/dev_api/v1/test/deposit/create_new_account_number";
             const params ={
                 "first_name":firstname,
@@ -3301,7 +3302,7 @@ async function createvirtualaccount(firstname,lastname,userid){
              let endresult  = await axios.post(url,params,{ 
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'bearer 29A492021F4B709A8D1152C3EF4D32DC5A7092723ECAC4C511781003584B48873CCBFEBDEAE89CF22ED1CB1A836213549BC6638A3B563CA7FC009BEB3BC30CF8'
+                        'Authorization': 'bearer BE09BEE831CF262226B426E39BD1092AF84DC63076D4174FAC78A2261F9A3D6E59744983B8326B69CDF2963FE314DFC89635CFA37A40596508DD6EAAB09402C7'
                     }
                 })
                 .then(res=>{
