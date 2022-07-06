@@ -1078,25 +1078,12 @@ router.post('/get/all/transactions/individual',(req,res)=>{
                 else if(docs){
                     res.send(docs)
                 }
-            })
+            }).clone().catch(function(err){ return [err,false]});
           
         }
-    })
+    }).clone().catch(function(err){ return [err,false]});
 
-    let x = wallet_transactions.find({},(err,docs)=>{
-        if(err){
-            res.status(400).send({
-                "message":err,
-                "status":false
-            })
-        }
-        else{
-            res.send({
-                "message":docs,
-                "status":true
-            })
-        }
-    })
+   
 })
 
 router.get('/get/awaiting/approval',(req,res)=>{
