@@ -595,6 +595,19 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                             rateInnaira:req.body.jupitrate,
                             status:'Transaction Completed' 
                         })
+                        let saveStatus =  await Notification.create({
+                            type:5,
+                            orderid:docs._id,
+                            transfertype:'Buy',
+                            asset:"BTC",
+                            from_address:req.body.nairavaluex,
+                            to_address:docs.btc_wallet[0].address,
+                            status:'Completed',
+                            read:'unread',
+                            date_created:new Date(),
+                            initiator:req.body.valuex,
+                    
+                        })
                         res.send({
                             "message":"Wallet Successfully Updated",
                             "status":true
