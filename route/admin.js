@@ -1039,6 +1039,66 @@ router.get('/get/all/transactions',(req,res)=>{
     })
 })
 
+router.post('/get/all/transactions/individual',(req,res)=>{
+
+    Usermodel.findOne({_id:req.body.userid},async(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            let address_BTC = docs.btc_wallet[0].address; 
+            let address_USDT = docs.usdt_wallet[0].address; 
+
+            wallet_transactions.find({
+
+                $or:[
+
+                    {
+                        order_id:req.body.userid
+                    },
+                    {
+                        from_address:address_BTC
+                    },
+                    {
+                        to_address:address_BTC
+                    },
+                    {
+                        from_address:address_USDT
+                    },
+                    {
+                        to_address:address_USDT
+                    }
+
+                ]
+
+            },(err,docs)=>{
+                if(err){
+                    res.status(400).send(err)
+                }
+                else if(docs){
+                    res.send(docs)
+                }
+            })
+          
+        }
+    })
+
+    let x = wallet_transactions.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send({
+                "message":err,
+                "status":false
+            })
+        }
+        else{
+            res.send({
+                "message":docs,
+                "status":true
+            })
+        }
+    })
+})
+
 router.get('/get/awaiting/approval',(req,res)=>{
     idcardverification.find({status:'Pending'},(err,docs)=>{
         if(err){
