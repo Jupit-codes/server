@@ -595,7 +595,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                             rateInnaira:req.body.jupitrate,
                             status:'Transaction Completed' 
                         })
-                        let saveStatus =  await Notification.create({
+                        let saveStatus =  await notification.create({
                             type:5,
                             orderid:docs._id,
                             transfertype:'Buy',
