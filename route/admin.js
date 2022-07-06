@@ -637,6 +637,35 @@ router.post('/manual/wallet/credit',async (req,res)=>{
         console.log('usdt',req.body.title)
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.0.balance':parseFloat(req.body.valuex).toFixed(6)}}).exec();
         if(AddFund){
+            await wallet_transactions.create({
+                type:'Buy',
+                serial:req.body.userid,
+                order_id:req.body.userid,
+                currency:"USDT",
+                amount:req.body.valuex,
+                from_address:randomUUID(),
+                fees:"0",
+                to_address:docs.btc_wallet[0].address,
+                wallet_id:req.body.userid,
+                usdvalue:req.body.usdvaluex,
+                nairavalue:req.body.nairavaluex,
+                marketprice:req.body.marketrate,
+                rateInnaira:req.body.jupitrate,
+                status:'Transaction Completed' 
+            })
+            let saveStatus =  await notification.create({
+                type:5,
+                orderid:docs._id,
+                transfertype:'Buy',
+                asset:"BTC",
+                from_address:req.body.nairavaluex,
+                to_address:docs.btc_wallet[0].address,
+                status:'Completed',
+                read:'unread',
+                date_created:new Date(),
+                initiator:req.body.valuex,
+        
+            })
             res.send({
                 "message":"Wallet Successfully Updated",
                 "status":true
