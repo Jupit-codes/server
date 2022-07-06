@@ -1810,6 +1810,30 @@ async function getalldeposit(){
      })
  })
 
+ router.post('/deactivate/user/suspension',(req,res)=>{
+    let status = req.body.updatestatus;
+     Usermodel.findOneAndUpdate({_id:req.body.id},{$set:{suspension:status}},(err,docs)=>{
+         if(err){
+             res.status(400).send(err);
+         }
+         else if(docs){
+             res.send(docs.Status)
+         }
+     })
+ })
+
+ router.post('/deactivate/user/blacklist',(req,res)=>{
+    let status = req.body.updatestatus;
+     Usermodel.findOneAndUpdate({_id:req.body.id},{$set:{blacklist:status}},(err,docs)=>{
+         if(err){
+             res.status(400).send(err);
+         }
+         else if(docs){
+             res.send(docs.Status)
+         }
+     })
+ })
+
  router.post('/deactivate/2fa',(req,res)=>{
    
      Usermodel.findOneAndUpdate({_id:req.body.id},{$set:{TWOFA:false}},(err,docs)=>{
