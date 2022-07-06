@@ -573,10 +573,43 @@ router.post('/manual/wallet/credit',async (req,res)=>{
        
         let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':parseFloat(req.body.valuex).toFixed(8)}}).exec();
         if(AddFund){
-            res.send({
-                "message":"Wallet Successfully Updated",
-                "status":true
+
+            await Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
+                    if(err){
+                        res.status(400).send('Inter Server Error')
+                    }
+                    else if(docs){
+                        await wallet_transactions.create({
+                            type:'Buy',
+                            serial:req.body.userid,
+                            order_id:req.body.userid,
+                            currency:"BTC",
+                            amount:req.body.valuex,
+                            from_address:randomUUID(),
+                            fees:"0",
+                            to_address:docs.btc_wallet[0].address,
+                            wallet_id:req.body.userid,
+                            usdvalue:req.body.usdvaluex,
+                            nairavalue:req.body.nairavaluex,
+                            marketprice:req.body.marketrate,
+                            rateInnaira:req.body.jupitrate,
+                            status:'Transaction Completed' 
+                        })
+                        res.send({
+                            "message":"Wallet Successfully Updated",
+                            "status":true
+                        })
+                    }
+                    else if(!docs){
+                        res.send({
+                            "message":"Wallet Commit Not Completed",
+                            "status":false
+                        })
+                    }
             })
+           
+
+            
             
         }
         else{
