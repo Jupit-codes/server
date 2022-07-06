@@ -1049,7 +1049,7 @@ router.post('/get/all/transactions/individual',(req,res)=>{
             let address_BTC = docs.btc_wallet[0].address; 
             let address_USDT = docs.usdt_wallet[0].address; 
 
-            wallet_transactions.find({
+           await  wallet_transactions.find({
 
                 $or:[
 
