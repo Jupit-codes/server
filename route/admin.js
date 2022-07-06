@@ -571,10 +571,138 @@ router.post('/manual/wallet/credit',async (req,res)=>{
    
     if(req.body.modalTitle === "BTC Wallet Balance"){
        
-        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':parseFloat(req.body.valuex).toFixed(8)}}).exec();
-        if(AddFund){
+        if(req.body.mode === "Deposit"){
 
-            await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+
+            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':parseFloat(req.body.valuex).toFixed(8)}}).exec();
+    
+            if(AddFund){
+    
+                await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+                        if(err){
+                            res.status(400).send('Inter Server Error')
+                        }
+                        else if(docs){
+                            await wallet_transactions.create({
+                                type:'Buy',
+                                serial:req.body.userid,
+                                order_id:req.body.userid,
+                                currency:"BTC",
+                                amount:req.body.valuex,
+                                from_address:randomUUID(),
+                                fees:"0",
+                                to_address:docs.btc_wallet[0].address,
+                                wallet_id:req.body.userid,
+                                usdvalue:req.body.usdvaluex,
+                                nairavalue:req.body.nairavaluex,
+                                marketprice:req.body.marketrate,
+                                rateInnaira:req.body.jupitrate,
+                                status:'Transaction Completed' 
+                            })
+                            let saveStatus =  await notification.create({
+                                type:5,
+                                orderid:docs._id,
+                                transfertype:'Buy',
+                                asset:"BTC",
+                                from_address:req.body.nairavaluex,
+                                to_address:docs.btc_wallet[0].address,
+                                status:'Completed',
+                                read:'unread',
+                                date_created:new Date(),
+                                initiator:req.body.valuex,
+                        
+                            })
+                            res.send({
+                                "message":"Wallet Successfully Updated",
+                                "status":true
+                            })
+                        }
+                        else if(!docs){
+                            res.send({
+                                "message":"Wallet Commit Not Completed",
+                                "status":false
+                            })
+                        }
+                }).clone().catch(function(err){ return [err,false]});
+               
+            }
+            else{
+                res.send({
+                    "message":"Wallet Update Error",
+                    "status":false
+                })
+            }
+
+        }
+        else if(req.body.mode === "Withdrawal"){
+            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':- parseFloat(req.body.valuex).toFixed(8)}}).exec();
+    
+            if(AddFund){
+    
+                await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+                        if(err){
+                            res.status(400).send('Inter Server Error')
+                        }
+                        else if(docs){
+                            await wallet_transactions.create({
+                                type:'Sell',
+                                serial:req.body.userid,
+                                order_id:req.body.userid,
+                                currency:"BTC",
+                                amount:req.body.valuex,
+                                from_address:randomUUID(),
+                                fees:"0",
+                                to_address:docs.btc_wallet[0].address,
+                                wallet_id:req.body.userid,
+                                usdvalue:req.body.usdvaluex,
+                                nairavalue:req.body.nairavaluex,
+                                marketprice:req.body.marketrate,
+                                rateInnaira:req.body.jupitrate,
+                                status:'Transaction Completed' 
+                            })
+                            // let saveStatus =  await notification.create({
+                            //     type:5,
+                            //     orderid:docs._id,
+                            //     transfertype:'Buy',
+                            //     asset:"BTC",
+                            //     from_address:req.body.nairavaluex,
+                            //     to_address:docs.btc_wallet[0].address,
+                            //     status:'Completed',
+                            //     read:'unread',
+                            //     date_created:new Date(),
+                            //     initiator:req.body.valuex,
+                        
+                            // })
+                            res.send({
+                                "message":"Wallet Successfully Updated",
+                                "status":true
+                            })
+                        }
+                        else if(!docs){
+                            res.send({
+                                "message":"Wallet Commit Not Completed",
+                                "status":false
+                            })
+                        }
+                }).clone().catch(function(err){ return [err,false]});
+               
+            }
+            else{
+                res.send({
+                    "message":"Wallet Update Error",
+                    "status":false
+                })
+            }
+        }
+        
+    
+    }
+    else if(req.body.modalTitle === "USDT Wallet Balance"){
+        
+        if(req.body.mode === "Deposit"){
+            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.0.balance':parseFloat(req.body.valuex).toFixed(6)}}).exec();
+            if(AddFund){
+                await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
                     if(err){
                         res.status(400).send('Inter Server Error')
                     }
@@ -583,11 +711,11 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                             type:'Buy',
                             serial:req.body.userid,
                             order_id:req.body.userid,
-                            currency:"BTC",
+                            currency:"USDT",
                             amount:req.body.valuex,
                             from_address:randomUUID(),
                             fees:"0",
-                            to_address:docs.btc_wallet[0].address,
+                            to_address:docs.usdt_wallet[0].address,
                             wallet_id:req.body.userid,
                             usdvalue:req.body.usdvaluex,
                             nairavalue:req.body.nairavaluex,
@@ -599,9 +727,9 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                             type:5,
                             orderid:docs._id,
                             transfertype:'Buy',
-                            asset:"BTC",
+                            asset:"USDT",
                             from_address:req.body.nairavaluex,
-                            to_address:docs.btc_wallet[0].address,
+                            to_address:docs.usdt_wallet[0].address,
                             status:'Completed',
                             read:'unread',
                             date_created:new Date(),
@@ -621,116 +749,163 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                     }
             }).clone().catch(function(err){ return [err,false]});
            
-
-            
-            
-        }
-        else{
-            res.send({
-                "message":"Wallet Update Error",
-                "status":false
-            })
-        }
     
-    }
-    else if(req.body.modalTitle === "USDT Wallet Balance"){
-        console.log('usdt',req.body.title)
-        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.0.balance':parseFloat(req.body.valuex).toFixed(6)}}).exec();
-        if(AddFund){
-            await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
-                if(err){
-                    res.status(400).send('Inter Server Error')
-                }
-                else if(docs){
-                    await wallet_transactions.create({
-                        type:'Buy',
-                        serial:req.body.userid,
-                        order_id:req.body.userid,
-                        currency:"USDT",
-                        amount:req.body.valuex,
-                        from_address:randomUUID(),
-                        fees:"0",
-                        to_address:docs.usdt_wallet[0].address,
-                        wallet_id:req.body.userid,
-                        usdvalue:req.body.usdvaluex,
-                        nairavalue:req.body.nairavaluex,
-                        marketprice:req.body.marketrate,
-                        rateInnaira:req.body.jupitrate,
-                        status:'Transaction Completed' 
-                    })
-                    let saveStatus =  await notification.create({
-                        type:5,
-                        orderid:docs._id,
-                        transfertype:'Buy',
-                        asset:"USDT",
-                        from_address:req.body.nairavaluex,
-                        to_address:docs.usdt_wallet[0].address,
-                        status:'Completed',
-                        read:'unread',
-                        date_created:new Date(),
-                        initiator:req.body.valuex,
-                
-                    })
-                    res.send({
-                        "message":"Wallet Successfully Updated",
-                        "status":true
-                    })
-                }
-                else if(!docs){
-                    res.send({
-                        "message":"Wallet Commit Not Completed",
-                        "status":false
-                    })
-                }
-        }).clone().catch(function(err){ return [err,false]});
-       
-
+            
+            }
+            else{
+                res.send({
+                    "message":"Wallet Update Error",
+                    "status":false
+                })
+            }
+        }
+        else if(req.body.mode === "Withdrawal"){
+            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.0.balance':- parseFloat(req.body.valuex).toFixed(6)}}).exec();
+            if(AddFund){
+                await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+                    if(err){
+                        res.status(400).send('Inter Server Error')
+                    }
+                    else if(docs){
+                        await wallet_transactions.create({
+                            type:'Sell',
+                            serial:req.body.userid,
+                            order_id:req.body.userid,
+                            currency:"USDT",
+                            amount:req.body.valuex,
+                            from_address:randomUUID(),
+                            fees:"0",
+                            to_address:docs.usdt_wallet[0].address,
+                            wallet_id:req.body.userid,
+                            usdvalue:req.body.usdvaluex,
+                            nairavalue:req.body.nairavaluex,
+                            marketprice:req.body.marketrate,
+                            rateInnaira:req.body.jupitrate,
+                            status:'Transaction Completed' 
+                        })
+                        // let saveStatus =  await notification.create({
+                        //     type:5,
+                        //     orderid:docs._id,
+                        //     transfertype:'Buy',
+                        //     asset:"USDT",
+                        //     from_address:req.body.nairavaluex,
+                        //     to_address:docs.usdt_wallet[0].address,
+                        //     status:'Completed',
+                        //     read:'unread',
+                        //     date_created:new Date(),
+                        //     initiator:req.body.valuex,
+                    
+                        // })
+                        res.send({
+                            "message":"Wallet Successfully Updated",
+                            "status":true
+                        })
+                    }
+                    else if(!docs){
+                        res.send({
+                            "message":"Wallet Commit Not Completed",
+                            "status":false
+                        })
+                    }
+            }).clone().catch(function(err){ return [err,false]});
+           
+    
+            
+            }
+            else{
+                res.send({
+                    "message":"Wallet Update Error",
+                    "status":false
+                })
+            }
+        }
         
-        }
-        else{
-            res.send({
-                "message":"Wallet Update Error",
-                "status":false
-            })
-        }
+
+       
     
     }
     else if(req.body.modalTitle === "Naira Wallet Balance"){
-        console.log('naiara',req.body.userid)
-        let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':parseFloat(req.body.valuex)}}).exec();
-        if(AddFund){
 
-            Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
-                if(err){
-                    res.status(400).send(err)
-                }
-                else if(docs){
-                    await deposit_webhook.create({
-                        reference:'Manual Deposit',
-                        account_number:docs.virtual_account,
-                        amount:parseFloat(req.body.valuex).toFixed(8)
-                    })
-                    res.send({
-                        "message":"Wallet Successfully Updated",
-                        "status":true
-                    })
-                }
-                else{
-                    res.send({
-                        "message":"Commit Not Completed",
-                        "status":false
-                    })
-                }
-            }).clone().catch(function(err){ return [err,false]});
-           
-        }
-        else{
-            res.send({
-                "message":"Wallet Update Error",
-                "status":false
-            })
-        }
+        if(req.body.mode === "Deposit"){
+            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':parseFloat(req.body.valuex)}}).exec();
+            if(AddFund){
     
+                Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+                    if(err){
+                        res.status(400).send(err)
+                    }
+                    else if(docs){
+                        await deposit_webhook.create({
+                            reference:'Manual Deposit',
+                            account_number:docs.virtual_account,
+                            amount:parseFloat(req.body.valuex).toFixed(8)
+                        })
+                        res.send({
+                            "message":"Wallet Successfully Updated",
+                            "status":true
+                        })
+                    }
+                    else{
+                        res.send({
+                            "message":"Commit Not Completed",
+                            "status":false
+                        })
+                    }
+                }).clone().catch(function(err){ return [err,false]});
+               
+            }
+            else{
+                res.send({
+                    "message":"Wallet Update Error",
+                    "status":false
+                })
+            }
+        
+        }
+        else if(req.body.mode === "Withdrawal"){
+            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- parseFloat(req.body.valuex)}}).exec();
+            if(AddFund){
+    
+                Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+                    if(err){
+                        res.status(400).send(err)
+                    }
+                    else if(docs){
+                        await withdrawal.create({
+                            username:docs.username,
+                            userid:req.body.userid,
+                            amount:req.body.valuex,
+                            account_number:'00000000000',
+                            account_name:'Jupit',
+                            bank_code:'000',
+                            email:docs.email,
+                            type:'Withdrawal',
+                            currency_worth:req.body.valuex
+                        })
+                        res.send({
+                            "message":"Wallet Successfully Updated",
+                            "status":true
+                        })
+                    }
+                    else{
+                        res.send({
+                            "message":"Commit Not Completed",
+                            "status":false
+                        })
+                    }
+                }).clone().catch(function(err){ return [err,false]});
+               
+            }
+            else{
+                res.send({
+                    "message":"Wallet Update Error",
+                    "status":false
+                })
+            }
+        
+        }
+     
+        
     }
     
    
