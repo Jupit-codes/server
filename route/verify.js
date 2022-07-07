@@ -1620,6 +1620,162 @@ router.post('/client/withdrawal',(req,res)=>{
     
 })
 
+router.post('/transaction/history',(req,res)=>{
+   
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
+    let type = req.body.type;
+    let currency = req.body.asset;
+    let status = req.body.status;
+
+    let query = [];
+
+    if(startDate && endDate ){
+        query.push({
+            date_created: {
+                // $gte: new Date(new Date(startDate)),
+                // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                  $gte: new Date(startDate),
+                $lt: new Date(endDate).setHours(23, 59, 59)
+            }
+        })  
+
+    }
+
+    if(userid){
+        query.push(
+            {
+                order_id:req.body.userid
+            }
+            )
+    }
+
+    if(status){
+         if(status !== "All"){
+            query.push(
+                {
+                    type:req.body.status
+                }
+                )
+         }
+         else{
+            query.push(
+                {
+                    $or:[
+                        {
+                            type:'Sell'
+                        },
+                        {
+                            type:'Buy'
+                        },
+                        {
+                            type:'Receive'
+                        },
+                        {
+                            type:'Send'
+                        }
+                    ]
+                }
+            )
+         }
+        
+    }
+
+    if(currency){
+        if(currency !== "All"){
+            query.push({
+                currency:req.body.asset
+            })
+        }
+        else{
+            query.push(
+                {
+                    $or:[
+                        {
+                            currency:'BTC'
+                        },
+                        {
+                            currency:'USDT'
+                        }  
+                    ]
+                }
+            )
+        }
+        
+    }
+
+    if(type){
+        query.push({
+            type:req.body.type
+        })
+    }
+    
+    if(query.length > 0){
+
+        Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+            if(err){
+                res.status(400).send(err);
+            }
+            else if(docs){
+
+                await wallet_transactions.find({
+
+                    $and:[
+                     {
+                         $or:[
+                             {
+                                 order_id:req.body.userid
+                             },
+                             {
+                                from_address:docs.btc_wallet[0].address
+                            },
+                            {
+                                from_address:docs.usdt_wallet[0].address
+                            },
+                            {
+                                to_address:docs.usdt_wallet[0].address
+                            },
+                            {
+                                to_address:docs.btc_wallet[0].address
+                            },
+                         ]
+                     },
+                     {
+                         $and:query
+                     }
+                    ]
+                   
+                    },(err,docs)=>{
+                        if(err){
+                            res.send(err)
+                        }
+                        else{
+                            res.send(docs)
+                        }
+                    }).sort({ date_created: 'asc'}).clone().catch(function(err){ return [err,false]});
+
+            }
+        }).clone().catch(function(err){ return [err,false]});
+       
+   
+
+    }
+    else{
+        const x = wallet_transactions.find({},(err,docs)=>{
+               if(err){
+                   res.send(err)
+               }
+               else{
+                   res.send(docs)
+               }
+           }).sort({ date_created: 'asc'})
+    }
+    
+        
+})
+
+
+
 router.post('/filter',(req,res)=>{
    
     let startDate = req.body.startdate;
