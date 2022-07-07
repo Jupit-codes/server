@@ -1794,7 +1794,7 @@ router.post('/transaction/history',(req,res)=>{
                        }
                    }).sort({ date_created: 'asc'}).clone().catch(function(err){ return [err,false]});
             }
-        })
+        }).clone().catch(function(err){ return [err,false]});
         
     }
     
