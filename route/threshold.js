@@ -176,10 +176,23 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                 if(docs){
                     if(docs.processing_state !== 2){
                         let status = 'Transaction Completed';
-                        
                         await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
-                        let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                        let newAmount;
+                        let UpdateDepositAccount;
+                        if(req.body.currency === "BTC"){
+                            newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                        }
+                        else if(req.body.currency === "USDT"){
+                            newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
+                        }
                         
+                        if(req.body.currency === "BTC"){
+                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                        }
+                        else if(req.body.currency === "USDT"){
+                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':req.body.to_address},{$inc:{'usdt_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                        }
+                       
                         if(UpdateDepositAccount){
 
                              res.sendStatus(200);
