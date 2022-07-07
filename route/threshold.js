@@ -203,8 +203,25 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     
                 }
                 else{
-                    // console.log('Transaction Completed Already',req.body)
-                    // res.sendStatus(200);
+                    let status = 'Transaction Completed';
+                    let insert = await updateDepositStatus(req.body,status);
+                   
+                    if(insert[0]){
+                        //NOtification
+                        let saveNotificationx = await saveNotification(req.body,status)
+                    }
+
+
+                    let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                    if(UpdateDepositAccount){
+
+                        res.sendStatus(200);
+                   }
+                   else{
+                       let subject = "Failed Deposit Update onPremises"
+                       await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
+                       res.sendStatus(200);
+                   }
                     
                    
                 }
