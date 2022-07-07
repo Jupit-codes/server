@@ -1492,7 +1492,7 @@ function verifyResponse(req,res,next){
     else{
         const bearerToken = bearerHeader.split(' ')[1];
         console.log('Bearer',bearerToken);
-        console.log('process',process.env.TEST_TOKEN);
+        
         let token = "8f9838f22b7d7545562135370af912f21204178229f1820bed178cd58578120301602c200c58b2894a6c5be2d0b55e40c451845739c4f197692aefc579078d2a"
         if(token == bearerToken){
             req.token = bearerToken;
