@@ -377,6 +377,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
     
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log(req.body)
+        let newAmount;
         if(req.body.processing_state === 1){
             Walletmodel.findOne({txtid:req.body.txid}, async function(err,docs){
                 if(err){
@@ -417,8 +418,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                 if(docs){
                     if(docs.processing_state !== 2){
 
-                        let newAmount;
-
+                    
                         if(req.body.currency === "BTC"){
                             newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
                         }
