@@ -1443,6 +1443,8 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
                 status:'successful'
 
             })
+            
+            await Usermodel.findOneAndUpdate({virtual_account:req.body.account_number},{$inc:{'naira_wallet.0.balance':req.body.amount}}).exec();
 
             await notification.create({
                 type:6,
