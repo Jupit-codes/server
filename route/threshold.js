@@ -2290,18 +2290,41 @@ async function FailedUpdateEmail(addr,txid,subject,amount){
 
 async function updateDepositStatus(body,status){
     let newAmount;
+    let orderid;
     if(body.currency === "BTC"){
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
+        await Usermodel.findOne({'btc_wallet[0].address': body.to_address},(err,docs)=>{
+            if(err){
+                    orderid="0000";
+            }
+            else if(docs){
+                orderid = docs.userid
+            }
+            else{
+                orderid="0000";
+            }
+        }).clone().catch(function(err){ return [err,false]});
     }
     else if(body.currency === "USDT"){
         newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
+        await Usermodel.findOne({'usdt_wallet[0].address': body.to_address},(err,docs)=>{
+            if(err){
+                    orderid="0000";
+            }
+            else if(docs){
+                orderid = docs.userid
+            }
+            else{
+                orderid="0000";
+            }
+        }).clone().catch(function(err){ return [err,false]});
     }
     
 
     let saveStatus = await Walletmodel.create({
         type:"Receive",
         serial:body.serial,
-        order_id:body.order_id,
+        order_id:orderid,
         currency:body.currency,
         txtid:body.txid,
         block_height:body.block_height,
