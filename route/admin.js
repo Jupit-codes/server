@@ -635,9 +635,9 @@ router.post('/manual/wallet/credit',async (req,res)=>{
 
         }
         else if(req.body.mode === "Withdrawal"){
-            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':- parseFloat(req.body.valuex).toFixed(8)}}).exec();
+            let SubFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'btc_wallet.0.balance':- parseFloat(req.body.valuex).toFixed(8)}}).exec();
     
-            if(AddFund){
+            if(SubFund){
     
                 await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
                         if(err){
@@ -659,6 +659,11 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                                 marketprice:req.body.marketrate,
                                 rateInnaira:req.body.jupitrate,
                                 status:'Transaction Completed' 
+                            })
+                            await deposit_webhook.create({
+                                reference:'Manual Withdrawal',
+                                account_number:docs.virtual_account,
+                                amount:parseFloat(req.body.valuex).toFixed(8)
                             })
                             // let saveStatus =  await notification.create({
                             //     type:5,
@@ -736,6 +741,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                             initiator:req.body.valuex,
                     
                         })
+                        
                         res.send({
                             "message":"Wallet Successfully Updated",
                             "status":true
@@ -760,8 +766,8 @@ router.post('/manual/wallet/credit',async (req,res)=>{
             }
         }
         else if(req.body.mode === "Withdrawal"){
-            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.0.balance':- parseFloat(req.body.valuex).toFixed(6)}}).exec();
-            if(AddFund){
+            let SubFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'usdt_wallet.0.balance':- parseFloat(req.body.valuex).toFixed(6)}}).exec();
+            if(SubFund){
                 await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
                     if(err){
                         res.status(400).send('Inter Server Error')
@@ -782,6 +788,11 @@ router.post('/manual/wallet/credit',async (req,res)=>{
                             marketprice:req.body.marketrate,
                             rateInnaira:req.body.jupitrate,
                             status:'Transaction Completed' 
+                        })
+                        await deposit_webhook.create({
+                            reference:'Manual Withdrawal',
+                            account_number:docs.virtual_account,
+                            amount:parseFloat(req.body.valuex).toFixed(8)
                         })
                         // let saveStatus =  await notification.create({
                         //     type:5,
@@ -863,8 +874,8 @@ router.post('/manual/wallet/credit',async (req,res)=>{
         
         }
         else if(req.body.mode === "Withdrawal"){
-            let AddFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- parseFloat(req.body.valuex)}}).exec();
-            if(AddFund){
+            let SubFund = await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- parseFloat(req.body.valuex)}}).exec();
+            if(SubFund){
     
                 Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
                     if(err){
