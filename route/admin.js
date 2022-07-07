@@ -641,7 +641,7 @@ router.post('/manual/wallet/credit',async (req,res)=>{
     
                 await Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
                         if(err){
-                            res.status(400).send('Inter Server Error')
+                            res.status(400).send('Internal Server Error')
                         }
                         else if(docs){
                             await wallet_transactions.create({
