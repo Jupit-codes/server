@@ -3096,16 +3096,17 @@ router.post('/get/transaction/count',async(req,res)=>{
            ])
         
            Sell = await wallet_transactions.aggregate([
-            { 
-                $and:[
-                    {
-                        type:'Sell'
-                    },
-                    {
-                        currency:req.body.asset
-                    }
-                ]
-            
+            {
+                $match: {
+                    $and:[
+                        {
+                            type:'Sell'
+                        },
+                        {
+                            currency:req.body.asset
+                        }
+                    ]
+                }
             },
             {
                 $count: "type"
