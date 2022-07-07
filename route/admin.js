@@ -2925,7 +2925,8 @@ router.post('/get/fiatasset/set',async (req,res)=>{
 
 router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
-    let endDate = req.body.enddate;   
+    let endDate = req.body.enddate; 
+    let asset = req.body.asset  
     let Buy,Sell,Send,Receive,Deposit,Withdrawal
     if(startDate && endDate){
         Buy = await wallet_transactions.aggregate([
@@ -2942,6 +2943,9 @@ router.post('/get/transaction/count',async(req,res)=>{
                                 $lte:new Date(endDate)
                                 
                             }
+                        },
+                        {
+                            currency:req.body.asset
                         }
                     ]
                     
@@ -2967,6 +2971,9 @@ router.post('/get/transaction/count',async(req,res)=>{
                                 $lte:new Date(endDate)
                                 
                             }
+                        },
+                        {
+                            currency:req.body.asset
                         }
                     ]
                 }
@@ -2990,6 +2997,9 @@ router.post('/get/transaction/count',async(req,res)=>{
                                 $lte:new Date(endDate)
                                 
                             }
+                        },
+                        {
+                            currency:req.body.asset
                         }
                     ]
                 }
@@ -3013,6 +3023,9 @@ router.post('/get/transaction/count',async(req,res)=>{
                                 $lte:new Date(endDate)
                                 
                             }
+                        },
+                        {
+                            currency:req.body.asset
                         }
                     ]
                 }
