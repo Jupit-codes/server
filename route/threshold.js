@@ -176,15 +176,10 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                 if(docs){
                     if(docs.processing_state !== 2){
                         let status = 'Transaction Completed';
-                        let insert = await updateDepositStatus(req.body,status);
-                        // console.log('Deposit-Completed1')
-                        if(insert[0]){
-                            //NOtification
-                            let saveNotificationx = await saveNotification(req.body,status)
-                        }
-
-
+                        
+                        await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
                         let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                        
                         if(UpdateDepositAccount){
 
                              res.sendStatus(200);
