@@ -1761,14 +1761,41 @@ router.post('/transaction/history',(req,res)=>{
 
     }
     else{
-        const x = wallet_transactions.find({},(err,docs)=>{
-               if(err){
-                   res.send(err)
-               }
-               else{
-                   res.send(docs)
-               }
-           }).sort({ date_created: 'asc'})
+        Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+            if(err){
+                res.status(400).send(err)
+            }
+            else if(docs){
+                await wallet_transactions.find({
+                    $or:[
+                        {
+                            order_id:req.body.userid
+                        },
+                        {
+                           from_address:docs.btc_wallet[0].address
+                       },
+                       {
+                           from_address:docs.usdt_wallet[0].address
+                       },
+                       {
+                           to_address:docs.usdt_wallet[0].address
+                       },
+                       {
+                           to_address:docs.btc_wallet[0].address
+                       },
+                    ]
+        
+                },(err,docs)=>{
+                       if(err){
+                           res.send(err)
+                       }
+                       else{
+                           res.send(docs)
+                       }
+                   }).sort({ date_created: 'asc'}).clone().catch(function(err){ return [err,false]});
+            }
+        })
+        
     }
     
         
