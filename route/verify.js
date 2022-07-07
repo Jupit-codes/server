@@ -1481,7 +1481,7 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
 
 function verifyResponse(req,res,next){
     const bearerHeader = req.headers['authorization'];
-    const bearerToken = bearerHeader.split(' ')[1];
+    
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         console.log('A false Webhook Forbidden')
         const bearerToken = bearerHeader.split(' ')[1];
@@ -1495,6 +1495,7 @@ function verifyResponse(req,res,next){
         
         let token = "8f9838f22b7d7545562135370af912f21204178229f1820bed178cd58578120301602c200c58b2894a6c5be2d0b55e40c451845739c4f197692aefc579078d2a"
         if(token == bearerToken){
+            console.log('Token passed')
             req.token = bearerToken;
             next();
         }
