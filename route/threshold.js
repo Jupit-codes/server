@@ -426,7 +426,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         }
 
                         Walletmodel.create({
-                            type:req.body.type,
+                            type:"Send",
                             serial:req.body.serial,
                             order_id:req.body.order_id,
                             currency:req.body.currency,
@@ -501,7 +501,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                     if(docs){
                         if(docs.processing_state !== -1){
                             Walletmodel.create({
-                                type:req.body.type,
+                                type:"Send",
                                 serial:req.body.serial,
                                 order_id:req.body.order_id,
                                 currency:req.body.currency,
@@ -563,7 +563,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                     if(docs){
                         if(docs.processing_state !== -1){
                             Walletmodel.create({
-                                type:req.body.type,
+                                type:"Send",
                                 serial:req.body.serial,
                                 order_id:req.body.order_id,
                                 currency:req.body.currency,
@@ -624,7 +624,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                     if(docs){
                         if(docs.processing_state !== -1){
                             Walletmodel.create({
-                                type:req.body.type,
+                                type:"Send",
                                 serial:req.body.serial,
                                 order_id:req.body.order_id,
                                 currency:req.body.currency,
@@ -683,7 +683,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                     if(docs){
                         if(docs.processing_state !== -1){
                             Walletmodel.create({
-                                type:req.body.type,
+                                type:"Send",
                                 serial:req.body.serial,
                                 order_id:req.body.order_id,
                                 currency:req.body.currency,
@@ -2273,7 +2273,7 @@ async function updateDepositStatus(body,status){
     
 
     let saveStatus = await Walletmodel.create({
-        type:body.type,
+        type:"Receive",
         serial:body.serial,
         order_id:body.order_id,
         currency:body.currency,
