@@ -3080,7 +3080,7 @@ router.post('/get/transaction/count',async(req,res)=>{
                 $match: {
                     $and:[
                         {
-                            type:'Receive'
+                            type:'Buy'
                         },
                         {
                             currency:req.body.asset
