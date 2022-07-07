@@ -161,10 +161,9 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     
                 }
             })
+        }
 
             
-            
-        }
         if(req.body.processing_state === 2){
 
             Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
@@ -203,6 +202,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                     
                 }
                 else{
+                   
                     let status = 'Transaction Completed';
                     let insert = await updateDepositStatus(req.body,status);
                    
@@ -223,7 +223,6 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                        res.sendStatus(200);
                    }
                     
-                   
                 }
             })
             
