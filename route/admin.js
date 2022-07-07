@@ -3077,8 +3077,16 @@ router.post('/get/transaction/count',async(req,res)=>{
         Buy = await wallet_transactions.aggregate([
             { 
                 $match: {
-                    type:'Buy'
+                    $and:[
+                        {
+                            type:'Receive'
+                        },
+                        {
+                            currency:asset
+                        }
+                    ]
                 }
+
             
             },
             {
@@ -3088,9 +3096,14 @@ router.post('/get/transaction/count',async(req,res)=>{
         
            Sell = await wallet_transactions.aggregate([
             { 
-                $match: {
-                    type:'Sell'
-                }
+                $and:[
+                    {
+                        type:'Sell'
+                    },
+                    {
+                        currency:asset
+                    }
+                ]
             
             },
             {
@@ -3100,7 +3113,14 @@ router.post('/get/transaction/count',async(req,res)=>{
            Send = await wallet_transactions.aggregate([
             { 
                 $match: {
-                    type:'Send'
+                   $and:[
+                        {
+                            type:'Send'
+                        },
+                        {
+                            currency:asset
+                        }
+                    ]
                 }
             
             },
@@ -3111,7 +3131,14 @@ router.post('/get/transaction/count',async(req,res)=>{
             Receive = await wallet_transactions.aggregate([
             { 
                 $match: {
-                    type:'Receive'
+                    $and:[
+                        {
+                            type:'Receive'
+                        },
+                        {
+                            currency:asset
+                        }
+                    ]
                 }
             
             },
