@@ -2927,6 +2927,7 @@ router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
     let endDate = req.body.enddate; 
     let asset = req.body.asset  
+    console.log("asset",asset)
     let Buy,Sell,Send,Receive,Deposit,Withdrawal
     if(startDate && endDate){
         Buy = await wallet_transactions.aggregate([
@@ -3082,7 +3083,7 @@ router.post('/get/transaction/count',async(req,res)=>{
                             type:'Receive'
                         },
                         {
-                            currency:asset
+                            currency:req.body.asset
                         }
                     ]
                 }
@@ -3101,7 +3102,7 @@ router.post('/get/transaction/count',async(req,res)=>{
                         type:'Sell'
                     },
                     {
-                        currency:asset
+                        currency:req.body.asset
                     }
                 ]
             
@@ -3118,7 +3119,7 @@ router.post('/get/transaction/count',async(req,res)=>{
                             type:'Send'
                         },
                         {
-                            currency:asset
+                            currency:req.body.asset
                         }
                     ]
                 }
@@ -3136,7 +3137,7 @@ router.post('/get/transaction/count',async(req,res)=>{
                             type:'Receive'
                         },
                         {
-                            currency:asset
+                            currency:req.body.asset
                         }
                     ]
                 }
