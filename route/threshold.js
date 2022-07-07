@@ -136,6 +136,7 @@ Router.get('/checkaddressvalidity',async (req,res)=>{
 Router.post('/incoming/depositcallback',(req,res)=>{
     
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
+        console.log(req.body)
         if(req.body.processing_state === 1){
             Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                 if(err){
@@ -2264,6 +2265,7 @@ async function FailedUpdateEmail(addr,txid,subject,amount){
 }
 
 async function updateDepositStatus(body,status){
+    let newAmount;
     if(body.currency === "BTC"){
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
     }
