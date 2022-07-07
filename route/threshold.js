@@ -2321,6 +2321,13 @@ async function updateDepositStatus(body,status){
 }
 
 async function saveNotification(body,status){
+    let newAmount;
+    if(body.currency === "BTC"){
+        newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
+    }
+    else if(body.currency === "USDT"){
+        newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
+    }
     let saveStatus =  await Notification.create({
         type:4,
         orderid:body.order_id,
@@ -2331,7 +2338,7 @@ async function saveNotification(body,status){
         status:status,
         read:'unread',
         date_created:new Date(),
-        initiator:body.amount,
+        initiator:newAmount,
 
     })
     
