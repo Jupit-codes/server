@@ -96,7 +96,7 @@ Router.post('/getautofee',async (req,res)=>{
    .then((result)=>{
     //    console.log(result.data['auto_fees'][0]['auto_fee'])
     let bankCheck;
-      await  bank.findOne({email:req.body.email},(err,docs)=>{
+        bank.findOne({email:req.body.email},(err,docs)=>{
             if(err){
                 res.status(400).send(err)
             }
