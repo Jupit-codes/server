@@ -1538,11 +1538,7 @@ router.post('/client/withdrawal',(req,res)=>{
                 }
             })
             .then(result=>{
-                // console.log(result)
-                // res.json(
-                //     "Withdrawal Was Successfull Made"
-                // );
-                // res.send('Endpoint Reached')
+               console.log(result)
                 Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},async (err,document)=>{
                     if(err){
                         res.status(400).send('Internal Server Error')
@@ -1579,40 +1575,10 @@ router.post('/client/withdrawal',(req,res)=>{
                 
             })
             .catch((error)=>{
-                console.log("An Erorr Occurreds")
-                // res.json("An Error Occurreds")
-                // res.send('Endpoint Reached');
-                Usermodel.findOneAndUpdate({id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},async(err,document)=>{
-                    if(err){
-                        res.status(400).send('Internal Server Error')
-                    }
-                    else if(document){
-                        let saveStatus =  await Notification.create({
-                            type:7,
-                            orderid:req.body.phonenumber,
-                            transfertype:'Withdrawal',
-                            asset:req.body.amount,
-                            from_address:req.body.firstname,
-                            to_address:req.body.lastname,
-                            status:'Completed',
-                            read:'unread',
-                            date_created:new Date(),
-                            initiator:req.body.email,
-                        })
-                        await withdrawal.create({
-                            userid:req.body.userid,
-                            amount:req.body.amount,
-                            account_number:docs.account_number,
-                            account_name:docs.account_name,
-                            bank_code:docs.bank_code,
-                            email:req.body.email,
-                            type:'Withdrawal',
-                            currency_worth:req.body.amount
-                        })
-                        res.send('Withdrawal Success');
-                        
-                    }
-                })
+                console.log(error)
+                res.status(400).send(error)
+                
+                
             })
         }
         else if(!docs){
