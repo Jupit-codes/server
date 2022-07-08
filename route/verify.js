@@ -1517,7 +1517,7 @@ router.post('/client/withdrawal',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else if(docs){
-            const url = "https://sandbox.purplepayapp.com/dev_api/v1/test/transfer/"
+            const url = "https://live.purplepayapp.com/v1/transfer/"
             var params = {
                 
                     "account_number": docs.account_number,
@@ -1534,7 +1534,7 @@ router.post('/client/withdrawal',(req,res)=>{
             axios.post(url,params,{ 
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'bearer 29A492021F4B709A8D1152C3EF4D32DC5A7092723ECAC4C511781003584B48873CCBFEBDEAE89CF22ED1CB1A836213549BC6638A3B563CA7FC009BEB3BC30CF8'
+                    'Authorization': 'bearer 8f9838f22b7d7545562135370af912f21204178229f1820bed178cd58578120301602c200c58b2894a6c5be2d0b55e40c451845739c4f197692aefc579078d2a '
                 }
             })
             .then(result=>{
