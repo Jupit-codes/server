@@ -11,6 +11,7 @@ import wallet_transactions from '../model/wallet_transactions.js';
 import nodemailer from 'nodemailer';
 import cloudinary from 'cloudinary'
 import { Route } from 'express';
+import bank from '../model/bank.js';
 
 
 
@@ -94,9 +95,21 @@ Router.post('/getautofee',(req,res)=>{
    })
    .then((result)=>{
     //    console.log(result.data['auto_fees'][0]['auto_fee'])
-        
+    let bankCheck;
+      await  bank.findOne({email:req.body.email},(err,docs)=>{
+            if(err){
+                res.status(400).send(err)
+            }
+            else if(docs){
+                bankCheck=true;
+            }
+            else if(!docs){
+                bankCheck=false;
+            }
+        }).clone().catch(function(err){ return [err,false]});
         res.send({
            "message":result.data,
+           "bankCheck":bankCheck,
             "status":true
         })
         
