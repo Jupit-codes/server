@@ -28,6 +28,7 @@ import session from "../model/session.js";
 import { readdirSync } from "fs";
 import NodeDateTime from 'node-datetime';
 import idcardverification from "../model/idcardverification.js";
+import bank from "../model/bank.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -1598,13 +1599,29 @@ router.get('/users',async(req,res,next)=>{
 router.post('/users/refresh',middlewareVerify,(req,res)=>{
    
     
-    Usermodel.findOne({_id:req.body._id},function(err,docs){
+    Usermodel.findOne({_id:req.body._id},async function(err,docs){
         if(err){
             res.status(403).send(err)
         }
         if(docs){
-           
-            res.send(docs)
+           await bank.findOne({email:docs.email},(err,docs_bank)=>{
+                if(err){
+                    res.status(400).send('Internal Server Error')
+                }
+                else if(docs_bank){
+                    res.send({
+                        'user':docs,
+                        'bankCheck':true
+                    })
+                }
+                else{
+                    res.send({
+                        'user':docs,
+                        'bankCheck':false
+                    })
+                }
+           })
+            
         }
         else if(!docs){
             res.status(403).send('User Not Found')
