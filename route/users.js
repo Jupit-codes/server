@@ -1626,7 +1626,7 @@ router.post('/users/refresh',middlewareVerify,(req,res)=>{
         else if(!docs){
             res.status(403).send('User Not Found')
         }
-    }).clone();
+    }).clone().catch(function(err){ console.log(err)});
 })
 
 router.post('/users/test',middlewareVerify,(req,res)=>{
