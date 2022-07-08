@@ -96,22 +96,29 @@ Router.post('/getautofee',async (req,res)=>{
    .then((result)=>{
     //    console.log(result.data['auto_fees'][0]['auto_fee'])
     let bankCheck;
-        bank.findOne({email:req.body.email},(err,docs)=>{
+        bank.findOne({email:req.body.email},async (err,docs)=>{
             if(err){
                 res.status(400).send(err)
             }
             else if(docs){
                 bankCheck=true;
+                res.send({
+                    "message":result.data,
+                    "bankCheck":bankCheck,
+                     "status":true
+                 })
             }
             else if(!docs){
                 bankCheck=false;
+                res.send({
+                    "message":result.data,
+                    "bankCheck":bankCheck,
+                     "status":true
+                 })
             }
         }).clone().catch(function(err){ return [err,false]});
-        res.send({
-           "message":result.data,
-           "bankCheck":bankCheck,
-            "status":true
-        })
+
+        
         
    })
    .catch((err)=>{
