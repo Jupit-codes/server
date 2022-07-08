@@ -27,7 +27,7 @@ const transporter = nodemailer.createTransport({
 
 const Router  = express.Router();
 
-Router.post('/getautofee',(req,res)=>{
+Router.post('/getautofee',async (req,res)=>{
 
     let Api ="";
     let wallet_id = "";
