@@ -1523,7 +1523,7 @@ router.post('/client/withdrawal',(req,res)=>{
                     "account_number": docs.account_number,
                     "account_name": docs.account_name,
                     "bank_code": docs.bank_code,
-                    "amount": req.body.amount,
+                    "amount": parseFloat(req.body.amount),
                     "first_name": req.body.firstname,
                     "last_name": req.body.lastname,
                     "email": req.body.email,
