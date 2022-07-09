@@ -34,7 +34,9 @@ const adminSchema = mongoose.Schema({
     roleid:{
         type:Number
     },
-
+    previledge:{
+        type:Array, "default":[]
+    },
     status:{
         type:'String'
     },
