@@ -24,6 +24,7 @@ import withdrawal from "../model/withdrawal.js";
 import deposit_webhook from "../model/deposit_webhook.js";
 import giftCardnew from "../model/giftCardnew.js";
 import notification from "../model/notification.js";
+import adminroles from "../model/adminroles.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -3226,5 +3227,22 @@ router.post('/get/transaction/count',async(req,res)=>{
 
 })
 
+router.post('/create/role',(req,res)=>{
+    adminroles.findOne({rolename:req.bosy.rolename},(err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else if(docs){
+            res.status(400).send('Role Already Exist');
+        }
+        else if (!docs){
+            adminroles.create({
+                rolename:req.body.rolename,
+                status:'active'
+            })
+            res.send('Role Successfully Created');
+        }
+    })
+})
  
 export default router
