@@ -216,6 +216,16 @@ router.post('/onboard/new',(req,res)=>{
                         roleid:1,
                         status:'active'
                     });
+                    if(createAdmin){
+                        admin.findOneAndUpdate({_id:createAdmin._id},{$push:{
+                            previledge:"All"
+                       }},(err,docs)=>{
+                           if(err){
+                               res.send(err);
+                           }
+                           
+                       })
+                    }
 
                    
         
