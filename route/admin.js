@@ -3611,5 +3611,21 @@ router.post('/create/role',(req,res)=>{
         }
     })
 })
+
+router.get('/get/allroles',(req,res)=>{
+
+    adminroles.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else{
+            res.send({
+                "message":"Roles Recovered",
+                "data":docs
+            })
+        }
+    })
+
+})
  
 export default router
