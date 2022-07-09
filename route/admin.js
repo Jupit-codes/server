@@ -2223,7 +2223,7 @@ router.post('/staff/creation',(req,res)=>{
                         const mailData = {
                             from: 'Jupit<hello@jupitapp.co>',  // sender address
                             to: req.body.email,   // list of receivers
-                            subject: `${role}@jupitapp.co <One Time Password>`,
+                            subject: `Onboarding@jupitapp.co <One Time Password>`,
                             text: 'That was easy!',
                             html: `
                             <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
