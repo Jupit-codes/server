@@ -2434,7 +2434,7 @@ router.post('/staff/creation',(req,res)=>{
                                                       <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 10px;font-family:arial,helvetica,sans-serif;" align="left">
                           
                                                         <div style="color: #a7a5a5; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                          <p style="font-size: 14px; line-height: 140%;"><strong><span style="font-family: Lato, sans-serif; font-size: 14px; line-height: 19.6px;">Dear ${role},</span></strong></p>
+                                                          <p style="font-size: 14px; line-height: 140%;"><strong><span style="font-family: Lato, sans-serif; font-size: 14px; line-height: 19.6px;">Dear ${req.body.role},</span></strong></p>
                                                         </div>
                           
                                                       </td>
