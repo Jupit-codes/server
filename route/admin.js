@@ -204,14 +204,14 @@ router.post('/onboard/new',(req,res)=>{
                     res.status(400).send('Email Already Exist');
                 }
                 else if(!docs){
-                    // let password = randomUUID();
+                     let password = randomUUID();
                     const salt =  bcrypt.genSaltSync(10);
                     let createAdmin =   await admin.create({
                         firstname:req.body.firstname,
                         lastname:req.body.lastname,
                         email:req.body.email,
                         username:req.body.username,
-                        password:bcrypt.hashSync(random, salt),
+                        password:bcrypt.hashSync(password, salt),
                         role:'Super Admin',
                         roleid:1,
                         status:'active'
