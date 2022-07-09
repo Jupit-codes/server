@@ -3228,7 +3228,7 @@ router.post('/get/transaction/count',async(req,res)=>{
 })
 
 router.post('/create/role',(req,res)=>{
-    adminroles.findOne({rolename:req.bosy.rolename},(err,docs)=>{
+    adminroles.findOne({rolename:req.body.rolename},(err,docs)=>{
         if(err){
             res.status(400).send(err);
         }
