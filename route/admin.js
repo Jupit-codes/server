@@ -464,7 +464,7 @@ router.post('/onboard/new',(req,res)=>{
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:15px 10px 12px;font-family:arial,helvetica,sans-serif;" align="left">
                             
                                                           <h1 style="margin: 0px; color: #3b4d63; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: arial,helvetica,sans-serif; font-size: 41px;">
-                                                            <strong><span style="text-decoration: underline;">${random}</span></strong>
+                                                            <strong><span style="text-decoration: underline;">${password}</span></strong>
                                                           </h1>
                             
                                                         </td>
