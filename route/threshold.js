@@ -1006,7 +1006,8 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
     const addressBTC = req.body.addressBTC;
     const addressUSDT = req.body.addressUSDT;
     const userid = req.body.userid;
-    const email= req.body.email
+    const email= req.body.email;
+    const virtual_account = req.body.virtual_account
     //{$and:[{read:'unread'}]}
     // console.log(req.body)
     Notification.find({ 
@@ -1016,6 +1017,7 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
                 $or: [
                     { from_address: req.body.addressBTC }, 
                     { to_address: req.body.addressBTC },
+                    { to_address: req.body.virtual_account },
                     { from_address: req.body.addressUSDT }, 
                     { to_address: req.body.addressUSDT },
                     {initiator:req.body.email}
