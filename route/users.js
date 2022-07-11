@@ -1709,7 +1709,7 @@ async function signsuccessmail(email,username,time){
     const mailData = {
         from: 'Jupit <hello@jupitapp.co>',  // sender address
         to: email,   // list of receivers
-        subject: 'LogIn Successful',
+        subject: 'Login Successful',
         text: 'That was easy!',
         html: `
                   
@@ -1967,7 +1967,7 @@ async function signsuccessmail(email,username,time){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 31px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.2px;"><strong><span style="line-height: 39.2px; font-size: 28px;">Log In Success Notification</span></strong>
+                                                    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.2px;"><strong><span style="line-height: 39.2px; font-size: 28px;">Login Success Notification</span></strong>
                                                     </span>
                                                     </p>
                                                 </div>
@@ -2684,7 +2684,7 @@ router.post('/users/register',(req,res)=>{
             const mailData = {
                 from: 'Jupit <hello@jupitapp.co>',  // sender address
                 to: req.body.email,   // list of receivers
-                subject: 'Email Verification <jupit.app>',
+                subject: 'Email Verification',
                 text: 'That was easy!',
                 html: `
 
@@ -2927,7 +2927,7 @@ router.post('/users/register',(req,res)=>{
                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                 
                                             <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                <p style="font-size: 14px; line-height: 140%;"><strong>T H A N K S&nbsp; &nbsp;F O R&nbsp; &nbsp;S I G N I N G&nbsp; &nbsp;U P !</strong></p>
+                                                <p style="font-size: 14px; line-height: 140%;"><strong>E M A I L&nbsp;V E R I F I C A T I O N!</strong></p>
                                             </div>
                 
                                             </td>
@@ -3810,9 +3810,9 @@ async function SendMail(address,status){
     }
     else{
             const mailData = {
-                from: 'hello@jupit.app',  // sender address
+                from: 'Jupit<hello@jupit.app>',  // sender address
                 to: address,   // list of receivers
-                subject: 'Account  Verification <jupit.app>',
+                subject: 'Bank Account  Verification',
                 text: 'That was easy!',
                 html: `
                         
