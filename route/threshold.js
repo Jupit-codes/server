@@ -162,7 +162,7 @@ async function crypomarketprice(){
     })
     .then(result=>{
        
-        let BTCprice = result.data.RAW.BTC.USD.PRICE;
+        let BTCprice = parseFloat(result.data.RAW.BTC.USD.PRICE) - 150;
         let USDTprice = result.data.RAW.USDT.USD.PRICE
         return [true,BTCprice,USDTprice]
         
@@ -2365,26 +2365,48 @@ async function updateDepositStatus(body,status){
             }
         }).clone().catch(function(err){ return [err,false]});
     }
-    let btcbuyrate;
-    let usdtbuyrate;
+    let rateInNaira,marketPrice
+    
     rate.find({},(err,docs)=>{
         if(err){
-            btcbuyrate='error'
-            usdtbuyrate='error'
+            rateInNaira='error'
         }
-        else{
-            btcbuyrate = docs.btc[1].buy
-            usdtbuyrate = docs.btc[1].buy
+        else if(docs){
+            // btcbuyrate = docs.btc[1].buy
+            // usdtbuyrate = docs.btc[1].buy
+            if(body.currency == "BTC"){
+                rateInNaira = docs.btc[1].buy
+            }
+            else if(body.currency == "USDT"){
+                usdtbuyrate = docs.usdt[1].buy
+            }
         }
     })
     
-
+    let getcurrentmarketrate = await crypomarketprice();
+    if(getcurrentmarketrate[0]){
+        if(body.currency == "BTC"){
+           marketPrice = getcurrentmarketrate[1]
+        }
+        else if(body.currency == "USDT"){
+            marketPrice = getcurrentmarketrate[2]
+        }
+    }
+    else{
+        marketPrice = 0;
+    }
+    let usdValue = newAmount * marketPrice;
+    let nairaValue = usdValue * rateInNaira;
     let saveStatus = await Walletmodel.create({
         type:"Receive",
         serial:body.serial,
         order_id:orderid,
         currency:body.currency,
         txtid:body.txid,
+        rateInnaira:rateInNaira,
+        usdvalue:usdValue,
+        nairavalue:nairaValue,
+        marketprice:marketPrice,
         block_height:body.block_height,
         tindex:body.tindex,
         vout_index:body.vout_index,
