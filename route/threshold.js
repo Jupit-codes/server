@@ -152,6 +152,27 @@ Router.get('/checkaddressvalidity',async (req,res)=>{
     
 })
 
+Router.get('/retrieve/usd/market/price',(req,res)=>{
+    
+    axios.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,USDT&tsyms=USD',{
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization':'Apikey 475906935b55657e131801270facf7cd73a797ee9cff36bbb24185f751c18d63'
+        }
+    })
+    .then(result=>{
+        res.send({
+            'BTC': result.data.RAW.BTC.USD.PRICE,
+            'USDT': result.data.RAW.USDT.USD.PRICE,
+
+        })
+        
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+})
+
 
 Router.post('/incoming/depositcallback',(req,res)=>{
     
