@@ -12,6 +12,7 @@ import nodemailer from 'nodemailer';
 import cloudinary from 'cloudinary'
 import { Route } from 'express';
 import bank from '../model/bank.js';
+import rate from '../model/rate.js';
 
 
 
@@ -2364,6 +2365,18 @@ async function updateDepositStatus(body,status){
             }
         }).clone().catch(function(err){ return [err,false]});
     }
+    let btcbuyrate;
+    let usdtbuyrate;
+    rate.find({},(err,docs)=>{
+        if(err){
+            btcbuyrate='error'
+            usdtbuyrate='error'
+        }
+        else{
+            btcbuyrate = docs.btc[1].buy
+            usdtbuyrate = docs.btc[1].buy
+        }
+    })
     
 
     let saveStatus = await Walletmodel.create({
