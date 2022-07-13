@@ -1077,6 +1077,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
     const addressUSDT = req.body.addressUSDT;
     const userid = req.body.userid;
     const email= req.body.email;
+    const virtual_account = req.body.virtual_account
     //{$and:[{read:'unread'}]}
     Notification.find({ 
         $and:[
@@ -1085,6 +1086,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
                 $or: [
                     { from_address: addressBTC }, 
                     { to_address: addressBTC },
+                    { to_address: virtual_account },
                     { from_address: addressUSDT }, 
                     { to_address: addressUSDT },
                     {initiator:req.body.email}
