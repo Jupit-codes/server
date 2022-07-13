@@ -1582,6 +1582,17 @@ router.post('/client/withdrawal',(req,res)=>{
                                 type:'Withdrawal',
                                 currency_worth:req.body.amount
                             })
+                            await wallet_transactions.create({
+                                type:'Withdrawal',
+                                serial:document.virtual_account,
+                                order_id:document.virtual_account,
+                                currency:'Naira',
+                                amount:req.body.amount,
+                                from_address:document.virtual_account,
+                                fees:"0",
+                                to_address:docs.account_number,
+                                status:'Transaction Completed' 
+                    })
     
                             res.send('Withdrawal Success');
                         }
