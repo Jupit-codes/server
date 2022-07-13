@@ -1069,7 +1069,7 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
         }
     })
 
-}).sort({updated:-1})
+}).sort({updated:'desc'})
 
 
 Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
