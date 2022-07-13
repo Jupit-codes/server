@@ -179,7 +179,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    withdrawal.deleteMany({},(err,docs)=>{
+    notification.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }
@@ -1447,7 +1447,7 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
             await Usermodel.findOneAndUpdate({virtual_account:req.body.account_number},{$inc:{'naira_wallet.0.balance':req.body.amount}}).exec();
 
             await notification.create({
-                type:5,
+                type:13,
                 orderid:req.body.reference,
                 transfertype:'Naira Wallet Deposit',
                 asset:"Naira",

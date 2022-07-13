@@ -1031,7 +1031,7 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
     const addressUSDT = req.body.addressUSDT;
     const userid = req.body.userid;
     const email= req.body.email;
-    const virtual_account = req.body.virtual_account
+    const virtual_account = req.body.virtual_account;
     //{$and:[{read:'unread'}]}
     // console.log(req.body)
     Notification.find({ 
