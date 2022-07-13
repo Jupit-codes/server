@@ -2255,6 +2255,9 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
                     {
                         to_address:req.body.addressUSDT,
                         
+                    },
+                    {
+                        serial:req.body.virtual_account
                     }
 
                 ]

@@ -1460,6 +1460,19 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
         
             })
 
+            await wallet_transactions.create({
+                type:'Deposit',
+                serial:req.body.account_number,
+                order_id:req.body.account_number,
+                currency:'Naira',
+                amount:req.body.amount,
+                from_address:req.body.reference,
+                fees:"0",
+                to_address:req.body.account_number,
+                status:'Transaction Completed' 
+    })
+
+
 
 
 
