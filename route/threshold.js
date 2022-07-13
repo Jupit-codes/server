@@ -1069,14 +1069,14 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
         }
     })
 
-}).sort({updated: -1})
+})
 
 
 Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
     const addressBTC = req.body.addressBTC;
     const addressUSDT = req.body.addressUSDT;
     const userid = req.body.userid;
-    const email= req.body.email
+    const email= req.body.email;
     //{$and:[{read:'unread'}]}
     Notification.find({ 
         $and:[
