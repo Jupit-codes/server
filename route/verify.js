@@ -1447,7 +1447,7 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
             await Usermodel.findOneAndUpdate({virtual_account:req.body.account_number},{$inc:{'naira_wallet.0.balance':req.body.amount}}).exec();
 
             await notification.create({
-                type:6,
+                type:5,
                 orderid:req.body.reference,
                 transfertype:'Naira Wallet Deposit',
                 asset:"Naira",
