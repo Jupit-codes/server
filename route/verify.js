@@ -441,9 +441,9 @@ router.post('/changepassword',middlewareVerify,(req,res)=>{
 
 
             const mailData = {
-                from: 'hello@jupitapp.co',  // sender address
+                from: 'Jupit<hello@jupitapp.co>',  // sender address
                 to: docs.email,   // list of receivers
-                subject: 'Change Password <jupit.app>',
+                subject: 'Change Password',
                 text: 'That was easy!',
                 html: `
                             <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
