@@ -1067,7 +1067,7 @@ Router.post('/notification/fetch/title',middlewareVerify,(req,res)=>{
         else{
             console.log('Not Found')
         }
-    }).sort({updated:-1})
+    }).sort({updated:'desc'})
 
 })
 
