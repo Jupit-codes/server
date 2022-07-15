@@ -2498,7 +2498,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                         })
                                     }
                                     else if(docs){
-                                        let update =  Usermodel.findOneAndUpdate({_id:docs._id},{$set:{'virtual_account':vitualaccount[1],'email_verification':true}},{new: true},async (err,documents)=>{
+                                        let update =  Usermodel.findOne({_id:docs._id},async (err,documents)=>{
                                                         if(err){
                                                            res.send({
                                                                "UpdateError":err
