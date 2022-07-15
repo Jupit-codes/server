@@ -178,7 +178,7 @@ async function crypomarketprice(){
 
 
 Router.post('/incoming/depositcallback',(req,res)=>{
-    // res.sendStatus(200);
+  
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log(req.body)
         if(req.body.processing_state === 1){
@@ -1326,9 +1326,13 @@ Router.post('/update/read',middlewareVerify,(req,res)=>{
 async function creditWalletAddress(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
     
     let isTrue ;
-    let secret="3QdPXcmt7RYeMKBQy9eM281N7gMD";
-    let apikey = "N5zrXLSLpfbxC3BX";
-    let wallet_id="678693"
+    // let secret="3QdPXcmt7RYeMKBQy9eM281N7gMD";
+    // let apikey = "N5zrXLSLpfbxC3BX";
+    // let wallet_id="678693"
+
+    let secret="2ARcpQugmy52KMHRm6bCn2jRWZA9";
+    let apikey = "4XoSQPfLwbUiyvF5i";
+    let wallet_id="127771"
    
     
 
@@ -1462,10 +1466,13 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
     
     let isTrue ;
    
-    let secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
-    let  apikey="WtjgBd7JbpeBTHCF"
-    let wallet_id="201075"
+    // let secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
+    // let  apikey="WtjgBd7JbpeBTHCF"
+    // let wallet_id="201075"
     
+    let secret="3C7hovfzkYy8d37dh19Uduh5C11a";
+    let  apikey="2hLWNPfAJXD47TXiM"
+    let wallet_id="870727"
 
 
     let rand = random(option_rand);
