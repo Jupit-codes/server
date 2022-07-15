@@ -178,7 +178,7 @@ async function crypomarketprice(){
 
 
 Router.post('/incoming/depositcallback',(req,res)=>{
-    
+    res.sendStatus(200);
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log(req.body)
         if(req.body.processing_state === 1){
