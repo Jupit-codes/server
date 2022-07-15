@@ -3258,7 +3258,9 @@ async function createUSDTWalletAddress(userid){
         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
 
-    var secret="51bEgEHrotG69PFScrPTt1gR8Wv";
+    // var secret="51bEgEHrotG69PFScrPTt1gR8Wv";
+    //var secret="3jNct6qzbmDNiFtCr6gyQGsQANFS";
+    var secret="3jNct6qzbmDNiFtCr6gyQGsQANFS";
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
@@ -3274,13 +3276,15 @@ async function createUSDTWalletAddress(userid){
         const get_request_args = querystring.stringify(parameters);
         
         // const base_url = "http://demo.thresh0ld.com"
-        const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/488433/addresses?'+get_request_args
+        const url = 'https://vault.thresh0ld.com/v1/sofa/wallets/196649/addresses?'+get_request_args
     
         
      let result = await axios.post(url,params,{ 
         headers: {
             'Content-Type': 'application/json',
-            'X-API-CODE':'2C38687sm5kTnyFWD',
+            // 'X-API-CODE':'2C38687sm5kTnyFWD',
+            // 'X-API-CODE':'4nrsvq2xgf2QXtoyC',
+            'X-API-CODE':'4nrsvq2xgf2QXtoyC',
             'X-CHECKSUM':buildUSDT,
             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
         }
@@ -3368,7 +3372,8 @@ async function createBTCWalletAddress(userid){
     return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
 
-    var secret="2awjZJeeVhtG23tepAzv5tcMYYN";
+    // var secret="2awjZJeeVhtG23tepAzv5tcMYYN";
+    var secret="3MfESNefnjWQv42PGxhWyg8VtS4H";
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
@@ -3385,13 +3390,14 @@ async function createBTCWalletAddress(userid){
     const get_request_args = querystring.stringify(parameters);
 
     const base_url = "http://demo.thresh0ld.com"
-    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/addresses?'+get_request_args
+    const url = 'https://vault.thresh0ld.com/v1/sofa/wallets/136821/addresses?'+get_request_args
 
 
     let result = await axios.post(url,params,{ 
     headers: {
         'Content-Type': 'application/json',
-        'X-API-CODE':'55JbxSP6xosFTkFvg',
+        // 'X-API-CODE':'55JbxSP6xosFTkFvg',
+        'X-API-CODE':'5acGjgQXSHQQJBTWk',
         'X-CHECKSUM':build,
         'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
     }
