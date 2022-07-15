@@ -3339,7 +3339,7 @@ async function createvirtualaccount(firstname,lastname,userid){
                     } 
                 })
                 .catch((error)=>{
-                    console.log('error',error.response)
+                    console.log('errorxxx',error)
                     return [false,error];
                 })
 

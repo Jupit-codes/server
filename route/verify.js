@@ -26,6 +26,9 @@ import logger from "../model/logger.js";
 import kyc from "../model/kyc.js";
 import withdrawal from "../model/withdrawal.js";
 import moment from 'moment'
+import twoFactor from "../model/twoFactor.js";
+import idcardverification from "../model/idcardverification.js";
+import setup_pin from "../model/setup_pin.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -179,7 +182,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    notification.deleteMany({},(err,docs)=>{
+    giftcardtransactions.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }
