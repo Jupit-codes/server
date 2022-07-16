@@ -3357,7 +3357,7 @@ async function createvirtualaccount(firstname,lastname,userid){
                 })
                 .then(res=>{
                     console.log("acct",res.data);
-                    if(res.data.data.account_number){
+                    if(res.data.status){
                         return [ true,res.data.data.account_number];
                     }
                     else{
