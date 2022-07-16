@@ -2525,7 +2525,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                        
 
                                         const vitualaccount = await createvirtualaccount(docs.firstname,docs.lastname,docs._id);
-                                        
+                                        console.log('VirtualAccount',vitualaccount);
                                         if(vitualaccount[0]){
                                             console.log(docs._id)
                                             console.log(vitualaccount[1])
