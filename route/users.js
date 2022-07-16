@@ -3357,12 +3357,13 @@ async function createvirtualaccount(firstname,lastname,userid){
                 })
                 .then(res=>{
                     console.log("acct",res.data)
-                    if(res.data.data.account_number){
-                        return [ true,res.data.data.account_number];
-                    }
-                    else{
-                        return [ false,"No Account"];
-                    } 
+                    // if(res.data.data.account_number){
+                    //     return [ true,res.data.data.account_number];
+                    // }
+                    // else{
+                    //     return [ false,"No Account"];
+                    // } 
+                    return [true,res.data]
                 })
                 .catch((error)=>{
                     console.log('errorxxx',error)
