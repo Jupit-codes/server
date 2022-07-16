@@ -3361,7 +3361,7 @@ async function createvirtualaccount(firstname,lastname,userid){
                         return [ true,res.data.data.account_number];
                     }
                     else{
-                        return [ false,"No Account"];
+                        return [ false,res.data.message];
                     } 
                     
                 })
