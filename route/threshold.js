@@ -2376,7 +2376,7 @@ async function updateDepositStatus(body,status){
             }
         }).clone().catch(function(err){ return [err,false]});
     }
-    else if(body.currency === "USDT"){
+    else if(body.currency === "TRX-USDT-TRC20"){
         newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
         await Usermodel.findOne({'usdt_wallet[0].address': body.to_address},(err,docs)=>{
             if(err){
@@ -2390,7 +2390,7 @@ async function updateDepositStatus(body,status){
             }
         }).clone().catch(function(err){ return [err,false]});
     }
-    let rateInNaira;
+    let rateInNaira,newCurrency;
     let marketPrice = 0;
     
     rate.findOne({initialization:'JupitRateBard'},(err,mydocs)=>{
@@ -2436,12 +2436,19 @@ async function updateDepositStatus(body,status){
     console.log("usdValue",usdValue);
     console.log("nairaValue",nairaValue);
 
+    if(body.currency == "TRX-USDT-TRC20"){
+        newCurrency = "USDT"
+    }
+    else{
+        newCurrency = body.currency;
+    }
+
 
     let saveStatus = await Walletmodel.create({
         type:"Receive",
         serial:body.serial,
         order_id:orderid,
-        currency:body.currency,
+        currency:newCurrency,
         txtid:body.txid,
         rateInnaira:rateInNaira,
         usdvalue:usdValue,
