@@ -2392,7 +2392,7 @@ async function updateDepositStatus(body,status){
     let rateInNaira;
     let marketPrice = 0;
     
-    rate.find({},(err,mydocs)=>{
+    rate.findOne({initialization:'JupitRateBard'},(err,mydocs)=>{
         if(err){
             rateInNaira=0
         }
