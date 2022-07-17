@@ -2401,7 +2401,7 @@ async function updateDepositStatus(body,status){
     })
     
     let getcurrentmarketrate = await crypomarketprice();
-    console.log(getcurrentmarketrate)
+    
     if(getcurrentmarketrate[0]){
         if(body.currency == "BTC"){
            marketPrice = getcurrentmarketrate[1]
@@ -2413,8 +2413,12 @@ async function updateDepositStatus(body,status){
     else{
         marketPrice = 0;
     }
-    let usdValue = newAmount * marketPrice;
+    let usdValue = parseFloat(body.amount * 0.000001).toFixed(6) * parseFloat(marketPrice);
     let nairaValue = usdValue * rateInNaira;
+    console.log("usdValue",usdValue);
+    console.log("nairaValue",nairaValue);
+
+
     let saveStatus = await Walletmodel.create({
         type:"Receive",
         serial:body.serial,
