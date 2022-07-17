@@ -2401,6 +2401,7 @@ async function updateDepositStatus(body,status){
     })
     
     let getcurrentmarketrate = await crypomarketprice();
+    console.log(getcurrentmarketrate)
     if(getcurrentmarketrate[0]){
         if(body.currency == "BTC"){
            marketPrice = getcurrentmarketrate[1]
