@@ -2409,7 +2409,7 @@ async function updateDepositStatus(body,status){
            marketPrice = getcurrentmarketrate[1];
            console.log("mbtc",marketPrice)
         }
-        else if(body.currency == "USDT"){
+        else if(body.currency == "TRX-USDT-TRC20"){
             marketPrice = getcurrentmarketrate[2];
             console.log("musdt",marketPrice)
         }
