@@ -2385,20 +2385,20 @@ async function updateDepositStatus(body,status){
     let rateInNaira;
     let marketPrice = 0;
     
-    rate.find({},(err,docs)=>{
+    rate.find({},(err,mydocs)=>{
         if(err){
-            rateInNaira='error'
+            rateInNaira=0
         }
-        else if(docs){
+        else if(mydocs){
             // btcbuyrate = docs.btc[1].buy
             // usdtbuyrate = docs.btc[1].buy
 
-            console.log("docs",docs.usdt)
+            console.log("docs",mydocs.usdt)
             if(body.currency == "BTC"){
-                rateInNaira = docs.btc[1].buy
+                rateInNaira = mydocs.btc[1].buy
             }
             else if(body.currency == "TRX-USDT-TRC20"){
-                usdtbuyrate = docs.usdt[1].buy
+                usdtbuyrate = mydocs.usdt[1].buy
             }
         }
     })
