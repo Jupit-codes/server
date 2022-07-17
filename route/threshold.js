@@ -243,7 +243,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         }
                         else{
                             let subject = "Failed Deposit Update onPremises"
-                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,newAmount);
                             res.sendStatus(200);
                         }
                         // console.log('Deposit-Completed2')
