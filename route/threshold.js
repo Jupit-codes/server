@@ -2392,6 +2392,8 @@ async function updateDepositStatus(body,status){
         else if(docs){
             // btcbuyrate = docs.btc[1].buy
             // usdtbuyrate = docs.btc[1].buy
+
+            console.log(docs)
             if(body.currency == "BTC"){
                 rateInNaira = docs.btc[1].buy
             }
