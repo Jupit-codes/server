@@ -2415,6 +2415,8 @@ async function updateDepositStatus(body,status){
     }
     let usdValue = parseFloat(body.amount * 0.000001).toFixed(6) * parseFloat(marketPrice);
     let nairaValue = usdValue * rateInNaira;
+    console.log(marketPrice);
+    console.log(body.amount);
     console.log("usdValue",usdValue);
     console.log("nairaValue",nairaValue);
 
