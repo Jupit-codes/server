@@ -231,10 +231,10 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         }
                         
                         if(req.body.currency === "BTC"){
-                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(newAmount).toFixed(8)}}).exec();
                         }
-                        else if(req.body.currency === "USDT"){
-                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':req.body.to_address},{$inc:{'usdt_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                        else if(req.body.currency === "TRX-USDT-TRC20"){
+                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':req.body.to_address},{$inc:{'usdt_wallet.$.balance':parseFloat(newAmount).toFixed(8)}}).exec();
                         }
                        
                         if(UpdateDepositAccount){
@@ -2398,11 +2398,7 @@ async function updateDepositStatus(body,status){
             rateInNaira=0
         }
         else if(mydocs){
-            // btcbuyrate = docs.btc[1].buy
-            // usdtbuyrate = docs.btc[1].buy
-
-            console.log("mydocs",mydocs.usdt)
-            console.log(mydocs)
+           
             if(body.currency == "BTC"){
                 rateInNaira = mydocs.btc[1].buy
             }
@@ -2415,26 +2411,23 @@ async function updateDepositStatus(body,status){
     let getcurrentmarketrate = await crypomarketprice();
     
     if(getcurrentmarketrate[0]){
-        console.log('currentmarket',getcurrentmarketrate)
+        
         if(body.currency == "BTC"){
            marketPrice = getcurrentmarketrate[1];
-           console.log("mbtc",marketPrice)
+          
         }
         else if(body.currency == "TRX-USDT-TRC20"){
             marketPrice = getcurrentmarketrate[2];
-            console.log("musdt",marketPrice)
+            
         }
     }
     else{
         marketPrice = 0;
-        console.log('merror',marketPrice)
+        
     }
     let usdValue = parseFloat(body.amount * 0.000001).toFixed(6) * parseFloat(marketPrice);
     let nairaValue = usdValue * rateInNaira;
-    console.log(marketPrice);
-    console.log(body.amount);
-    console.log("usdValue",usdValue);
-    console.log("nairaValue",nairaValue);
+   
 
     if(body.currency == "TRX-USDT-TRC20"){
         newCurrency = "USDT"
