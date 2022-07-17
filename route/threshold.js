@@ -1871,6 +1871,12 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
      
     return transactionSub;
 }
+Router.get("/rate",(req,res)=>{
+    rate.findOne({initialization:'JupitRateBard'},(err,docs)=>{
+        res.send(docs.usdt[0].sell);
+    })
+})
+
 
 
 Router.post('/update/phonenumber',middlewareVerify,async(req,res)=>{
@@ -2071,6 +2077,7 @@ async function parseJwt(token){
         return null;
       }
   }
+
 
 
 
