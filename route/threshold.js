@@ -2477,17 +2477,19 @@ async function updateDepositStatus(body,status){
 }
 
 async function saveNotification(body,status){
-    let newAmount;
+    let newAmount,newCurrency
     if(body.currency === "BTC"){
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
+        newCurrency=body.currency
     }
-    else if(body.currency === "USDT"){
+    else if(body.currency === "TRX-USDT-TRC20"){
         newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
+        newCurrency = "USDT"
     }
     let saveStatus =  await Notification.create({
         type:4,
         orderid:body.order_id,
-        transfertype:body.currency,
+        transfertype:USDT,
         asset:'Incoming Deposit',
         from_address:body.from_address,
         to_address:body.to_address,
