@@ -2382,7 +2382,8 @@ async function updateDepositStatus(body,status){
             }
         }).clone().catch(function(err){ return [err,false]});
     }
-    let rateInNaira,marketPrice
+    let rateInNaira;
+    let marketPrice = 0;
     
     rate.find({},(err,docs)=>{
         if(err){
@@ -2403,15 +2404,19 @@ async function updateDepositStatus(body,status){
     let getcurrentmarketrate = await crypomarketprice();
     
     if(getcurrentmarketrate[0]){
+        console.log('currentmarket',getcurrentmarketrate)
         if(body.currency == "BTC"){
-           marketPrice = getcurrentmarketrate[1]
+           marketPrice = getcurrentmarketrate[1];
+           console.log("mbtc",marketPrice)
         }
         else if(body.currency == "USDT"){
-            marketPrice = getcurrentmarketrate[2]
+            marketPrice = getcurrentmarketrate[2];
+            console.log("musdt",marketPrice)
         }
     }
     else{
         marketPrice = 0;
+        console.log('merror',marketPrice)
     }
     let usdValue = parseFloat(body.amount * 0.000001).toFixed(6) * parseFloat(marketPrice);
     let nairaValue = usdValue * rateInNaira;
