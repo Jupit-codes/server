@@ -2347,7 +2347,8 @@ async function FailedUpdateEmail(addr,txid,subject,amount){
     transporter.sendMail(mailData, function (err, info) {
         if(err){
            
-            res.send({"message":"An Error Occurred","callback":err})
+            // res.send()
+            console.log({"message":"An Error Occurred","callback":err})
         }
         
         else{                                   
