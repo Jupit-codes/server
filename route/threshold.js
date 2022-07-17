@@ -180,7 +180,7 @@ async function crypomarketprice(){
 Router.post('/incoming/depositcallback',(req,res)=>{
   
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
-        console.log(req.body)
+        console.log("body",req.body)
         if(req.body.processing_state === 1){
             Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                 if(err){
