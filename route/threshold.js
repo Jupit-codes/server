@@ -2395,7 +2395,7 @@ async function updateDepositStatus(body,status){
             if(body.currency == "BTC"){
                 rateInNaira = docs.btc[1].buy
             }
-            else if(body.currency == "USDT"){
+            else if(body.currency == "TRX-USDT-TRC20"){
                 usdtbuyrate = docs.usdt[1].buy
             }
         }
