@@ -490,7 +490,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         if(req.body.currency === "BTC"){
                             newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
                         }
-                        else if(req.body.currency === "USDT"){
+                        else if(req.body.currency === "TRX-USDT-TRC20"){
                             newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
                         }
 
@@ -519,15 +519,23 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             token_address:req.body.token_address,
                             status:'Transaction Completed'
                         });
+                        let newCurrency;
+
+                        if(req.body.currency === "TRX-USDT-TRC20"){
+                            newCurrency="USDT";
+                        }
+                        else if(req.body.currency === "BTC"){
+                            newCurrency="BTC";
+                        }
 
                         Notification.create({
                             type:req.body.type,
                             orderid:req.body.orderid,
                             transfertype:'BlockChain Transfer',
-                            asset:req.body.currency,
+                            asset:newCurrency,
                             from_address:req.body.from_address,
                             to_address:req.body.to_address,
-                            amount:req.body.amount,
+                            amount:newAmount,
                             status:'Transaction Completed',
                             read:'unread',
                             initiator:'sender',
@@ -1105,7 +1113,7 @@ Router.post('/notification/fetch',middlewareVerify,(req,res)=>{
             res.send(docs)
            
         }
-    }).limit(10).sort({date_created: -1})
+    }).limit(10).sort({updated: -1})
 
 })
 
