@@ -1470,9 +1470,9 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
     // let  apikey="WtjgBd7JbpeBTHCF"
     // let wallet_id="201075"
     
-    let secret="3C7hovfzkYy8d37dh19Uduh5C11a";
-    let  apikey="2hLWNPfAJXD47TXiM"
-    let wallet_id="870727"
+    let secret="217cyBZWak6vnSLdjELF9WNhdCPy";
+    let  apikey="Lhoby3gmcSfjRT5M"
+    let wallet_id="863931"
 
 
     let rand = random(option_rand);
