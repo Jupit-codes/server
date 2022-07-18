@@ -166,7 +166,7 @@ router.post('/sendOTP/wallet/pin/creation',middlewareVerify,(req,res)=>{
                 const mailData = {
                     from: 'Jupit <hello@jupitapp.co>',  // sender address
                     to: req.body.email,   // list of receivers
-                    subject: 'WALLET PIN CREATION CODE <jupitapp.co>',
+                    subject: 'WALLET PIN CREATION CODE',
                     text: 'That was easy!',
                     html: `
                             <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
