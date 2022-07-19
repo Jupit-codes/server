@@ -584,6 +584,8 @@ Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     
 })
 
+
+
 Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const user_id = req.body.userid;
     const sender = req.body.senderaddress;
@@ -651,9 +653,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     }
     else if(tranfertype === "BlockChain Transfer"){
                 let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
-                let totalAmount  = parseFloat(networkFee) + parseFloat(amount)
-                
-                
+                let totalAmount  = parseFloat(networkFee) + parseFloat(amount) 
         let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentaddress);
         if(UpdateWalletBalances){
             if(wallet_type === "BTC"){
@@ -676,36 +676,16 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     })
 
                     Walletmodel.create({
-                        usdvalue: req.body.usdequivalent,
-                        marketprice: req.body.current_usd_rate,
-                        nairaRate:'580',
-                        txtid:req.body.txid,
-                        currency:req.body.currency,
-                        type:req.body.type,
-                        serial:req.body.serial,
+                        type:"Send",
                         order_id:WalletCallback[2],
-                        to_address:req.body.to_address,
-                        amount:amount,
-                        
-                        // block_height:req.body.block_height,
-                        // tindex:req.body.tindex,
-                        // vout_index:req.body.vout_index,
-                        
-                        // fees:req.body.fees,
-                        // memo:req.body.memo,
-                        // broadcast_at:req.body.broadcast_at,
-                        // chain_at:req.body.chain_at,
-                        // from_address:req.body.from_address,
-                        // to_address:req.body.to_address,
-                        // wallet_id:req.body.wallet_id,
-                        // state:req.body.state,
-                        // confirm_blocks:req.body.confirm_blocks,
-                        // processing_state:req.body.processing_state,
-                        // decimal:req.body.decimal,
-                        // currency_bip44:req.body.currency_bip44,
-                        // token_address:req.body.token_address,
-                        
-                    })
+                        currency:"BTC",
+                        status:'Processing',
+                        usdvalue:req.body.usdvalue,
+                        nairavalue:req.body.nairavalue,
+                        rateInnaira:req.body.rate
+                    });
+
+                    
                     
                     res.send({
                         "Message":"Transaction Initiated",
@@ -742,7 +722,10 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         type:"Send",
                         order_id:WalletCallback[2],
                         currency:"USDT",
-                        status:'Processing'
+                        status:'Processing',
+                        usdvalue:req.body.usdvalue,
+                        nairavalue:req.body.nairavalue,
+                        rateInnaira:req.body.rate
                     });
                     
                     res.send({
@@ -751,12 +734,9 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     })
                 }
                 else{
-                    // console.log(WalletCallback[0]);
+                  
                     res.status(403).send("Internal Server Error..")
-                    // res.json({
-                    //     "Message":"Internal Server Error..",
-                    //     "Status":false
-                    // })
+                   
                 }
             }
             
