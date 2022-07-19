@@ -713,12 +713,9 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                     })
                 }
                 else{
-                    // console.log(WalletCallback[0]);
+                    
                     res.status(403).send("Internal Server Error..")
-                    // res.json({
-                    //     "Message":"Internal Server Error..",
-                    //     "Status":false
-                    // })
+                    
                 }
             }
 
