@@ -201,13 +201,10 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         let saveNotificationx = await saveNotification(req.body,status)
                     }
 
-                    
-                    
                 }
             })
         }
-
-            
+  
         if(req.body.processing_state === 2){
 
             Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
@@ -222,22 +219,37 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         let status = 'Transaction Completed';
                         await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
                         let newAmount;
-                        let UpdateDepositAccount;
+                        
                         if(req.body.currency === "BTC"){
                             newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
                         }
-                        else if(req.body.currency === "USDT"){
+                        else if(req.body.currency === "TRX-USDT-TRC20"){
                             newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
                         }
                         
-                        if(req.body.currency === "BTC"){
-                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':newAmount}}).exec();
-                        }
-                        else if(req.body.currency === "TRX-USDT-TRC20"){
-                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':req.body.to_address},{$inc:{'usdt_wallet.$.balance':newAmount}}).exec();
-                        }
+                        let UpdateDepositAccount = await updateDepositStatusCallback(req.body.currency,req.body.to_address,newAmount);
                        
                         if(UpdateDepositAccount){
+                            
+                            let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
+                           
+                            await Usermodel.findOne({
+                                $or:[
+                                    {
+                                        'btc_wallet.0.wallet':req.body.to_address
+                                    },
+                                    {
+                                        'usdt_wallet.0.wallet':req.body.to_address
+                                    }
+                                ]
+                            },(err,docxc)=>{
+                                if(err){
+                                    console.log('UsermodelMailError',err)
+                                }
+                                else if(docxc){
+                                    successfulDeposit(docxc.email,docxc.username,req.body.currency,req.body.from_address,newAmount)
+                                }
+                            })
 
                              res.sendStatus(200);
                         }
@@ -247,9 +259,7 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                             res.sendStatus(200);
                         }
                         // console.log('Deposit-Completed2')
-                      
-                        
-                        
+
                     }
                     
                 }
@@ -263,191 +273,93 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         let saveNotificationx = await saveNotification(req.body,status)
                     }
 
-
-                    let UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(req.body.amount).toFixed(8)}}).exec();
+                    let newAmount;
+                        
+                    if(req.body.currency === "BTC"){
+                        newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                    }
+                    else if(req.body.currency === "TRX-USDT-TRC20"){
+                        newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
+                    }
+                    
+                    let UpdateDepositAccount = await updateDepositStatusCallback(req.body.currency,req.body.to_address,newAmount);
+                    
                     if(UpdateDepositAccount){
+                        
+                        let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
+                        await Usermodel.findOne({
+                            $or:[
+                                {
+                                    'btc_wallet.0.wallet':req.body.to_address
+                                },
+                                {
+                                    'usdt_wallet.0.wallet':req.body.to_address
+                                }
+                            ]
+                        },(err,docxc)=>{
+                            if(err){
 
+                            }
+                            else if(docxc){
+                                successfulDeposit(docxc.email,docxc.username,req.body.currency,req.body.from_address,newAmount)
+                            }
+                        })
+                        
                         res.sendStatus(200);
-                   }
-                   else{
-                       let subject = "Failed Deposit Update onPremises"
-                       await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
-                       res.sendStatus(200);
-                   }
+                    }
+                    else{
+                        let subject = "Failed Deposit Update onPremises"
+                        await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,newAmount);
+                        res.sendStatus(200);
+                    }
                     
                 }
             })
             
-           
-            
         }
         if(req.body.processing_state === -1){
-            
-            // res.sendStatus(200)
-            if(req.body.state === 5){
-                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    if(docs){
-                        if(docs.processing_state !== -1){
-                            let status = 'Transaction Failed';
-                            let insert = await updateDepositStatus(req.body,status);
-
-                            if(insert[0]){
-                                //notification
-                                let saveNotificationx = await saveNotification(req.body,status)
-                            }
-     
-                        }
+            let status = "Transaction Failed";
+            await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
+            let newAmount;
                         
-                        res.sendStatus(200);
-                    }
-                    else{
-                        // console.log('Transaction Failed',req.body)
-                        res.sendStatus(200);
-                        
-                       
-                    }
-                })
-               
-            }
-            else if(req.body.state === 8 ){
-
-                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    if(docs){
-                        if(docs.processing_state !== -1){
-                           
-                            let status = 'Transaction Cancelled';
-                            let insert = await updateDepositStatus(req.body,status);
-
-                            if(insert[0]){
-                                //notification
-                                let saveNotificationx = await saveNotification(req.body,status)
-                            }
-                            
-                            
-                        }
-                       
-                        res.sendStatus(200);
-                    }
-                    else{
-                        // console.log('Transaction Cancelled',req.body)
-                        res.sendStatus(200);
-                        
-                       
-                    }
-                })
+                if(req.body.currency === "BTC"){
+                    newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                }
+                else if(req.body.currency === "TRX-USDT-TRC20"){
+                    newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
+                }
                 
-            }
-            else if(req.body.state ===  10){
-
-                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    if(docs){
-                        if(docs.processing_state !== -1){
-                            
-
-                            let status = 'Transaction Dropped';
-                            let insert = await updateDepositStatus(req.body,status);
-
-                            if(insert[0]){
-                                //notification
-                                let saveNotificationx = await saveNotification(req.body,status)
-                            }
-
-                           
-                            
-                            
-                        }
-                        
-                        res.sendStatus(200);
-                    }
-                    else{
-                        
-                        res.sendStatus(200);
-                        
-                       
-                    }
-                })      
-            }
-            else{
-                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    if(docs){
-                        if(docs.processing_state !== -1){
-                           
-
-                            let status = 'Transaction Unsuccessful';
-                            let insert = await updateDepositStatus(req.body,status);
-
-                            if(insert[0]){
-                                let saveNotificationx = await saveNotification(req.body)
-                            }
-                            
-                            
-                        }
-                        
-                        res.sendStatus(200);
-                    }
-                    else{
-                        // console.log('Transaction Unsuccessful',req.body)
-                        res.sendStatus(200);
-                        
-                       
-                    }
-                })
-                
-
-
-                res.json({
-                    'message':'Transaction Unsuccessful',
-                    'status':false,
-                    'completed':false
-                }) 
-            }
-            
+                let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
+                res.sendStatus(200);
             
         }
     }
     else{
-        res.json({
-            'message':'Forbidden',
-            'status':false,
-            'completed':false
-        }) 
+        
+        console.log('Unverified Call On Deposit Webhook')
     }
    
 })
 
+async function updateDepositStatusCallback(currency,address,amount){
+
+     if(currency === "BTC"){
+        UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':address},{$inc:{'btc_wallet.$.balance':parseFloat(amount)}}).exec();
+    }
+    else if(currency === "TRX-USDT-TRC20"){
+        UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':address},{$inc:{'usdt_wallet.$.balance':parseFloat(amount)}}).exec();
+    }
+}
+
 
 Router.post('/incoming/withdrawalcallback',(req,res)=>{
-    // res.sendStatus(200);
+    
     
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log(req.body)
         let newAmount;
         if(req.body.processing_state === 1){
-            Walletmodel.findOne({txtid:req.body.txid}, async function(err,docs){
+            Walletmodel.findOne({order_id:req.body.order_id}, async function(err,docs){
                 if(err){
                     res.json({
                         'message':'An Error'+err,
@@ -460,13 +372,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                 else{
                    
                     let status = "Processing"
-                    let insert = await updateDepositStatus(req.body,status);
-
-                    if(insert[0]){
-                        let saveNotificationx = saveNotification(req.body,status)
-                    }
-
-                   
+                    await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
                     
                 }
             })
@@ -474,7 +380,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
         }
         if(req.body.processing_state === 2){
 
-            Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
+            Walletmodel.findOne({order_id:req.body.order_id},async function(err,docs){
                 if(err){
                     res.json({
                         'message':err,
@@ -484,14 +390,43 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                 if(docs){
                     if(docs.processing_state !== 2){
                          let status = 'Transaction Completed';
-                         let WithdrawalStatus = await updateWithdrawalStatus(req.body,status)
+                         let newAmount;
+                         let currency;
+                        
+                         if(req.body.currency === "BTC"){
+                             newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                         }
+                         else if(req.body.currency === "TRX-USDT-TRC20"){
+                             newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
+                         }
+                         if(req.body.currency === "TRX-USDT-TRC20"){
+                            currency = "USDT"
+                         }
+                         else{
+                            currency = "BTC"
+                         }
+                         await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
+                         await Notification.create({
+                            type:2,
+                            transfertype:'BlockChain',
+                            asset:currency,
+                            from_address:req.body.from_address,
+                            to_address:req.body.to_address,
+                            amount:newAmount,
+                            status:status,
+                            read:'unread',
+                            initiator:'sender',
+                            senderaddress:'',
+                        })
+    
+                        
+    
                         
                     }
-                    
                     res.sendStatus(200); 
                 }
                 else{
-                    // console.log('Transaction Completed Already',req.body)
+                    
                     res.sendStatus(200);
                     
                    
@@ -501,21 +436,14 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
             
         }
         if(req.body.processing_state === -1){
-            
-                res.json({
-                    'message':'Transaction Unsuccessful',
-                    'status':false,
-                    'completed':false
-                }) 
-              
+            let status = 'Transaction Completed';
+            await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
+               
         }
     }
     else{
-        res.json({
-            'message':'Forbidden',
-            'status':false,
-            'completed':false
-        }) 
+         
+        console.log('Forbidden Outward Withdrawal Request WebHook')
     }
 })
 
@@ -652,8 +580,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
         }
     }
     else if(tranfertype === "BlockChain Transfer"){
-                let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
-                let totalAmount  = parseFloat(networkFee) + parseFloat(amount) 
+        let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
+        let totalAmount  = parseFloat(networkFee) + parseFloat(amount) 
         let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentaddress);
         if(UpdateWalletBalances){
             if(wallet_type === "BTC"){
@@ -1139,52 +1067,16 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
    })
    .then((result)=>{
     
-        return([result.data,true,generate_order_id])
-        // let jupitPromise = new Promise(function(resolve,reject){
-        //     isTrue = true;
-        //     if(isTrue){
-        //         resolve()
-        //     }
-            
-        // })
-        // jupitPromise.then(()=>{
-        //     return 'Completed';
-        // }).catch((err)=>{
-        //     return 'Uncompleted'
-        // })
-        
-        
+        return([result.data,true,generate_order_id]) 
    })
    .catch((err)=>{
-    // console.log(err)
-    // return new Promise(function(resolve,reject){
-    //     resolve(err.response.data);
-    // })
-    //    console.log('err',err.response.data)
-    console.log(err.response.data)
+     console.log(err.response.data)
     return [err.response.data,false]
     
-
-    // let jupitPromise = new Promise(function(resolve,reject){
-    //     isTrue = false;
-    //     if(isTrue){
-    //         resolve()
-    //     }
-    //     else{
-    //         reject();
-    //     }
-        
-    // })
-    // jupitPromise.then(()=>{
-    //     return 'Completed';
-    // }).catch((err)=>{
-    //     return 'Uncompleted'
-    // })
-
     
     
    });
-//    console.log('myAxios',myAxios);
+
    return myAxios;
    
    
@@ -1998,6 +1890,438 @@ async function activateUSDTToken(){
 
 }
 
+
+
+async function successfulDeposit(email,username,currency,address,amount){
+
+    const mailData = {
+        from: 'Jupit<hello@jupitapp.co>',  // sender address
+        to: email, 
+        subject: 'Incoming Deposit Alert',
+        text: 'That was easy!',
+        html: `
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+        <head>
+        <!--[if gte mso 9]>
+        <xml>
+          <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+        </xml>
+        <![endif]-->
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta name="x-apple-disable-message-reformatting">
+          <!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+          <title></title>
+          
+            <style type="text/css">
+              @media only screen and (min-width: 620px) {
+          .u-row {
+            width: 600px !important;
+          }
+          .u-row .u-col {
+            vertical-align: top;
+          }
+        
+          .u-row .u-col-100 {
+            width: 600px !important;
+          }
+        
+        }
+        
+        @media (max-width: 620px) {
+          .u-row-container {
+            max-width: 100% !important;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+          }
+          .u-row .u-col {
+            min-width: 320px !important;
+            max-width: 100% !important;
+            display: block !important;
+          }
+          .u-row {
+            width: calc(100% - 40px) !important;
+          }
+          .u-col {
+            width: 100% !important;
+          }
+          .u-col > div {
+            margin: 0 auto;
+          }
+        }
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        
+        table,
+        tr,
+        td {
+          vertical-align: top;
+          border-collapse: collapse;
+        }
+        
+        p {
+          margin: 0;
+        }
+        
+        .ie-container table,
+        .mso-container table {
+          table-layout: fixed;
+        }
+        
+        * {
+          line-height: inherit;
+        }
+        
+        a[x-apple-data-detectors='true'] {
+          color: inherit !important;
+          text-decoration: none !important;
+        }
+        
+        table, td { color: #000000; } a { color: #0000ee; text-decoration: underline; }
+            </style>
+          
+          
+        
+        <!--[if !mso]><!--><link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet" type="text/css"><!--<![endif]-->
+        
+        </head>
+        
+        <body class="clean-body u_body" style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #ffffff;color: #000000">
+          <!--[if IE]><div class="ie-container"><![endif]-->
+          <!--[if mso]><div class="mso-container"><![endif]-->
+          <table style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #ffffff;width:100%" cellpadding="0" cellspacing="0">
+          <tbody>
+          <tr style="vertical-align: top">
+            <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
+            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color: #ffffff;"><![endif]-->
+            
+        
+        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+          <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+              <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
+              
+        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 1px solid #e9e9e9;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+          <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 1px solid #e9e9e9;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+          
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td style="padding-right: 0px;padding-left: 0px;" align="center">
+              
+              <img align="center" border="0" src="https://assets.unlayer.com/projects/90767/1658238821901-JUPIT-Logo-Wordmark_1.png" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 30%;max-width: 174px;" width="174"/>
+              
+            </td>
+          </tr>
+        </table>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td style="padding-right: 0px;padding-left: 0px;" align="center">
+              
+              <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1635863849995-ref.jpg" alt="Hero Image" title="Hero Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;" width="600"/>
+              
+            </td>
+          </tr>
+        </table>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+          <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+          </div>
+        </div>
+        <!--[if (mso)|(IE)]></td><![endif]-->
+              <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+          <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+              <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
+              
+        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+          <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+          
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+          <h1 style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: arial,helvetica,sans-serif; font-size: 22px;">
+            <strong>INCOMING DEPOSIT ALERT</strong>
+          </h1>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+          <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+          </div>
+        </div>
+        <!--[if (mso)|(IE)]></td><![endif]-->
+              <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+          <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;">
+            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-image: url('https://cdn.templates.unlayer.com/assets/1635864800330-tbg.jpg');background-repeat: no-repeat;background-position: center top;background-color: transparent;">
+              <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-image: url('https://cdn.templates.unlayer.com/assets/1635864800330-tbg.jpg');background-repeat: no-repeat;background-position: center top;background-color: #ffffff;"><![endif]-->
+              
+        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+          <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+          
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px 40px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+          <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
+            <p style="font-size: 14px; line-height: 140%;"><strong><span style="font-size: 16px; line-height: 22.4px; font-family: Raleway, sans-serif;">Dear ${username},</span></strong></p>
+          </div>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 40px 18px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+          <div style="line-height: 160%; text-align: left; word-wrap: break-word;">
+            <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">You have successfully received a sum of ${amount} ${currency} from ${address} address.</span></p>
+        <p style="font-size: 14px; line-height: 160%;"> </p>
+        <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;"> Feel free to login to your app to confirm this and trade more.</span></p>
+        <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">Thank you for choosing us</span></p>
+        <p style="font-size: 14px; line-height: 160%;"> </p>
+          </div>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 50px 40px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+          <div style="line-height: 120%; text-align: left; word-wrap: break-word;">
+            <p style="font-size: 14px; line-height: 120%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 19.2px;">Best Regards,</span></p>
+        <p style="font-size: 14px; line-height: 120%;"> </p>
+        <p style="font-size: 14px; line-height: 120%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 19.2px;">Jupit Team</span></p>
+          </div>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+          <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+          </div>
+        </div>
+        <!--[if (mso)|(IE)]></td><![endif]-->
+              <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+          <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #2d4ac0;">
+            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+              <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #2d4ac0;"><![endif]-->
+              
+        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+          <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+          
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+        <div align="center">
+          <div style="display: table; max-width:43px;">
+          <!--[if (mso)|(IE)]><table width="43" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:43px;"><tr><![endif]-->
+          
+            
+            <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 0px;" valign="top"><![endif]-->
+            <table align="left" border="0" cellspacing="0" cellpadding="0" width="32" height="32" style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 0px">
+              <tbody><tr style="vertical-align: top"><td align="left" valign="middle" style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
+                <a href="https://instagram.com/jupit" title="Instagram" target="_blank">
+                  <img src="https://cdn.tools.unlayer.com/social/icons/circle-white/instagram.png" alt="Instagram" title="Instagram" width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
+                </a>
+              </td></tr>
+            </tbody></table>
+            <!--[if (mso)|(IE)]></td><![endif]-->
+            
+            
+            <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+          </div>
+        </div>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+          <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+          </div>
+        </div>
+        <!--[if (mso)|(IE)]></td><![endif]-->
+              <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+          <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #2d4ac0;">
+            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+              <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #2d4ac0;"><![endif]-->
+              
+        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+          <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+          
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:20px 40px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+          <div style="color: #ffffff; line-height: 160%; text-align: center; word-wrap: break-word;">
+            <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">©️ Jupit</span></p>
+          </div>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+          <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+          </div>
+        </div>
+        <!--[if (mso)|(IE)]></td><![endif]-->
+              <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+          <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+              <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
+              
+        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+          <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+          
+        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+          <tbody>
+            <tr>
+              <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;" align="left">
+                
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td style="padding-right: 0px;padding-left: 0px;" align="center">
+              
+              <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1635865576753-ws2.png" alt="Shadow" title="Shadow" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;" width="600"/>
+              
+            </td>
+          </tr>
+        </table>
+        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+          <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+          </div>
+        </div>
+        <!--[if (mso)|(IE)]></td><![endif]-->
+              <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+            </div>
+          </div>
+        </div>
+        
+        
+            <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+          </tbody>
+          </table>
+          <!--[if mso]></div><![endif]-->
+          <!--[if IE]></div><![endif]-->
+        </body>
+        
+        </html>
+                   
+            `
+      };
+
+      transporter.sendMail(mailData, function (err, info) {
+        if(err){
+            console.log(err);
+            // res.send({"message":"An Error Occurred","callback":err})
+        }
+        
+        else{
+
+            //res.send({"message":"The password reset link has been sent to your mail","callback":info,"status":true})
+            
+        }
+    })
+}
+
+
 async function FailedUpdateEmail(addr,txid,subject,amount){
     const mailData = {
         from: 'hello@jupitapp.co',  // sender address
@@ -2169,6 +2493,41 @@ async function updateDepositStatus(body,status){
     else{
         return [false, 'Wallet Status Failed'];
     }
+
+}
+
+async function saveNotificationCallBack(body,status){
+    let newAmount,newCurrency
+    if(body.currency === "BTC"){
+        newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
+        newCurrency = body.currency
+    }
+    else if(body.currency === "TRX-USDT-TRC20"){
+        newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
+        newCurrency = "USDT"
+    }
+    let saveStatus =  await Notification.create({
+        type:4,
+        orderid:body.order_id,
+        transfertype:newCurrency,
+        asset:'Incoming Deposit Update',
+        from_address:body.from_address,
+        to_address:body.to_address,
+        status:status,
+        read:'unread',
+        date_created:new Date(),
+        initiator:newAmount,
+
+    })
+    
+    if(saveStatus){
+        return [true,'Notification Incoming Deposit Failed'];
+    }
+    else{
+        return [false,'Notification Incoming Deposit Failed']
+    }
+
+
 
 }
 
