@@ -177,7 +177,7 @@ async function crypomarketprice(){
 
 
 
-Router.post('/incoming/depositcallback',(req,res)=>{
+Router.post('/incoming/depositcallback', (req,res)=>{
   
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log("body",req.body)
@@ -318,19 +318,31 @@ Router.post('/incoming/depositcallback',(req,res)=>{
             
         }
         if(req.body.processing_state === -1){
-            let status = "Transaction Failed";
-            await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
-            let newAmount;
+            Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
+                if(err){
+                    res.json({
+                        'message':err,
+                        'status':false
+                    })
+                }
+                else{
+                    let status = "Transaction Failed";
+                    await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
+                    let newAmount;
                         
-                if(req.body.currency === "BTC"){
-                    newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                    if(req.body.currency === "BTC"){
+                        newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                    }
+                    else if(req.body.currency === "TRX-USDT-TRC20"){
+                        newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
+                    }
+                    
+                    let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
+                    
                 }
-                else if(req.body.currency === "TRX-USDT-TRC20"){
-                    newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
-                }
-                
-                let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
-                res.sendStatus(200);
+            })
+            res.sendStatus(200);
+            
             
         }
     }
