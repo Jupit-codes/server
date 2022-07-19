@@ -35,14 +35,14 @@ Router.post('/getautofee',async (req,res)=>{
     let secret = "";
 
     if(req.body.walletType === "BTC"){
-            secret="2awjZJeeVhtG23tepAzv5tcMYYN";
-            Api="55JbxSP6xosFTkFvg"
-            wallet_id="194071"
+            secret="2ARcpQugmy52KMHRm6bCn2jRWZA9";
+            Api="4XoSQPfLwbUiyvF5i"
+            wallet_id="127771"
     }
     else if(req.body.walletType === "USDT"){
-        wallet_id="488433"
-        secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2"
-        Api="WtjgBd7JbpeBTHCF"
+        wallet_id="881173"
+        secret="5ZtPb6znHJ8F8uomp"
+        Api="2LRmQDmoziaxvGuz5a9A3d9yhURe"
     }
         
     let rand = random(option_rand);
