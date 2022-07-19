@@ -81,7 +81,7 @@ Router.post('/getautofee',async (req,res)=>{
     
     const get_request_args = querystring.stringify(parameters);
    
-    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/autofees?`+ get_request_args
+    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${wallet_id}/autofees?`+ get_request_args
     
     const new_params = {
         "block_nums": [1,50,100]
