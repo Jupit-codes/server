@@ -449,7 +449,47 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
         }
         if(req.body.processing_state === -1){
             let status = 'Transaction Completed';
-            await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
+            Walletmodel.findOne({order_id:req.body.order_id},async function(err,docs){
+                if(err){
+                    res.json({
+                        'message':err,
+                        'status':false
+                    })
+                }
+                else{
+                    let newAmount;
+                    let currency;
+                   
+                    if(req.body.currency === "BTC"){
+                        newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                    }
+                    else if(req.body.currency === "TRX-USDT-TRC20"){
+                        newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
+                    }
+                    if(req.body.currency === "TRX-USDT-TRC20"){
+                       currency = "USDT"
+                    }
+                    else{
+                       currency = "BTC"
+                    }
+
+                    await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
+                    await Notification.create({
+                        type:2,
+                        transfertype:'BlockChain',
+                        asset:currency,
+                        from_address:req.body.from_address,
+                        to_address:req.body.to_address,
+                        amount:newAmount,
+                        status:status,
+                        read:'unread',
+                        initiator:'sender',
+                        senderaddress:'',
+                    })
+                }
+
+            })
+            
                
         }
     }
