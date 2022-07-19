@@ -662,7 +662,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         status:'Processing',
                         usdvalue:req.body.usdvalue,
                         nairavalue:req.body.nairavalue,
-                        rateInnaira:req.body.rate
+                        rateInnaira:req.body.rate,
+                        initiator:req.body.email
                     });
 
                     
@@ -705,7 +706,8 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         status:'Processing',
                         usdvalue:req.body.usdvalue,
                         nairavalue:req.body.nairavalue,
-                        rateInnaira:req.body.rate
+                        rateInnaira:req.body.rate,
+                        initiator:req.body.email
                     });
                     
                     res.send({
