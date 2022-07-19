@@ -1525,7 +1525,7 @@ Router.post('/update/phonenumber',middlewareVerify,async(req,res)=>{
 let userid = req.body.userid;
 let phonenumber = req.body.newphonenumber;
 
-    Usermodel.findOne({phonenumber:phonenumber},(err,docs)=>{
+    Usermodel.findOne({phonenumber:phonenumber},async (err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
