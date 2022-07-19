@@ -231,10 +231,10 @@ Router.post('/incoming/depositcallback',(req,res)=>{
                         }
                         
                         if(req.body.currency === "BTC"){
-                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(newAmount).toFixed(8)}}).exec();
+                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':newAmount}}).exec();
                         }
                         else if(req.body.currency === "TRX-USDT-TRC20"){
-                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':req.body.to_address},{$inc:{'usdt_wallet.$.balance':parseFloat(newAmount).toFixed(8)}}).exec();
+                            UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':req.body.to_address},{$inc:{'usdt_wallet.$.balance':newAmount}}).exec();
                         }
                        
                         if(UpdateDepositAccount){
@@ -2176,7 +2176,7 @@ async function saveNotification(body,status){
     let newAmount,newCurrency
     if(body.currency === "BTC"){
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
-        newCurrency=body.currency
+        newCurrency = body.currency
     }
     else if(body.currency === "TRX-USDT-TRC20"){
         newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
