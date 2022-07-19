@@ -1525,14 +1525,26 @@ Router.post('/update/phonenumber',middlewareVerify,async(req,res)=>{
 let userid = req.body.userid;
 let phonenumber = req.body.newphonenumber;
 
-let update = await Usermodel.findOneAndUpdate({_id:userid},{'phonenumber':phonenumber}).exec()
+    Usermodel.findOne({phonenumber:phonenumber},(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            res.status(400).send('Phonenumber Already In Use');
+        }
+        else if(!docs){
+            let update = await Usermodel.findOneAndUpdate({_id:userid},{'phonenumber':phonenumber}).exec()
 
-if(update){
-    res.send('Phonenumber Successfully Updated');
-}
-else{
-    res.status(400).send('Update Error');
-}
+            if(update){
+                res.send('Phonenumber Successfully Updated');
+            }
+            else{
+                res.status(400).send('Update Error');
+            }
+        }
+    })
+
+
 
 })
 
