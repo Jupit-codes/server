@@ -2185,7 +2185,7 @@ async function saveNotification(body,status){
     let saveStatus =  await Notification.create({
         type:4,
         orderid:body.order_id,
-        transfertype:USDT,
+        transfertype:newCurrency,
         asset:'Incoming Deposit',
         from_address:body.from_address,
         to_address:body.to_address,
