@@ -470,9 +470,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                     
                 }
             })
-
-            
-            
+  
         }
         if(req.body.processing_state === 2){
 
@@ -485,67 +483,11 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                 }
                 if(docs){
                     if(docs.processing_state !== 2){
-
-                    
-                        if(req.body.currency === "BTC"){
-                            newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
-                        }
-                        else if(req.body.currency === "TRX-USDT-TRC20"){
-                            newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
-                        }
-
-                        Walletmodel.create({
-                            type:"Send",
-                            serial:req.body.serial,
-                            order_id:req.body.order_id,
-                            currency:req.body.currency,
-                            txtid:req.body.txid,
-                            block_height:req.body.block_height,
-                            tindex:req.body.tindex,
-                            vout_index:req.body.vout_index,
-                            amount:newAmount,
-                            fees:req.body.fees,
-                            memo:req.body.memo,
-                            broadcast_at:req.body.broadcast_at,
-                            chain_at:req.body.chain_at,
-                            from_address:req.body.from_address,
-                            to_address:req.body.to_address,
-                            wallet_id:req.body.wallet_id,
-                            state:req.body.state,
-                            confirm_blocks:req.body.confirm_blocks,
-                            processing_state:req.body.processing_state,
-                            decimal:req.body.decimal,
-                            currency_bip44:req.body.currency_bip44,
-                            token_address:req.body.token_address,
-                            status:'Transaction Completed'
-                        });
-                        let newCurrency;
-
-                        if(req.body.currency === "TRX-USDT-TRC20"){
-                            newCurrency="USDT";
-                        }
-                        else if(req.body.currency === "BTC"){
-                            newCurrency="BTC";
-                        }
-
-                        Notification.create({
-                            type:req.body.type,
-                            orderid:req.body.orderid,
-                            transfertype:'BlockChain Transfer',
-                            asset:newCurrency,
-                            from_address:req.body.from_address,
-                            to_address:req.body.to_address,
-                            amount:newAmount,
-                            status:'Transaction Completed',
-                            read:'unread',
-                            initiator:'sender',
-                            date_created:new Date(),
-                            senderaddress:req.body.orderid,
-                            // senderaddress:req.body.from_address,
-                        })
-   
+                         let status = 'Transaction Completed';
+                         let WithdrawalStatus = await updateWithdrawalStatus(req.body,status)
+                        
                     }
-                    // console.log('Transaction Completed',req.body)
+                    
                     res.sendStatus(200); 
                 }
                 else{
@@ -555,259 +497,17 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                    
                 }
             })
-            
-            // res.sendStatus(200);
-            // res.json({
-            //     'message':'Transaction Completed',
-            //     'status':true,
-            //     'completed':true
-            // })
+          
             
         }
         if(req.body.processing_state === -1){
             
-            // res.sendStatus(200)
-            if(req.body.state === 5){
-                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    if(docs){
-                        if(docs.processing_state !== -1){
-                            Walletmodel.create({
-                                type:"Send",
-                                serial:req.body.serial,
-                                order_id:req.body.order_id,
-                                currency:req.body.currency,
-                                txtid:req.body.txid,
-                                block_height:req.body.block_height,
-                                tindex:req.body.tindex,
-                                vout_index:req.body.vout_index,
-                                amount:req.body.amount,
-                                fees:req.body.fees,
-                                memo:req.body.memo,
-                                broadcast_at:req.body.broadcast_at,
-                                chain_at:req.body.chain_at,
-                                from_address:req.body.from_address,
-                                to_address:req.body.to_address,
-                                wallet_id:req.body.wallet_id,
-                                state:req.body.state,
-                                confirm_blocks:req.body.confirm_blocks,
-                                processing_state:req.body.processing_state,
-                                decimal:req.body.decimal,
-                                currency_bip44:req.body.currency_bip44,
-                                token_address:req.body.token_address,
-                                status:'Transaction Failed'
-                            });
-                            
-                            
-                        }
-                        
-                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
-                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
-                        // console.log('Transaction Failed',req.body)
-                        if(Reversal){
-                            res.sendStatus(200);
-                        }
-                        else{
-                            let subject = "Failed Reversal Update On Premises"
-                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
-                            res.sendStatus(200);
-                        }
-                        
-                    }
-                    else{
-                        // console.log('Transaction Failed',req.body)
-                        res.sendStatus(200);
-                        
-                       
-                    }
-                })
-               
-            }
-            else if(req.body.state === 8 ){
-
-                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    if(docs){
-                        if(docs.processing_state !== -1){
-                            Walletmodel.create({
-                                type:"Send",
-                                serial:req.body.serial,
-                                order_id:req.body.order_id,
-                                currency:req.body.currency,
-                                txtid:req.body.txid,
-                                block_height:req.body.block_height,
-                                tindex:req.body.tindex,
-                                vout_index:req.body.vout_index,
-                                amount:req.body.amount,
-                                fees:req.body.fees,
-                                memo:req.body.memo,
-                                broadcast_at:req.body.broadcast_at,
-                                chain_at:req.body.chain_at,
-                                from_address:req.body.from_address,
-                                to_address:req.body.to_address,
-                                wallet_id:req.body.wallet_id,
-                                state:req.body.state,
-                                confirm_blocks:req.body.confirm_blocks,
-                                processing_state:req.body.processing_state,
-                                decimal:req.body.decimal,
-                                currency_bip44:req.body.currency_bip44,
-                                token_address:req.body.token_address,
-                                status:'Transaction Cancelled'
-                            });
-                            
-                            
-                        }
-                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
-                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
-                        // console.log('Transaction Failed',req.body)
-                        if(Reversal){
-                            res.sendStatus(200);
-                        }
-                        else{
-                            let subject = "Failed Reversal Update On Premises"
-                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,req.body.amount);
-                            res.sendStatus(200);
-                        }
-                        
-                    }
-                    else{
-                        // console.log('Transaction Cancelled',req.body)
-                        res.sendStatus(200);
-                        
-                       
-                    }
-                })
-                
-            }
-            else if(req.body.state ===  10){
-
-                Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    if(docs){
-                        if(docs.processing_state !== -1){
-                            Walletmodel.create({
-                                type:"Send",
-                                serial:req.body.serial,
-                                order_id:req.body.order_id,
-                                currency:req.body.currency,
-                                txtid:req.body.txid,
-                                block_height:req.body.block_height,
-                                tindex:req.body.tindex,
-                                vout_index:req.body.vout_index,
-                                amount:req.body.amount,
-                                fees:req.body.fees,
-                                memo:req.body.memo,
-                                broadcast_at:req.body.broadcast_at,
-                                chain_at:req.body.chain_at,
-                                from_address:req.body.from_address,
-                                to_address:req.body.to_address,
-                                wallet_id:req.body.wallet_id,
-                                state:req.body.state,
-                                confirm_blocks:req.body.confirm_blocks,
-                                processing_state:req.body.processing_state,
-                                decimal:req.body.decimal,
-                                currency_bip44:req.body.currency_bip44,
-                                token_address:req.body.token_address,
-                                status:'Transaction Dropped'
-                            });
-                            
-                            
-                        }
-                        let total = parseFloat(req.body.amount * 0.00000001).toFixed(8) + parseFloat(req.body.fees * 0.00000001).toFixed(8);
-                        let Reversal  = await Usermodel.findOneAndUpdate({'btc_wallet.address':req.body.to_address},{$inc:{'btc_wallet.$.balance':parseFloat(total).toFixed(8)}}).exec();
-                        // console.log('Transaction Failed',req.body)
-                        if(Reversal){
-                            res.sendStatus(200);
-                        }
-                        else{
-                            let subject = "Failed Reversal Update On Premises"
-                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject);
-                            res.sendStatus(200);
-                        }
-                        
-                    }
-                    else{
-                        // console.log('Transaction Dropped',req.body)
-                        res.sendStatus(200);
-                        
-                       
-                    }
-                })      
-            }
-            else{
-                Walletmodel.findOne({txtid:req.body.txid},function(err,docs){
-                    if(err){
-                        res.json({
-                            'message':err,
-                            'status':false
-                        })
-                    }
-                    if(docs){
-                        if(docs.processing_state !== -1){
-                            Walletmodel.create({
-                                type:"Send",
-                                serial:req.body.serial,
-                                order_id:req.body.order_id,
-                                currency:req.body.currency,
-                                txtid:req.body.txtid,
-                                block_height:req.body.block_height,
-                                tindex:req.body.tindex,
-                                vout_index:req.body.vout_index,
-                                amount:req.body.amount,
-                                fees:req.body.fees,
-                                memo:req.body.memo,
-                                broadcast_at:req.body.broadcast_at,
-                                chain_at:req.body.chain_at,
-                                from_address:req.body.from_address,
-                                to_address:req.body.to_address,
-                                wallet_id:req.body.wallet_id,
-                                state:req.body.state,
-                                confirm_blocks:req.body.confirm_blocks,
-                                processing_state:req.body.processing_state,
-                                decimal:req.body.decimal,
-                                currency_bip44:req.body.currency_bip44,
-                                token_address:req.body.token_address,
-                                status:'Transaction Unsuccessful'
-                            });
-                            
-                            
-                        }
-                        // console.log('Transaction Unsuccessful',req.body)
-                        res.sendStatus(200);
-                    }
-                    else{
-                        // console.log('Transaction Unsuccessful',req.body)
-                        res.sendStatus(200);
-                        
-                       
-                    }
-                })
-                
-
-
                 res.json({
                     'message':'Transaction Unsuccessful',
                     'status':false,
                     'completed':false
                 }) 
-            }
-            
-            
+              
         }
     }
     else{
@@ -818,6 +518,45 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
         }) 
     }
 })
+
+async function updateWithdrawalStatus(body,status){
+
+    if(req.body.currency === "BTC"){
+        newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
+    }
+    else if(req.body.currency === "TRX-USDT-TRC20"){
+        newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
+    }
+
+   
+    let newCurrency;
+
+    if(req.body.currency === "TRX-USDT-TRC20"){
+        newCurrency="USDT";
+    }
+    else if(req.body.currency === "BTC"){
+        newCurrency="BTC";
+    }
+
+    Notification.create({
+        type:req.body.type,
+        orderid:req.body.orderid,
+        transfertype:'BlockChain Transfer',
+        asset:newCurrency,
+        from_address:req.body.from_address,
+        to_address:req.body.to_address,
+        amount:newAmount,
+        status:status,
+        read:'unread',
+        initiator:'sender',
+        date_created:new Date(),
+        senderaddress:req.body.orderid,
+        // senderaddress:req.body.from_address,
+    })
+
+}
+
+
 
 Router.post('/check/customer/Address',middlewareVerify,async(req,res)=>{
     
@@ -1002,6 +741,12 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         initiator:'sender',
                         senderaddress:sender,
                     })
+                    Walletmodel.create({
+                        type:"Send",
+                        order_id:WalletCallback[2],
+                        currency:"USDT",
+                        status:'Processing'
+                    });
                     
                     res.send({
                         "Message":"Transaction Initiated",
@@ -1508,16 +1253,12 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
     var time = Math.floor(new Date().getTime() / 1000);
     var generate_order_id = generateuuID();
    
-    // console.log('AutoFee',auto_fee);
-    // var newauto_fee = parseInt(auto_fee / 0.00000001);
     
-    // console.log('newAuto',newauto_fee)
-    // "order_id": "187795_"+generate_order_id,
    
     var params = {
         "requests": [
           {
-            "order_id": "804173_"+userid,
+            "order_id": "804173_"+generate_order_id,
             "address": recipentAddress,
             "amount": amount,
             "memo": address,
@@ -1557,51 +1298,15 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
    .then((result)=>{
     
         return([result.data,true,generate_order_id])
-        // let jupitPromise = new Promise(function(resolve,reject){
-        //     isTrue = true;
-        //     if(isTrue){
-        //         resolve()
-        //     }
-            
-        // })
-        // jupitPromise.then(()=>{
-        //     return 'Completed';
-        // }).catch((err)=>{
-        //     return 'Uncompleted'
-        // })
-        
         
    })
    .catch((err)=>{
-    // console.log(err)
-    // return new Promise(function(resolve,reject){
-    //     resolve(err.response.data);
-    // })
-    //    console.log('err',err.response.data)
-    // console.log(err.response.data)
+ 
     return [err.response.data,false]
-    
 
-    // let jupitPromise = new Promise(function(resolve,reject){
-    //     isTrue = false;
-    //     if(isTrue){
-    //         resolve()
-    //     }
-    //     else{
-    //         reject();
-    //     }
-        
-    // })
-    // jupitPromise.then(()=>{
-    //     return 'Completed';
-    // }).catch((err)=>{
-    //     return 'Uncompleted'
-    // })
-
-    
     
    });
-//    console.log('myAxios',myAxios);
+
    return myAxios;
    
    
