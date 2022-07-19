@@ -1567,6 +1567,12 @@ Router.get("/rate",(req,res)=>{
     })
 })
 
+Router.get("/rate/btc",(req,res)=>{
+    rate.findOne({initialization:'JupitRateBard'},(err,docs)=>{
+        res.send(docs.btc[0].sell);
+    })
+})
+
 
 
 Router.post('/update/phonenumber',middlewareVerify,async(req,res)=>{
