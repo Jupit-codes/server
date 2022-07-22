@@ -1533,13 +1533,14 @@ router.post('/client/withdrawal',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else if(docs){
+            const valueNew = parseFloat(req.body.amount) - 100;
             const url = "https://live.purplepayapp.com/v1/transfer/"
             var params = {
                 
                     "account_number": docs.account_number,
                     "account_name": docs.account_name,
                     "bank_code": docs.bank_code,
-                    "amount": parseFloat(req.body.amount),
+                    "amount": valueNew,
                     "first_name": req.body.firstname,
                     "last_name": req.body.lastname,
                     "email": req.body.email,
@@ -2453,12 +2454,10 @@ console.log(endofday)
         if(err){
             res.status(400).send(err)
         }
-        else if(docs){
+        else{
             res.send(docs)
         }
-        else if(!docs){
-            res.send(docs)
-        }
+       
     })
 })
 
@@ -2988,6 +2987,7 @@ router.get('/sendmail',(req,res)=>{
 })
 
 router.post('/withdrawal/count',(req,res)=>{
+    let today = 
     withdrawal.find({userid:req.body._id},(err,docs)=>{
         if(err){
             res.status(400).send(err);
