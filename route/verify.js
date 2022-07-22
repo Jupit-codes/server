@@ -2987,5 +2987,16 @@ router.get('/sendmail',(req,res)=>{
     
 })
 
+router.post('/withdrawal/count',(req,res)=>{
+    withdrawal.find({userid:req.body._id},(err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else{
+            res.send(docs)
+        }
+    })
+})
+
 
 export default router
