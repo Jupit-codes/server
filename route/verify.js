@@ -1533,7 +1533,7 @@ router.post('/client/withdrawal',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else if(docs){
-            const valueNew = parseFloat(req.body.amount) - 100;
+            const valueNew = parseFloat(req.body.amount) - parseFloat(req.body.charge);
             const url = "https://live.purplepayapp.com/v1/transfer/"
             var params = {
                 
@@ -1556,9 +1556,9 @@ router.post('/client/withdrawal',(req,res)=>{
             })
             .then(result=>{
                console.log(result)
-
+                let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
                 if(result.data.status){
-                    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.amount}},async (err,document)=>{
+                    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- amount_with_charge}},async (err,document)=>{
                         if(err){
                             res.status(400).send('Internal Server Error')
                         }
@@ -1567,7 +1567,7 @@ router.post('/client/withdrawal',(req,res)=>{
                                 type:7,
                                 orderid:req.body.phonenumber,
                                 transfertype:'Withdrawal',
-                                asset:req.body.amount,
+                                asset:amount_with_charge,
                                 from_address:req.body.firstname,
                                 to_address:req.body.lastname,
                                 status:'Completed',
@@ -1578,7 +1578,7 @@ router.post('/client/withdrawal',(req,res)=>{
                             await withdrawal.create({
                                 username:document.username,
                                 userid:req.body.userid,
-                                amount:req.body.amount,
+                                amount:amount_with_charge,
                                 account_number:docs.account_number,
                                 account_name:docs.account_name,
                                 bank_code:docs.bank_code,
