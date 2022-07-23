@@ -633,8 +633,9 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     }
     else if(tranfertype === "BlockChain Transfer"){
         let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
-        let totalAmount  = parseFloat(networkFee) + parseFloat(amount) 
-        let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount).toFixed(8),wallet_type,fee,sender,recipentaddress);
+        let totalAmount  = parseFloat(networkFee) + parseFloat(amount);
+        let totalAmount_with_Charges = parseFloat(networkFee) + parseFloat(amount) + parseFloat(charge)  
+        let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount_with_Charges).toFixed(8),wallet_type,fee,sender,recipentaddress);
         if(UpdateWalletBalances){
             if(wallet_type === "BTC"){
                 
