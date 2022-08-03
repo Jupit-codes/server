@@ -182,7 +182,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    giftcardtransactions.deleteMany({},(err,docs)=>{
+    withdrawal.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }
