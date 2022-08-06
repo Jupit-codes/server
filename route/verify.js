@@ -30,6 +30,7 @@ import twoFactor from "../model/twoFactor.js";
 import idcardverification from "../model/idcardverification.js";
 import setup_pin from "../model/setup_pin.js";
 import cryptoledger from "../model/cryptoledger.js";
+import fiatledger from "../model/fiatledger.js";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -1598,7 +1599,14 @@ router.post('/client/withdrawal',(req,res)=>{
                                 to_address:docs.account_number,
                                 status:'Transaction Completed' 
                     })
-    
+                    
+                    fiatledger.create({
+                        userid:req.body.userid,
+                        email:req.body.email,
+                        amount:req.body.amount,
+                        transaction_fee:req.body.charge,
+                        status:'Transaction Completed'
+                    })
                             res.send('Withdrawal Success');
                         }
                     })
