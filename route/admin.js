@@ -25,6 +25,7 @@ import deposit_webhook from "../model/deposit_webhook.js";
 import giftCardnew from "../model/giftCardnew.js";
 import notification from "../model/notification.js";
 import adminroles from "../model/adminroles.js";
+import cryptoledger from "../model/cryptoledger.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -4018,6 +4019,16 @@ router.get('/get/allroles',(req,res)=>{
         }
     })
 
+})
+router.get('/get/all/cryptoledger',(req,res)=>{
+    cryptoledger.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
 })
  
 export default router
