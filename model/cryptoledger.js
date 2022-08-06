@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const cryptoSchema = mongoose.Schema({
     userid:{
         type:'String',
-        required: [true, "Required"],
+       
     },
     address:{
         type:'String',
@@ -31,9 +31,6 @@ const cryptoSchema = mongoose.Schema({
     },
     dateofcreation:{
         type:Date
-    },
-    status:{
-        type:'String'
     },
     updated: { type: Date, default: Date.now },
 })

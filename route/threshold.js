@@ -13,6 +13,7 @@ import cloudinary from 'cloudinary'
 import { Route } from 'express';
 import bank from '../model/bank.js';
 import rate from '../model/rate.js';
+import cryptoledger from '../model/cryptoledger.js';
 
 
 
@@ -575,6 +576,7 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const tranfertype = req.body.transfertype
     const networkFee = req.body.networkFee
     const block_average_fee = req.body.block_average;
+    const charge = req.body.charge;
 
     
     if(tranfertype === "Internal Transfer"){
@@ -666,6 +668,14 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         rateInnaira:req.body.rate,
                         initiator:req.body.email
                     });
+                    cryptoledger.create({
+                        
+                        address:sender,
+                        currency:"BTC",
+                        amount:parseFloat(amount),
+                        transaction_fee:charge,
+                        type:'Send'
+                    });
 
                     
                     
@@ -710,7 +720,13 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         rateInnaira:req.body.rate,
                         initiator:req.body.email
                     });
-                    
+                    cryptoledger.create({
+                        address:sender,
+                        currency:"USDT",
+                        amount:parseFloat(amount),
+                        transaction_fee:charge,
+                        type:'Send'
+                    });
                     res.send({
                         "Message":"Transaction Initiated",
                         "Status":true
