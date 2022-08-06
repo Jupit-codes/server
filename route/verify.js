@@ -2056,6 +2056,128 @@ router.post('/filtercryptoledger',(req,res)=>{
         
 })
 
+//filterfiatledger
+
+router.post('/filterfiatledger',(req,res)=>{
+   
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
+    // let type = req.body.type;
+    let currency = req.body.asset;
+    // let status = req.body.status;
+    // let userid= req.body.userid;
+
+    let query = [];
+
+    if(startDate && endDate ){
+        query.push({
+            date_created: {
+                // $gte: new Date(new Date(startDate)),
+                // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
+                  $gte: new Date(startDate),
+                $lt: new Date(endDate).setHours(23, 59, 59)
+            }
+        })  
+
+    }
+
+    // if(userid){
+    //     query.push(
+    //         {
+    //             order_id:req.body.userid
+    //         }
+    //         )
+    // }
+
+    // if(status){
+    //      if(status !== "All"){
+    //         query.push(
+    //             {
+    //                 type:req.body.status
+    //             }
+    //             )
+    //      }
+    //      else{
+    //         query.push(
+    //             {
+    //                 $or:[
+    //                     {
+    //                         type:'Sell'
+    //                     },
+    //                     {
+    //                         type:'Buy'
+    //                     },
+    //                     {
+    //                         type:'Receive'
+    //                     },
+    //                     {
+    //                         type:'Send'
+    //                     }
+    //                 ]
+    //             }
+    //         )
+    //      }
+        
+    // }
+
+    if(currency){
+        if(currency !== "All"){
+            query.push({
+                currency:req.body.asset
+            })
+        }
+        else{
+            query.push(
+                {
+                    $or:[
+                        {
+                            currency:'BTC'
+                        },
+                        {
+                            currency:'USDT'
+                        }  
+                    ]
+                }
+            )
+        }
+        
+    }
+
+    // if(type){
+    //     query.push({
+    //         type:req.body.type
+    //     })
+    // }
+    
+    if(query.length > 0){
+       
+    const x = fiatledger.find({
+        $and:query
+      
+       },(err,docs)=>{
+           if(err){
+               res.send(err)
+           }
+           else{
+               res.send(docs)
+           }
+       }).sort({ date_created: 'asc'})
+
+    }
+    else{
+        const x = fiatledger.find({},(err,docs)=>{
+               if(err){
+                   res.send(err)
+               }
+               else{
+                   res.send(docs)
+               }
+           }).sort({ date_created: 'asc'})
+    }
+    
+        
+})
+
 
 router.post('/filter/deposit',(req,res)=>{
   

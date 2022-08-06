@@ -26,6 +26,7 @@ import giftCardnew from "../model/giftCardnew.js";
 import notification from "../model/notification.js";
 import adminroles from "../model/adminroles.js";
 import cryptoledger from "../model/cryptoledger.js";
+import fiatledger from "../model/fiatledger.js";
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -4022,6 +4023,17 @@ router.get('/get/allroles',(req,res)=>{
 })
 router.get('/get/all/cryptoledger',(req,res)=>{
     cryptoledger.find({},(err,docs)=>{
+        if(err){
+            res.status(400).send(err)
+        }
+        else if(docs){
+            res.send(docs)
+        }
+    })
+})
+ 
+router.get('/get/all/fiatledger',(req,res)=>{
+    fiatledger.find({},(err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
