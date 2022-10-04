@@ -2280,7 +2280,7 @@ router.post('/user/getAllTransactions',middlewareVerify,(req,res)=>{
 router.post('/customer_webhook', (req,res)=>{
    
     // res.send(req.body)
-    // console.log(req.body)
+    console.log(req.body)
     res.status(200).end();
     if(req.body.event){
        
