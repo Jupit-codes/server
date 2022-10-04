@@ -2281,7 +2281,7 @@ router.post('/customer_webhook', (req,res)=>{
    
     // res.send(req.body)
     console.log(req.body)
-    res.status(200).end();
+    
     if(req.body.event){
 
         // saveNotificationNEW(req.body);
@@ -2301,6 +2301,7 @@ router.post('/customer_webhook', (req,res)=>{
         
         updateWebHook(req.body);
         saveWebHook(req.body); 
+        res.status(200).end();
         
     }
    
