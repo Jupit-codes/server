@@ -3760,8 +3760,7 @@ async function updateWebHook(json){
             // console.log('Error',err)
             return [false,err]
         }
-        
-        process.exit(0)
+
     }).clone().catch(function(err){ console.log(err);return [false,err]});
 
     return [true,"Saved"];
