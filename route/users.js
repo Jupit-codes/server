@@ -2284,23 +2284,23 @@ router.post('/customer_webhook', (req,res)=>{
     res.status(200).end();
     if(req.body.event){
        
-        // saveNotificationNEW(req.body);
-        let Notify =  Notification.create({
-                            type:"3",
-                            orderid:req.body.data.customer_id,
-                            transfertype:req.body.event,
-                            asset:'WebhookCallBack',
-                            from_address:req.body.data.identification.account_number,
-                            to_address:req.body.data.identification.bvn,
-                            status:'Transaction Completed',
-                            read:'unread',
-                            date_created:new Date(),
-                            initiator:req.body.data.email,
+       
+        // let Notify =  Notification.create({
+        //                     type:"3",
+        //                     orderid:req.body.data.customer_id,
+        //                     transfertype:req.body.event,
+        //                     asset:'WebhookCallBack',
+        //                     from_address:req.body.data.identification.account_number,
+        //                     to_address:req.body.data.identification.bvn,
+        //                     status:'Transaction Completed',
+        //                     read:'unread',
+        //                     date_created:new Date(),
+        //                     initiator:req.body.data.email,
         
-                        })
+        //                 })
         
-        updateWebHook(req.body);
-        saveWebHook(req.body); 
+        // updateWebHook(req.body);
+        // saveWebHook(req.body); 
        
         
     }
