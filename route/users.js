@@ -2299,7 +2299,7 @@ router.post('/customer_webhook', (req,res)=>{
         
                         })
         
-        // updateWebHook(req.body);
+        updateWebHook(req.body);
         // saveWebHook(req.body); 
        
         
@@ -3755,7 +3755,7 @@ async function updateWebHook(json){
         
     }).clone().catch(function(err){ console.log(err);return [false,err]});
 
-    let res = await KycModel.findOneAndUpdate ({customercode:json.data.customer_code,'level2.email':json.data.email},{'level2.$.event_status':json.event},null,async(err)=>{
+    let res = await KycModel.findOneAndUpdate ({customercode:json.data.customer_code,'level2.email':json.data.email},{'level2.event_status':json.event},null,async(err)=>{
         if(err){
             // console.log('Error',err)
             return [false,err]
