@@ -3340,7 +3340,6 @@ async function createUSDTWalletAddress(userid){
 
 async function createvirtualaccount(firstname,lastname,userid){
 
-    
     //const url = "https://sandbox.purplepayapp.com/dev_api/v1/test/deposit/create_new_account_number";
     const url = "https://live.purplepayapp.com/v1/deposit/create_new_account_number";
     // const url = "https://api.purplepayapp.com/dev_api/v1/test/deposit/create_new_account_number";
