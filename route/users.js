@@ -2489,7 +2489,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                         // console.log('usdt',usdt_add);
                         if(usdt_add[0]){
                             const btc_add = await createBTCWalletAddress(req.params.id);
-                            // console.log('btc_add',btc_add);
+                            
                             if(btc_add[0]){
                                 let userid = req.params.id;
                                 Usermodel.findOne({_id:userid},async (err,docs)=>{
@@ -2499,32 +2499,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                         })
                                     }
                                     else if(docs){
-                                        // let update =  Usermodel.findOneAndUpdate({_id:docs._id},{$set:{'email_verification':true}},{new: true},async (err,documents)=>{
-                                        //                 if(err){
-                                        //                    res.send({
-                                        //                        "UpdateError":err
-                                        //                    })
-                                        //                 }
-                                        //                 else if(documents){
-    
-                                        //                    await createKyc(documents._id,documents.email,documents.phonenumber);
-                                        //                     res.redirect('https://app-rust-one.vercel.app/client/signin')
-                                                        
-                                        //                         // res.send({
-                                        //                         //     "message":"Virtual Acct Successfully Updated",
-                                        //                         //     "status":documents
-                                        //                         // })
-                                                          
-                                        //                 }
-                                        //                 else if(!documents){
-                                        //                     res.send({
-                                        //                         "message":"Virtual Acct Update Failed ",
-                                        //                         "status":false
-                                        //                     })
-                                        //                 }
-                                        //             })
-                                       
-
+                                      
                                         const vitualaccount = await createvirtualaccount(docs.firstname,docs.lastname,docs._id);
                                         console.log('VirtualAccount',vitualaccount);
                                         if(vitualaccount[0]){
@@ -3356,7 +3331,7 @@ async function createvirtualaccount(firstname,lastname,userid){
                     }
                 })
                 .then(res=>{
-                    console.log("acct",res.data);
+                    console.log("virtualAccountResponse",res);
                     if(res.data.status){
                         return [ true,res.data.data.account_number];
                     }
