@@ -52,7 +52,13 @@ const transporter = nodemailer.createTransport({
 
 const router = express.Router();
 
-
+router.get('/show/rody/nodejs',(req,res)=>{
+    res.json({
+        'Programming Lang':'Node.js',
+        'Script Type':'Backend',
+        'Speed':'Extremely Fast'
+    })
+})
 
 router.get('/sendmail',(req,res)=>{
     const mailData = {
