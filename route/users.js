@@ -57,6 +57,14 @@ router.get('/',(req,res)=>{
     res.sendStatus(200); 
 })
 
+router.get('/testnet',(req,res)=>{
+    
+    res.json({
+        "Appname":"Jupit",
+        "host":"Amazon"
+    }) 
+})
+
 router.get('/sendmail',(req,res)=>{
     const mailData = {
         from: '<Jupit>hello@jupitapp.co',  // sender address
