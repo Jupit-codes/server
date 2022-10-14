@@ -65,7 +65,7 @@ router.get('/testnet',(req,res)=>{
     }) 
 })
 
-router.get('/sendmail',async (req,res)=>{
+router.get('/sendmail', (req,res)=>{
     var dt = NodeDateTime.create();
     var formatted = dt.format('Y-m-d H:M:S');
     let email = 'bigdevtemy@gmail.com';
@@ -75,7 +75,7 @@ router.get('/sendmail',async (req,res)=>{
 
 
 
-async function testmail(email,username,time){
+ function testmail(email,username,time){
     
     const mailData = {
         from: 'Jupit <hello@jupitapp.co>',  // sender address
