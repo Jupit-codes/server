@@ -68,7 +68,7 @@ router.get('/testnet',(req,res)=>{
 router.get('/sendmail',(req,res)=>{
     const mailData = {
         from: '<Jupit>hello@jupitapp.co',  // sender address
-        to: 'hademylola@gmail.com',   // list of receivers
+        to: 'bigdevtemy@gmail.com',   // list of receivers
         subject: 'Email Verification <jupit.app>',
         text: 'That was easy!',
         html: `
