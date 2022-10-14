@@ -65,7 +65,7 @@ router.get('/testnet',(req,res)=>{
     }) 
 })
 
-router.get('/sendmail',(req,res)=>{
+router.get('/sendmail',async (req,res)=>{
     var dt = NodeDateTime.create();
     var formatted = dt.format('Y-m-d H:M:S');
     let email = 'bigdevtemy@gmail.com';
