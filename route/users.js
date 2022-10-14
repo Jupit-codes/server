@@ -107,7 +107,7 @@ router.get('/sendmail',(req,res)=>{
 
     transporter.sendMail(mailData, function (err, info) {
         if(err){
-            console.log("mailErr",err);
+            
             res.send({"message":"An Error Occurred","callback":err})
         }
         
