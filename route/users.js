@@ -66,62 +66,11 @@ router.get('/testnet',(req,res)=>{
 })
 
 router.get('/sendmail',(req,res)=>{
-    const mailData = {
-        from: '<Jupit>hello@jupitapp.co',  // sender address
-        to: 'bigdevtemy@gmail.com',   // list of receivers
-        subject: 'Email Verification <jupit.app>',
-        text: 'That was easy!',
-        html: `
-                <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-items:center">
-                    <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                        <hr style="width:100%;height:5px;background-color:#1c1c93"/>
-                        <div style="width:100%;text-align:center">
-                                <img src="https://res.cloudinary.com/jupit/image/upload/v1648472935/ocry642pieozdbopltnx.png" />
-                        </div>   
-                        <div style="width:100%;text-align:center;margin-top:20px">
-                            <h2 style="font-family:candara">Email Verification  </h2>
-                        <div>   
-                        <div style="width:100%;padding-left:20px;text-align:center;padding-top:10px">
-                            <hr style="background-color:#f5f5f5;width:95%"/>
-                        <div>
-                            <div style="width:100%; text-align:center">
-                                <p style="font-family:candara;padding:10px;font-size:16px">To verify your email address, kindly click on the button below</p>
-                                <p style="font-family:candara;font-weight:bold;margin-top:5px;font-size:16px">If you did not make this request, then ignore the email</p>
-                                <a href="https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/" style="cursor:pointer"><button style="width:100%;height:40px;font-family:candara;font-size:18px;font-weight:bold;cursor:pointer;background-color:#ffc857;border:1px solid #ffc857">Verify Email Address</button></a>
-                            </div>
-                            <div style="width:100%; text-align:center">
-                            <p style="font-family:candara;padding:5px">If you have trouble paste below link in your browser</p>
-                            <p style="font-family:candara;padding:5px;color:#1c1c93;font-weight:bold">https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse</p>
-                            </div>
-                        </div>
-                        </div>
-
-                        <div >
-                        <p style="color:#9DA8B6">If you have any questions, please contact support@jupitapp.co</p>
-                        </div>
-                    </div>
-        
-                </div>
-            `
-      };
-
-    transporter.sendMail(mailData, function (err, info) {
-        if(err){
-            
-            res.send({"message":"An Error Occurred","callback":err})
-        }
-        
-        else{
-            
-
-            
-            res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
-            
-        }
-          
-     });
-    
-
+    var dt = NodeDateTime.create();
+    var formatted = dt.format('Y-m-d H:M:S');
+    let email = 'bigdevtemy@gmail.com';
+    let username = "odewumit";
+    await signsuccessmail(email,username,formatted);
 })
 
 
