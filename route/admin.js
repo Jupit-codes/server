@@ -33,7 +33,7 @@ import fiatledger from "../model/fiatledger.js";
     host: "smtppro.zoho.com",
        auth: {
             user:'hello@jupitapp.co',
-            pass:'w6vBmv6624eW'
+            pass:'xW1hyG7CDGhm'
             // pass:'ii84NsMqT9Xv'
          },
     secure: true,
