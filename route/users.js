@@ -3011,7 +3011,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                                     else if(documents){
 
                                                        await createKyc(documents._id,documents.email,documents.phonenumber);
-                                                        res.redirect('https://app-rust-one.vercel.app/client/signin')
+                                                        res.redirect('https://app.jupitapp.co/client/signin')
                                                     
                                                             // res.send({
                                                             //     "message":"Virtual Acct Successfully Updated",
