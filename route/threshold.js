@@ -16,7 +16,7 @@ import rate from '../model/rate.js';
 import cryptoledger from '../model/cryptoledger.js';
 
 
-
+//https://vault.thresh0ld.com/v1/sofa
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtp.gmail.com",
@@ -43,14 +43,14 @@ Router.post('/getautofee',async (req,res)=>{
     let secret = "";
 
     if(req.body.walletType === "BTC"){
-            secret="2ARcpQugmy52KMHRm6bCn2jRWZA9";
-            Api="4XoSQPfLwbUiyvF5i"
-            wallet_id="127771"
+            secret=process.env.THRESHOLD_BTC_API_SECRET_MASS_SENDER;
+            Api=process.env.THRESHOLD_BTC_API_TOKEN_MASS_SENDER
+            wallet_id=process.env.THRESHOLD_BTC_WALLET_ID_MASS_SENDER
     }
     else if(req.body.walletType === "USDT"){
-        wallet_id="881173"
-        secret="5ZtPb6znHJ8F8uomp"
-        Api="2LRmQDmoziaxvGuz5a9A3d9yhURe"
+        wallet_id=process.env.THRESHOLD_USDT_API_SECRET_MASS_SENDER
+        secret=process.env.THRESHOLD_USDT_API_TOKEN_MASS_SENDER
+        Api=process.env.THRESHOLD_USDT_WALLET_ID_MASS_SENDER
     }
         
     let rand = random(option_rand);
@@ -89,7 +89,7 @@ Router.post('/getautofee',async (req,res)=>{
     
     const get_request_args = querystring.stringify(parameters);
    
-    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${wallet_id}/autofees?`+ get_request_args
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/autofees?`+ get_request_args
     
     const new_params = {
         "block_nums": [1,50,100]
@@ -1063,9 +1063,13 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     // let apikey = "N5zrXLSLpfbxC3BX";
     // let wallet_id="678693"
 
-    let secret="2ARcpQugmy52KMHRm6bCn2jRWZA9";
-    let apikey = "4XoSQPfLwbUiyvF5i";
-    let wallet_id="127771"
+    // let secret="2ARcpQugmy52KMHRm6bCn2jRWZA9";
+    // let apikey = "4XoSQPfLwbUiyvF5i";
+    // let wallet_id="127771"
+
+    let secret=THRESHOLD_BTC_API_SECRET_MASS_SENDER
+    let apikey = THRESHOLD_BTC_API_TOKEN_MASS_SENDER;
+    let wallet_id=THRESHOLD_BTC_WALLET_ID_MASS_SENDER
    
     
 
@@ -1128,7 +1132,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
  
     const get_request_args = querystring.stringify(parameters);
    
-    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
     
    
    let myAxios = await axios.post(url,params,{
@@ -1167,9 +1171,9 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
     // let  apikey="WtjgBd7JbpeBTHCF"
     // let wallet_id="201075"
     
-    let secret="217cyBZWak6vnSLdjELF9WNhdCPy";
-    let  apikey="Lhoby3gmcSfjRT5M"
-    let wallet_id="863931"
+    let secret=THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
+    let apikey = THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+    let wallet_id=THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
 
 
     let rand = random(option_rand);
@@ -1227,7 +1231,7 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
  
     const get_request_args = querystring.stringify(parameters);
    
-    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
     
    
    let myAxios = await axios.post(url,params,{
@@ -1267,13 +1271,22 @@ async function checkJupitAddress(address,wallet_type){
     const addrr = [];
     let secret="";
     let apikey="";
+    let wallet_id=""
     if(wallet_type === "BTC"){
-        secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
-        apikey = "4PiVpdbyLJZatLBwR";
+
+        let secret=THRESHOLD_BTC_API_SECRET_MASSCOLLECTION
+        let apikey = THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+        let wallet_id=THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
+
+        // secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
+        // apikey = "4PiVpdbyLJZatLBwR";
     }
     else if(wallet_type === "USDT"){
-        secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
-        apikey = "WtjgBd7JbpeBTHCF";
+        // secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
+        // apikey = "WtjgBd7JbpeBTHCF";
+        let secret=THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
+        let apikey = THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+        let wallet_id=THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
     }
     else{
         return ["Invalid Wallet Type",false]
@@ -1310,7 +1323,7 @@ async function checkJupitAddress(address,wallet_type){
  
     const get_request_args = querystring.stringify(parameters);
    
-    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/194071/addresses?'+ get_request_args
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/addresses?`+ get_request_args
     
    
    let check = await axios.get(url,{
@@ -1359,9 +1372,9 @@ async function CheckAddressValidity (address,walletType){
             // Api="55JbxSP6xosFTkFvg";
             // walletId ="194071"
 
-            secret = "3MfESNefnjWQv42PGxhWyg8VtS4H";
-            Api="5acGjgQXSHQQJBTWk";
-            walletId ="136821"
+            secret = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
+            Api= process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+            walletId = process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
             
         }
         else if(walletType === "USDT"){
@@ -1369,9 +1382,10 @@ async function CheckAddressValidity (address,walletType){
             // secret = "3EXdWbtVAiMb5BGVF7utbXnCDGb2";
             // walletId="488433"
 
-            Api="4nrsvq2xgf2QXtoyC";
-            secret = "3jNct6qzbmDNiFtCr6gyQGsQANFS";
-            walletId="196649"
+            secret = process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
+            Api= process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+            walletId = process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+
         }
 
     let rand = random(option_rand);
@@ -1417,7 +1431,7 @@ async function CheckAddressValidity (address,walletType){
         }
         const get_request_args = querystring.stringify(parameters);
         
-        const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses/verify?`+get_request_args
+        const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses/verify?`+get_request_args
 
         
     let x =  await axios.post(url,params,{ 
