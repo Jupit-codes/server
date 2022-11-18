@@ -29,6 +29,13 @@ const transporter = nodemailer.createTransport({
 
 const Router  = express.Router();
 
+Router.get('/testprocess',(req,res)=>{
+    res.json(process.env.THRESHOLD_BTC_API_TOKEN_MASS_SENDER)
+    
+})
+
+
+
 Router.post('/getautofee',async (req,res)=>{
 
     let Api ="";
