@@ -61,10 +61,11 @@ router.get('/',(req,res)=>{
 })
 
 router.get('/testnet',(req,res)=>{
-    
+    let x = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
     res.json({
         "Appname":"Jupit",
         "host":"Amazon",
+        'secret':x
         
     }) 
 })
