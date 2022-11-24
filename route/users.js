@@ -35,6 +35,9 @@ cloudinary.config({
     api_secret: '57S453gwuBc1_vypuLOcqYQ2V5o' 
   });
 
+
+
+
 const upload = multer({ dest: 'uploads/' })
    // user: 'bigdevtemy@gmail.com',
             // pass: 'vyafmhqbffkiawrc',
@@ -61,7 +64,8 @@ router.get('/testnet',(req,res)=>{
     
     res.json({
         "Appname":"Jupit",
-        "host":"Amazon"
+        "host":"Amazon",
+        
     }) 
 })
 
@@ -3735,7 +3739,10 @@ router.post('/tester',async (req,res)=>{
 })
 
 async function createUSDTWalletAddress(userid){
-    
+    secret = process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
+    Api= process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+    walletId = process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+
     let rand = random(option_rand);
     var option_rand = {
             min: 48886
@@ -3759,7 +3766,7 @@ async function createUSDTWalletAddress(userid){
 
     // var secret="51bEgEHrotG69PFScrPTt1gR8Wv";
     //var secret="3jNct6qzbmDNiFtCr6gyQGsQANFS";
-    var secret="3jNct6qzbmDNiFtCr6gyQGsQANFS";
+    
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
@@ -3775,7 +3782,7 @@ async function createUSDTWalletAddress(userid){
         const get_request_args = querystring.stringify(parameters);
         
         // const base_url = "http://demo.thresh0ld.com"
-        const url = 'https://vault.thresh0ld.com/v1/sofa/wallets/196649/addresses?'+get_request_args
+        const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
     
         
      let result = await axios.post(url,params,{ 
@@ -3783,7 +3790,7 @@ async function createUSDTWalletAddress(userid){
             'Content-Type': 'application/json',
             // 'X-API-CODE':'2C38687sm5kTnyFWD',
             // 'X-API-CODE':'4nrsvq2xgf2QXtoyC',
-            'X-API-CODE':'4nrsvq2xgf2QXtoyC',
+            'X-API-CODE':Api,
             'X-CHECKSUM':buildUSDT,
             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
         }
@@ -3849,7 +3856,9 @@ async function createvirtualaccount(firstname,lastname,userid){
 
 
 async function createBTCWalletAddress(userid){
-        
+    secret = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
+    Api= process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+    walletId = process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
     let rand = random(option_rand);
     var option_rand = {
             min: 48886
@@ -3872,7 +3881,7 @@ async function createBTCWalletAddress(userid){
     }
 
     // var secret="2awjZJeeVhtG23tepAzv5tcMYYN";
-    var secret="3MfESNefnjWQv42PGxhWyg8VtS4H";
+    
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
@@ -3889,14 +3898,14 @@ async function createBTCWalletAddress(userid){
     const get_request_args = querystring.stringify(parameters);
 
     const base_url = "http://demo.thresh0ld.com"
-    const url = 'https://vault.thresh0ld.com/v1/sofa/wallets/136821/addresses?'+get_request_args
+    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
 
 
     let result = await axios.post(url,params,{ 
     headers: {
         'Content-Type': 'application/json',
         // 'X-API-CODE':'55JbxSP6xosFTkFvg',
-        'X-API-CODE':'5acGjgQXSHQQJBTWk',
+        'X-API-CODE':Api,
         'X-CHECKSUM':build,
         'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
     }
