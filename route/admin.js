@@ -3695,7 +3695,9 @@ router.post('/get/transaction/count',async(req,res)=>{
     res.send({
         "newDate":new Date(startDate).getDate(),
         "newEndDate":new Date(endDate).getDate(),
-        "extractor":extractor
+        "extractor":new Date(startDate).getFullYear+'-'+ new Date(startDate).getMonth()+'-'+new Date(startDate).getDay(),
+        "extract":extractor
+
 
         
     });
@@ -3999,9 +4001,9 @@ router.post('/get/transaction/count',async(req,res)=>{
 })
 
 async function extractDate(date){
-    let dayx = new Date(date).getDate;
-    let month = new Date(date).getMonth;
-    let year = new Date(date).getFullYear;
+    let dayx = new Date(date).getDate();
+    let month = new Date(date).getMonth();
+    let year = new Date(date).getFullYear();
 
     let join = year+'-'+month+'-'+dayx
 
