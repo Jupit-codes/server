@@ -3688,16 +3688,18 @@ router.post('/get/fiatasset/set',async (req,res)=>{
 router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
     let endDate = req.body.enddate; 
-    let asset = req.body.asset 
+    let asset = req.body.asset
+      let momentum = moment(startDate)
     
     let extractor =  extractDate(startDate)
     console.log("asset",startDate)
     res.send({
-        "newDate":startDate.toDate(),
+       
         "newEndDate":new Date(endDate).getDay(),
         "extractor":new Date(startDate).getFullYear() +'-'+ new Date(startDate).getMonth() +'-'+ new Date(startDate).getDate(),
         "extract":extractor,
-        "body":req.body
+        "body":req.body,
+        "momentum":momentum
 
 
         
