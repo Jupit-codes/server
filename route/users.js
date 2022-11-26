@@ -3072,12 +3072,12 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                
                             }
                             else{
-                                res.send({"ErrorMessage":'Unable to create BTC Wallet Address..pls try again'})
+                                res.send({"ErrorMessage":'Unable to create USDT Wallet Address..pls try again'})
                             }
 
                         }
                         else{
-                                res.send({"ErrorMessage":'Unable to create USDT Wallet Address..pls try again'})
+                                res.send({"ErrorMessage":'Unable to create BTC Wallet Address..pls try again'})
                         }
 
 
