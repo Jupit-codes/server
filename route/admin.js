@@ -3998,7 +3998,8 @@ router.post('/get/transaction/count',async(req,res)=>{
     "Send":SendCount,
     "Receive":ReceiveCount,
     "Withdrawal":WithdrawalCount,
-    "Deposit":DepositCount
+    "Deposit":DepositCount,
+    "body":req.body
    })
    
 
