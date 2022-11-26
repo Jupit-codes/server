@@ -3690,7 +3690,7 @@ router.post('/get/transaction/count',async(req,res)=>{
     let endDate = req.body.enddate; 
     let asset = req.body.asset 
     
-    let extractor = await extractDate(startDate)
+    let extractor =  extractDate(startDate)
     console.log("asset",startDate)
     res.send({
         "newDate":new Date(startDate).getDate(),
