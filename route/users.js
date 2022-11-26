@@ -3893,8 +3893,7 @@ async function createBTCWalletAddress(userid){
 
     var build = buildChecksum(null,secret,time,rand,postData);
 
-    const params ={
-    "count": 1}
+    const params ={"count": 1}
 
 
     const parameters = {
