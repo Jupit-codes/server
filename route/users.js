@@ -3765,8 +3765,7 @@ async function createUSDTWalletAddress(userid){
         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
 
-    // var secret="51bEgEHrotG69PFScrPTt1gR8Wv";
-    //var secret="3jNct6qzbmDNiFtCr6gyQGsQANFS";
+    
     
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
