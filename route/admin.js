@@ -3688,11 +3688,15 @@ router.post('/get/fiatasset/set',async (req,res)=>{
 router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
     let endDate = req.body.enddate; 
-    let asset = req.body.asset  
+    let asset = req.body.asset 
+    
+    let extractor = await extractDate(startDate)
     console.log("asset",startDate)
     res.send({
         "newDate":new Date(startDate).getDate(),
         "newEndDate":new Date(endDate).getDate(),
+        "extractor":extractor
+
         
     });
     return false
@@ -3993,6 +3997,16 @@ router.post('/get/transaction/count',async(req,res)=>{
    
 
 })
+
+async function extractDate(date){
+    let dayx = new Date(date).getDate;
+    let month = new Date(date).getMonth;
+    let year = new Date(date).getFullYear;
+
+    let join = year+'-'+month+'-'+dayx
+
+    return join;
+}
 
 router.post('/create/role',(req,res)=>{
     adminroles.findOne({rolename:req.body.rolename},(err,docs)=>{
