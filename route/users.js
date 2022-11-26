@@ -3887,8 +3887,8 @@ async function createBTCWalletAddress(userid){
     }
 
     // var secret="2awjZJeeVhtG23tepAzv5tcMYYN";
-    var timestamp = Math.floor(new Date().getTime() / 1000)
-    var time = timestamp - 240
+    
+    var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
     var build = buildChecksum(null,secret,time,rand,postData);
