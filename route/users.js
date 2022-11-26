@@ -2986,13 +2986,14 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                 res.send({"message":"Email has Already Been Verified"})
             }
             else{
+                
 
-                const usdt_add =  await createUSDTWalletAddress(req.params.id);
+                const usdt_add =  await createBTCWalletAddress(req.params.id);
                         // console.log('usdt',usdt_add);
-                        if(usdt_add[0]){
-                            const btc_add = await createBTCWalletAddress(req.params.id);
+                        if(btc_add[0]){
+                            const btc_add = await createUSDTWalletAddress(req.params.id);
                             
-                            if(btc_add[0]){
+                            if(usdt_add[0]){
                                 let userid = req.params.id;
                                 Usermodel.findOne({_id:userid},async (err,docs)=>{
                                     if(err){
