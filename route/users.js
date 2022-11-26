@@ -3787,7 +3787,7 @@ async function createUSDTWalletAddress(userid){
         const get_request_args = querystring.stringify(parameters);
         //https://vault.thresh0ld.com
         // const base_url = "http://demo.thresh0ld.com"
-        const url = `http://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
+        const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
     
         
      let result = await axios.post(url,params,{ 
@@ -3904,7 +3904,7 @@ async function createBTCWalletAddress(userid){
     }
     const get_request_args = querystring.stringify(parameters);
     
-    const url = `http://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
 
     console.log(url)
     let result = await axios.post(url,params,{ 
