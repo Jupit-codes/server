@@ -14,6 +14,7 @@ import { Route } from 'express';
 import bank from '../model/bank.js';
 import rate from '../model/rate.js';
 import cryptoledger from '../model/cryptoledger.js';
+import https, { get } from 'https'
 
 
 //https://vault.thresh0ld.com/v1/sofa
@@ -143,6 +144,7 @@ Router.post('/getautofee',async (req,res)=>{
 
 Router.get('/activateusdtToken',async(req,res)=>{
     let result = await activate_token();
+    // let result = await activateUSDTToken();
     res.send(result);
 })
 
@@ -1888,9 +1890,12 @@ p.sort();
 p.push(`secret=${secret}`);
 return crypto.createHash('sha256').update(p.join('&')).digest('hex');
 }
-var secret="2Tzeo889sniN76LerbwjCSshkSZN";
+var secret="28QadEbch82EbXFDU2sf771M8Qnv";
 // var rand = "Ademilola2@";
-var time = Math.floor(new Date().getTime() / 1000)
+
+var timestamp = Math.floor(new Date().getTime() / 1000);
+var time = timestamp - 240;
+console.log(time)
 var params="";
 var postData=""
 const parameters = {
@@ -1904,18 +1909,18 @@ const get_request_args = querystring.stringify(parameters);
 
 const options = {
   hostname: 'demo.thresh0ld.com',
-  path: '/v1/sofa/wallets/194071/apisecret/activate?'+ get_request_args,
+  path: '/v1/sofa/wallets/488433/apisecret/activate?'+ get_request_args,
   method: 'POST',
   headers: {
         'Content-Type': 'application/json',
-        'X-API-CODE':'491Wh19j3Ece4MJRz',
+        'X-API-CODE':'3NxBbdeL3vGtSfWTa',
         'X-CHECKSUM':build,
         'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
       }
 }
 
 const req = https.request(options, res => {
-//   console.log(`statusCode: ${res.statusCode}`)
+  console.log(`statusCode: ${res.statusCode}`)
   
 
   res.on('data', d => {
@@ -1952,9 +1957,10 @@ async function activateUSDTToken(){
         p.push(`secret=${secret}`);
         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
-    var secret="2Tzeo889sniN76LerbwjCSshkSZN";
+    var secret="28QadEbch82EbXFDU2sf771M8Qnv";
     // var rand = "Ademilola2@";
-    var time = Math.floor(new Date().getTime() / 1000)
+    // var time = Math.floor(new Date().getTime() / 1000)
+    var time = Math.floor(Date.now() / 1000)
     var params="";
     var postData="";
 
@@ -1966,12 +1972,13 @@ async function activateUSDTToken(){
     }
     const get_request_args = querystring.stringify(parameters);
     
+    
     const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/488433/apisecret/activate?'+get_request_args
 
     let axiosCallback = await axios.post(url,params,{ 
         headers: {
             'Content-Type': 'application/json',
-            'X-API-CODE':'491Wh19j3Ece4MJRz',
+            'X-API-CODE':'3NxBbdeL3vGtSfWTa',
             'X-CHECKSUM':build,
             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
         }

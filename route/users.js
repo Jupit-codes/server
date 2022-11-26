@@ -3808,7 +3808,7 @@ async function createUSDTWalletAddress(userid){
         
     })
     .catch((error)=>{
-        // console.log('error_usdt',console.log(error.response))
+        console.log('error_usdt',console.log(error.response))
         return [false,error.response];
        
     })
