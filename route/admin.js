@@ -3690,7 +3690,10 @@ router.post('/get/transaction/count',async(req,res)=>{
     let endDate = req.body.enddate; 
     let asset = req.body.asset  
     console.log("asset",startDate)
-    res.send(req.body);
+    res.send({
+        "newDate":new Date(startDate),
+        "newEndDate":new Date(endDate)
+    });
     return false
     let Buy,Sell,Send,Receive,Deposit,Withdrawal
     if(startDate && endDate){
