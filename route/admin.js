@@ -3693,9 +3693,9 @@ router.post('/get/transaction/count',async(req,res)=>{
     let extractor =  extractDate(startDate)
     console.log("asset",startDate)
     res.send({
-        "newDate":new Date(startDate).getMonth(),
+        "newDate":startDate.toDate(),
         "newEndDate":new Date(endDate).getDay(),
-        "extractor":new Date(startDate).getFullYear() +'-'+ new Date(startDate).getMonth() + '-'+ new Date(startDate).getDate(),
+        "extractor":new Date(startDate).getFullYear() +'-'+ new Date(startDate).getMonth() +'-'+ new Date(startDate).getDate(),
         "extract":extractor,
         "body":req.body
 
