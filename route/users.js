@@ -3740,9 +3740,9 @@ router.post('/tester',async (req,res)=>{
 })
 
 async function createUSDTWalletAddress(userid){
-    let secret = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
-    let  Api= process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
-    let  walletId = process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
+    let secret = process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
+    let  Api= process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+    let  walletId = process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
  
     console.log(Api,secret)
     console.log(walletId)
