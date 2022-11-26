@@ -3740,8 +3740,8 @@ router.post('/tester',async (req,res)=>{
 })
 
 async function createUSDTWalletAddress(userid){
-    let secret = process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
-    let Api= process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+    let secret = '28QadEbch82EbXFDU2sf771M8Qnv';
+    
     let walletId = process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
 
     let rand = random(option_rand);
@@ -3791,7 +3791,7 @@ async function createUSDTWalletAddress(userid){
             'Content-Type': 'application/json',
             // 'X-API-CODE':'2C38687sm5kTnyFWD',
             // 'X-API-CODE':'4nrsvq2xgf2QXtoyC',
-            'X-API-CODE':Api,
+            'X-API-CODE':'3NxBbdeL3vGtSfWTa',
             'X-CHECKSUM':buildUSDT,
             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
         }
