@@ -3691,9 +3691,9 @@ router.post('/get/transaction/count',async(req,res)=>{
     let asset = req.body.asset  
     console.log("asset",startDate)
     res.send({
-        "newDate":new Date(startDate),
-        "newEndDate":new Date(endDate),
-        "date":startDate.getDate()
+        "newDate":new Date(startDate).getDate(),
+        "newEndDate":new Date(endDate).getDate(),
+        
     });
     return false
     let Buy,Sell,Send,Receive,Deposit,Withdrawal
