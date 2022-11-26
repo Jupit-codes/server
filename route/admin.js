@@ -3689,7 +3689,9 @@ router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
     let endDate = req.body.enddate; 
     let asset = req.body.asset  
-    console.log("asset",asset)
+    console.log("asset",startDate)
+    res.send(req.body);
+    return false
     let Buy,Sell,Send,Receive,Deposit,Withdrawal
     if(startDate && endDate){
         Buy = await wallet_transactions.aggregate([
