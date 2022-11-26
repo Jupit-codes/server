@@ -3695,7 +3695,7 @@ router.post('/get/transaction/count',async(req,res)=>{
     res.send({
         "newDate":new Date(startDate).getDate(),
         "newEndDate":new Date(endDate).getDate(),
-        "extractor":new Date(startDate).getFullYear+'-'+ new Date(startDate).getMonth()+'-'+new Date(startDate).getDay(),
+        "extractor":new Date(startDate).getFullYear() +'-'+ new Date(startDate).getMonth()+ '-'+ new Date(startDate).getDate(),
         "extract":extractor
 
 
