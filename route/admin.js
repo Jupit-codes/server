@@ -3689,22 +3689,23 @@ router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
     let endDate = req.body.enddate; 
     let asset = req.body.asset
-      let momentum = moment(startDate)
+      let momentum_start = moment(startDate).startOf('day').toDate()
+      let momentum_end = moment(endDate).endOf('day').toDate()
     
-    let extractor =  extractDate(startDate)
-    console.log("asset",startDate)
-    res.send({
+
+    // res.send({
        
-        "newEndDate":new Date(endDate).getDay(),
-        "extractor":new Date(startDate).getFullYear() +'-'+ new Date(startDate).getMonth() +'-'+ new Date(startDate).getDate(),
-        "extract":extractor,
-        "body":req.body,
-        "momentum":momentum
+    //     "newEndDate":new Date(endDate).getDay(),
+    //     "extractor":new Date(startDate).getFullYear() +'-'+ new Date(startDate).getMonth() +'-'+ new Date(startDate).getDate(),
+    //     "extract":extractor,
+    //     "body":req.body,
+    //     "momentum":momentum_start,
+    //     "momentum_end":momentum_end
 
 
         
-    });
-    return false
+    // });
+    // return false
     let Buy,Sell,Send,Receive,Deposit,Withdrawal
     if(startDate && endDate){
         Buy = await wallet_transactions.aggregate([
@@ -3717,8 +3718,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
                         },
@@ -3745,8 +3746,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
                         },
@@ -3771,8 +3772,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
                         },
@@ -3797,8 +3798,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
                         },
@@ -3819,8 +3820,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                 $match: {
                     updated: {
                 
-                        $gte: new Date(startDate),
-                        $lte:new Date(endDate)
+                        $gte: momentum_start,
+                        $lte:momentum_end
                         
                     }
                 }
@@ -3837,8 +3838,8 @@ router.post('/get/transaction/count',async(req,res)=>{
 
                     updated: {
                 
-                        $gte: new Date(startDate),
-                        $lte:new Date(endDate)
+                        $gte: momentum_start,
+                        $lte:momentum_end
                         
                     }
                 }
