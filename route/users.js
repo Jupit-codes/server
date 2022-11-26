@@ -3928,7 +3928,7 @@ async function createBTCWalletAddress(userid){
             return [true,'success'];
     })
     .catch((error)=>{
-        // console.log('error',error.response)
+        console.log('error',error.response)
         return [false,error.response];
         
         
