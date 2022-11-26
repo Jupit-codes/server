@@ -2988,11 +2988,12 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
             else{
 
                 const btc_add =  await createBTCWalletAddress(req.params.id);
-                        // console.log('usdt',usdt_add);
+                        console.log('passwed');
                         if(btc_add[0]){
                             const usdt_add = await createUSDTWalletAddress(req.params.id);
                             
                             if(usdt_add[0]){
+                                console.log('passwed');
                                 let userid = req.params.id;
                                 Usermodel.findOne({_id:userid},async (err,docs)=>{
                                     if(err){
