@@ -3903,7 +3903,7 @@ async function createBTCWalletAddress(userid){
     }
     const get_request_args = querystring.stringify(parameters);
 
-    const base_url = "http://demo.thresh0ld.com"
+    
     const url = `http://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
 
 
