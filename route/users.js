@@ -3859,17 +3859,20 @@ async function createvirtualaccount(firstname,lastname,userid){
 
 
 async function createBTCWalletAddress(userid){
+
    let secret = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
    let  Api= process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
    let  walletId = process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
    console.log(Api,secret)
    console.log(walletId)
+   var option_rand = {
+    min: 48886
+    , max: 67889
+    , integer: true
+}
+
     let rand = random(option_rand);
-    var option_rand = {
-            min: 48886
-            , max: 67889
-            , integer: true
-        }
+    
     function buildChecksum(params, secret, t, r, postData) {
     const p = params || [];
     p.push(`t=${t}`, `r=${r}`);
