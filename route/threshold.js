@@ -1276,9 +1276,9 @@ async function checkJupitAddress(address,wallet_type){
     let wallet_id=""
     if(wallet_type === "BTC"){
 
-        let secret=THRESHOLD_BTC_API_SECRET_MASSCOLLECTION
-        let apikey = THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
-        let wallet_id=THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
+         secret=THRESHOLD_BTC_API_SECRET_MASSCOLLECTION
+         apikey = THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+         wallet_id=THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
 
         // secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
         // apikey = "4PiVpdbyLJZatLBwR";
@@ -1286,9 +1286,9 @@ async function checkJupitAddress(address,wallet_type){
     else if(wallet_type === "USDT"){
         // secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
         // apikey = "WtjgBd7JbpeBTHCF";
-        let secret=THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
-        let apikey = THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
-        let wallet_id=THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+         secret=THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
+         apikey = THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+         wallet_id=THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
     }
     else{
         return ["Invalid Wallet Type",false]
