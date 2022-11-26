@@ -3862,7 +3862,6 @@ async function createBTCWalletAddress(userid){
    let secret = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
    let  Api= process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
    let  walletId = process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
-
    console.log(Api,secret)
    console.log(walletId)
     let rand = random(option_rand);
@@ -3901,11 +3900,10 @@ async function createBTCWalletAddress(userid){
         r:rand,
     }
     const get_request_args = querystring.stringify(parameters);
-
     
     const url = `http://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
 
-
+    console.log(url)
     let result = await axios.post(url,params,{ 
     headers: {
         'Content-Type': 'application/json',
@@ -3929,7 +3927,6 @@ async function createBTCWalletAddress(userid){
     .catch((error)=>{
         console.log('error',error.response)
         return [false,error.response];
-        
         
     })
 
