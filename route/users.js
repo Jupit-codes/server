@@ -35,6 +35,9 @@ cloudinary.config({
     api_secret: '57S453gwuBc1_vypuLOcqYQ2V5o' 
   });
 
+
+
+
 const upload = multer({ dest: 'uploads/' })
    // user: 'bigdevtemy@gmail.com',
             // pass: 'vyafmhqbffkiawrc',
@@ -58,10 +61,12 @@ router.get('/',(req,res)=>{
 })
 
 router.get('/testnet',(req,res)=>{
-    
+    let x = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
     res.json({
         "Appname":"Jupit",
-        "host":"Amazon"
+        "host":"Amazon",
+        'secret':x
+        
     }) 
 })
 
@@ -411,7 +416,7 @@ router.get('/sendmail', (req,res)=>{
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div align="center">
-                                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://jupit.app/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}" style="height:46px; v-text-anchor:middle; width:193px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
+                                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}" style="height:46px; v-text-anchor:middle; width:193px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                                     <a href="mailto:support@jupitapp.co" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
                                                     <span style="display:block;padding:14px 44px 13px;line-height:120%;"><span style="font-size: 16px; line-height: 19.2px;">MAIL US NOW.</span></span>
                                                     </a>
@@ -2534,7 +2539,7 @@ async function signsuccessmail(email,username,time){
                                                 <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                     
                                                 <div align="center">
-                                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://jupit.app/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/" style="height:46px; v-text-anchor:middle; width:193px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
+                                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/" style="height:46px; v-text-anchor:middle; width:193px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                                     <a href="mailto:support@jupitapp.co" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
                                                     <span style="display:block;padding:14px 44px 13px;line-height:120%;"><span style="font-size: 16px; line-height: 19.2px;">MAIL US NOW.</span></span>
                                                     </a>
@@ -2982,12 +2987,14 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
             }
             else{
 
-                const usdt_add =  await createUSDTWalletAddress(req.params.id);
-                        // console.log('usdt',usdt_add);
-                        if(usdt_add[0]){
-                            const btc_add = await createBTCWalletAddress(req.params.id);
+                const btc_add =  await createBTCWalletAddress(req.params.id);
+                       
+                        if(btc_add[0]){
+                            console.log('BTC Created');
+                            const usdt_add = await createUSDTWalletAddress(req.params.id);
                             
-                            if(btc_add[0]){
+                            if(usdt_add[0]){
+                                console.log('USDT created');
                                 let userid = req.params.id;
                                 Usermodel.findOne({_id:userid},async (err,docs)=>{
                                     if(err){
@@ -3066,12 +3073,12 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                
                             }
                             else{
-                                res.send({"ErrorMessage":'Unable to create BTC Wallet Address..pls try again'})
+                                res.send({"ErrorMessage":'Unable to create USDT Wallet Address..pls try again'})
                             }
 
                         }
                         else{
-                                res.send({"ErrorMessage":'Unable to create USDT Wallet Address..pls try again'})
+                                res.send({"ErrorMessage":'Unable to create BTC Wallet Address..pls try again'})
                         }
 
 
@@ -3499,8 +3506,8 @@ router.post('/users/register',(req,res)=>{
                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
                 
                                             <div align="center">
-                                                <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://jupit.app/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}" style="height:46px; v-text-anchor:middle; width:235px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
-                                                <a href="https://jupit.app/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
+                                                <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}" style="height:46px; v-text-anchor:middle; width:235px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
+                                                <a href="https://myjupit.herokuapp.com/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/${user._id}" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
                                                 <span style="display:block;padding:14px 44px 13px;line-height:120%;"><span style="font-size: 16px; line-height: 19.2px;"><strong><span style="line-height: 19.2px; font-size: 16px">VERIFY YOUR EMAIL</span></strong>
                                                 </span>
                                                 </span>
@@ -3735,7 +3742,13 @@ router.post('/tester',async (req,res)=>{
 })
 
 async function createUSDTWalletAddress(userid){
-    
+    let secret = process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
+    let  Api= process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+    let  walletId = process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+ 
+    console.log(Api,secret)
+    console.log(walletId)
+
     let rand = random(option_rand);
     var option_rand = {
             min: 48886
@@ -3757,9 +3770,8 @@ async function createUSDTWalletAddress(userid){
         return crypto.createHash('sha256').update(p.join('&')).digest('hex');
     }
 
-    // var secret="51bEgEHrotG69PFScrPTt1gR8Wv";
-    //var secret="3jNct6qzbmDNiFtCr6gyQGsQANFS";
-    var secret="3jNct6qzbmDNiFtCr6gyQGsQANFS";
+    
+    
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
@@ -3773,17 +3785,15 @@ async function createUSDTWalletAddress(userid){
             r:rand,
         }
         const get_request_args = querystring.stringify(parameters);
-        
+        //https://vault.thresh0ld.com
         // const base_url = "http://demo.thresh0ld.com"
-        const url = 'https://vault.thresh0ld.com/v1/sofa/wallets/196649/addresses?'+get_request_args
+        const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
     
         
      let result = await axios.post(url,params,{ 
         headers: {
             'Content-Type': 'application/json',
-            // 'X-API-CODE':'2C38687sm5kTnyFWD',
-            // 'X-API-CODE':'4nrsvq2xgf2QXtoyC',
-            'X-API-CODE':'4nrsvq2xgf2QXtoyC',
+            'X-API-CODE':Api,
             'X-CHECKSUM':buildUSDT,
             'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
         }
@@ -3800,7 +3810,7 @@ async function createUSDTWalletAddress(userid){
         
     })
     .catch((error)=>{
-        // console.log('error_usdt',console.log(error.response))
+        console.log(error.response)
         return [false,error.response];
        
     })
@@ -3849,13 +3859,20 @@ async function createvirtualaccount(firstname,lastname,userid){
 
 
 async function createBTCWalletAddress(userid){
-        
+
+   let secret = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
+   let  Api= process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+   let  walletId = process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
+   console.log(Api,secret)
+   console.log(walletId)
+   var option_rand = {
+    min: 48886
+    , max: 67889
+    , integer: true
+}
+
     let rand = random(option_rand);
-    var option_rand = {
-            min: 48886
-            , max: 67889
-            , integer: true
-        }
+    
     function buildChecksum(params, secret, t, r, postData) {
     const p = params || [];
     p.push(`t=${t}`, `r=${r}`);
@@ -3872,14 +3889,13 @@ async function createBTCWalletAddress(userid){
     }
 
     // var secret="2awjZJeeVhtG23tepAzv5tcMYYN";
-    var secret="3MfESNefnjWQv42PGxhWyg8VtS4H";
+    
     var time = Math.floor(new Date().getTime() / 1000)
     var postData = {"count":1};
 
     var build = buildChecksum(null,secret,time,rand,postData);
 
-    const params ={
-    "count": 1}
+    const params ={"count": 1}
 
 
     const parameters = {
@@ -3887,16 +3903,15 @@ async function createBTCWalletAddress(userid){
         r:rand,
     }
     const get_request_args = querystring.stringify(parameters);
+    
+    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
 
-    const base_url = "http://demo.thresh0ld.com"
-    const url = 'https://vault.thresh0ld.com/v1/sofa/wallets/136821/addresses?'+get_request_args
-
-
+    console.log(url)
     let result = await axios.post(url,params,{ 
     headers: {
         'Content-Type': 'application/json',
         // 'X-API-CODE':'55JbxSP6xosFTkFvg',
-        'X-API-CODE':'5acGjgQXSHQQJBTWk',
+        'X-API-CODE':Api,
         'X-CHECKSUM':build,
         'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
     }
@@ -3913,9 +3928,8 @@ async function createBTCWalletAddress(userid){
             return [true,'success'];
     })
     .catch((error)=>{
-        // console.log('error',error.response)
+        console.log('error',error.response)
         return [false,error.response];
-        
         
     })
 

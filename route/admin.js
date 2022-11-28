@@ -3688,8 +3688,24 @@ router.post('/get/fiatasset/set',async (req,res)=>{
 router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
     let endDate = req.body.enddate; 
-    let asset = req.body.asset  
-    console.log("asset",asset)
+    let asset = req.body.asset
+      let momentum_start = moment(startDate).startOf('day').toDate()
+      let momentum_end = moment(endDate).endOf('day').toDate()
+    
+
+    // res.send({
+       
+    //     "newEndDate":new Date(endDate).getDay(),
+    //     "extractor":new Date(startDate).getFullYear() +'-'+ new Date(startDate).getMonth() +'-'+ new Date(startDate).getDate(),
+    //     "extract":extractor,
+    //     "body":req.body,
+    //     "momentum":momentum_start,
+    //     "momentum_end":momentum_end
+
+
+        
+    // });
+    // return false
     let Buy,Sell,Send,Receive,Deposit,Withdrawal
     if(startDate && endDate){
         Buy = await wallet_transactions.aggregate([
@@ -3702,8 +3718,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
                         },
@@ -3730,8 +3746,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
                         },
@@ -3756,8 +3772,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
                         },
@@ -3782,8 +3798,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
                         },
@@ -3804,8 +3820,8 @@ router.post('/get/transaction/count',async(req,res)=>{
                 $match: {
                     updated: {
                 
-                        $gte: new Date(startDate),
-                        $lte:new Date(endDate)
+                        $gte: momentum_start,
+                        $lte:momentum_end
                         
                     }
                 }
@@ -3822,8 +3838,8 @@ router.post('/get/transaction/count',async(req,res)=>{
 
                     updated: {
                 
-                        $gte: new Date(startDate),
-                        $lte:new Date(endDate)
+                        $gte: momentum_start,
+                        $lte:momentum_end
                         
                     }
                 }
@@ -3982,11 +3998,22 @@ router.post('/get/transaction/count',async(req,res)=>{
     "Send":SendCount,
     "Receive":ReceiveCount,
     "Withdrawal":WithdrawalCount,
-    "Deposit":DepositCount
+    "Deposit":DepositCount,
+    "body":req.body
    })
    
 
 })
+
+async function extractDate(date){
+    let dayx = new Date(date).getDate();
+    let month = new Date(date).getMonth();
+    let year = new Date(date).getFullYear();
+
+    let join = year+'-'+month+'-'+dayx
+
+    return join;
+}
 
 router.post('/create/role',(req,res)=>{
     adminroles.findOne({rolename:req.body.rolename},(err,docs)=>{

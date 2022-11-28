@@ -18,7 +18,7 @@ import cors from 'cors';
 import timeout from 'connect-timeout'
 const oneDay = 1000 * 60 * 60 * 24;
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 dotenv.config();
 
