@@ -189,8 +189,8 @@ async function crypomarketprice(){
 
 Router.post('/incoming/depositcallback', (req,res)=>{
 
-    res.sendStatus(200);
-    return false;
+    // res.sendStatus(200);
+    // return false;
   
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log("body",req.body)
@@ -379,8 +379,8 @@ async function updateDepositStatusCallback(currency,address,amount){
 
 Router.post('/incoming/withdrawalcallback',(req,res)=>{
     
-    res.sendStatus(200);
-    return false;
+    // res.sendStatus(200);
+    // return false;
 
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log(req.body)
