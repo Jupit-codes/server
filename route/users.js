@@ -65,7 +65,8 @@ router.get('/testnet',(req,res)=>{
     res.json({
         "Appname":"Jupit",
         "host":"Amazon",
-        'secret':x
+        'secret':x,
+        "safe":"day"
         
     }) 
 })
