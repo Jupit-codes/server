@@ -14,7 +14,7 @@ import database from './config/database.js'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid';
 import cors from 'cors';
-import { NoncurrentVersionTransition } from "@aws-sdk/client-s3";
+
 import timeout from 'connect-timeout'
 const oneDay = 1000 * 60 * 60 * 24;
 const app = express();
