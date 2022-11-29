@@ -243,7 +243,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                     })
                 }
                 if(docs){
-                    
+                    let status = 'Transaction Completed';
                     if(docs.processing_state !== 2){
                        
                         await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
@@ -778,8 +778,6 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                 }
             }
             
-        
-        
         } 
         else{
             res.status(403).send("Internal Server Error.."+ UpdateWalletBalances)
