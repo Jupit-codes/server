@@ -204,11 +204,10 @@ Router.post('/incoming/depositcallback', (req,res)=>{
 
     // res.sendStatus(200);
     // return false;
-    console.log(req.body);
-    console.log(req.header);
+   
 
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
-        console.log("body",req.body)
+        
         if(req.body.processing_state === 1){
             Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                 if(err){
@@ -2586,6 +2585,9 @@ async function updateDepositStatus(body,status){
         newCurrency = body.currency;
     }
 
+    console.log('Rate',rateInNaira)
+    console.log('Currency',newCurrency)
+    console.log('body',body);
 
     let saveStatus = await Walletmodel.create({
         type:"Receive",
