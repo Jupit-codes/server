@@ -66,7 +66,7 @@ router.get('/testnet',(req,res)=>{
         "Appname":"Jupit",
         "host":"Amazon",
         'secret':x,
-        "safe":"day"
+        "safe":"Phillips"
         
     }) 
 })
