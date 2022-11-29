@@ -177,7 +177,7 @@ async function crypomarketprice(){
         }
     })
     .then(result=>{
-       console.log(result.data);
+      
        if(result.data.Response = 'Error'){
         return [true,0,0]
        }
@@ -191,7 +191,7 @@ async function crypomarketprice(){
        
     })
     .catch(err=>{
-        console.log(err)
+        // console.log(err)
         return [false]
     })
 
@@ -233,7 +233,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
         }
   
         if(req.body.processing_state === 2){
-
+            console.log('I am here 1')
             Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                 if(err){
                     res.json({
@@ -242,7 +242,9 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                     })
                 }
                 if(docs){
+                    console.log('I am here 2')
                     if(docs.processing_state !== 2){
+                        console.log('I am here 3')
                         let status = 'Transaction Completed';
                         await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
                         let newAmount;
@@ -259,24 +261,17 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                         if(UpdateDepositAccount){
                             
                             let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
-                           
-                            await Usermodel.findOne({
-                                $or:[
-                                    {
-                                        'btc_wallet.0.wallet':req.body.to_address
-                                    },
-                                    {
-                                        'usdt_wallet.0.wallet':req.body.to_address
-                                    }
-                                ]
+                           console.log("saveNotificationCallbackx",saveNotificationCallbackx)
+                            await Usermodel.findOne({$or:[{'btc_wallet.address':req.body.to_address},{'usdt_wallet.address':req.body.to_address}]
                             },(err,docxc)=>{
                                 if(err){
-                                    console.log('UsermodelMailError',err)
+                                    console.log('UsermodelMailErrorjhjghj',err)
                                 }
                                 else if(docxc){
+                                    console.log('docxc',docxc)
                                     successfulDeposit(docxc.email,docxc.username,req.body.currency,req.body.from_address,newAmount)
                                 }
-                            })
+                            }).clone().catch(function(err){ return [err,false]});
 
                              res.sendStatus(200);
                         }
@@ -312,7 +307,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                     let UpdateDepositAccount = await updateDepositStatusCallback(req.body.currency,req.body.to_address,newAmount);
                     
                     if(UpdateDepositAccount){
-                        
+                        console.log('Success')
                         let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
                         await Usermodel.findOne({
                             $or:[
@@ -381,15 +376,32 @@ Router.post('/incoming/depositcallback', (req,res)=>{
 })
 
 async function updateDepositStatusCallback(currency,address,amount){
-
+    let response =false
      if(currency === "BTC"){
-        UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':address},{$inc:{'btc_wallet.$.balance':parseFloat(amount)}}).exec();
-        return true;
+        let filter = {'btc_wallet.address':address};
+        let update = {$inc:{'btc_wallet.$.balance':parseFloat(amount)}}
+         
+        let updatedValue =  await Usermodel.findOneAndUpdate(filter, update, {
+            new: true
+          });
+
+          if(updatedValue){
+            response=true
+          }
+        
     }
     else if(currency === "TRX-USDT-TRC20"){
-        UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':address},{$inc:{'usdt_wallet.$.balance':parseFloat(amount)}}).exec();
-        return true;
+        let filter = {'usdt_wallet.address':address};
+        let update = {$inc:{'usdt_wallet.$.balance':parseFloat(amount)}}
+        let updatedValue =  await Usermodel.findOneAndUpdate(filter, update, {
+            new: true
+          });
+          if(updatedValue){
+            response=true
+          }
     }
+
+    return response;
 }
 
 
@@ -2509,18 +2521,22 @@ async function FailedUpdateEmail(addr,txid,subject,amount){
 }
 
 async function updateDepositStatus(body,status){
-    let newAmount;
-    let orderid;
+    let newAmount=0;
+    let orderid=""
     if(body.currency === "BTC"){
+        
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
+      
         await Usermodel.findOne({'btc_wallet[0].address': body.to_address},(err,docs)=>{
             if(err){
                     orderid="0000";
             }
             else if(docs){
-                orderid = docs.userid
+                
+                orderid = docs.id
             }
             else{
+               
                 orderid="0000";
             }
         }).clone().catch(function(err){ return [err,false]});
@@ -2532,14 +2548,17 @@ async function updateDepositStatus(body,status){
                     orderid="0000";
             }
             else if(docs){
-                orderid = docs.userid
+                orderid = docs.id
             }
             else{
                 orderid="0000";
             }
         }).clone().catch(function(err){ return [err,false]});
     }
-    let rateInNaira,newCurrency;
+
+ 
+    let rateInNaira=0;
+    let newCurrency="";
     let marketPrice = 0;
     
     rate.findOne({initialization:'JupitRateBard'},(err,mydocs)=>{
@@ -2547,18 +2566,20 @@ async function updateDepositStatus(body,status){
             rateInNaira=0
         }
         else if(mydocs){
-           
+        //    console.log('rate',mydocs);
+        //    console.log('bodyCurrency',body.currency)
             if(body.currency == "BTC"){
-                rateInNaira = mydocs.btc[1].buy
+                rateInNaira = mydocs.btc[0].buy
+                
             }
             else if(body.currency == "TRX-USDT-TRC20"){
-                rateInNaira = mydocs.usdt[1].buy
+                rateInNaira = mydocs.usdt[0].buy
             }
         }
     })
-    
+   
     let getcurrentmarketrate = await crypomarketprice();
-    
+    console.log('currentMarket',getcurrentmarketrate)
     if(getcurrentmarketrate[0]){
         
         if(body.currency == "BTC"){
@@ -2585,9 +2606,9 @@ async function updateDepositStatus(body,status){
         newCurrency = body.currency;
     }
 
-    console.log('Rate',rateInNaira)
-    console.log('Currency',newCurrency)
-    console.log('body',body);
+    // console.log('Rate',rateInNaira)
+    // console.log('Currency',newCurrency)
+    // console.log('body',body);
 
     let saveStatus = await Walletmodel.create({
         type:"Receive",
@@ -2629,7 +2650,9 @@ async function updateDepositStatus(body,status){
 }
 
 async function saveNotificationCallBack(body,status){
-    let newAmount,newCurrency
+    console.log('I got here')
+    let newAmount =0,
+    newCurrency=""
     if(body.currency === "BTC"){
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
         newCurrency = body.currency
@@ -2652,8 +2675,9 @@ async function saveNotificationCallBack(body,status){
 
     })
     
+    
     if(saveStatus){
-        return [true,'Notification Incoming Deposit Failed'];
+        return [true,'Notification Incoming Deposit Successful'];
     }
     else{
         return [false,'Notification Incoming Deposit Failed']
