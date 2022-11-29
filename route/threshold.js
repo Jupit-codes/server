@@ -191,7 +191,9 @@ Router.post('/incoming/depositcallback', (req,res)=>{
 
     // res.sendStatus(200);
     // return false;
-  
+    console.log(req.body);
+    console.log(req.header);
+
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log("body",req.body)
         if(req.body.processing_state === 1){
@@ -370,9 +372,11 @@ async function updateDepositStatusCallback(currency,address,amount){
 
      if(currency === "BTC"){
         UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'btc_wallet.address':address},{$inc:{'btc_wallet.$.balance':parseFloat(amount)}}).exec();
+        return true;
     }
     else if(currency === "TRX-USDT-TRC20"){
         UpdateDepositAccount  = await Usermodel.findOneAndUpdate({'usdt_wallet.address':address},{$inc:{'usdt_wallet.$.balance':parseFloat(amount)}}).exec();
+        return true;
     }
 }
 
