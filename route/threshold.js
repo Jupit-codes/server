@@ -20,10 +20,11 @@ import https, { get } from 'https'
 //https://vault.thresh0ld.com/v1/sofa
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
-    host: "smtp.gmail.com",
+    host: "smtppro.zoho.com",
        auth: {
-            user: 'hello@jupitapp.co',
-            pass: 'w6vBmv6624eW'
+            user:'hello@jupitapp.co',
+            pass:'xW1hyG7CDGhm'
+            // pass:'ii84NsMqT9Xv'
          },
     secure: true,
     });
@@ -242,10 +243,9 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                     })
                 }
                 if(docs){
-                    console.log('I am here 2')
+                    
                     if(docs.processing_state !== 2){
-                        console.log('I am here 3')
-                        let status = 'Transaction Completed';
+                       
                         await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
                         let newAmount;
                         
@@ -261,14 +261,14 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                         if(UpdateDepositAccount){
                             
                             let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
-                           console.log("saveNotificationCallbackx",saveNotificationCallbackx)
+                          
                             await Usermodel.findOne({$or:[{'btc_wallet.address':req.body.to_address},{'usdt_wallet.address':req.body.to_address}]
                             },(err,docxc)=>{
                                 if(err){
-                                    console.log('UsermodelMailErrorjhjghj',err)
+                                    
                                 }
                                 else if(docxc){
-                                    console.log('docxc',docxc)
+                                   
                                     successfulDeposit(docxc.email,docxc.username,req.body.currency,req.body.from_address,newAmount)
                                 }
                             }).clone().catch(function(err){ return [err,false]});
@@ -277,7 +277,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                         }
                         else{
                             let subject = "Failed Deposit Update onPremises"
-                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,newAmount);
+                            await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,newAmount,req.body.currency);
                             res.sendStatus(200);
                         }
                         // console.log('Deposit-Completed2')
@@ -331,7 +331,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                     }
                     else{
                         let subject = "Failed Deposit Update onPremises"
-                        await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,newAmount);
+                        await FailedUpdateEmail(req.body.to_address,req.body.txtid,subject,newAmount,req.body.currency);
                         res.sendStatus(200);
                     }
                     
@@ -2450,7 +2450,7 @@ async function successfulDeposit(email,username,currency,address,amount){
 
       transporter.sendMail(mailData, function (err, info) {
         if(err){
-            console.log(err);
+            console.log("sendError",err);
             // res.send({"message":"An Error Occurred","callback":err})
         }
         
@@ -2463,11 +2463,11 @@ async function successfulDeposit(email,username,currency,address,amount){
 }
 
 
-async function FailedUpdateEmail(addr,txid,subject,amount){
+async function FailedUpdateEmail(addr,txid,subject,amount,currency){
     const mailData = {
         from: 'hello@jupitapp.co',  // sender address
         to: 'support@jupitapp.co',   // list of receivers
-        subject: `${subject}>>>>>>${amount}`,
+        subject: `${subject}>>>>>>${amount}>>>>${currency}`,
         html: `
                 <div style="width:100%;height:100vh;background-color:#f5f5f5; display:flex;justify-content:center;align-item:center">
                     <div style="width:100%; height:70%;background-color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
