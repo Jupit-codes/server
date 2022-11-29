@@ -163,6 +163,12 @@ Router.get('/checkaddressvalidity',async (req,res)=>{
     
 })
 
+Router.get('/cryptocompare',async (req,res)=>{
+    let x = await crypomarketprice();
+
+    res.json(x);
+})
+
 async function crypomarketprice(){
     let x = await axios.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,USDT&tsyms=USD',{
         headers:{
@@ -171,11 +177,18 @@ async function crypomarketprice(){
         }
     })
     .then(result=>{
-       
+       console.log(result.data);
+       if(result.data.Response = 'Error'){
+        return [true,0,0]
+       }
+       else{
         let BTCprice = parseFloat(result.data.RAW.BTC.USD.PRICE) - 150;
         let USDTprice = result.data.RAW.USDT.USD.PRICE
         return [true,BTCprice,USDTprice]
-        
+
+       }
+       
+       
     })
     .catch(err=>{
         console.log(err)
