@@ -1892,7 +1892,7 @@ router.post('/users/getIdcardverification',middlewareVerify,(req,res)=>{
 
 router.post('/users/bank',middlewareVerify,(req,res)=>{
    
-    Bankmodel.findOne({email:req.body.email},(err,docs)=>{
+    Bankmodel.findOne({email:req.body.email,status:"customeridentification.success"},(err,docs)=>{
         if(err){
             console.log(err)
             res.status(400).send(err);
