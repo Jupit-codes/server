@@ -4115,7 +4115,7 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
                 }
             })
             .then(result=>{
-                console.log(res.data)
+                // console.log(res.data)
                 res.send({
                     "message":result.data
                 })
