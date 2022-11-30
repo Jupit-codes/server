@@ -1530,7 +1530,7 @@ function verifyResponse(req,res,next){
 
 router.post('/client/withdrawal',(req,res)=>{
 
-    bank.findOne({email:req.body.email,status:"customeridentification.success"},async (err,docs)=>{
+    bank.findOne({email:req.body.email},async (err,docs)=>{
         if(err){
             res.status(400).send('Internal Server Error');
         }
