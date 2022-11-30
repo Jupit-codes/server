@@ -174,18 +174,19 @@ async function crypomarketprice(){
     let x = await axios.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,USDT&tsyms=USD',{
         headers:{
             'Content-Type':'application/json',
-            'Authorization':'Apikey 475906935b55657e131801270facf7cd73a797ee9cff36bbb24185f751c18d63'
+            'Authorization':'Apikey fab6779bb25e937fa7ef922e132796d2c323635c431bc1f3185faf7b293633c5'
         }
     })
     .then(result=>{
-      
-       if(result.data.Response = 'Error'){
-        return [true,0,0]
-       }
-       else{
+        console.log(result.data)
+       if(result.data.RAW){
         let BTCprice = parseFloat(result.data.RAW.BTC.USD.PRICE) - 150;
         let USDTprice = result.data.RAW.USDT.USD.PRICE
         return [true,BTCprice,USDTprice]
+        
+       }
+       else{
+        return [true,0,0]
 
        }
        
