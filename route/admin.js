@@ -2970,6 +2970,9 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
     
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
+    let momentum_start = moment(startDate).startOf('day').toDate()
+    let momentum_end = moment(endDate).endOf('day').toDate()
+  
 
     let BTC_IN ,BTC_OUT,USDT_IN,USDT_OUT
     
@@ -2984,8 +2987,8 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
 
@@ -3030,8 +3033,8 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                         {
                                 updated: {
                 
-                                    $gte: new Date(startDate),
-                                    $lt: new Date(endDate)
+                                    $gte: momentum_start,
+                                    $lt: momentum_end
                             }
                         },
                         {
@@ -3073,8 +3076,8 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                         {
                                 updated: {
                 
-                                    $gte: new Date(startDate),
-                                    $lt: new Date(endDate)
+                                    $gte: momentum_start,
+                                    $lt: momentum_end
                             }
                         },
                         {
@@ -3116,8 +3119,8 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
                         {
                                 updated: {
                     
-                                    $gte: new Date(startDate),
-                                    $lt: new Date(endDate)
+                                    $gte: momentum_start,
+                                    $lt: momentum_end
                                 }
                         },
                         {
