@@ -1668,7 +1668,7 @@ router.post('/transaction/history',(req,res)=>{
     if(userid){
         query.push(
             {
-                order_id:req.body.userid
+                order_id:userid
             }
             )
     }
@@ -1734,7 +1734,7 @@ router.post('/transaction/history',(req,res)=>{
     
     if(query.length > 0){
 
-        Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+        Usermodel.findOne({_id:userid},async (err,docs)=>{
             if(err){
                 res.status(400).send(err);
             }
@@ -1746,7 +1746,7 @@ router.post('/transaction/history',(req,res)=>{
                      {
                          $or:[
                              {
-                                 order_id:req.body.userid
+                                 order_id:userid
                              },
                              {
                                 from_address:docs.btc_wallet[0].address
@@ -1774,7 +1774,7 @@ router.post('/transaction/history',(req,res)=>{
                         else{
                             res.send(docs)
                         }
-                    }).sort({ date_created: 'asc'}).clone().catch(function(err){ return [err,false]});
+                    }).sort({ updated: 'asc'}).clone().catch(function(err){ return [err,false]});
 
             }
         }).clone().catch(function(err){ return [err,false]});
@@ -1783,7 +1783,7 @@ router.post('/transaction/history',(req,res)=>{
 
     }
     else{
-        Usermodel.findOne({_id:req.body.userid},async (err,docs)=>{
+        Usermodel.findOne({_id:userid},async (err,docs)=>{
             if(err){
                 res.status(400).send(err)
             }
@@ -1791,7 +1791,7 @@ router.post('/transaction/history',(req,res)=>{
                 await wallet_transactions.find({
                     $or:[
                         {
-                            order_id:req.body.userid
+                            order_id:userid
                         },
                         {
                            from_address:docs.btc_wallet[0].address
@@ -1814,7 +1814,7 @@ router.post('/transaction/history',(req,res)=>{
                        else{
                            res.send(docs)
                        }
-                   }).sort({ date_created: 'asc'}).clone().catch(function(err){ return [err,false]});
+                   }).sort({ updated: 'asc'}).clone().catch(function(err){ return [err,false]});
             }
         }).clone().catch(function(err){ return [err,false]});
         
