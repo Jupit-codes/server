@@ -3377,6 +3377,8 @@ router.post('/get/fiatasset/set',async (req,res)=>{
     let NGN_IN,NGN_IN_II,NGN_OUT,NGN_OUT_II
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
+    let momentum_start = moment(startDate).startOf('day').toDate()
+    let momentum_end = moment(endDate).endOf('day').toDate()
     if(startDate && endDate ){
         
         console.log(new Date(startDate))
@@ -3389,8 +3391,8 @@ router.post('/get/fiatasset/set',async (req,res)=>{
                         {
                             updated: {
                 
-                                $gte: new Date(startDate),
-                                $lte:new Date(endDate)
+                                $gte: momentum_start,
+                                $lte:momentum_end
                                 
                             }
 
@@ -3433,8 +3435,8 @@ router.post('/get/fiatasset/set',async (req,res)=>{
                 $match: {
                         updated: {
                         
-                            $gte: new Date(startDate),
-                            $lte:new Date(endDate)
+                            $gte: momentum_start,
+                            $lte:momentum_end
                             
                         }
                     }
@@ -3460,8 +3462,8 @@ router.post('/get/fiatasset/set',async (req,res)=>{
                         {
                             updated: {
             
-                                $gte: new Date(startDate),
-                                $lt: new Date(endDate)
+                                $gte: momentum_start,
+                                $lt: momentum_end
                             }
                         },
                         {
@@ -3502,8 +3504,8 @@ router.post('/get/fiatasset/set',async (req,res)=>{
                 $match: {
                         updated: {
                         
-                            $gte: new Date(startDate),
-                            $lte:new Date(endDate)
+                            $gte: momentum_start,
+                            $lte:momentum_end
                             
                         }
                     }
