@@ -1832,6 +1832,9 @@ router.post('/filter',(req,res)=>{
     let status = req.body.status;
     let userid= req.body.userid;
 
+    let momentstart  = moment(startDate).startOf('day')
+    let momentend = moment(endDate).endOf('day').toDate();
+
     let query = [];
 
     if(startDate && endDate ){
@@ -1839,8 +1842,8 @@ router.post('/filter',(req,res)=>{
             date_created: {
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
-                  $gte: new Date(startDate),
-                $lt: new Date(endDate).setHours(23, 59, 59)
+                  $gte: momentstart,
+                $lt: momentend
             }
         })  
 
@@ -1954,6 +1957,9 @@ router.post('/filtercryptoledger',(req,res)=>{
     // let status = req.body.status;
     // let userid= req.body.userid;
 
+    let momentstart = moment(startDate).startOf('day')
+    let momentend = moment(endDate).endOf('day').toDate();
+
     let query = [];
 
     if(startDate && endDate ){
@@ -1961,8 +1967,8 @@ router.post('/filtercryptoledger',(req,res)=>{
             date_created: {
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
-                  $gte: new Date(startDate),
-                $lt: new Date(endDate).setHours(23, 59, 59)
+                  $gte: momentstart,
+                $lt: momentend
             }
         })  
 
