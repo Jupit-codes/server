@@ -1843,7 +1843,7 @@ router.post('/filter',(req,res)=>{
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
                   $gte: momentstart,
-                $lt: momentend
+                    $lt: momentend
             }
         })  
 
@@ -1916,9 +1916,9 @@ router.post('/filter',(req,res)=>{
             type:req.body.type
         })
     }
-    
+    console.log('Query',query)
     if(query.length > 0){
-       
+        console.log('Greater',query)
     const x = wallet_transactions.find({
         $and:query
       
