@@ -4139,6 +4139,39 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
 
 });
 
+
+
+router.get('/getcutomercode',async(req,res)=>{
+    const url = `https://api.paystack.co/customer`;
+    const params={
+        "email":'temiloluwao@phillipsoutsourcing.net',
+        "first_name":"",
+        "last_name":"",
+        "phone":""
+    }
+    let cust_code = await axios.post(url,params,{
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization':'Bearer sk_live_e17b8c11ebd06acf37e6999d97ce43e7b1711a57' 
+        }
+    })
+    .then(result=>{
+        console.log(result.data.data.customer_code)
+        return [result.data.data.customer_code,true];
+        
+    })
+    .catch((err)=>{
+        console.log(err.response)
+        return[ err.response,false];
+        
+        
+    })
+    return cust_code;
+
+   
+})
+
+
 async function customer_code_fetch(emailaddress){
     const url = `https://api.paystack.co/customer`;
     const params={
