@@ -1536,6 +1536,7 @@ router.post('/client/withdrawal',(req,res)=>{
         }
         else if(docs){
             const valueNew = parseFloat(req.body.amount) - parseFloat(req.body.charge);
+            console.log('valueNew',valueNew);
             const url = "https://live.purplepayapp.com/v1/transfer/"
             var params = {
                 
