@@ -4115,17 +4115,18 @@ router.post('/users/validate/bvntoaccount/kyc/level2',middlewareVerify, async(re
                 }
             })
             .then(result=>{
-
+                console.log(res.data)
                 res.send({
                     "message":result.data
                 })
                 
             })
             .catch((err)=>{
+                 err.response ? console.log("errData",err.response.data) :console.log("errAll",err)
                 res.send({
                     "err":err.response.data
                 })
-                // err.response ? console.log("errData",err.response.data) :console.log("errAll",err)
+                
                 
             })
         }
@@ -4153,7 +4154,7 @@ async function customer_code_fetch(emailaddress){
         }
     })
     .then(result=>{
-        // console.log(result.data.data.customer_code)
+        console.log(result.data.data.customer_code)
         return [result.data.data.customer_code,true];
         
     })
