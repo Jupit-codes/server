@@ -1675,11 +1675,7 @@ router.post('/transaction/history',(req,res)=>{
 
     if(status){
          if(status !== "All"){
-            query.push(
-                {
-                    type:req.body.status
-                }
-                )
+            query.push({ type:req.body.status})
          }
          else{
             query.push(
@@ -1732,6 +1728,9 @@ router.post('/transaction/history',(req,res)=>{
             type:req.body.type
         })
     }
+
+    console.log("history",query)
+    console.log("hostorybody",req.body)
     
     if(query.length > 0){
 
