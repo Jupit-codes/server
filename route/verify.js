@@ -1839,7 +1839,7 @@ router.post('/filter',(req,res)=>{
 
     if(startDate && endDate ){
         query.push({
-            date_created: {
+            updated: {
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
                   $gte: momentstart,
