@@ -1647,16 +1647,19 @@ router.post('/transaction/history',(req,res)=>{
     let type = req.body.type;
     let currency = req.body.asset;
     let status = req.body.status;
-
+    let userid = req.body.userid;
     let query = [];
+
+    let momentstart = moment(startDate).startOf('day');
+    let momentend = moment(endDate).endOf('day');
 
     if(startDate && endDate ){
         query.push({
-            date_created: {
+            updated: {
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
-                  $gte: new Date(startDate),
-                $lt: new Date(endDate).setHours(23, 59, 59)
+                  $gte: momentstart,
+                $lt: momentend
             }
         })  
 
