@@ -1647,7 +1647,7 @@ router.post('/transaction/history',(req,res)=>{
     let type = req.body.type;
     let currency = req.body.asset;
     let status = req.body.status;
-    let userid = req.body.userid;
+    let userid = req.body.userId;
     let query = [];
 
     let momentstart = moment(startDate).startOf('day');
