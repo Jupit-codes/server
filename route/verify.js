@@ -1631,7 +1631,7 @@ router.post('/client/withdrawal',(req,res)=>{
             })
         }
         else if(!docs){
-            await walletReminder();
+            // await walletReminder();
             res.status(400).send('Bank Details not found..Complete your KYC Level 2');
         }
     })
