@@ -1624,7 +1624,7 @@ router.post('/client/withdrawal',(req,res)=>{
                 
             })
             .catch((error)=>{
-                console.log(error)
+                console.log(error.response)
                 res.status(400).send(error)
                 
                 
