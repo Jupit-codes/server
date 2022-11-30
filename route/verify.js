@@ -1558,7 +1558,7 @@ router.post('/client/withdrawal',(req,res)=>{
                 }
             })
             .then(result=>{
-               console.log(result)
+               console.log('result',result)
                 let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
                 if(result.data.status){
                     Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- amount_with_charge}},async (err,document)=>{
@@ -1617,7 +1617,7 @@ router.post('/client/withdrawal',(req,res)=>{
                 }
                 else if(!result.data.status && result.data.code == "01"  ){
                     res.status(400).send("Failed Request..Pls Try Again")
-                    sendremindermail();
+                    // sendremindermail();
                 }
 
                 
@@ -1625,7 +1625,7 @@ router.post('/client/withdrawal',(req,res)=>{
                 
             })
             .catch((error)=>{
-                console.log(error.response)
+                console.log('error',error.response)
                 res.status(400).send(error)
                 
                 
