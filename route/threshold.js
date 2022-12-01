@@ -105,6 +105,7 @@ Router.post('/getautofee',async (req,res)=>{
         }
    })
    .then((result)=>{
+    console.log(result.data)
     //    console.log(result.data['auto_fees'][0]['auto_fee'])
     let bankCheck;
         bank.findOne({email:req.body.email},async (err,docs)=>{
