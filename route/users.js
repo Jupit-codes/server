@@ -2977,7 +2977,7 @@ router.post('/user/changepassword/data',async (req,res)=>{
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
     
    
-    Usermodel.findOne({_id: req.params.id },   async function (err, docs) {
+    Usermodel.findOne({id: req.params.id },   async function (err, docs) {
         if (err){
             // console.log(err)
             res.send({"err":err})
@@ -3788,7 +3788,7 @@ async function createUSDTWalletAddress(userid){
         const get_request_args = querystring.stringify(parameters);
         //https://vault.thresh0ld.com
         // const base_url = "http://demo.thresh0ld.com"
-        const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
+        const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
     
         
      let result = await axios.post(url,params,{ 
@@ -3905,7 +3905,7 @@ async function createBTCWalletAddress(userid){
     }
     const get_request_args = querystring.stringify(parameters);
     
-    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
+    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses?`+get_request_args
 
     console.log(url)
     let result = await axios.post(url,params,{ 

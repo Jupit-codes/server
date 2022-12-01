@@ -184,7 +184,7 @@ router.post('/getChart/data',async (req,res)=>{
 })
 
 router.get('/emptyTable',(req,res)=>{
-    withdrawal.deleteMany({},(err,docs)=>{
+    buy_n_sell.deleteMany({},(err,docs)=>{
         if(err){
             res.json(err)
         }

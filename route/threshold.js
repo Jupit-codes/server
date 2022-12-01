@@ -91,7 +91,7 @@ Router.post('/getautofee',async (req,res)=>{
     
     const get_request_args = querystring.stringify(parameters);
    
-    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/autofees?`+ get_request_args
+    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${wallet_id}/autofees?`+ get_request_args
     
     const new_params = {
         "block_nums": [1,50,100]
@@ -1166,7 +1166,7 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
  
     const get_request_args = querystring.stringify(parameters);
    
-    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
+    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
     
    
    let myAxios = await axios.post(url,params,{
@@ -1265,7 +1265,7 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
  
     const get_request_args = querystring.stringify(parameters);
    
-    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
+    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${wallet_id}/sender/transactions?`+ get_request_args
     
    
    let myAxios = await axios.post(url,params,{
@@ -1357,7 +1357,7 @@ async function checkJupitAddress(address,wallet_type){
  
     const get_request_args = querystring.stringify(parameters);
    
-    const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${wallet_id}/addresses?`+ get_request_args
+    const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${wallet_id}/addresses?`+ get_request_args
     
    
    let check = await axios.get(url,{
@@ -1465,7 +1465,7 @@ async function CheckAddressValidity (address,walletType){
         }
         const get_request_args = querystring.stringify(parameters);
         
-        const url = `https://demo.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses/verify?`+get_request_args
+        const url = `https://vault.thresh0ld.com/v1/sofa/wallets/${walletId}/addresses/verify?`+get_request_args
 
         
     let x =  await axios.post(url,params,{ 
@@ -2005,7 +2005,7 @@ async function activateUSDTToken(){
     const get_request_args = querystring.stringify(parameters);
     
     
-    const url = 'https://demo.thresh0ld.com/v1/sofa/wallets/488433/apisecret/activate?'+get_request_args
+    const url = 'https://vault.thresh0ld.com/v1/sofa/wallets/488433/apisecret/activate?'+get_request_args
 
     let axiosCallback = await axios.post(url,params,{ 
         headers: {
