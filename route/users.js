@@ -2973,11 +2973,27 @@ router.post('/user/changepassword/data',async (req,res)=>{
    
 })
 
+router.get('/testUser',(req,res)=>{
+    Usermodel.findOne({id:'6388b64884f97d934901bac6'},(err,docs)=>{
+        if(err){
+            res.send(err)
+        }
+        else if(docs){
+            res.send({
+                docs
+            })
+        }
+        else{
+            res.send('User doesnt Exist')
+        }
+    })
+})
+
 
 router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,res)=>{
     
-   
-    Usermodel.findOne({id: req.params.id },   async function (err, docs) {
+   console.log(req.params.id)
+    Usermodel.findOne({_id: req.params.id },   async function (err, docs) {
         if (err){
             // console.log(err)
             res.send({"err":err})
