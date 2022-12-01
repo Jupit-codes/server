@@ -39,7 +39,7 @@ Router.get('/testprocess',(req,res)=>{
 
 
 Router.post('/getautofee',async (req,res)=>{
-
+    console.log('Autosum',req.body)
     let Api ="";
     let wallet_id = "";
     let secret = "";
