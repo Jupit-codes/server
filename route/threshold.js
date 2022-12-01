@@ -101,7 +101,7 @@ Router.post('/getautofee',async (req,res)=>{
     const new_params = {
         "block_nums": [1,50,100]
     }
-   axios.post(url,new_params,{
+   await axios.post(url,new_params,{
         headers: {
             'Content-Type': 'application/json',
             'X-API-CODE':Api,
