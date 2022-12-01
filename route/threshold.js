@@ -1922,7 +1922,7 @@ p.sort();
 p.push(`secret=${secret}`);
 return crypto.createHash('sha256').update(p.join('&')).digest('hex');
 }
-var secret="28QadEbch82EbXFDU2sf771M8Qnv";
+var secret="3xhwE4xyFsYvg6iyok6RVEW32nvm";
 // var rand = "Ademilola2@";
 
 var timestamp = Math.floor(new Date().getTime() / 1000);
@@ -1938,14 +1938,14 @@ const parameters = {
 var build = buildChecksum(null,secret,time,rand,null);
 
 const get_request_args = querystring.stringify(parameters);
-
+//https://vault.thresh0ld.com/v1/sofa
 const options = {
-  hostname: 'demo.thresh0ld.com',
-  path: '/v1/sofa/wallets/488433/apisecret/activate?'+ get_request_args,
+  hostname: 'vault.thresh0ld.com',
+  path: '/v1/sofa/wallets/870727/apisecret/activate?'+ get_request_args,
   method: 'POST',
   headers: {
         'Content-Type': 'application/json',
-        'X-API-CODE':'3NxBbdeL3vGtSfWTa',
+        'X-API-CODE':'2JgrSbJpctYdVHqVT',
         'X-CHECKSUM':build,
         'User-Agent': 'Node.js/16.7.0 (Windows 10; x64)'
       }
