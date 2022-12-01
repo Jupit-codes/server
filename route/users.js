@@ -2982,7 +2982,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
             // console.log(err)
             res.send({"err":err})
         }
-        else{
+        else if(docs){
             if(docs.email_verification){
                 res.send({"message":"Email has Already Been Verified"})
             }
@@ -3097,6 +3097,9 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                 // }
                      
             }
+        }
+        else{
+            res.send('User Account not found')
         }
     }).clone().catch(function(err){ console.log(err);return [false,err]});
 })
