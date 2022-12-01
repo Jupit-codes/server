@@ -139,6 +139,7 @@ Router.post('/getautofee',async (req,res)=>{
         
    })
    .catch((err)=>{
+    console.log(err)
     //    console.log(err)
     //    res.send({
     //        "message":err,
