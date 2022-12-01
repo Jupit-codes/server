@@ -35,7 +35,8 @@ const wallet_transactions = mongoose.Schema({
         type:'String'
     },
     amount:{
-        type:Double
+        // type:Double
+        type:'String'
     },
     fees:{
         type:Double
