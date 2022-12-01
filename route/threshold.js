@@ -51,8 +51,8 @@ Router.post('/getautofee',async (req,res)=>{
     }
     else if(req.body.walletType == "USDT"){
         wallet_id=process.env.THRESHOLD_USDT_WALLET_ID_MASS_SENDER
-        secret=process.env.THRESHOLD_USDT_API_TOKEN_MASS_SENDER
-        Api=process.env.THRESHOLD_USDT_API_SECRET_MASS_SENDER
+        Api=process.env.THRESHOLD_USDT_API_TOKEN_MASS_SENDER
+        secret=process.env.THRESHOLD_USDT_API_SECRET_MASS_SENDER
     }
         
     let rand = random(option_rand);
