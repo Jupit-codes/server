@@ -78,8 +78,8 @@ Router.post('/getautofee',async (req,res)=>{
 
    
    // var time = Math.floor(new Date().getTime() / 1000)
-   var timestamp = Math.floor(new Date().getTime() / 1000);
-   var time = timestamp - 240;
+   var time = Math.floor(new Date().getTime() / 1000);
+//    var time = timestamp - 240;
     // var postData = [{ "block_num": [1] }]
     const params = ['{"block_nums":[1,50,100]}'];
 
