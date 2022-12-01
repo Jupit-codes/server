@@ -44,12 +44,12 @@ Router.post('/getautofee',async (req,res)=>{
     let wallet_id = "";
     let secret = "";
 
-    if(req.body.walletType === "BTC"){
+    if(req.body.walletType == "BTC"){
             secret=process.env.THRESHOLD_BTC_API_SECRET_MASS_SENDER;
             Api=process.env.THRESHOLD_BTC_API_TOKEN_MASS_SENDER
             wallet_id=process.env.THRESHOLD_BTC_WALLET_ID_MASS_SENDER
     }
-    else if(req.body.walletType === "USDT"){
+    else if(req.body.walletType == "USDT"){
         wallet_id=process.env.THRESHOLD_USDT_API_SECRET_MASS_SENDER
         secret=process.env.THRESHOLD_USDT_API_TOKEN_MASS_SENDER
         Api=process.env.THRESHOLD_USDT_WALLET_ID_MASS_SENDER
