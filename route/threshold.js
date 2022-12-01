@@ -77,7 +77,9 @@ Router.post('/getautofee',async (req,res)=>{
     }
 
    
-    var time = Math.floor(new Date().getTime() / 1000)
+   // var time = Math.floor(new Date().getTime() / 1000)
+   var timestamp = Math.floor(new Date().getTime() / 1000);
+   var time = timestamp - 240;
     // var postData = [{ "block_num": [1] }]
     const params = ['{"block_nums":[1,50,100]}'];
 
@@ -88,6 +90,9 @@ Router.post('/getautofee',async (req,res)=>{
         t:time,
         r:rand,
     }
+
+    console.log(secret,Api)
+    console.log(wallet_id)
     
     const get_request_args = querystring.stringify(parameters);
    
@@ -105,7 +110,7 @@ Router.post('/getautofee',async (req,res)=>{
         }
    })
    .then((result)=>{
-    console.log(result.data)
+    console.log("here",result.data)
     //    console.log(result.data['auto_fees'][0]['auto_fee'])
     let bankCheck;
         bank.findOne({email:req.body.email},async (err,docs)=>{
@@ -139,7 +144,8 @@ Router.post('/getautofee',async (req,res)=>{
     //        "message":err,
     //        "status":false
     //    })
-       res.status(403).send(err);
+    res.send(err)
+       //res.status(403).send(err);
    })
 })
 
