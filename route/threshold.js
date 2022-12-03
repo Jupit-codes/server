@@ -302,7 +302,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                     
                 }
                 else{
-                   console.log('TRansaction is new')
+                   
                     let status = 'Transaction Completed';
                     let insert = await updateDepositStatus(req.body,status);
                    
