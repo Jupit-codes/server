@@ -268,6 +268,8 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                         let UpdateDepositAccount = await updateDepositStatusCallback(req.body.currency,req.body.to_address,newAmount);
                        
                         if(UpdateDepositAccount){
+
+                            console.log('Update Processing')
                             
                             let saveNotificationCallbackx= await saveNotificationCallBack(req.body,status)
                           
@@ -295,14 +297,14 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                     
                 }
                 else{
-                   
+                   console.log('TRansaction is new')
                     let status = 'Transaction Completed';
                     let insert = await updateDepositStatus(req.body,status);
                    
-                    if(insert[0]){
-                        //NOtification
-                        let saveNotificationx = await saveNotification(req.body,status)
-                    }
+                    // if(insert[0]){
+                    //     //NOtification
+                    //     let saveNotificationx = await saveNotification(req.body,status)
+                    // }
 
                     let newAmount;
                         
