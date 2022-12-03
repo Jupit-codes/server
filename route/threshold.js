@@ -2586,7 +2586,7 @@ async function updateDepositStatus(body,status){
             }
             else if(body.currency == "TRX-USDT-TRC20"){
                 
-                rateInNaira = docs.usdt[1].buy;
+                rateInNaira = mydocs.usdt[1].buy;
                 console.log('RateINNairaCall',rateInNaira)
             }
         }
