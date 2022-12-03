@@ -1586,7 +1586,7 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
 }
 Router.get("/rate",(req,res)=>{
     rate.findOne({initialization:'JupitRateBard'},(err,docs)=>{
-        res.send(docs.usdt[0].sell);
+        res.send(docs.usdt[1]);
     })
 })
 
@@ -2527,6 +2527,9 @@ async function FailedUpdateEmail(addr,txid,subject,amount,currency){
      });
 }
 
+
+
+
 async function updateDepositStatus(body,status){
     let newAmount=0;
     let orderid=""
@@ -2568,7 +2571,7 @@ async function updateDepositStatus(body,status){
     let newCurrency="";
     let marketPrice = 0;
     
-    await rate.findOne({initialization:'JupitRateBard'},(err,mydocs)=>{
+    rate.findOne({initialization:'JupitRateBard'},(err,mydocs)=>{
         if(err){
             console.log('rateinnairaError',err)
             rateInNaira=0
@@ -2579,10 +2582,12 @@ async function updateDepositStatus(body,status){
             if(body.currency == "BTC"){
                 rateInNaira = mydocs.btc[0].buy
                 
+                
             }
             else if(body.currency == "TRX-USDT-TRC20"){
+                
+                rateInNaira = docs.usdt[1].buy;
                 console.log('RateINNairaCall',rateInNaira)
-                rateInNaira = mydocs.usdt[0].buy
             }
         }
     })
