@@ -179,17 +179,17 @@ Router.get('/cryptocompare',async (req,res)=>{
 })
 
 async function crypomarketprice(){
-    let x = await axios.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,USDT&tsyms=USD',{
+    let x = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=tether,bitcoin&order=market_cap_desc&per_page=100&page=1&sparkline=false',{
         headers:{
             'Content-Type':'application/json',
-            'Authorization':'Apikey fab6779bb25e937fa7ef922e132796d2c323635c431bc1f3185faf7b293633c5'
+           
         }
     })
     .then(result=>{
         console.log(result.data)
-       if(result.data.RAW){
-        let BTCprice = parseFloat(result.data.RAW.BTC.USD.PRICE) - 150;
-        let USDTprice = result.data.RAW.USDT.USD.PRICE
+       if(result.data){
+        let BTCprice = parseFloat(result.data[0].current_price) - 150;
+        let USDTprice = result.data[1].current_price
         return [true,BTCprice,USDTprice]
         
        }
