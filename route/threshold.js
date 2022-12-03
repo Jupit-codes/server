@@ -2604,7 +2604,9 @@ async function updateDepositStatus(body,status){
     }
     let usdValue = parseFloat(body.amount * 0.000001).toFixed(6) * parseFloat(marketPrice);
     let nairaValue = usdValue * rateInNaira;
-   console.log(nairaValue)
+    console.log('usdValue',usdValue)
+    console.log('marketPrice',marketPrice)
+   console.log('nairaValue',nairaValue)
 
     if(body.currency == "TRX-USDT-TRC20"){
         newCurrency = "USDT"
