@@ -2568,8 +2568,9 @@ async function updateDepositStatus(body,status){
     let newCurrency="";
     let marketPrice = 0;
     
-    rate.findOne({initialization:'JupitRateBard'},(err,mydocs)=>{
+    await rate.findOne({initialization:'JupitRateBard'},(err,mydocs)=>{
         if(err){
+            console.log('rateinnairaError',err)
             rateInNaira=0
         }
         else if(mydocs){
@@ -2580,6 +2581,7 @@ async function updateDepositStatus(body,status){
                 
             }
             else if(body.currency == "TRX-USDT-TRC20"){
+                console.log('RateINNairaCall',rateInNaira)
                 rateInNaira = mydocs.usdt[0].buy
             }
         }
@@ -2604,6 +2606,7 @@ async function updateDepositStatus(body,status){
     }
     let usdValue = parseFloat(body.amount * 0.000001).toFixed(6) * parseFloat(marketPrice);
     let nairaValue = usdValue * rateInNaira;
+    console.log('Sus',rateInNaira)
     console.log('usdValue',usdValue)
     console.log('marketPrice',marketPrice)
    console.log('nairaValue',nairaValue)
