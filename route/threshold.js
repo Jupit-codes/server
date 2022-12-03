@@ -321,10 +321,10 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                         await Usermodel.findOne({
                             $or:[
                                 {
-                                    'btc_wallet.0.wallet':req.body.to_address
+                                    'btc_wallet.address':req.body.to_address
                                 },
                                 {
-                                    'usdt_wallet.0.wallet':req.body.to_address
+                                    'usdt_wallet.address':req.body.to_address
                                 }
                             ]
                         },(err,docxc)=>{
