@@ -253,6 +253,9 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                 }
                 if(docs){
                     let status = 'Transaction Completed';
+                    if(docs.processing_state == 2){
+                        res.sendStatus(200);
+                    }
                     if(docs.processing_state !== 2){
                        
                         await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
@@ -382,6 +385,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
     else{
         
         console.log('Unverified Call On Deposit Webhook')
+        res.sendStatus(200);
     }
    
 })
