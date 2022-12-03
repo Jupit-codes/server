@@ -244,6 +244,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
   
         if(req.body.processing_state === 2){
             console.log('I am here 1')
+            console.log(req.body)
             Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                 if(err){
                     res.json({
@@ -253,10 +254,8 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                 }
                 if(docs){
                     let status = 'Transaction Completed';
-                    if(docs.processing_state == 2){
-                        res.sendStatus(200);
-                    }
-                    if(docs.processing_state !== 2){
+                    
+                    if(docs.processing_state !== "2"){
                        
                         await wallet_transactions.findOneAndUpdate({txtid:req.body.txid},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
                         let newAmount;
@@ -296,6 +295,9 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                         }
                         // console.log('Deposit-Completed2')
 
+                    }
+                    else if(docs.processing_state == "2"){
+                        res.sendStatus(200);
                     }
                     
                 }
@@ -338,10 +340,13 @@ Router.post('/incoming/depositcallback', (req,res)=>{
                             }
                             else if(docxc){
                                 successfulDeposit(docxc.email,docxc.username,req.body.currency,req.body.from_address,newAmount)
+                                
                             }
-                        })
-                        
+                        }).clone().catch(function(err){ return [err,false]});
+
                         res.sendStatus(200);
+                        
+                        //res.sendStatus(200);
                     }
                     else{
                         let subject = "Failed Deposit Update onPremises"
