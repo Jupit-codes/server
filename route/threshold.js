@@ -244,7 +244,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
   
         if(req.body.processing_state === 2){
             console.log('I am here 1')
-            console.log(req.body)
+            
             Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
                 if(err){
                     res.json({
