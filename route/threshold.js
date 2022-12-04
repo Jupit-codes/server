@@ -218,29 +218,29 @@ Router.post('/incoming/depositcallback', (req,res)=>{
 
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         
-        if(req.body.processing_state === 1){
-            Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
-                if(err){
-                    res.json({
-                        'message':'An Error'+err,
-                        'status':false
-                    })
-                }
-                if(docs){
+        // if(req.body.processing_state === 1){
+        //     Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
+        //         if(err){
+        //             res.json({
+        //                 'message':'An Error'+err,
+        //                 'status':false
+        //             })
+        //         }
+        //         if(docs){
 
-                }
-                else{
+        //         }
+        //         else{
                     
-                    let status = 'Processing';
-                    let insert = await updateDepositStatus(req.body,status);
-                    // console.log('Deposit-Processing')
-                    if(insert[0]){
-                        let saveNotificationx = await saveNotification(req.body,status)
-                    }
+        //             let status = 'Processing';
+        //             let insert = await updateDepositStatus(req.body,status);
+        //             // console.log('Deposit-Processing')
+        //             if(insert[0]){
+        //                 let saveNotificationx = await saveNotification(req.body,status)
+        //             }
 
-                }
-            })
-        }
+        //         }
+        //     })
+        // }
   
         if(req.body.processing_state === 2){
             console.log('I am here 1')
@@ -394,6 +394,7 @@ Router.post('/incoming/depositcallback', (req,res)=>{
     }
    
 })
+
 
 async function updateDepositStatusCallback(currency,address,amount){
     let response =false
