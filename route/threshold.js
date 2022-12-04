@@ -434,26 +434,26 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
         console.log(req.body)
         let newAmount;
-        if(req.body.processing_state === 1){
-            Walletmodel.findOne({order_id:req.body.order_id}, async function(err,docs){
-                if(err){
-                    res.json({
-                        'message':'An Error'+err,
-                        'status':false
-                    })
-                }
-                if(docs){
+        // if(req.body.processing_state === 1){
+        //     Walletmodel.findOne({order_id:req.body.order_id}, async function(err,docs){
+        //         if(err){
+        //             res.json({
+        //                 'message':'An Error'+err,
+        //                 'status':false
+        //             })
+        //         }
+        //         if(docs){
 
-                }
-                else{
+        //         }
+        //         else{
                    
-                    let status = "Processing"
-                    await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
+        //             let status = "Processing"
+        //             await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
                     
-                }
-            })
+        //         }
+        //     })
   
-        }
+        // }
         if(req.body.processing_state === 2){
 
             Walletmodel.findOne({order_id:req.body.order_id},async function(err,docs){
