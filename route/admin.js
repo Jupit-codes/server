@@ -2970,8 +2970,8 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
     
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
-    let momentum_start = startDate
-    let momentum_end = endDate
+    let momentum_start = moment(startDate).startOf('day').toDate()
+    let momentum_end = moment(endDate).endOf('day').toDate()
   console.log(momentum_start,momentum_end)
 
     let BTC_IN ,BTC_OUT,USDT_IN,USDT_OUT
@@ -3018,7 +3018,13 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address",updatted:"$updated"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
+                    
                 },
                 
             }, 
@@ -3061,7 +3067,12 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3104,7 +3115,12 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3147,7 +3163,12 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3185,7 +3206,12 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3221,7 +3247,12 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3257,7 +3288,12 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3293,7 +3329,12 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3422,7 +3463,13 @@ router.post('/get/fiatasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address",updatted:"$updated"},
-                    amount: { $sum : "$nairavalue"} 
+                    amount: { 
+                        
+                        $sum: {
+                            "$toDouble": "$nairavalue"
+                          }
+                    } 
+                    
                 },
                 
             }, 
@@ -3445,7 +3492,11 @@ router.post('/get/fiatasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : {updatted:"$updated"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                            $sum: {
+                                "$toDouble": "$amount"
+                            }
+                        } 
                 },
                 
             }, 
@@ -3490,7 +3541,11 @@ router.post('/get/fiatasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$nairavalue"} 
+                    amount: { 
+                        $sum: {
+                            "$toDouble": "$nairavalue"
+                          }
+                        } 
                 },
                 
             }, 
@@ -3514,7 +3569,13 @@ router.post('/get/fiatasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : {updatted:"$updated"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                        
+                       } 
                 },
                 
             }, 
@@ -3553,7 +3614,13 @@ router.post('/get/fiatasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" }},
-                    amount: { $sum : "$nairavalue"} 
+                    amount: {
+                         
+                         $sum: {
+                            "$toDouble": "$nairavalue"
+                          }
+                    
+                        } 
                 },
                 
             }, 
@@ -3569,7 +3636,12 @@ router.post('/get/fiatasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : {updatted:"$updated"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3605,7 +3677,12 @@ router.post('/get/fiatasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : { year: { $year : "$updated" }, month: { $month : "$updated" },day: { $dayOfMonth : "$updated" },transactionType:"$type",currency:"$currency",from_address:"$from_address",to_address:"$to_address"},
-                    amount: { $sum : "$nairavalue"} 
+                    amount: { 
+                        
+                        $sum: {
+                            "$toDouble": "$nairavalue"
+                          }
+                    } 
                 },
                 
             }, 
@@ -3620,7 +3697,12 @@ router.post('/get/fiatasset/set',async (req,res)=>{
             { 
                 $group : { 
                     _id : {updatted:"$updated"},
-                    amount: { $sum : "$amount"} 
+                    amount: { 
+                       
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
                 },
                 
             }, 
