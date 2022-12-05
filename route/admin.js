@@ -2970,8 +2970,8 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
     
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
-    let momentum_start = moment(startDate).startOf('day').toDate()
-    let momentum_end = moment(endDate).endOf('day').toDate()
+    let momentum_start = startDate
+    let momentum_end = endDate
   console.log(momentum_start,momentum_end)
 
     let BTC_IN ,BTC_OUT,USDT_IN,USDT_OUT
