@@ -464,7 +464,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                     })
                 }
                 if(docs){
-                    if(docs.processing_state !== 2){
+                    if(docs.processing_state !== "2"){
                          let status = 'Transaction Completed';
                          let newAmount;
                          let currency;
@@ -494,22 +494,19 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                             initiator:'sender',
                             senderaddress:'',
                         })
-      
+                        res.sendStatus(200); 
                     }
-                    res.sendStatus(200); 
+                    
                 }
                 else{
-                    
                     res.sendStatus(200);
-                    
-                   
                 }
             })
           
             
         }
         if(req.body.processing_state === -1){
-            let status = 'Transaction Completed';
+            let status = 'Transaction Failed';
             Walletmodel.findOne({order_id:req.body.order_id},async function(err,docs){
                 if(err){
                     res.json({
@@ -550,6 +547,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                 }
 
             })
+            res.sendStatus(200);
             
                
         }
@@ -778,7 +776,10 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
                         usdvalue:req.body.usdvalue,
                         nairavalue:req.body.nairavalue,
                         rateInnaira:req.body.rate,
-                        initiator:req.body.email
+                        initiator:req.body.email,
+                        state:"1",
+                        confirm_block:"1",
+                        processing_state:"1"
                     });
                     cryptoledger.create({
                         address:sender,
@@ -1299,7 +1300,7 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
    })
    .then((result)=>{
     
-        return([result.data,true,generate_order_id])
+        return([result.data,true,"804173_"+generate_order_id])
         
    })
    .catch((err)=>{
