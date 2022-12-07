@@ -2970,8 +2970,9 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
     
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
-    let momentum_start = moment(startDate).startOf('day').toDate()
-    let momentum_end = moment(endDate).endOf('day').toDate()
+    console.log(startDate.split('T')[0])
+    let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
+    let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
   console.log(momentum_start,momentum_end)
 
     let BTC_IN ,BTC_OUT,USDT_IN,USDT_OUT
@@ -3418,8 +3419,8 @@ router.post('/get/fiatasset/set',async (req,res)=>{
     let NGN_IN,NGN_IN_II,NGN_OUT,NGN_OUT_II
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
-    let momentum_start = moment(startDate).startOf('day').toDate()
-    let momentum_end = moment(endDate).endOf('day').toDate()
+    let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
+    let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
     if(startDate && endDate ){
         
         console.log(new Date(startDate))
