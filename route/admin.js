@@ -3777,8 +3777,8 @@ router.post('/get/transaction/count',async(req,res)=>{
     let startDate = req.body.startdate;
     let endDate = req.body.enddate; 
     let asset = req.body.asset
-      let momentum_start = moment(startDate).startOf('day').toDate()
-      let momentum_end = moment(endDate).endOf('day').toDate()
+      let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
+      let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
     
 
     // res.send({
