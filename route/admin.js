@@ -3423,8 +3423,7 @@ router.post('/get/fiatasset/set',async (req,res)=>{
     let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
     if(startDate && endDate ){
         
-        console.log("here",momentum_start)
-        console.log("here",momentum_end)
+     
         NGN_IN = await wallet_transactions.aggregate([
         
             { $match: {

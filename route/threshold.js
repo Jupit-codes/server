@@ -2545,7 +2545,8 @@ async function FailedUpdateEmail(addr,txid,subject,amount,currency){
 
 async function updateDepositStatus(body,status){
     let newAmount=0;
-    let orderid=""
+    let orderid="";
+    let converter;
     if(body.currency === "BTC"){
         
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
@@ -2594,13 +2595,13 @@ async function updateDepositStatus(body,status){
         //    console.log('bodyCurrency',body.currency)
             if(body.currency == "BTC"){
                 rateInNaira = mydocs.btc[0].buy
-                
+                converter = parseFloat(body.amount * 0.00000001).toFixed(8);
                 
             }
             else if(body.currency == "TRX-USDT-TRC20"){
                 
                 rateInNaira = mydocs.usdt[1].buy;
-                console.log('RateINNairaCall',rateInNaira)
+                newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
             }
         }
     })
