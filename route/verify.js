@@ -1275,7 +1275,7 @@ router.post('/sell/coin',(req,res)=>{
                     userid:req.body.userid,
                     address:'',
                     amount:req.body.btcamount,
-                    type:'Debit',
+                    type:'Credit',
                     transaction_fee:0,
                     currency:req.body.wallet_type
 
