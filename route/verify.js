@@ -1112,6 +1112,26 @@ router.post('/purchase/coin',(req,res)=>{
             }
             else if(docs){
                 // res.send(docs)
+                let cryptoLedgerDebit = await cryptoledger.create({
+                    userid:req.body.userid,
+                    address:'',
+                    amount:- req.body.btcamount,
+                    type:'Debit',
+                    transaction_fee:0,
+                    currency:req.body.wallet_type
+
+                }) 
+
+                let fiatLedgerCredit = await fiatledger.create({
+                    userid:req.body.userid,
+                    email:docs.email,
+                    amount:req.body.ngnamount,
+                    type:'Credit',
+                    transaction_fee:0,
+                    status:'completed',
+                    currency:'NGN'
+
+                }) 
                 let saveStatus =  await Notification.create({
                     type:5,
                     orderid:docs._id,
@@ -1169,6 +1189,27 @@ router.post('/purchase/coin',(req,res)=>{
             }
             else if(docs){
                 // res.send(docs)
+
+                let cryptoLedgerDebit = await cryptoledger.create({
+                    userid:req.body.userid,
+                    address:'',
+                    amount:- req.body.btcamount,
+                    type:'Debit',
+                    transaction_fee:0,
+                    currency:req.body.wallet_type
+
+                }) 
+
+                let fiatLedgerCredit = await fiatledger.create({
+                    userid:req.body.userid,
+                    email:docs.email,
+                    amount:req.body.ngnamount,
+                    type:'Credit',
+                    transaction_fee:0,
+                    status:'completed',
+                    currency:'NGN'
+
+                }) 
                 let saveStatus =  await Notification.create({
                     type:5,
                     orderid:docs._id,
@@ -1229,6 +1270,28 @@ router.post('/sell/coin',(req,res)=>{
             }
             else if(docs){
                 // res.send(docs)
+
+                let cryptoLedgerCredit = await cryptoledger.create({
+                    userid:req.body.userid,
+                    address:'',
+                    amount:req.body.btcamount,
+                    type:'Debit',
+                    transaction_fee:0,
+                    currency:req.body.wallet_type
+
+                }) 
+
+                let fiatLedgerDebit = await fiatledger.create({
+                    userid:req.body.userid,
+                    email:docs.email,
+                    amount: -req.body.ngnamount,
+                    type:'Debit',
+                    transaction_fee:0,
+                    status:'completed',
+                    currency:'NGN'
+
+                }) 
+
                 let saveStatus =  await Notification.create({
                     type:5,
                     orderid:docs._id,
