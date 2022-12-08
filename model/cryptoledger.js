@@ -7,27 +7,27 @@ const cryptoSchema = mongoose.Schema({
     },
     address:{
         type:'String',
-        required: [true, "Required"],
+      
     },
     amount:{
         type:'String',
-        required: [true, "Required"],
+       
         
     },
     type:{
         type:'String',
-        required: [true, "Required"],
+       
         
     },
     
     currency:{
         type:'String',
-        required: [true, "Required"],
+        
         
     },
     transaction_fee:{
         type:'String',
-        required: [true, "Required"],
+        
     },
     dateofcreation:{
         type:Date
