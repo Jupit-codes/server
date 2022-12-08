@@ -1528,19 +1528,49 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
                 initiator:req.body.reference,
         
             })
-
-            await wallet_transactions.create({
-                type:'Deposit',
-                serial:req.body.account_number,
-                order_id:req.body.account_number,
-                currency:'Naira',
-                amount:req.body.amount,
-                from_address:req.body.reference,
-                fees:"0",
-                to_address:req.body.account_number,
-                status:'Transaction Completed' 
-    })
-
+            Usermodel.findOne({account_number:req.body.account_number},async(err,docs)=>{
+               if(err){
+                await wallet_transactions.create({
+                    type:'Deposit',
+                    serial:req.body.account_number,
+                    order_id:'N/A/E',
+                    currency:'Naira',
+                    amount:req.body.amount,
+                    from_address:req.body.reference,
+                    fees:"0",
+                    to_address:req.body.account_number,
+                    status:'Transaction Completed' 
+                })
+               }
+               else if(docs){
+                await wallet_transactions.create({
+                    type:'Deposit',
+                    serial:req.body.account_number,
+                    order_id:docs._id,
+                    currency:'Naira',
+                    amount:req.body.amount,
+                    from_address:req.body.reference,
+                    fees:"0",
+                    to_address:req.body.account_number,
+                    status:'Transaction Completed' 
+                })
+               }
+               else{
+                await wallet_transactions.create({
+                    type:'Deposit',
+                    serial:req.body.account_number,
+                    order_id:'N/A',
+                    currency:'Naira',
+                    amount:req.body.amount,
+                    from_address:req.body.reference,
+                    fees:"0",
+                    to_address:req.body.account_number,
+                    status:'Transaction Completed' 
+                })
+               }
+    
+            })
+            
 
 
 
