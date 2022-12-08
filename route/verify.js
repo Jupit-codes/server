@@ -1276,6 +1276,7 @@ router.post('/sell/coin',(req,res)=>{
                     address:'',
                     amount:req.body.btcamount,
                     type:'Credit',
+                    status:'completed',
                     transaction_fee:0,
                     currency:req.body.wallet_type
 

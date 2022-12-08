@@ -29,6 +29,9 @@ const cryptoSchema = mongoose.Schema({
         type:'String',
         
     },
+    status:{
+        type:'String'
+    },
     dateofcreation:{
         type:Date
     },
