@@ -2290,6 +2290,7 @@ router.post('/filterfiatledger',async(req,res)=>{
         ])
 
        
+        console.log(sumFiatLedger)
     
     
     const x = fiatledger.find({
@@ -2302,7 +2303,7 @@ router.post('/filterfiatledger',async(req,res)=>{
            else{
                res.send({
                 data:docs,
-                sumTotal:sumFiatLedger[0].amount
+                sumTotal:sumFiatLedger.length > 0 ? sumFiatLedger[0].amount : 0
                })
            }
        }).sort({ updated: 'desc'})
