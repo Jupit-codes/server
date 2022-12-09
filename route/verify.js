@@ -2169,7 +2169,7 @@ router.post('/filtercryptoledger',(req,res)=>{
 
 //filterfiatledger
 
-router.post('/filterfiatledger',(req,res)=>{
+router.post('/filterfiatledger',async(req,res)=>{
    
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -2263,7 +2263,35 @@ router.post('/filterfiatledger',(req,res)=>{
     // }
     
     if(query.length > 0){
+        
+       let sumFiatLedger = await fiatledger.aggregate([
+        
+            { $match: {
+                
+                  $and:query
+              
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id:{},
+                    amount: { 
+                        // $sum : "$amount"
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
+                    
+                },
+                
+            }, 
+          
+        ])
+
        
+    
+    
     const x = fiatledger.find({
         $and:query
       
@@ -2272,7 +2300,10 @@ router.post('/filterfiatledger',(req,res)=>{
                res.send(err)
            }
            else{
-               res.send(docs)
+               res.send({
+                data:docs,
+                sumTotal:sumFiatLedger[0].amount
+               })
            }
        }).sort({ updated: 'desc'})
 
