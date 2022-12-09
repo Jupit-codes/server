@@ -4146,15 +4146,42 @@ router.get('/get/all/cryptoledger',(req,res)=>{
     })
 })
  
-router.get('/get/all/fiatledger',(req,res)=>{
+router.get('/get/all/fiatledger',async (req,res)=>{
+   
+    let sum = await fiatledger.aggregate([
+        
+        { $match: {}
+        
+        },
+        { 
+            $group : { 
+                _id : {},
+                amount: { 
+                    // $sum : "$amount"
+                    $sum: {
+                        "$toDouble": "$amount"
+                      }
+                } 
+                
+            },
+            
+        }, 
+      
+    ])
+
     fiatledger.find({},(err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
         else if(docs){
-            res.send(docs)
+            res.send({
+                data:docs,
+                sumTotal:sum[0].amount
+            })
         }
     })
+
+   
 })
  
 export default router
