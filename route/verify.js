@@ -2274,7 +2274,7 @@ router.post('/filterfiatledger',(req,res)=>{
            else{
                res.send(docs)
            }
-       }).sort({ date_created: 'asc'})
+       }).sort({ updated: 'desc'})
 
     }
     else{
@@ -2285,7 +2285,7 @@ router.post('/filterfiatledger',(req,res)=>{
                else{
                    res.send(docs)
                }
-           }).sort({ date_created: 'asc'})
+           }).sort({ updated: 'desc'})
     }
     
         
