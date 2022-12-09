@@ -4135,13 +4135,65 @@ router.get('/get/allroles',(req,res)=>{
     })
 
 })
-router.get('/get/all/cryptoledger',(req,res)=>{
+router.get('/get/all/cryptoledger',async(req,res)=>{
+
+    let sumBTC = await cryptoledger.aggregate([
+        
+        { $match: {
+            currency:"BTC"
+        }
+        
+        },
+        { 
+            $group : { 
+                _id : {},
+                amount: { 
+                    // $sum : "$amount"
+                    $sum: {
+                        "$toDouble": "$amount"
+                      }
+                } 
+                
+            },
+            
+        }, 
+      
+    ])
+
+    let sumUSDT= await cryptoledger.aggregate([
+        
+        { $match: {
+            currency:"USDT"
+        }
+        
+        },
+        { 
+            $group : { 
+                _id : {},
+                amount: { 
+                    // $sum : "$amount"
+                    $sum: {
+                        "$toDouble": "$amount"
+                      }
+                } 
+                
+            },
+            
+        }, 
+      
+    ])
+
+
     cryptoledger.find({},(err,docs)=>{
         if(err){
             res.status(400).send(err)
         }
         else if(docs){
-            res.send(docs)
+            res.send({
+                data:docs,
+                sumTotalBTC:sumBTC.length ? sumBTC[0].amount : 0,
+                sumTotalUSDT:sumUSDT.length ? sumUSDT[0].amount : 0
+            })
         }
     })
 })
@@ -4176,7 +4228,7 @@ router.get('/get/all/fiatledger',async (req,res)=>{
         else if(docs){
             res.send({
                 data:docs,
-                sumTotal:sum[0].amount
+                sumTotal:sum.length > 0 ? sum[0].amount : 0
             })
         }
     })
