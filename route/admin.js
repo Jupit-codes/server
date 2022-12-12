@@ -1809,7 +1809,7 @@ router.post('/verify/idcard',middlewareVerify, async(req,res)=>{
                     "lastName": docs.lastname,
                     "gender": "Male",
                     "dob": docs.dob,
-                    "verificationType": "PASSPORT-FULL-DETAILS",
+                    "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
                      "email":"bigdevtemy@gmail.com",
                      "phone": "07030000000",  
                     "selfie": base64Image,
