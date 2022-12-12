@@ -1809,8 +1809,8 @@ router.post('/verify/idcard',middlewareVerify, async(req,res)=>{
                     "lastName": docs.lastname,
                     "gender": "Male",
                     "dob": docs.dob,
-                    "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
-                     "email":"johndoe@email.com",
+                    "verificationType": "PASSPORT-FULL-DETAILS",
+                     "email":"bigdevtemy@gmail.com",
                      "phone": "07030000000",  
                     "selfie": base64Image,
                     "selfieToDatabaseMatch":"true"
