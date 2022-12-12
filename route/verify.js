@@ -194,6 +194,14 @@ router.get('/emptyTable',(req,res)=>{
     })
 })
 
+router.get('/others',(req,res)=>{
+    wallet_transactions.updateMany(
+        { order_id: '6388e3091e882cc2cfa550aa' },
+        { $set: { email: 'borborfemo@gmail.com'}},{upsert:true}).then((result, err) => {
+           return res.status(200).json({ data: result, message:"Value Updated" });
+       })
+})
+
 
 router.post('/latest/transaction',(req,res)=>{
     let btcaddress = req.body.btcaddress;
@@ -1158,6 +1166,7 @@ router.post('/purchase/coin',(req,res)=>{
                 await wallet_transactions.create({
                             type:'Buy',
                             serial:req.body.userid,
+                            email:docs.email,
                             order_id:req.body.userid,
                             currency:req.body.wallet_type,
                             amount:req.body.btcamount,
@@ -1320,6 +1329,7 @@ router.post('/sell/coin',(req,res)=>{
                 await wallet_transactions.create({
                             type:'Sell',
                             serial:req.body.userid,
+                            email:docs.email,
                             order_id:req.body.userid,
                             currency:req.body.wallet_type,
                             amount:req.body.btcamount,

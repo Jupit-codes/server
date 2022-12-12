@@ -14,6 +14,9 @@ const wallet_transactions = mongoose.Schema({
         type:'String',
        
     },
+    email:{
+        type:'String'
+    },
     currency:{
         type:'String',
         

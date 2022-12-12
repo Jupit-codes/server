@@ -2546,6 +2546,7 @@ async function FailedUpdateEmail(addr,txid,subject,amount,currency){
 async function updateDepositStatus(body,status){
     let newAmount=0;
     let orderid="";
+    let email = ""
     let converter;
     if(body.currency === "BTC"){
         
@@ -2554,14 +2555,17 @@ async function updateDepositStatus(body,status){
         await Usermodel.findOne({'btc_wallet[0].address': body.to_address},(err,docs)=>{
             if(err){
                     orderid="0000";
+                    email = "";
             }
             else if(docs){
                 
-                orderid = docs.id
+                orderid = docs._id
+                email = docs.email;
             }
             else{
                
                 orderid="0000";
+                email = "";
             }
         }).clone().catch(function(err){ return [err,false]});
     }
@@ -2570,12 +2574,15 @@ async function updateDepositStatus(body,status){
         await Usermodel.findOne({'usdt_wallet[0].address': body.to_address},(err,docs)=>{
             if(err){
                     orderid="0000";
+                    email = "";
             }
             else if(docs){
                 orderid = docs._id
+                email = docs.email;
             }
             else{
                 orderid="0000";
+                email=""
             }
         }).clone().catch(function(err){ return [err,false]});
     }
@@ -2645,6 +2652,7 @@ async function updateDepositStatus(body,status){
         type:"Receive",
         serial:body.serial,
         order_id:orderid,
+        email:email,
         currency:newCurrency,
         txtid:body.txid,
         rateInnaira:rateInNaira,
