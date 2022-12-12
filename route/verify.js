@@ -1629,6 +1629,7 @@ router.post('/client/withdrawal',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else if(docs){
+        
             //const valueNew = parseFloat(req.body.amount) - parseFloat(req.body.charge);
            // console.log('valueNew',valueNew);
             const url = "https://live.purplepayapp.com/v1/transfer/"
@@ -1645,6 +1646,8 @@ router.post('/client/withdrawal',(req,res)=>{
                     "msg": "Jupit Customer Withdrawal"
                     
             }
+            
+            
             axios.post(url,params,{ 
                 headers: {
                     'Content-Type': 'application/json',

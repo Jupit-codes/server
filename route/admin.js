@@ -1728,10 +1728,6 @@ router.post('/verify/idcard',middlewareVerify, async(req,res)=>{
                 const raw = Buffer.from(image.data).toString('base64');
                 const base64Image = "data:" + image.headers["content-type"] + ";base64,"+raw;
 
-                
-             
-                
-                
             if(docs.cardtype === "VoterCard"){
                 const params = {
                 
@@ -1803,18 +1799,8 @@ router.post('/verify/idcard',middlewareVerify, async(req,res)=>{
             else if(docs.cardtype === "Intlpassport"){
                 console.log(docs.cardtype)
                 const params_intlpassport = 
-                //     {
-                //         "searchParameter": docs.cardnumber,
-                //         "lastName": docs.lastname,
-                //         "firstName": docs.firstname,
-                //         "dob": docs.dob,
-                //         "gender": "Male",
-                //         "selfie": base64Image,
-                //         "phone": "07033300011",
-                //         "email": "hhhh@gmail.com",
-                //         "verificationType": "PASSPORT-FACE-MATCH-VERIFICATION",
-                //         "selfieToDatabaseMatch": "True"
-                //    }
+                
+               
                 {
                     "transactionReference": "",
                     "searchParameter": docs.cardnumber,
@@ -1902,7 +1888,7 @@ async function InternationalPassport(params){
                 }
             })
         .then(result=>{
-            console.log(result.data)
+            console.log("DataNemesisi",result.data)
             // res.send({
             //     "message":result.data,
             //     "status":true
@@ -1911,7 +1897,7 @@ async function InternationalPassport(params){
             
         })
         .catch((err)=>{
-            console.log(err.response)
+            console.log("ErrorNemsis",err.response)
             // res.status(400).send({
             //     "message":err.response,
             //     "status":false
