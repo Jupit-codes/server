@@ -4123,10 +4123,11 @@ router.get('/get/allroles',(req,res)=>{
 })
 router.get('/get/all/cryptoledger',async(req,res)=>{
 
-    let sumBTC = await cryptoledger.aggregate([
+    let sumBTCTransaction = await cryptoledger.aggregate([
         
         { $match: {
-            currency:"BTC"
+            currency:"BTC",
+            diff_type:'transaction'
         }
         
         },
@@ -4146,10 +4147,35 @@ router.get('/get/all/cryptoledger',async(req,res)=>{
       
     ])
 
-    let sumUSDT= await cryptoledger.aggregate([
+    let sumBTCTransactionFee = await cryptoledger.aggregate([
         
         { $match: {
-            currency:"USDT"
+            currency:"BTC",
+            diff_type:'transaction-fee'
+        }
+        
+        },
+        { 
+            $group : { 
+                _id : {},
+                amount: { 
+                    // $sum : "$amount"
+                    $sum: {
+                        "$toDouble": "$transaction_fee"
+                      }
+                } 
+                
+            },
+            
+        }, 
+      
+    ])
+
+    let sumUSDTTransaction= await cryptoledger.aggregate([
+        
+        { $match: {
+            currency:"USDT",
+            diff_type:'transaction'
         }
         
         },
@@ -4160,6 +4186,29 @@ router.get('/get/all/cryptoledger',async(req,res)=>{
                     // $sum : "$amount"
                     $sum: {
                         "$toDouble": "$amount"
+                      }
+                } 
+                
+            },
+            
+        }, 
+      
+    ])
+    let sumUSDTTransactionFee= await cryptoledger.aggregate([
+        
+        { $match: {
+            currency:"USDT",
+            diff_type:'transaction'
+        }
+        
+        },
+        { 
+            $group : { 
+                _id : {},
+                amount: { 
+                    // $sum : "$amount"
+                    $sum: {
+                        "$toDouble": "$transaction_fee"
                       }
                 } 
                 
@@ -4177,8 +4226,10 @@ router.get('/get/all/cryptoledger',async(req,res)=>{
         else if(docs){
             res.send({
                 data:docs,
-                sumTotalBTC:sumBTC.length ? sumBTC[0].amount : 0,
-                sumTotalUSDT:sumUSDT.length ? sumUSDT[0].amount : 0
+                sumBTCTransaction:sumBTCTransaction.length ? sumBTCTransaction[0].amount : 0,
+                sumBTCTransactionFee:sumBTCTransactionFee.length ? sumBTCTransactionFee[0].amount : 0,
+                sumUSDTTransaction:sumUSDTTransaction.length ? sumUSDTTransaction[0].amount : 0,
+                sumUSDTTransactionFee:sumUSDTTransactionFee.length ? sumUSDTTransactionFee[0].amount : 0
             })
         }
     })
