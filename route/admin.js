@@ -4222,7 +4222,7 @@ router.get('/get/all/fiatledger',async (req,res)=>{
                 amount: { 
                     // $sum : "$amount"
                     $sum: {
-                        "$toDouble": "$amount"
+                        "$toDouble": "$transaction_fee"
                       }
                 } 
                 
