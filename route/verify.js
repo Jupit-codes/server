@@ -196,8 +196,8 @@ router.get('/emptyTable',(req,res)=>{
 
 router.get('/others',(req,res)=>{
     wallet_transactions.updateMany(
-        { order_id: '6388e3091e882cc2cfa550aa' },
-        { $set: { email: 'borborfemo@gmail.com'}},{upsert:true}).then((result, err) => {
+        { order_id: '9995786465' },
+        { $set: { email: 'fakoredekudus@gmail.com'}},{upsert:true}).then((result, err) => {
            return res.status(200).json({ data: result, message:"Value Updated" });
        })
 })
@@ -1125,6 +1125,7 @@ router.post('/purchase/coin',(req,res)=>{
                     address:'',
                     amount:- req.body.btcamount,
                     type:'Debit',
+                    diff_type:'transaction',
                     transaction_fee:0,
                     currency:req.body.wallet_type
 
@@ -1135,6 +1136,7 @@ router.post('/purchase/coin',(req,res)=>{
                     email:docs.email,
                     amount:req.body.ngnamount,
                     type:'Credit',
+                    diff_type:'transaction',
                     transaction_fee:0,
                     status:'completed',
                     currency:'NGN'
@@ -1285,6 +1287,7 @@ router.post('/sell/coin',(req,res)=>{
                     address:'',
                     amount:req.body.btcamount,
                     type:'Credit',
+                    diff_type:'transaction',
                     status:'completed',
                     transaction_fee:0,
                     currency:req.body.wallet_type
@@ -1297,6 +1300,7 @@ router.post('/sell/coin',(req,res)=>{
                     amount: -req.body.ngnamount,
                     type:'Debit',
                     transaction_fee:0,
+                    diff_type:'transaction',
                     status:'completed',
                     currency:'NGN'
 
@@ -1700,6 +1704,7 @@ router.post('/client/withdrawal',(req,res)=>{
                                 type:'Withdrawal',
                                 serial:document.virtual_account,
                                 order_id:document.virtual_account,
+                                email:req.body.email,
                                 currency:'Naira',
                                 amount:req.body.amount,
                                 from_address:document.virtual_account,
@@ -1707,14 +1712,23 @@ router.post('/client/withdrawal',(req,res)=>{
                                 to_address:docs.account_number,
                                 status:'Transaction Completed' 
                     })
+                        // fiatledger.create({
+                        //     userid:req.body.userid,
+                        //     email:req.body.email,
+                        //     amount:req.body.amount,
+                        //     transaction_fee:req.body.charge,
+                        //     status:'Transaction Completed'
+                        // })
                     
-                    fiatledger.create({
-                        userid:req.body.userid,
-                        email:req.body.email,
-                        amount:req.body.amount,
-                        transaction_fee:req.body.charge,
-                        status:'Transaction Completed'
-                    })
+                        fiatledger.create({
+                            userid:req.body.userid,
+                            email:req.body.email,
+                            amount:req.body.amount,
+                            transaction_fee:req.body.charge,
+                            type:"Credit",
+                            diff_type:'transaction-fee',
+                            status:'Transaction Completed'
+                        })
                             res.send('Withdrawal Success');
                         }
                     })

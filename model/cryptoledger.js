@@ -10,23 +10,26 @@ const cryptoSchema = mongoose.Schema({
       
     },
     amount:{
-        type:'String',
+        type:'String'
        
         
     },
     type:{
-        type:'String',
+        type:'String'
        
         
     },
+    diff_type:{
+        type:'String'
+    },
     
     currency:{
-        type:'String',
+        type:'String'
         
         
     },
     transaction_fee:{
-        type:'String',
+        type:'String'
         
     },
     status:{

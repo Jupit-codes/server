@@ -22,7 +22,9 @@ const fiatschema = mongoose.Schema({
     type:{
         type:'String'
     },
-  
+    diff_type:{
+        type:'String'
+    },
     dateofcreation:{
         type:Date
     },

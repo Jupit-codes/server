@@ -4186,9 +4186,34 @@ router.get('/get/all/cryptoledger',async(req,res)=>{
  
 router.get('/get/all/fiatledger',async (req,res)=>{
    
-    let sum = await fiatledger.aggregate([
+    let sumTransaction = await fiatledger.aggregate([
         
-        { $match: {}
+        { $match: {
+            diff_type:'transaction'
+        }
+        
+        },
+        { 
+            $group : { 
+                _id : {},
+                amount: { 
+                    // $sum : "$amount"
+                    $sum: {
+                        "$toDouble": "$amount"
+                      }
+                } 
+                
+            },
+            
+        }, 
+      
+    ])
+
+    let sumTransactionFee = await fiatledger.aggregate([
+        
+        { $match: {
+            diff_type:'transaction-fee'
+        }
         
         },
         { 
@@ -4214,7 +4239,8 @@ router.get('/get/all/fiatledger',async (req,res)=>{
         else if(docs){
             res.send({
                 data:docs,
-                sumTotal:sum.length > 0 ? sum[0].amount : 0
+                sumTransaction:sumTransaction.length > 0 ? sum[0].amount : 0,
+                sumTransactionFee:sumTransactionFee.length > 0 ? sum[0].amount : 0
             })
         }
     })
