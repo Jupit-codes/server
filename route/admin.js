@@ -4239,8 +4239,8 @@ router.get('/get/all/fiatledger',async (req,res)=>{
         else if(docs){
             res.send({
                 data:docs,
-                sumTransaction:sumTransaction.length > 0 ? sum[0].amount : 0,
-                sumTransactionFee:sumTransactionFee.length > 0 ? sum[0].amount : 0
+                sumTransaction:sumTransaction.length > 0 ? sumTransaction[0].amount : 0,
+                sumTransactionFee:sumTransactionFee.length > 0 ? sumTransactionFee[0].amount : 0
             })
         }
     })
