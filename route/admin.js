@@ -1606,6 +1606,7 @@ router.get('/get/all/transactions',(req,res)=>{
     }).sort({updated:-1})
 })
 
+
 router.post('/get/all/transactions/individual',(req,res)=>{
 
     Usermodel.findOne({_id:req.body.userid},async(err,docs)=>{
