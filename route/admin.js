@@ -1603,7 +1603,7 @@ router.get('/get/all/transactions',(req,res)=>{
                 "status":true
             })
         }
-    })
+    }).sort({updated:-1})
 })
 
 router.post('/get/all/transactions/individual',(req,res)=>{
