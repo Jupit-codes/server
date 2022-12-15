@@ -2837,7 +2837,7 @@ async function getalldeposit(){
         else if(docs){
             res.send(docs)
         }
-    })
+    }).sort({updated:-1})
 })
 
 router.get('/all/withdrawal',(req,res)=>{
@@ -2849,7 +2849,7 @@ router.get('/all/withdrawal',(req,res)=>{
         else if(docs){
             res.send(docs)
         }
-    })
+    }).sort({updated:-1})
 })
 
 router.post('/edit/user/email',(req,res)=>{
