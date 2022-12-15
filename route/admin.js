@@ -1646,7 +1646,7 @@ router.post('/get/all/transactions/individual',(req,res)=>{
                 else if(docs){
                     res.send(docs)
                 }
-            }).clone().catch(function(err){ return [err,false]});
+            }).sort({updated: -1}).clone().catch(function(err){ return [err,false]});
           
         }
     }).clone().catch(function(err){ return [err,false]});
