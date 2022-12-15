@@ -1590,7 +1590,7 @@ router.post('/get/user/wallet/transactions',(req,res)=>{
 })
 
 router.get('/get/all/transactions',(req,res)=>{
-    let x = wallet_transactions.find({},(err,docs)=>{
+    let x = wallet_transactions.find({$or:[{type:'Receive'},{type:'Sell'},{type:'Buy'}]},(err,docs)=>{
         if(err){
             res.status(400).send({
                 "message":err,
@@ -3380,7 +3380,8 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
     res.send({
         'BTC_BALANCE':btc_asset_balance.toFixed(8),
         'USDT_BALANCE':usdt_asset_balance.toFixed(8),
-        'BTC_IN':BTC_IN,
+        'BTC_IN':btc_in,
+        'BTC_OUT':btc_out
     });
     
     //  res.json({
