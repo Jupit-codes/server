@@ -1590,7 +1590,7 @@ router.post('/get/user/wallet/transactions',(req,res)=>{
 })
 
 router.get('/get/all/transactions',(req,res)=>{
-    let x = wallet_transactions.find({$or:[{type:'Receive'},{type:'Sell'},{type:'Buy'}]},(err,docs)=>{
+    let x = wallet_transactions.find({$or:[{type:'Receive'},{type:'Sell'},{type:'Buy'},{type:'Send'}]},(err,docs)=>{
         if(err){
             res.status(400).send({
                 "message":err,

@@ -2357,7 +2357,8 @@ router.post('/filter/deposit',(req,res)=>{
     let endDate = req.body.enddate;
     let status = req.body.status;
     let virtual_account= req.body.virtualacct;
-
+    let momentstart = moment(startDate).startOf('day')
+    let momentend = moment(endDate).endOf('day').toDate();
     let query = [];
 
     if(startDate && endDate ){
@@ -2365,8 +2366,8 @@ router.post('/filter/deposit',(req,res)=>{
             updated: {
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
-                  $gte: new Date(startDate),
-                $lt: new Date(endDate).setHours(23, 59, 59)
+                  $gte: momentstart,
+                $lt: momentend
             }
         })  
 
@@ -2401,7 +2402,7 @@ router.post('/filter/deposit',(req,res)=>{
            else{
                res.send(docs)
            }
-       }).sort({ date_created: 'asc'})
+       }).sort({ updated: -1})
 
     }
     else{
@@ -2412,7 +2413,7 @@ router.post('/filter/deposit',(req,res)=>{
                else{
                    res.send(docs)
                }
-           }).sort({ date_created: 'asc'})
+           }).sort({ updated: -1})
     }
     
         
@@ -2650,6 +2651,9 @@ router.post('/filter/withdrawal',(req,res)=>{
     let email = req.body.email;
     let accountnumber = req.body.accountnumber;
     let status = req.body.status;
+
+    let momentstart = moment(startDate).startOf('day')
+    let momentend = moment(endDate).endOf('day').toDate();
   
 
     let query = [];
@@ -2659,8 +2663,8 @@ router.post('/filter/withdrawal',(req,res)=>{
             updated: {
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
-                  $gte: new Date(startDate),
-                $lt: new Date(endDate).setHours(23, 59, 59)
+                  $gte: momentstart,
+                $lt: momentend
             }
         })  
 
