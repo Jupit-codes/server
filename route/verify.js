@@ -2789,6 +2789,9 @@ router.post('/filter/transactionlog',(req,res)=>{
     let type = req.body.type;
     let currency = req.body.asset;
     let status = req.body.status
+
+    let momentstart = moment(startDate).startOf('day')
+    let momentend = moment(endDate).endOf('day').toDate();
     
 
     let query = [];
@@ -2798,8 +2801,8 @@ router.post('/filter/transactionlog',(req,res)=>{
             updated: {
                 // $gte: new Date(new Date(startDate)),
                 // $lt: new Date(new Date(endDate).setHours(23, 59, 59))
-                  $gte: new Date(startDate),
-                  $lt: new Date(endDate).setHours(23, 59, 59)
+                  $gte: momentstart,
+                  $lt: momentend
             }
         })  
 
@@ -2835,7 +2838,7 @@ router.post('/filter/transactionlog',(req,res)=>{
            else{
                res.send(docs)
            }
-       }).sort({ updated: 'asc'})
+       }).sort({ updated: -1})
 
     }
     else{
@@ -2846,7 +2849,7 @@ router.post('/filter/transactionlog',(req,res)=>{
                else{
                    res.send(docs)
                }
-        }).sort({ updated: 'asc'})
+        }).sort({ updated: -1})
     }
     
         
