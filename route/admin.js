@@ -4120,7 +4120,7 @@ router.get('/get/allroles',(req,res)=>{
                 "data":docs
             })
         }
-    })
+    }).sort({updated:-1})
 
 })
 
