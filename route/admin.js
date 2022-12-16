@@ -4123,6 +4123,28 @@ router.get('/get/allroles',(req,res)=>{
     })
 
 })
+
+router.post('/edit/rolename',async (req,res)=>{
+    let updateRole = await adminroles.findOneAndUpdate({_id:req.body.rowid},{rolename:req.body.newrolename}).exec();
+    
+    if(updateRole){
+        res.send({
+            "message":"Roles update was successfull",
+            "status":true
+        })
+    }
+    else{
+        res.send({
+            "message":"Roles Update Failed",
+            "status":false
+        })
+    }
+    
+   
+
+})
+
+
 router.get('/get/all/cryptoledger',async(req,res)=>{
 
     let sumBTCTransaction = await cryptoledger.aggregate([
