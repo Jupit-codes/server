@@ -4140,9 +4140,41 @@ router.post('/edit/rolename',async (req,res)=>{
         })
     }
     
+
    
 
 })
+
+router.post('/delete/selected/roles',async (req,res)=>{
+    //let updateRole = await adminroles.findOneAndUpdate({_id:req.body.rowid},{rolename:req.body.newrolename}).exec();
+    // let _ids = ["639bc714c41794f758ac8148","639bc708c41794f758ac8143"];
+    await adminroles.deleteMany({_id: {$in: req.body._ids}}, (err,docs)=> {
+        if(err){
+            res.send({
+                "message":err,
+                "status":false
+            })
+        }
+        else if(docs){
+            res.send({
+                "message":"Roles Succesfully Deleted",
+                "status":true
+            })
+        }
+        else{
+            res.send({
+                "message":"Fault",
+                "status":false
+            })
+        }
+    }).clone().catch(function(err){ console.log(err)});
+   
+
+})
+
+
+
+
 
 
 router.get('/get/all/cryptoledger',async(req,res)=>{
