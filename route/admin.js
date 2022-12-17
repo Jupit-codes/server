@@ -1635,6 +1635,9 @@ router.post('/get/all/transactions/individual',(req,res)=>{
                     },
                     {
                         to_address:address_USDT
+                    },
+                    {
+                        serial:docs.virtual_account
                     }
 
                 ]
