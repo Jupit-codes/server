@@ -2152,6 +2152,20 @@ router.get('/all/staff',(req,res)=>{
 })
 
 
+router.post('/staff/individual/',(req,res)=>{
+    admin.findOne({_id:req.body.staffid},(err,docs)=>{
+        if(err){
+            res.send(err);
+            return false
+        }
+        else{
+            res.send(docs);
+            return true;
+        }
+    })
+})
+
+
 router.post('/staff/creation',(req,res)=>{
 
     admin.findOne({username:req.body.username},async (err,docs)=>{
