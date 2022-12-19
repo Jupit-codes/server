@@ -1698,7 +1698,7 @@ router.post('/client/withdrawal',(req,res)=>{
                                 bank_code:docs.bank_code,
                                 email:req.body.email,
                                 type:'Withdrawal',
-                                currency_worth:req.body.amount
+                                currency_worth:parseFloat(req.body.amount) - parseFloat(req.body.charge)
                             })
                             await wallet_transactions.create({
                                 type:'Withdrawal',
