@@ -687,7 +687,7 @@ router.get('/get/all/users',(req,res)=>{
                 "status":false
             })
         }
-    })
+    }).sort({updated:-1})
 })
 
 
