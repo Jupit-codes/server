@@ -2198,14 +2198,20 @@ router.post('/staff/edit',(req,res)=>{
             if(EditStaffProfile){
                 req.body.previledges.length > 0 && req.body.previledges.forEach(d => {
         
-                    admin.findOneAndUpdate({_id:EditStaffProfile._id},{$push:{
-                        previledge:d
-                   }},(err,docs)=>{
-                       if(err){
-                           res.send(err);
-                       }
-                       
-                   })
+                    let emptyExistingPreviledges = admin.updateOne({_id:EditStaffProfile._id}, { $set: { previledge: [] }}, function(err, affected){
+                        console.log('affected: ', affected);
+                    });
+                    if(emptyExistingPreviledges){
+                        admin.findOneAndUpdate({_id:EditStaffProfile._id},{$push:{
+                                previledge:d
+                        }},(err,docs)=>{
+                            if(err){
+                                res.send(err);
+                            }
+                            
+                        })
+                    }
+                    
                    
                }); 
                res.send({
