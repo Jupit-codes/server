@@ -1294,17 +1294,17 @@ router.post('/sell/coin',(req,res)=>{
 
                 }) 
 
-                let fiatLedgerDebit = await fiatledger.create({
-                    userid:req.body.userid,
-                    email:docs.email,
-                    amount: -req.body.ngnamount,
-                    type:'Debit',
-                    transaction_fee:0,
-                    diff_type:'transaction',
-                    status:'completed',
-                    currency:'NGN'
+                // let fiatLedgerDebit = await fiatledger.create({
+                //     userid:req.body.userid,
+                //     email:docs.email,
+                //     amount: -req.body.ngnamount,
+                //     type:'Debit',
+                //     transaction_fee:0,
+                //     diff_type:'transaction',
+                //     status:'completed',
+                //     currency:'NGN'
 
-                }) 
+                // }) 
 
                 let saveStatus =  await Notification.create({
                     type:5,
@@ -1692,13 +1692,13 @@ router.post('/client/withdrawal',(req,res)=>{
                             await withdrawal.create({
                                 username:document.username,
                                 userid:req.body.userid,
-                                amount:amount_with_charge,
+                                amount:amount,
                                 account_number:docs.account_number,
                                 account_name:docs.account_name,
                                 bank_code:docs.bank_code,
                                 email:req.body.email,
                                 type:'Withdrawal',
-                                currency_worth:parseFloat(req.body.amount) - parseFloat(req.body.charge)
+                                currency_worth:amount_with_charge
                             })
                             await wallet_transactions.create({
                                 type:'Withdrawal',
@@ -1719,6 +1719,17 @@ router.post('/client/withdrawal',(req,res)=>{
                         //     transaction_fee:req.body.charge,
                         //     status:'Transaction Completed'
                         // })
+                        fiatledger.create({
+                            userid:req.body.userid,
+                            email:req.body.email,
+                            amount:-req.body.amount,
+                            transaction_fee:req.body.charge,
+                            type:"Debit",
+                            diff_type:'transaction',
+                            status:'Transaction Completed'
+                        })
+
+                       
                     
                         fiatledger.create({
                             userid:req.body.userid,
