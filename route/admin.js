@@ -3418,16 +3418,90 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
   
 })
 
+router.post('/get/fiatasset/position',async (req,res)=>{
+    let startDate = req.body.startdate;
+    let endDate = req.body.enddate;
+
+    if(startDate && endDate ){
+        let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
+        let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
+     
+        let NGN_IN = await fiatledger.aggregate([
+        
+            { $match: {
+                
+                  
+                        
+                        updated: {
+            
+                            $gte: momentum_start,
+                            $lte:momentum_end
+                            
+                        }
+
+                }
+            
+            },
+            { 
+                $group : { 
+                    _id : {},
+                    amount: { 
+                        
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
+                    
+                },
+                
+            }, 
+          
+        ])
+
+        res.send(NGN_IN)
+    }
+    else{
+        let NGN_IN = await fiatledger.aggregate([
+        
+            { $match: {
+               
+                diff_type:'transaction'
+               
+            }
+            
+            },
+            { 
+                $group : { 
+                    _id : { transactionType:"$type"},
+                    amount: { 
+                        
+                        $sum: {
+                            "$toDouble": "$amount"
+                          }
+                    } 
+                    
+                },
+                
+            }, 
+          
+        ])
+        
+       
+        res.send(NGN_IN)
+
+    }
+})
+
 
 router.post('/get/fiatasset/set',async (req,res)=>{
     
     let NGN_IN,NGN_IN_II,NGN_OUT,NGN_OUT_II
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
-    let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
-    let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
+    
     if(startDate && endDate ){
-        
+        let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
+        let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
      
         NGN_IN = await wallet_transactions.aggregate([
         
@@ -3445,7 +3519,7 @@ router.post('/get/fiatasset/set',async (req,res)=>{
                         },
                        
                         {
-                            type:'Sell'
+                            type:'Buy'
                         },
                         {
                             $or:[
@@ -3523,7 +3597,7 @@ router.post('/get/fiatasset/set',async (req,res)=>{
                             }
                         },
                         {
-                            type:'Buy'
+                            type:'Sell'
                         },
                         {
                             $or:[
@@ -4367,7 +4441,7 @@ router.get('/get/all/fiatledger',async (req,res)=>{
                 sumTransactionFee:sumTransactionFee.length > 0 ? sumTransactionFee[0].amount : 0
             })
         }
-    })
+    }).sort({updated:-1})
 
    
 })
