@@ -2166,6 +2166,68 @@ router.post('/staff/individual/',(req,res)=>{
 })
 
 
+
+router.post('/staff/edit',(req,res)=>{
+    
+    admin.findOne({_id:req.body.userid},async (err,docs)=>{
+        if(err){
+            res.status(400).send(err);
+        }
+        else if(docs){
+            let myroleid;
+            
+            switch(req.body.role){
+                case 'Finance':
+                    myroleid=3;
+                    break;
+                case 'Customer Service':
+                    myroleid=5;
+                    break;
+                case 'Quality Assurance':
+                    myroleid=4;
+                    break;
+                case 'Operation Manager':
+                    myroleid=2;
+                    break;
+                case 'Digital asset':
+                    myroleid=6;
+                    break;
+            }
+            
+            let EditStaffProfile = await admin.findOneAndUpdate({_id:req.body.userid},{role:req.body.role,roleid:myroleid}).exec();
+            if(EditStaffProfile){
+                req.body.previledges.length > 0 && req.body.previledges.forEach(d => {
+        
+                    admin.findOneAndUpdate({_id:EditStaffProfile._id},{$push:{
+                        previledge:d
+                   }},(err,docs)=>{
+                       if(err){
+                           res.send(err);
+                       }
+                       
+                   })
+                   
+               }); 
+               res.send({
+                status:true,
+                message:'User Profile Successfully Updated'
+               })
+            }
+            else{
+                res.status(400).send('Update Failed');  
+            }
+           
+
+        }
+        else if(!docs){
+            res.status(400).send('User Id not found');  
+        }
+    })
+    
+    
+});
+
+
 router.post('/staff/creation',(req,res)=>{
 
     admin.findOne({username:req.body.username},async (err,docs)=>{
