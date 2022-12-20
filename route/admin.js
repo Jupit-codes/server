@@ -2196,12 +2196,11 @@ router.post('/staff/edit',(req,res)=>{
             
             let EditStaffProfile = await admin.findOneAndUpdate({_id:req.body.userid},{role:req.body.role,roleid:myroleid}).exec();
             if(EditStaffProfile){
+                let emptyExistingPreviledges = admin.updateOne({_id:EditStaffProfile._id}, { $set: { previledge: [] }}, function(err, affected){
+                    console.log('affected: ', affected);
+                });
                 req.body.previledges.length > 0 && req.body.previledges.forEach(d => {
-        
-                    let emptyExistingPreviledges = admin.updateOne({_id:EditStaffProfile._id}, { $set: { previledge: [] }}, function(err, affected){
-                        console.log('affected: ', affected);
-                    });
-                    if(emptyExistingPreviledges){
+                    
                         admin.findOneAndUpdate({_id:EditStaffProfile._id},{$push:{
                                 previledge:d
                         }},(err,docs)=>{
@@ -2210,7 +2209,7 @@ router.post('/staff/edit',(req,res)=>{
                             }
                             
                         })
-                    }
+                    
                     
                    
                }); 
