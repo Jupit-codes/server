@@ -1294,17 +1294,17 @@ router.post('/sell/coin',(req,res)=>{
 
                 }) 
 
-                // let fiatLedgerDebit = await fiatledger.create({
-                //     userid:req.body.userid,
-                //     email:docs.email,
-                //     amount: -req.body.ngnamount,
-                //     type:'Debit',
-                //     transaction_fee:0,
-                //     diff_type:'transaction',
-                //     status:'completed',
-                //     currency:'NGN'
+                let fiatLedgerDebit = await fiatledger.create({
+                    userid:req.body.userid,
+                    email:docs.email,
+                    amount: -req.body.ngnamount,
+                    type:'Debit',
+                    transaction_fee:0,
+                    diff_type:'transaction',
+                    status:'completed',
+                    currency:'NGN'
 
-                // }) 
+                }) 
 
                 let saveStatus =  await Notification.create({
                     type:5,
