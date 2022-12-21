@@ -2709,7 +2709,7 @@ async function updateDepositStatus(body,status){
     });
 
     if(saveStatus){
-        return [true,'Wallet Status Saved',orderid,email,body.to_address];
+        return [true,'Wallet Status Saved'];
     }
     else{
         return [false, 'Wallet Status Failed'];
