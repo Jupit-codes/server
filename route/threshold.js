@@ -2540,7 +2540,38 @@ async function FailedUpdateEmail(addr,txid,subject,amount,currency){
      });
 }
 
-
+Router.get('/test/deposit',async (req,res)=>{
+    let body = {
+        "type": 1,
+        "serial": 90003875084,
+        "order_id": "",
+        "currency": "BTC",
+        "txid": "4309ddb623a24fe86933d3d90a372a806cc2b42e8fcb70bc118c29298e8fcd2f",
+        "block_height": 768375,
+        "tindex": 217,
+        "vout_index": 0,
+        "amount": "296754",
+        "fees": "7616",
+        "memo": "",
+        "broadcast_at": 0,
+        "chain_at": 1671638598,
+        "from_address": "122nLFARoHvKztFo8BSsyU5fxd9CF9XDP8",
+        "to_address": "35vgCwHqmhqZ1h9S3KEeApWbkjh9rJKor9",
+        "wallet_id": 136821,
+        "addon": {
+        "address_label": "",
+        "aml_screen_pass": true,
+        "fee_decimal": 8
+        },
+        "decimal": 8,
+        "currency_bip44": 0,
+        "token_address": ""
+        }
+        let checkUpdate = await updateDepositStatus(body,"completed")
+        res.send({
+            "message":checkUpdate
+        })
+})
 
 
 async function updateDepositStatus(body,status){
@@ -2552,7 +2583,7 @@ async function updateDepositStatus(body,status){
         
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
       
-        await Usermodel.findOne({'btc_wallet[0].address': body.to_address},(err,docs)=>{
+        await Usermodel.findOne({'btc_wallet.0.address': body.to_address},(err,docs)=>{
             if(err){
                     orderid="0000";
                     email = "";
@@ -2571,7 +2602,7 @@ async function updateDepositStatus(body,status){
     }
     else if(body.currency === "TRX-USDT-TRC20"){
         newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
-        await Usermodel.findOne({'usdt_wallet[0].address': body.to_address},(err,docs)=>{
+        await Usermodel.findOne({'usdt_wallet.0.address': body.to_address},(err,docs)=>{
             if(err){
                     orderid="0000";
                     email = "";
@@ -2644,43 +2675,41 @@ async function updateDepositStatus(body,status){
         newCurrency = body.currency;
     }
 
-    // console.log('Rate',rateInNaira)
-    // console.log('Currency',newCurrency)
-    // console.log('body',body);
+    let saveStatus=true
 
-    let saveStatus = await Walletmodel.create({
-        type:"Receive",
-        serial:body.serial,
-        order_id:orderid,
-        email:email,
-        currency:newCurrency,
-        txtid:body.txid,
-        rateInnaira:rateInNaira,
-        usdvalue:usdValue,
-        nairavalue:nairaValue,
-        marketprice:marketPrice,
-        block_height:body.block_height,
-        tindex:body.tindex,
-        vout_index:body.vout_index,
-        amount:newAmount,
-        fees:body.fees,
-        memo:body.memo,
-        broadcast_at:body.broadcast_at,
-        chain_at:body.chain_at,
-        from_address:body.from_address,
-        to_address:body.to_address,
-        wallet_id:body.wallet_id,
-        state:body.state,
-        confirm_blocks:body.confirm_blocks,
-        processing_state:body.processing_state,
-        decimal:body.decimal,
-        currency_bip44:body.currency_bip44,
-        token_address:body.token_address,
-        status:status
-    });
+    // let saveStatus = await Walletmodel.create({
+    //     type:"Receive",
+    //     serial:body.serial,
+    //     order_id:orderid,
+    //     email:email,
+    //     currency:newCurrency,
+    //     txtid:body.txid,
+    //     rateInnaira:rateInNaira,
+    //     usdvalue:usdValue,
+    //     nairavalue:nairaValue,
+    //     marketprice:marketPrice,
+    //     block_height:body.block_height,
+    //     tindex:body.tindex,
+    //     vout_index:body.vout_index,
+    //     amount:newAmount,
+    //     fees:body.fees,
+    //     memo:body.memo,
+    //     broadcast_at:body.broadcast_at,
+    //     chain_at:body.chain_at,
+    //     from_address:body.from_address,
+    //     to_address:body.to_address,
+    //     wallet_id:body.wallet_id,
+    //     state:body.state,
+    //     confirm_blocks:body.confirm_blocks,
+    //     processing_state:body.processing_state,
+    //     decimal:body.decimal,
+    //     currency_bip44:body.currency_bip44,
+    //     token_address:body.token_address,
+    //     status:status
+    // });
 
     if(saveStatus){
-        return [true,'Wallet Status Saved'];
+        return [true,'Wallet Status Saved',orderid,email,body.to_address];
     }
     else{
         return [false, 'Wallet Status Failed'];
