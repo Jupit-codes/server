@@ -1692,7 +1692,7 @@ router.post('/client/withdrawal',(req,res)=>{
                             await withdrawal.create({
                                 username:document.username,
                                 userid:req.body.userid,
-                                amount:amount,
+                                amount:req.body.amount,
                                 account_number:docs.account_number,
                                 account_name:docs.account_name,
                                 bank_code:docs.bank_code,
