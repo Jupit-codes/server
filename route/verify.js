@@ -1706,7 +1706,7 @@ router.post('/client/withdrawal',(req,res)=>{
                                 order_id:document.virtual_account,
                                 email:req.body.email,
                                 currency:'Naira',
-                                amount:req.body.amount,
+                                amount:amount_with_charge,
                                 from_address:document.virtual_account,
                                 fees:"0",
                                 to_address:docs.account_number,
