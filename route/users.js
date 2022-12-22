@@ -5566,8 +5566,10 @@ async function middlewareVerify(req,res,next){
     }
 }
 
-router.get('/test/Otc',async(req,res)=>{
+router.post('/otc/submit/request',async(req,res)=>{
+    console.log(req.body)
     let x = await otcmailer();
+    
     res.send(x)
 })
 
@@ -6491,20 +6493,24 @@ async function otcmailer(){
             `
       };
 
-    transporter.sendMail(mailData, function (err, info) {
+    let result =  transporter.sendMail(mailData, function (err, info) {
         if(err){
         console.log({"message":"An Error Occurred","callback":err})
-          res.send(err)
+        
+          return [false,err]
            
         }
         
         else{ 
-            console.log({"message":"Sent"})                               
-           res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
+            console.log({"message":"Sent"})
+            return [true,"Message Sent"] ;                              
+           //res.send({"message":"Kindly Check Mail for Account Verification Link","callback":info,"status":true})
             
         }
           
      });
+
+     return result;
 }
 
 
