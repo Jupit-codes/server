@@ -1712,22 +1712,7 @@ router.post('/client/withdrawal',(req,res)=>{
                                 to_address:docs.account_number,
                                 status:'Transaction Completed' 
                     })
-                        // fiatledger.create({
-                        //     userid:req.body.userid,
-                        //     email:req.body.email,
-                        //     amount:req.body.amount,
-                        //     transaction_fee:req.body.charge,
-                        //     status:'Transaction Completed'
-                        // })
-                        // fiatledger.create({
-                        //     userid:req.body.userid,
-                        //     email:req.body.email,
-                        //     amount:-req.body.amount,
-                        //     transaction_fee:req.body.charge,
-                        //     type:"Debit",
-                        //     diff_type:'transaction',
-                        //     status:'Transaction Completed'
-                        // })
+                    
 
                        
                     
