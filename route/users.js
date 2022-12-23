@@ -5567,25 +5567,21 @@ async function middlewareVerify(req,res,next){
 }
 
 router.post('/otc/submit/request',async(req,res)=>{
-    console.log(req.body.Form.fullname)
+    
     console.log(req.body)
-    let x = await otcmailer();
+    let x = await otcmailer(req.body.Form);
 
-    if(x){
-        res.send({
-            "message":"Message Sent",
-            "status":true
-        })
-    }else{
-        res.status(400).send('An Error Occurred..Pls try again')
-    }
+    res.send({
+        "message":"Message Sent",
+        "status":true
+    })
     
     
     
 })
 
 
-async function otcmailer(){
+async function otcmailer(data){
 
     const mailData = {
         from: 'Jupit<hello@jupitapp.co>',  // sender address
@@ -5835,13 +5831,13 @@ async function otcmailer(){
               <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 15px 40px;font-family:arial,helvetica,sans-serif;" align="left">
                 
           <div style="line-height: 180%; text-align: left; word-wrap: break-word;">
-            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Fullname: <strong>Wilbert Keffort </strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Email: <strong>wilbert@zmail.com </strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Phone:<strong> 101 617 4444</strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Alternate Phonenumber:<strong> 55555555</strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Whatsapp No: <strong>55555555</strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">ID Card Type:<strong> International Passport</strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Address: <strong>99 El ABCD San Francisco, CA. United States </strong></span></p>
+            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Fullname: <strong>${data.fullname} </strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Email: <strong>${data.email} </strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Phone:<strong> ${data.phonenumber}</strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Alternate Phonenumber:<strong> ${data.alternate_phonenumber}</strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Whatsapp No: <strong>${data.whatsapp_no}</strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">ID Card Type:<strong> ${data.idcard}</strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Address: <strong>${data.address}</strong></span></p>
           </div>
         
               </td>
@@ -5855,13 +5851,13 @@ async function otcmailer(){
               <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 15px 40px;font-family:arial,helvetica,sans-serif;" align="left">
                 
           <div style="line-height: 180%; text-align: left; word-wrap: break-word;">
-            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Business name: <strong>Wilbert Keffort </strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Business Tel: <strong>wilbert@zmail.com </strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Business Address:<strong> 101 617 4444</strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Type of User:<strong> Jupit</strong></span></p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Preferred means of Comm.: Email</span></p>
+            <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Business name: <strong>${data.business_name} </strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Business Tel: <strong>${data.business_tel}</strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Business Address:<strong> ${data.business_address}</strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Type of User:<strong> ${data.usertype}</strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Preferred means of Comm.: <strong> ${data.means_comm}</strong></span></p>
         <p style="font-size: 14px; line-height: 180%;"> </p>
-        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Message: <strong>99 El ABCD San Francisco, CA. United States </strong></span></p>
+        <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 18px; line-height: 32.4px; font-family: Rubik, sans-serif;">Message: <strong>${data.message} </strong></span></p>
           </div>
         
               </td>
