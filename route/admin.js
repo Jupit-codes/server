@@ -3041,15 +3041,15 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
     
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
-    console.log(startDate.split('T')[0])
-    let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
-    let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
-  console.log(momentum_start,momentum_end)
+    
+   
 
     let BTC_IN ,BTC_OUT,USDT_IN,USDT_OUT
     
     if(startDate && endDate ){
-        
+        console.log('HERE')
+        let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
+        let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
       
         BTC_IN = await wallet_transactions.aggregate([
         
@@ -3249,6 +3249,7 @@ router.post('/get/cryptoasset/set',async (req,res)=>{
             
     }
     else{
+        
         BTC_IN = await wallet_transactions.aggregate([
         
             { $match: {
@@ -3490,6 +3491,7 @@ router.post('/get/fiatasset/position',async (req,res)=>{
     let endDate = req.body.enddate;
 
     if(startDate && endDate ){
+        
         let momentum_start = moment(startDate.split('T')[0]).startOf('day').toDate()
         let momentum_end = moment(endDate.split('T')[0]).endOf('day').toDate()
      
