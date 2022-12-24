@@ -1294,17 +1294,17 @@ router.post('/sell/coin',(req,res)=>{
 
                 }) 
 
-                // let fiatLedgerDebit = await fiatledger.create({
-                //     userid:req.body.userid,
-                //     email:docs.email,
-                //     amount: -req.body.ngnamount,
-                //     type:'Debit',
-                //     transaction_fee:0,
-                //     diff_type:'transaction',
-                //     status:'completed',
-                //     currency:'NGN'
+                let fiatLedgerDebit = await fiatledger.create({
+                    userid:req.body.userid,
+                    email:docs.email,
+                    amount: -req.body.ngnamount,
+                    type:'Debit',
+                    transaction_fee:0,
+                    diff_type:'transaction',
+                    status:'completed',
+                    currency:'NGN'
 
-                // }) 
+                }) 
 
                 let saveStatus =  await Notification.create({
                     type:5,
@@ -1692,7 +1692,7 @@ router.post('/client/withdrawal',(req,res)=>{
                             await withdrawal.create({
                                 username:document.username,
                                 userid:req.body.userid,
-                                amount:amount,
+                                amount:req.body.amount,
                                 account_number:docs.account_number,
                                 account_name:docs.account_name,
                                 bank_code:docs.bank_code,
@@ -1706,28 +1706,13 @@ router.post('/client/withdrawal',(req,res)=>{
                                 order_id:document.virtual_account,
                                 email:req.body.email,
                                 currency:'Naira',
-                                amount:req.body.amount,
+                                amount:amount_with_charge,
                                 from_address:document.virtual_account,
                                 fees:"0",
                                 to_address:docs.account_number,
                                 status:'Transaction Completed' 
                     })
-                        // fiatledger.create({
-                        //     userid:req.body.userid,
-                        //     email:req.body.email,
-                        //     amount:req.body.amount,
-                        //     transaction_fee:req.body.charge,
-                        //     status:'Transaction Completed'
-                        // })
-                        fiatledger.create({
-                            userid:req.body.userid,
-                            email:req.body.email,
-                            amount:-req.body.amount,
-                            transaction_fee:req.body.charge,
-                            type:"Debit",
-                            diff_type:'transaction',
-                            status:'Transaction Completed'
-                        })
+                    
 
                        
                     
@@ -1744,9 +1729,10 @@ router.post('/client/withdrawal',(req,res)=>{
                         }
                     })
                 }
-                else if(!result.data.status && result.data.code == "00"  ){
-                    res.status(400).send("Failed Request..Pls Try Again")
-                }
+                // else if(!result.data.status && result.data.code == "02"  ){
+                //     res.status(400).send("Failed Request..Pls Try Again");
+
+                // }
                 else if(!result.data.status && result.data.code == "01"  ){
                     res.status(400).send("Failed Request..Pls Try Again")
                     // sendremindermail();

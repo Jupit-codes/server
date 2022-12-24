@@ -2,6 +2,7 @@ import express from 'express';
 import axios from "axios";
 import crypto from 'crypto';
 import querystring from 'querystring';
+import withdrawal from '../model/withdrawal.js';
 import random from 'random-number';
 import Usermodel from '../model/users.js';
 import Walletmodel from '../model/wallet_transactions.js'
@@ -15,6 +16,7 @@ import bank from '../model/bank.js';
 import rate from '../model/rate.js';
 import cryptoledger from '../model/cryptoledger.js';
 import https, { get } from 'https'
+import fiatledger from '../model/fiatledger.js';
 
 
 //https://vault.thresh0ld.com/v1/sofa
@@ -2540,7 +2542,47 @@ async function FailedUpdateEmail(addr,txid,subject,amount,currency){
      });
 }
 
+Router.get('/test/deposit',async (req,res)=>{
+    // await withdrawal.create({
+    //     username:"Geoffrey",
+    //     userid:"6388b64884f97d934901bac6",
+    //     amount:"100",
+    //     account_number:"1001744275",
+    //     account_name:"TEMILOLUWA ODEWUMI",
+    //     bank_code:"030",
+    //     email:"eliteappfitness@gmail.com",
+    //     type:'Withdrawal',
+    //     currency_worth:"200"
+    // })
 
+    await wallet_transactions.create({
+        type:'Withdrawal',
+        serial:"9996832596",
+        order_id:"9996832596",
+        email:"olami20223@gmail.com",
+        currency:'Naira',
+        amount:"36600",
+        from_address:"9996832596",
+        fees:"0",
+        to_address:"3116800784",
+        status:'Transaction Completed' 
+})
+
+
+
+
+await fiatledger.create({
+    userid:"6396de2c40c06c21c154f87e",
+    email:"olami20223@gmail.com",
+    amount:"36600",
+    transaction_fee:"100",
+    type:"Credit",
+    diff_type:'transaction-fee',
+    status:'Transaction Completed'
+})
+    res.send('Success')
+        
+})
 
 
 async function updateDepositStatus(body,status){
@@ -2552,7 +2594,7 @@ async function updateDepositStatus(body,status){
         
         newAmount = parseFloat(body.amount * 0.00000001).toFixed(8);
       
-        await Usermodel.findOne({'btc_wallet[0].address': body.to_address},(err,docs)=>{
+        await Usermodel.findOne({'btc_wallet.0.address': body.to_address},(err,docs)=>{
             if(err){
                     orderid="0000";
                     email = "";
@@ -2571,7 +2613,7 @@ async function updateDepositStatus(body,status){
     }
     else if(body.currency === "TRX-USDT-TRC20"){
         newAmount = parseFloat(body.amount * 0.000001).toFixed(6);
-        await Usermodel.findOne({'usdt_wallet[0].address': body.to_address},(err,docs)=>{
+        await Usermodel.findOne({'usdt_wallet.0.address': body.to_address},(err,docs)=>{
             if(err){
                     orderid="0000";
                     email = "";
@@ -2644,9 +2686,7 @@ async function updateDepositStatus(body,status){
         newCurrency = body.currency;
     }
 
-    // console.log('Rate',rateInNaira)
-    // console.log('Currency',newCurrency)
-    // console.log('body',body);
+   
 
     let saveStatus = await Walletmodel.create({
         type:"Receive",
