@@ -22,6 +22,15 @@ const cryptoSchema = mongoose.Schema({
     diff_type:{
         type:'String'
     },
+    email:{
+        type:'String'
+    },
+    usd_asset:{
+         type:'String'
+    },
+    usd_rate:{
+         type:'String'
+    },
     
     currency:{
         type:'String'

@@ -1107,9 +1107,40 @@ router.get('/get/current/rate',(req,res)=>{
         }
     })
 })
+async function crypomarketprice(){
+    let x = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=tether,bitcoin&order=market_cap_desc&per_page=100&page=1&sparkline=false',{
+        headers:{
+            'Content-Type':'application/json',
+           
+        }
+    })
+    .then(result=>{
+        console.log(result.data)
+       if(result.data){
+        let BTCprice = parseFloat(result.data[0].current_price) - 150;
+        let USDTprice = result.data[1].current_price
+        return [true,BTCprice,USDTprice]
+        
+       }
+       else{
+        return [true,0,0]
+
+       }
+       
+       
+    })
+    .catch(err=>{
+        // console.log(err)
+        return [false]
+    })
+
+    return x;
+}
+
 
 router.post('/purchase/coin',(req,res)=>{
     // console.log(req.body)
+    let marketPrice=0;
     if(req.body.wallet_type === "BTC"){
         Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- req.body.ngnamount,'btc_wallet.0.balance':req.body.btcamount}},async (err,docs)=>{
             if(err){
@@ -1120,6 +1151,15 @@ router.post('/purchase/coin',(req,res)=>{
             }
             else if(docs){
                 // res.send(docs)
+                let getcurrentmarketrate = await crypomarketprice();
+                //console.log('currentMarket',getcurrentmarketrate)
+                if(getcurrentmarketrate[0]){
+                    marketPrice = getcurrentmarketrate[1]; 
+                }
+                else{
+                    marketPrice = 0;
+                    
+                }
                 let cryptoLedgerDebit = await cryptoledger.create({
                     userid:req.body.userid,
                     address:'',
@@ -1127,8 +1167,10 @@ router.post('/purchase/coin',(req,res)=>{
                     type:'Debit',
                     diff_type:'transaction',
                     transaction_fee:0,
-                    currency:req.body.wallet_type
-
+                    currency:req.body.wallet_type,
+                    email:docs.email,
+                    usd_asset:marketPrice,
+                    usd_rate:parseFloat(marketPrice * req.body.btcamount)
                 }) 
 
                 let fiatLedgerCredit = await fiatledger.create({
@@ -1199,16 +1241,26 @@ router.post('/purchase/coin',(req,res)=>{
                 })
             }
             else if(docs){
-                // res.send(docs)
-
+               
+                let getcurrentmarketrate = await crypomarketprice();
+               
+                if(getcurrentmarketrate[0]){
+                    marketPrice = getcurrentmarketrate[2]; 
+                }
+                else{
+                    marketPrice = 0;
+                }
                 let cryptoLedgerDebit = await cryptoledger.create({
                     userid:req.body.userid,
                     address:'',
                     amount:- req.body.btcamount,
                     type:'Debit',
+                    diff_type:'transaction',
                     transaction_fee:0,
-                    currency:req.body.wallet_type
-
+                    currency:req.body.wallet_type,
+                    email:docs.email,
+                    usd_asset:marketPrice,
+                    usd_rate:parseFloat(marketPrice * req.body.btcamount)
                 }) 
 
                 let fiatLedgerCredit = await fiatledger.create({
@@ -1216,11 +1268,13 @@ router.post('/purchase/coin',(req,res)=>{
                     email:docs.email,
                     amount:req.body.ngnamount,
                     type:'Credit',
+                    diff_type:'transaction',
                     transaction_fee:0,
                     status:'completed',
                     currency:'NGN'
 
                 }) 
+                
                 let saveStatus =  await Notification.create({
                     type:5,
                     orderid:docs._id,
@@ -1270,7 +1324,11 @@ router.post('/purchase/coin',(req,res)=>{
     
 })
 
+
+
+
 router.post('/sell/coin',(req,res)=>{
+    let marketPrice = 0;
     if(req.body.wallet_type === "BTC"){
         Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance': req.body.ngnamount,'btc_wallet.0.balance': - req.body.btcamount}},async (err,docs)=>{
             if(err){
@@ -1281,6 +1339,17 @@ router.post('/sell/coin',(req,res)=>{
             }
             else if(docs){
                 // res.send(docs)
+                
+                let getcurrentmarketrate = await crypomarketprice();
+                //console.log('currentMarket',getcurrentmarketrate)
+                if(getcurrentmarketrate[0]){
+                    marketPrice = getcurrentmarketrate[1]; 
+                }
+                else{
+                    marketPrice = 0;
+                    
+                }
+
 
                 let cryptoLedgerCredit = await cryptoledger.create({
                     userid:req.body.userid,
@@ -1290,7 +1359,10 @@ router.post('/sell/coin',(req,res)=>{
                     diff_type:'transaction',
                     status:'completed',
                     transaction_fee:0,
-                    currency:req.body.wallet_type
+                    currency:req.body.wallet_type,
+                    email:docs.email,
+                    usd_asset:marketPrice,
+                    usd_rate:parseFloat(marketPrice * req.body.btcamount )
 
                 }) 
 
@@ -1368,6 +1440,38 @@ router.post('/sell/coin',(req,res)=>{
             }
             else if(docs){
                 // res.send(docs)
+                if(getcurrentmarketrate[0]){
+                    marketPrice = getcurrentmarketrate[2]; 
+                }
+                else{
+                    marketPrice = 0;  
+                }
+                let cryptoLedgerCredit = await cryptoledger.create({
+                    userid:req.body.userid,
+                    address:'',
+                    amount:req.body.btcamount,
+                    type:'Credit',
+                    diff_type:'transaction',
+                    status:'completed',
+                    transaction_fee:0,
+                    currency:req.body.wallet_type,
+                    email:docs.email,
+                    usd_asset:marketPrice,
+                    usd_rate:parseFloat(marketPrice * req.body.btcamount )
+
+                }) 
+
+                let fiatLedgerDebit = await fiatledger.create({
+                    userid:req.body.userid,
+                    email:docs.email,
+                    amount: -req.body.ngnamount,
+                    type:'Debit',
+                    transaction_fee:0,
+                    diff_type:'transaction',
+                    status:'completed',
+                    currency:'NGN'
+
+                }) 
                 let saveStatus =  await Notification.create({
                     type:5,
                     orderid:docs._id,
