@@ -214,7 +214,7 @@ async function crypomarketprice(){
 Router.post('/incoming/withdrwal/additional', (req,res)=>{
     console.log(req.body);
 
-    res.status(200)
+    res.sendStatus(200);
 
 });
 
