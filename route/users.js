@@ -2845,7 +2845,7 @@ router.get('/users/jupit/resetpassword/:id/resetpword/:code',(req,res)=>{
             }
             else if(docs.status === "Pending"){
                 //res.redirect(`https://app-rust-one.vercel.app/user/resetpassword/${req.params.code}/${req.params.id}`);
-                res.redirect(`https://app.jupitapp.co//user/changepassword/${req.params.code}/${req.params.id}`);
+                res.redirect(`https://app.jupitapp.co/user/changepassword/${req.params.code}/${req.params.id}`);
             }
             else{
                 // console.log('code not found')
@@ -2856,7 +2856,7 @@ router.get('/users/jupit/resetpassword/:id/resetpword/:code',(req,res)=>{
                 })
     
                 //res.redirect(`https://app-rust-one.vercel.app/user/resetpassword/${req.params.code}/${req.params.id}`);
-                res.redirect(`https://app-rust-one.vercel.app/user/changepassword/${req.params.code}/${req.params.id}`);
+                res.redirect(`https://app.jupitapp.co/user/changepassword/${req.params.code}/${req.params.id}`);
             }
         }
         else if(!docs){
@@ -3054,7 +3054,7 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                             else{
                                                 res.send({
                                                     "Errormessage":"Account Generation Error",
-                                                    "status":false
+                                                    "status":false,
                                                    
                                                 })
                                             }
