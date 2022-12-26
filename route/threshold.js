@@ -411,9 +411,7 @@ async function updateDepositStatusCallback(currency,address,amount){
         let filter = {'btc_wallet.address':address};
         let update = {$inc:{'btc_wallet.$.balance':parseFloat(amount)}}
          
-        let updatedValue =  await Usermodel.findOneAndUpdate(filter, update, {
-            new: true
-          });
+        let updatedValue =  await Usermodel.findOneAndUpdate(filter, update);
 
           if(updatedValue){
             response=true
@@ -423,9 +421,7 @@ async function updateDepositStatusCallback(currency,address,amount){
     else if(currency === "TRX-USDT-TRC20"){
         let filter = {'usdt_wallet.address':address};
         let update = {$inc:{'usdt_wallet.$.balance':parseFloat(amount)}}
-        let updatedValue =  await Usermodel.findOneAndUpdate(filter, update, {
-            new: true
-          });
+        let updatedValue =  await Usermodel.findOneAndUpdate(filter, update);
           if(updatedValue){
             response=true
           }
