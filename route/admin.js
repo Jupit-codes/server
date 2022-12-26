@@ -2888,6 +2888,39 @@ async function getalldeposit(){
      })
  })
 
+ router.post('/get/user/details',async (req,res)=>{
+    
+    let body = req.body
+    // Usermodel.findOne({'btc.address':req.body.address},(err,docs)=>{
+    //     if(err){
+    //         res.send(err)
+    //     }
+    //     else if(docs){
+    //         res.send(docs)
+    //     }
+    //     else{
+    //         res.send('Not FOund')
+    //     }
+    // })
+
+    let saveStatus =  await notification.create({
+        type:4,
+        orderid:body.order_id,
+        transfertype:body.transfertype,
+        asset:'Incoming Deposit Update',
+        from_address:body.from_address,
+        to_address:body.to_address,
+        status:body.status,
+        read:'unread',
+        date_created:new Date(),
+        initiator:body.initiator,
+
+    })
+
+    res.send('Notification')
+    
+ })
+
  router.post('/deactivate/user/blacklist',(req,res)=>{
     let status = req.body.updatestatus;
      Usermodel.findOneAndUpdate({_id:req.body.id},{$set:{blacklist:status}},(err,docs)=>{
