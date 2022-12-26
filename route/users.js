@@ -3054,8 +3054,8 @@ router.get('/users/jupit/emailverification/e9p5ikica6f19gdsmqta/qvrse/:id',(req,
                                             else{
                                                 res.send({
                                                     "Errormessage":"Account Generation Error",
-                                                    "status":false,
-                                                    "error":vitualaccount[1]
+                                                    "status":false
+                                                   
                                                 })
                                             }
                                    
