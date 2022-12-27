@@ -1562,7 +1562,7 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
 
                     if(wallet_type === "BTC"){
                         let oldValue = docs.btc_wallet[0].balance;
-                        
+                        console.log('oldValueString',oldValue.toString());
                         let newValue =   parseFloat(oldValue.toString()) - parseFloat(amount);
                         console.log('oldValue',oldValue);
                         console.log('newValue',newValue);
