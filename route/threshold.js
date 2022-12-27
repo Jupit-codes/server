@@ -1265,9 +1265,9 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
     // let  apikey="WtjgBd7JbpeBTHCF"
     // let wallet_id="201075"
     
-    let secret=THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
-    let apikey = THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
-    let wallet_id=THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+    let secret= process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
+    let apikey = process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+    let wallet_id= process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
 
 
     let rand = random(option_rand);
@@ -1351,8 +1351,7 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
 
    return myAxios;
    
-   
-   
+  
 }
 
 
