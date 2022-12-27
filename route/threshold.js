@@ -1126,9 +1126,9 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     // let apikey = "4XoSQPfLwbUiyvF5i";
     // let wallet_id="127771"
 
-    let secret=THRESHOLD_BTC_API_SECRET_MASS_SENDER
-    let apikey = THRESHOLD_BTC_API_TOKEN_MASS_SENDER;
-    let wallet_id=THRESHOLD_BTC_WALLET_ID_MASS_SENDER
+    let secret= process.env.THRESHOLD_BTC_API_SECRET_MASS_SENDER
+    let apikey = process.env.THRESHOLD_BTC_API_TOKEN_MASS_SENDER;
+    let wallet_id= process.env.THRESHOLD_BTC_WALLET_ID_MASS_SENDER
    
     
 
@@ -1563,7 +1563,7 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
                     if(wallet_type === "BTC"){
                         let oldValue = docs.btc_wallet[0].balance;
                         
-                        let newValue =   parseFloat(oldValue) - parseFloat(amount);
+                        let newValue =   parseFloat(oldValue.toString()) - parseFloat(amount);
                         console.log('oldValue',oldValue);
                         console.log('newValue',newValue);
                         let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8)}}},function(err,docs){
