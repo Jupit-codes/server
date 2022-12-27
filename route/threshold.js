@@ -1115,6 +1115,40 @@ Router.post('/update/read',middlewareVerify,(req,res)=>{
 
 })
 
+Router.post('/updateWallet',async (req,res)=>{
+    let amount = req.body.amount;
+    let user_id = req.body.user
+    console.log(req.body)
+    let SubFunds = await Usermodel.findById(user_id, async function(err,docs){
+        if(err){
+            res.send(err)
+        }
+        else if(docs){
+            let oldValue = docs.btc_wallet[0].balance;
+            console.log('Decimal128Converted',oldValue.toString())
+            let newValue = parseFloat(parseFloat(oldValue.toString()) - parseFloat(amount)).toFixed(7) 
+            
+            let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':newValue}}},function(err,docs){
+                if(err){
+                        return [err,false]
+                }
+                else{
+                    return ['updated',docs,true]
+                }
+            }).clone().catch(function(err){ return [err,false]});
+
+            res.send(updateValue)
+            
+            // res.send({
+            //     "oldValue":oldValue,
+            //     "newValue":newValue
+
+            // })
+        }
+    }).clone().catch(function(err){ return [err,false]});
+    
+})
+
 async function creditWalletAddress(userid,address,recipentAddress,wallet_type,auto_fee,amount,block_average_fee){
     
     let isTrue ;
@@ -1545,6 +1579,8 @@ async function AddFund(receipentAddress,amount,wallet_type){
 
 }
 
+
+
 async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddress,toAddress){
     // console.log('USER_ID',user_id);
     // console.log('amount',amount);
@@ -1562,24 +1598,24 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
 
                     if(wallet_type === "BTC"){
                         let oldValue = docs.btc_wallet[0].balance;
-                        console.log('oldValueString',oldValue.toString());
-                        let newValue =   parseFloat(oldValue.toString()) - parseFloat(amount);
-                        console.log('oldValue',oldValue);
-                        console.log('newValue',newValue);
-                        let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':parseFloat(newValue).toFixed(8)}}},function(err,docs){
+                        let newValue = parseFloat(parseFloat(oldValue.toString()) - parseFloat(amount)).toFixed(7)
+                        console.log(newValue)
+
+                        let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$$set:{'btc_wallet':{'balance':newValue}}},function(err,docs){
                             if(err){
                                     return [err,false]
                             }
                             else{
-                                return ['updated',true]
+                                return ['updated',docs,true]
                             }
                         }).clone().catch(function(err){ return [err,false]});
                     }
                     else if(wallet_type === "USDT"){
-                            let oldValue = docs.usdt_wallet[0].balance;
                             
-                            let newValue =   parseFloat(oldValue) - parseFloat(amount);
-                            let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'usdt_wallet':{'balance':parseFloat(newValue).toFixed(8)}}},function(err,docs){
+                            let oldValue = docs.btc_wallet[0].balance;
+                            let newValue = parseFloat(parseFloat(oldValue.toString()) - parseFloat(amount)).toFixed(7)
+                            //let newValue =   parseFloat(oldValue) - parseFloat(amount);
+                            let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'usdt_wallet':{'balance':newValue}}},function(err,docs){
                                 if(err){
                                         return [err,false]
                                 }
