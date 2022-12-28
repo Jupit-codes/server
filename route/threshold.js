@@ -218,14 +218,27 @@ Router.post('/incoming/withdrwal/additional', (req,res)=>{
 
 });
 
+Router.get('/remove/address',async (req,res)=>{
+    let update = await Usermodel.updateMany({},{ $set: { 'btc_wallet.0.address': '' } });
+    if(update){
+        res.send({
+            "message":"done"
+        })
+    }
+})
+
+
+
 
 Router.post('/incoming/depositcallback', (req,res)=>{
 
     // res.sendStatus(200);
     // return false;
    
-
+    console.log(req.body)
     if(req.headers['x-checksum'] !== "undefined" || req.headers['x-checksum'] !== "" ){
+
+       
         
         // if(req.body.processing_state === 1){
         //     Walletmodel.findOne({txtid:req.body.txid},async function(err,docs){
