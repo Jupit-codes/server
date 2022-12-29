@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 8080;
 
 dotenv.config();
 
-const MONGO_URI = 'mongodb+srv://odewumit:Ademilola@cluster0.9ymuh.mongodb.net/jupit_app?retryWrites=true&w=majority&useNewUrlParser=true&useUnifiedTopology=true'
+const MONGO_URI = 'mongodb+srv://8c7tOGoot659yGgK:8c7tOGoot659yGgK@cluster0.9ymuh.mongodb.net/jupit_app?retryWrites=true&w=majority&useNewUrlParser=true&useUnifiedTopology=true'
     mongoose
     .connect(MONGO_URI, {
       useNewUrlParser: true,
