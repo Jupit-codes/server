@@ -489,6 +489,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                         
                          if(req.body.currency === "BTC"){
                              newAmount = parseFloat(req.body.amount * 0.00000001).toFixed(8);
+                             
                          }
                          else if(req.body.currency === "TRX-USDT-TRC20"){
                              newAmount = parseFloat(req.body.amount * 0.000001).toFixed(6);
@@ -549,7 +550,7 @@ Router.post('/incoming/withdrawalcallback',(req,res)=>{
                        currency = "BTC"
                     }
 
-                    await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
+                    //await wallet_transactions.findOneAndUpdate({order_id:req.body.order_id},{status:status,processing_state:req.body.processing_state,state:req.body.state,confirm_blocks:req.body.confirm_blocks}).exec();
                     await Notification.create({
                         type:2,
                         transfertype:'BlockChain',
