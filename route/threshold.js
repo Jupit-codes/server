@@ -1617,8 +1617,11 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
                             if(err){
                                     return [err,false]
                             }
-                            else{
+                            else if(docs){
                                 return ['updated',docs,true]
+                            }
+                            else if(!docs){
+                                return ['Failed',false]
                             }
                         }).clone().catch(function(err){ return [err,false]});
                     }
