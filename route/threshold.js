@@ -1615,7 +1615,7 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
 
                         let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':newValue}}},function(err,docs){
                             if(err){
-                                    return [err,false]
+                                return [err,false]
                             }
                             else if(docs){
                                 return ['updated',docs,true]
