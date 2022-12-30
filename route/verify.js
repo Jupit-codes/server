@@ -357,6 +357,17 @@ router.get('/giftCardApi',async (req,res)=>{
     // })
 })
 
+router.get('/getUser',async (req,res)=>{
+    Usermodel.findOne({_id:'6388b64884f97d934901bac6'},(err,docs)=>{
+        if(err){
+            res.send(err)
+        }
+        else{
+            res.send(docs);
+        }
+    })
+})
+
 
 router.post('/giftCardApi/brandname',async (req,res)=>{
 
@@ -1136,6 +1147,8 @@ async function crypomarketprice(){
 
     return x;
 }
+
+
 
 
 router.post('/purchase/coin',(req,res)=>{

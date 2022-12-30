@@ -1613,7 +1613,7 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
                         let newValue = parseFloat(parseFloat(oldValue.toString()) - parseFloat(amount)).toFixed(7)
                         console.log(newValue)
 
-                        let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$$set:{'btc_wallet':{'balance':newValue}}},function(err,docs){
+                        let updateValue =  await Usermodel.findByIdAndUpdate(user_id,{$set:{'btc_wallet':{'balance':newValue}}},function(err,docs){
                             if(err){
                                     return [err,false]
                             }
