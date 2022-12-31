@@ -8,10 +8,12 @@ const userSchema = mongoose.Schema({
     },
     firstname:{
         type:'String',
+        trim : true,
         required: [true, "Required"],
     },
     lastname:{
         type:'String',
+        trim : true,
         required: [true, "Required"],
     },
     virtual_account:{
