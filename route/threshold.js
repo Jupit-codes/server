@@ -1666,22 +1666,57 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
 
 Router.post('/checkwalletaddress',async (req,res)=>{
     let body = req.body
-    let checkAddress = await checkJupitAddress(body.address,body.wallet_type);
-
-    if(checkAddress[1]){
-        if(checkAddress[0]== "JupitCustomer" ){
+    
+    let userid = body.userid
+    await Usermodel.findOne({_id:userid},async(err,docs)=>{
+        if(err){
             res.send({
-                "message":"success",
-                "status":true
+                "message":"Wallet Address Failed..pls logout and relogin",
+                "status":false
             })
         }
-        else{
+        else if(docs){
+           
+            let checkAddress;
+            if(body.wallet_type == "BTC"){
+                checkAddress = await checkJupitAddress(docs.btc_wallet[0].address,body.wallet_type);
+            }
+            else if(body.wallet_type == "USDT"){
+                checkAddress = await checkJupitAddress(docs.usdt_wallet[0].address,body.wallet_type);
+            }
+            
+
+            if(checkAddress[1]){
+                if(checkAddress[0] == "JupitCustomer" ){
+                    res.send({
+                        "message":"successss",
+                        "status":true
+                    })
+                }
+                else{
+                    res.send({
+                        "message":"failed",
+                        "status":false
+                    })
+                }
+            }
+            else{
+                res.send({
+                    "message":"failed",
+                    "status":false
+                })
+            }
+
+        }
+        else if(!docs){
             res.send({
                 "message":"failed",
                 "status":false
             })
         }
-    }
+
+    }).clone().catch(function(err){ return [err,false]});
+   
     
 })
 
