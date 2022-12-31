@@ -932,18 +932,21 @@ Router.post('/notification/details',middlewareVerify,(req,res)=>{
 
 Router.post('/test/update', async (req,res)=>{
 
-    let userid = "62509e4a135feac8ad2be9c9";
+    let userid = "6388b64884f97d934901bac6";
 
-    let update = await Usermodel.updateMany({_id:userid},{ $set: { Pin_Created: false,email_verification:true } });
+    let updateValue =  await Usermodel.findByIdAndUpdate(userid,{$set:{'btc_wallet':{'address':"0000"}}},function(err,docs){
+        if(err){
+            res.send(err)
+        }
+        else if(docs){
+            res.send(docs)
+        }
+        else if(!docs){
+            res.send("Not found")
+        }
+    }).clone().catch(function(err){ return [err,false]});
     
-    if(update){
-        res.send({
-            'message':'Save'
-        })
-    }
-    else{
-        console.log('err')
-    }
+   
     
     // const balance = req.body.balance;
     // const id = req.body.userid;
@@ -1374,6 +1377,8 @@ function generateuuID(){
     return randomUUID(); 
 }
 
+
+
 async function checkJupitAddress(address,wallet_type){
     const addrr = [];
     let secret="";
@@ -1381,9 +1386,9 @@ async function checkJupitAddress(address,wallet_type){
     let wallet_id=""
     if(wallet_type === "BTC"){
 
-         secret=THRESHOLD_BTC_API_SECRET_MASSCOLLECTION
-         apikey = THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
-         wallet_id=THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
+         secret= process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION
+         apikey = process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+         wallet_id= process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
 
         // secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
         // apikey = "4PiVpdbyLJZatLBwR";
@@ -1391,9 +1396,9 @@ async function checkJupitAddress(address,wallet_type){
     else if(wallet_type === "USDT"){
         // secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
         // apikey = "WtjgBd7JbpeBTHCF";
-         secret=THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
-         apikey = THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
-         wallet_id=THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+         secret=process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
+         apikey = process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+         wallet_id=process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
     }
     else{
         return ["Invalid Wallet Type",false]
@@ -1658,6 +1663,28 @@ async function updateWalletBalance(user_id,amount,wallet_type,auto_fee,fromAddre
      
     return transactionSub;
 }
+
+Router.post('/checkwalletaddress',async (req,res)=>{
+    let body = req.body
+    let checkAddress = await checkJupitAddress(body.address,body.wallet_type);
+
+    if(checkAddress[1]){
+        if(checkAddress[0]== "JupitCustomer" ){
+            res.send({
+                "message":"success",
+                "status":true
+            })
+        }
+        else{
+            res.send({
+                "message":"failed",
+                "status":false
+            })
+        }
+    }
+    
+})
+
 Router.get("/rate",(req,res)=>{
     rate.findOne({initialization:'JupitRateBard'},(err,docs)=>{
         res.send(docs.usdt[1]);
