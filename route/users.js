@@ -2166,12 +2166,26 @@ router.post('/users/login',(req,res)=>{
                     var dt = NodeDateTime.create();
                     var formatted = dt.format('Y-m-d H:M:S');
                     console.log(formatted)
+                    let removeCoreDetails = await Usermodel.find({_id:docs._id}, {
+                        password: 0 ,
+                        email_verification:0,
+                        Pin_Created:0,
+                        suspension:0,
+                        blacklist:0,
+                        TWOFA: 0
+
+                      });
+
+                      
+                    
                     Usermodel.findOneAndUpdate({_id:docs._id},{$set:{loginTime:formatted}})
                         await signsuccessmail(docs.email,docs.username,formatted);
+                       
                     jwt.sign({user:docs},'secretkey',{expiresIn:'1h'},(err,token)=>{
                         res.json({
                             token,
-                            docs,
+                            removeCoreDetails,
+                            // docs,
                             'status':true
                         })
                     })
