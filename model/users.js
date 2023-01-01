@@ -36,8 +36,8 @@ const userSchema = mongoose.Schema({
         required: [true, "Required"],
     },
     naira_wallet:[{balance:{type:mongoose.Decimal128},address:'String'}],
-    btc_wallet:[{balance:{type:mongoose.Decimal128},address:{type:'String',immutable: true}}],
-    usdt_wallet:[{balance:{type:mongoose.Decimal128},address:{type:'String',immutable: true}}],
+    btc_wallet:[{balance:{type:mongoose.Decimal128},address:{type:'String',immutable: true,unique:true}}],
+    usdt_wallet:[{balance:{type:mongoose.Decimal128},address:{type:'String',immutable: true,unique:true}}],
     wallet_pin:{
         type:'String'
     },

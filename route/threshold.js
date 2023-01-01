@@ -1690,6 +1690,7 @@ Router.post('/checkwalletaddress',async (req,res)=>{
                 if(checkAddress[0] == "JupitCustomer" ){
                     res.send({
                         "message":"successss",
+                        "wallet_address":docs.btc_wallet[0].address,
                         "status":true
                     })
                 }
