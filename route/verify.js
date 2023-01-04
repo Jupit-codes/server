@@ -1846,10 +1846,10 @@ router.post('/client/withdrawal',(req,res)=>{
                         }
                     })
                 }
-                // else if(!result.data.status && result.data.code == "02"  ){
-                //     res.status(400).send("Failed Request..Pls Try Again");
+                else if(!result.data.status && result.data.code == "02"  ){
+                    res.status(400).send("Failed Request..Pls Try Again");
 
-                // }
+                }
                 else if(!result.data.status && result.data.code == "01"  ){
                     res.status(400).send("Failed Request..Pls Try Again")
                     // sendremindermail();
