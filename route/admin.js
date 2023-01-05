@@ -674,7 +674,8 @@ router.get('/get/all/users',async(req,res)=>{
         Pin_Created:0,
         suspension:0,
         blacklist:0,
-        TWOFA: 0
+        TWOFA: 0,
+        virtual_account:0
 
       }).sort({updated:-1});
       
