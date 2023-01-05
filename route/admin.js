@@ -666,28 +666,54 @@ router.post('/onboard/new',(req,res)=>{
     
 });
 
-router.get('/get/all/users',(req,res)=>{
+router.get('/get/all/users',async(req,res)=>{
+
+    let removeCoreDetails = await Usermodel.find({}, {
+        password: 0 ,
+        email_verification:0,
+        Pin_Created:0,
+        suspension:0,
+        blacklist:0,
+        TWOFA: 0
+
+      }).sort({updated:-1});
+      
+
+      if(removeCoreDetails){
+        res.send({
+            "message":removeCoreDetails,
+            
+            "status":true
+        })
+      }
+      else{
+        res.status(400).send({
+                "message":"Fetch Error",
+                "status":false
+        })
+      }
+      
     
-    Usermodel.find({},(err,docs)=>{
-        if(err){
-            res.status(400).send({
-                "message":err,
-                "status":false
-            })
-        }
-        else if(docs){
-            res.send({
-                "message":docs,
-                "status":true
-            })
-        }
-        else if(!docs){
-            res.status(400).send({
-                "message":"No User Found",
-                "status":false
-            })
-        }
-    }).sort({updated:-1})
+    // Usermodel.find({},(err,docs)=>{
+    //     if(err){
+    //         res.status(400).send({
+    //             "message":err,
+    //             "status":false
+    //         })
+    //     }
+    //     else if(docs){
+    //         res.send({
+    //             "message":docs,
+    //             "status":true
+    //         })
+    //     }
+    //     else if(!docs){
+    //         res.status(400).send({
+    //             "message":"No User Found",
+    //             "status":false
+    //         })
+    //     }
+    // }).sort({updated:-1})
 })
 
 
