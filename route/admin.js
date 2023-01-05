@@ -670,10 +670,10 @@ router.get('/get/all/users',async(req,res)=>{
 
     let removeCoreDetails = await Usermodel.find({}, {
         password: 0 ,
-        email_verification:0,
         Pin_Created:0,
         suspension:0,
         blacklist:0,
+        Status:0,
         TWOFA: 0,
         virtual_account:0
 
@@ -683,7 +683,6 @@ router.get('/get/all/users',async(req,res)=>{
       if(removeCoreDetails){
         res.send({
             "message":removeCoreDetails,
-            
             "status":true
         })
       }
