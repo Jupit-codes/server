@@ -41,7 +41,8 @@
     "random-number": "^0.0.9",
     "random-url": "^1.0.0",
     "speakeasy": "^2.0.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "zeptomail": "^3.0.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

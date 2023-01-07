@@ -31,6 +31,7 @@ import idcardverification from "../model/idcardverification.js";
 import setup_pin from "../model/setup_pin.js";
 import cryptoledger from "../model/cryptoledger.js";
 import fiatledger from "../model/fiatledger.js";
+import { SendMailClient } from "zeptomail";
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -3521,6 +3522,37 @@ router.get('/sendmail',(req,res)=>{
         }
     })
     
+})
+
+router.get('/test/zeptomail',(req,res)=>{
+    
+
+    const url = "api.zeptomail.com/";
+    const token = "<SEND_MAIL_TOKEN>";
+    
+    let client = new SendMailClient({url, token});
+    
+    client.sendMail({
+        "bounce_address": "<BOUNCE_ADDRESS>",
+        "from": 
+        {
+            "address": "noreply@jupitapp.co",
+            "name": "noreply"
+        },
+        "to": 
+        [
+            {
+            "email_address": 
+                {
+                    "address": "bigdev@gmail.com",
+                    "name": "Jupit"
+                }
+            }
+        ],
+        "subject": "Test Email",
+        "htmlbody": "<div><b> Test email sent successfully.</b></div>",
+    }).then((resp) => {console.log("success")})
+    .catch((error) => {console.log(error)});
 })
 
 router.post('/withdrawal/count',(req,res)=>{
