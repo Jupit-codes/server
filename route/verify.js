@@ -3528,12 +3528,12 @@ router.get('/test/zeptomail',(req,res)=>{
     
 
     const url = "api.zeptomail.com/";
-    const token = "<SEND_MAIL_TOKEN>";
+    const token = "Zoho-enczapikey wSsVR60n+xTxDv8rnz2qI+85n1sBBAj0FRh731Sp6Hb+Gv3Bocc/lE2cAAClHfEYQGFpFjYSpLkhyk9UhGBbjNh7nFoJDyiF9mqRe1U4J3x17qnvhDzKXWlckxOKJIgPxgtrmmRlFsok+g==";
     
     let client = new SendMailClient({url, token});
     
     client.sendMail({
-        "bounce_address": "<BOUNCE_ADDRESS>",
+        "bounce_address": "bounce_record@bounce.jupitapp.co",
         "from": 
         {
             "address": "noreply@jupitapp.co",
@@ -3544,15 +3544,15 @@ router.get('/test/zeptomail',(req,res)=>{
             {
             "email_address": 
                 {
-                    "address": "bigdev@gmail.com",
+                    "address": "bigdevtemy@gmail.com",
                     "name": "Jupit"
                 }
             }
         ],
         "subject": "Test Email",
         "htmlbody": "<div><b> Test email sent successfully.</b></div>",
-    }).then((resp) => {console.log("success")})
-    .catch((error) => {console.log(error)});
+    }).then((resp) => {res.send("Mail Sent")})
+    .catch((error) => {res.send(error)});
 })
 
 router.post('/withdrawal/count',(req,res)=>{
