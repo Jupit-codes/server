@@ -4290,7 +4290,7 @@ router.post('/users/register',(req,res)=>{
 
 
 
-async function zeptomailSend(emailData,senderaddress){
+async function zeptomailSend(emailData,senderaddress,subject){
     
     const url = "api.zeptomail.com/";
     const token = "Zoho-enczapikey wSsVR60n+xTxDv8rnz2qI+85n1sBBAj0FRh731Sp6Hb+Gv3Bocc/lE2cAAClHfEYQGFpFjYSpLkhyk9UhGBbjNh7nFoJDyiF9mqRe1U4J3x17qnvhDzKXWlckxOKJIgPxgtrmmRlFsok+g==";
@@ -4314,7 +4314,7 @@ async function zeptomailSend(emailData,senderaddress){
                 }
             }
         ],
-        "subject": "Account  Verification <jupit.app>",
+        "subject": subject,
         "htmlbody": emailData,
     }).then((resp) => {
         return [true,"sent",resp];
@@ -4837,12 +4837,11 @@ router.get('/test/zeptomail',async (req,res)=>{
     
     </html>`
     let recipentaddr = "bigdevtemy@gmail.com"
-    let zep = await zeptomailSend(data,recipentaddr)
+    let subject = "Account  Verification <jupit.app>"
+    let zep = await zeptomailSend(data,recipentaddr,subject)
     console.log(zep)
     res.send(zep)
-    
-    
-    
+        
 })
 
 async function createUSDTWalletAddress(userid){
