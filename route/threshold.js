@@ -17,7 +17,7 @@ import rate from '../model/rate.js';
 import cryptoledger from '../model/cryptoledger.js';
 import https, { get } from 'https'
 import fiatledger from '../model/fiatledger.js';
-
+import { SendMailClient } from "zeptomail";
 
 //https://vault.thresh0ld.com/v1/sofa
 const transporter = nodemailer.createTransport({
