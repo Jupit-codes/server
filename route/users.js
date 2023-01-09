@@ -4246,7 +4246,7 @@ router.post('/users/register',(req,res)=>{
 
               if(sendVerificationEmail[0]){
 
-                res.send({"message":"Kindly Check Mail for Account Verification Link","callback":"info","status":true})
+                res.send({"message":"Check Mail for Account Verification Link","callback":"info","status":true})
 
               }
               else{
