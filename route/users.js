@@ -4314,7 +4314,7 @@ async function zeptomailSend(emailData,senderaddress){
                 }
             }
         ],
-        "subject": "Test Email",
+        "subject": "Account  Verification <jupit.app>",
         "htmlbody": emailData,
     }).then((resp) => {
         return [true,"sent",resp];
