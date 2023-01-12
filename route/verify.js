@@ -3440,6 +3440,8 @@ router.post('/client/withdrawal',(req,res)=>{
             res.status(400).send('Internal Server Error');
         }
         else if(docs){
+            let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
+            await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
         
             //const valueNew = parseFloat(req.body.amount) - parseFloat(req.body.charge);
            // console.log('valueNew',valueNew);
@@ -3469,7 +3471,7 @@ router.post('/client/withdrawal',(req,res)=>{
                console.log('result',result)
                 let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
                 if(result.data.status){
-                    Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- amount_with_charge}},async (err,document)=>{
+                    Usermodel.findOneAndUpdate({_id:req.body.userid},async (err,document)=>{
                         if(err){
                             res.status(400).send('Internal Server Error')
                         }
