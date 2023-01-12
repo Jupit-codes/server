@@ -2624,7 +2624,7 @@ async function zeptomailSend(emailData,senderaddress,subject){
         "from": 
         {
             "address": "noreply@jupitapp.co",
-            "name": "noreply"
+            "name": "Jupit"
         },
         "to": 
         [
@@ -2632,7 +2632,7 @@ async function zeptomailSend(emailData,senderaddress,subject){
             "email_address": 
                 {
                     "address": senderaddress,
-                    "name": "Jupit"
+                    
                 }
             }
         ],
