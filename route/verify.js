@@ -32,6 +32,7 @@ import setup_pin from "../model/setup_pin.js";
 import cryptoledger from "../model/cryptoledger.js";
 import fiatledger from "../model/fiatledger.js";
 import { SendMailClient } from "zeptomail";
+
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
@@ -3360,12 +3361,47 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
     })
 
     
-
-
-    
-   
-
 })
+
+
+
+
+async function zeptomailSend(emailData,senderaddress,subject){
+    
+    const url = "api.zeptomail.com/";
+    const token = "Zoho-enczapikey wSsVR60n+xTxDv8rnz2qI+85n1sBBAj0FRh731Sp6Hb+Gv3Bocc/lE2cAAClHfEYQGFpFjYSpLkhyk9UhGBbjNh7nFoJDyiF9mqRe1U4J3x17qnvhDzKXWlckxOKJIgPxgtrmmRlFsok+g==";
+    
+    let client = new SendMailClient({url, token});
+    
+   let result = client.sendMail({
+        "bounce_address": "bounce_record@bounce.jupitapp.co",
+        "from": 
+        {
+            "address": "noreply@jupitapp.co",
+            "name": "Jupit"
+        },
+        "to": 
+        [
+            {
+            "email_address": 
+                {
+                    "address": senderaddress,
+                    
+                }
+            }
+        ],
+        "subject": subject,
+        "htmlbody": emailData,
+    }).then((resp) => {
+        return [true,"sent",resp];
+    })
+    .catch((error) => {
+        return [false ,error];
+    });
+
+    return result;
+}
+
 
 
 function verifyResponse(req,res,next){
