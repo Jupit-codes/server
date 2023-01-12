@@ -4241,7 +4241,7 @@ router.post('/users/register',(req,res)=>{
               
               </html>`
             
-              let subject = "Account  Verification <jupit.app>"
+              let subject = "Account Verification"
 
               let sendVerificationEmail = await zeptomailSend(data,req.body.email,subject)
 
@@ -4275,9 +4275,6 @@ router.post('/users/register',(req,res)=>{
             //  });
             
 
-           
-
-
       
        }
        catch(err){
@@ -4288,6 +4285,8 @@ router.post('/users/register',(req,res)=>{
    }
   
 })
+
+
 
 
 
@@ -4303,7 +4302,7 @@ async function zeptomailSend(emailData,senderaddress,subject){
         "from": 
         {
             "address": "noreply@jupitapp.co",
-            "name": "noreply"
+            "name": "Jupit"
         },
         "to": 
         [
@@ -4311,7 +4310,7 @@ async function zeptomailSend(emailData,senderaddress,subject){
             "email_address": 
                 {
                     "address": senderaddress,
-                    "name": "Jupit"
+                    
                 }
             }
         ],
@@ -4838,7 +4837,7 @@ router.get('/test/zeptomail',async (req,res)=>{
     
     </html>`
     let recipentaddr = "bigdevtemy@gmail.com"
-    let subject = "Account  Verification <jupit.app>"
+    let subject = "Account Verification"
     let zep = await zeptomailSend(data,recipentaddr,subject)
     console.log(zep)
     res.send(zep)
@@ -5395,7 +5394,7 @@ async function SendMail(address,status){
         const mailData = {
             from: 'Jupit <hello@jupitapp.co>',  // sender address
             to: address,   // list of receivers
-            subject: 'Account  Verification <jupit.app>',
+            subject: 'Account  Verification',
             text: 'That was easy!',
             html: `
                     
