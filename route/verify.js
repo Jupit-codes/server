@@ -3439,15 +3439,16 @@ router.get('/test/immutable',async(req,res)=>{
 })
 
 router.post('/client/withdrawal',(req,res)=>{
-
+   // res.send(req.body)
+    
     bank.findOne({email:req.body.email},async (err,docs)=>{
         if(err){
-            res.status(400).send('Internal Server Error');
+            res.status(400).send(err);
         }
         else if(docs){
             let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
-            await Usermodel.findOneAndUpdate({_id:req.body.userid,'naira_wallet.0.balance':{$gte: 0}},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
-        
+             let x = await Usermodel.findOneAndUpdate({_id:req.body.userid,'naira_wallet.0.balance':{$gte: 0}},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
+            
             //const valueNew = parseFloat(req.body.amount) - parseFloat(req.body.charge);
            // console.log('valueNew',valueNew);
             const url = "https://live.purplepayapp.com/v1/transfer/"
@@ -3473,10 +3474,10 @@ router.post('/client/withdrawal',(req,res)=>{
                 }
             })
             .then(result=>{
-               console.log('result',result)
+               console.log('result',result.data.status)
                 let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
                 if(result.data.status){
-                    Usermodel.findOneAndUpdate({_id:req.body.userid},async (err,document)=>{
+                    Usermodel.findOne({_id:req.body.userid},async (err,document)=>{
                         if(err){
                             res.status(400).send('Internal Server Error')
                         }
