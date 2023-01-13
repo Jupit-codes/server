@@ -2741,10 +2741,10 @@ async function signsuccessmail(email,username,time){
     transporter.sendMail(mailData, function (err, info) {
         if(err){
             console.log(err);
-            res.status(400).send({"message":"An Error Occurred","callback":err})
+            //res.status(400).send({"message":"An Error Occurred","callback":err})
         }
         else{
-            res.status(200).send({'message':'Mailsent'})
+            //res.status(200).send({'message':'Mailsent'})
         }
         
     })
