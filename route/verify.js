@@ -7,6 +7,7 @@ import Kyc from '../model/kyc.js'
 import IdCardVerification from '../model/idcardverification.js'
 import Notification from "../model/notification.js";
 import rate from '../model/rate.js'
+import randomNumber from "random-number";
 import axios from "axios";
 import cloudinary from 'cloudinary'
 import notification from "../model/notification.js";
@@ -3443,8 +3444,15 @@ router.post('/client/withdrawal',(req,res)=>{
             res.status(400).send(err);
         }
         else if(docs){
+            var option_rand = {
+                min: 48886
+                , max: 1000000000
+                , integer: true
+            }
             let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
              let debitWallet = await Usermodel.findOneAndUpdate({_id:req.body.userid,'naira_wallet.0.balance':{$gte: 0}},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
+             let rand = randomNumber(option_rand);
+             
             
             if(debitWallet){
                 await withdrawal.create({
@@ -3456,8 +3464,12 @@ router.post('/client/withdrawal',(req,res)=>{
                     bank_code:docs.bank_code,
                     email:req.body.email,
                     type:'Withdrawal',
-                    currency_worth:amount_with_charge
+                    currency_worth:amount_with_charge,
+                    status:'Pending',
+                    ref_number:rand
                 })
+
+                
 
                 const url = "https://live.purplepayapp.com/v1/transfer/"
                 var params = {
@@ -3485,11 +3497,15 @@ router.post('/client/withdrawal',(req,res)=>{
                    console.log('result',result.data.status)
                     let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
                     if(result.data.status){
+                        
                         Usermodel.findOne({_id:req.body.userid},async (err,document)=>{
                             if(err){
                                 res.status(400).send('Internal Server Error')
                             }
                             else if(document){
+
+                                let updateWithdrawal = await withdrawal.findOneAndUpdate({$and:[{userid:req.body.userid},{ref_number:rand},{currency_worth:amount_with_charge}]},{$set:{'status':'Successful'}}).exec();
+
                                 let saveStatus =  await Notification.create({
                                     type:7,
                                     orderid:req.body.phonenumber,
@@ -3940,10 +3956,12 @@ router.post('/client/withdrawal',(req,res)=>{
                         })
                     }
                     else if(!result.data.status && result.data.code == "02"  ){
+                        let updateWithdrawal =  withdrawal.findOneAndUpdate({$and:[{userid:req.body.userid},{ref_number:rand},{amount:amount_with_charge}]},{$set:{'status':'Failed'}}).exec();
                         res.status(400).send("Failed Request..Pls Try Again");
     
                     }
                     else if(!result.data.status && result.data.code == "01"  ){
+                        let updateWithdrawal =  withdrawal.findOneAndUpdate({$and:[{userid:req.body.userid},{ref_number:rand},{amount:amount_with_charge}]},{$set:{'status':'Failed'}}).exec();
                         res.status(400).send("Failed Request..Pls Try Again")
                         // sendremindermail();
                     }

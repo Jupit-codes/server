@@ -32,10 +32,15 @@ const withdrawalSchema = mongoose.Schema({
         required: [true, "Required"],
         
     },
-    
     currency_worth:{
         type:'String',
         required: [true, "Required"],
+    },
+    status:{
+        type:'String'
+    },
+    ref_number:{
+        type:'String'
     },
     dateofcreation:{
         type:Date
