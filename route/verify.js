@@ -2887,7 +2887,7 @@ router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
                 initiator:req.body.reference,
         
             })
-            Usermodel.findOne({account_number:req.body.account_number},async(err,docs)=>{
+            Usermodel.findOne({virtual_account:req.body.account_number},async(err,docs)=>{
                if(err){
                 await wallet_transactions.create({
                     type:'Deposit',
