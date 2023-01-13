@@ -2838,19 +2838,6 @@ router.post('/check/pin',(req,res)=>{
 
 })
 
-router.get('/test/immutable',async(req,res)=>{
-    const doc =  await Usermodel.findOne({virtual_account: '9995710639' },(err,document)=>{
-        if(err){
-            return [err];
-        }
-        else if(document){
-            return [document];
-        }
-    }).clone().catch(function(err){ return [err,false]});;
-   
-    res.send(doc)
-})
-
 router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
 
     //res.status(200).end();
@@ -3446,6 +3433,11 @@ function verifyResponse(req,res,next){
     }
 }
 
+router.get('/test/immutable',async(req,res)=>{
+   let x = await Usermodel.findOneAndUpdate({_id:'6388b64884f97d934901bac6','naira_wallet.0.balance':{$gte: 0}},{$inc:{'naira_wallet.0.balance': 1000}}).exec();
+    res.send(x)
+})
+
 router.post('/client/withdrawal',(req,res)=>{
 
     bank.findOne({email:req.body.email},async (err,docs)=>{
@@ -3454,7 +3446,7 @@ router.post('/client/withdrawal',(req,res)=>{
         }
         else if(docs){
             let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
-            await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
+            await Usermodel.findOneAndUpdate({_id:req.body.userid,'naira_wallet.0.balance':{$gte: 0}},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
         
             //const valueNew = parseFloat(req.body.amount) - parseFloat(req.body.charge);
            // console.log('valueNew',valueNew);
