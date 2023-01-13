@@ -3520,8 +3520,6 @@ router.post('/client/withdrawal',(req,res)=>{
                         })
                         
     
-                           
-                        
                             fiatledger.create({
                                 userid:req.body.userid,
                                 email:req.body.email,
