@@ -3441,7 +3441,7 @@ router.post('/client/withdrawal',(req,res)=>{
         }
         else if(docs){
             let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
-            await Usermodel.findOneAndUpdate({_id:req.body.userid,'naira_wallet.0.balance':{$gte: 0}},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
+            await Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
         
             //const valueNew = parseFloat(req.body.amount) - parseFloat(req.body.charge);
            // console.log('valueNew',valueNew);
