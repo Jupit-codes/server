@@ -2838,6 +2838,19 @@ router.post('/check/pin',(req,res)=>{
 
 })
 
+router.get('/test/immutable',async(req,res)=>{
+    const doc =  await Usermodel.findOne({virtual_account: '9995710639' },(err,document)=>{
+        if(err){
+            return [err];
+        }
+        else if(document){
+            return [document];
+        }
+    }).clone().catch(function(err){ return [err,false]});;
+   
+    res.send(doc)
+})
+
 router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
 
     //res.status(200).end();
