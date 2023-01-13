@@ -3447,521 +3447,534 @@ router.post('/client/withdrawal',(req,res)=>{
         }
         else if(docs){
             let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
-             let x = await Usermodel.findOneAndUpdate({_id:req.body.userid,'naira_wallet.0.balance':{$gte: 0}},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
+             let debitWallet = await Usermodel.findOneAndUpdate({_id:req.body.userid,'naira_wallet.0.balance':{$gte: 0}},{$inc:{'naira_wallet.0.balance':- amount_with_charge}}).exec();
             
+            if(debitWallet){
+                await withdrawal.create({
+                    username:debitWallet.username,
+                    userid:req.body.userid,
+                    amount:req.body.amount,
+                    account_number:docs.account_number,
+                    account_name:docs.account_name,
+                    bank_code:docs.bank_code,
+                    email:req.body.email,
+                    type:'Withdrawal',
+                    currency_worth:amount_with_charge
+                })
+
+                const url = "https://live.purplepayapp.com/v1/transfer/"
+                var params = {
+                    
+                        "account_number": docs.account_number,
+                        "account_name": docs.account_name,
+                        "bank_code": docs.bank_code,
+                        "amount": req.body.amount,
+                        "first_name": req.body.firstname,
+                        "last_name": req.body.lastname,
+                        "email": req.body.email,
+                        "phone_number": req.body.phonenumber,
+                        "msg": "Jupit Customer Withdrawal"
+                        
+                }
+                
+                
+                axios.post(url,params,{ 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'bearer 8f9838f22b7d7545562135370af912f21204178229f1820bed178cd58578120301602c200c58b2894a6c5be2d0b55e40c451845739c4f197692aefc579078d2a '
+                    }
+                })
+                .then(result=>{
+                   console.log('result',result.data.status)
+                    let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
+                    if(result.data.status){
+                        Usermodel.findOne({_id:req.body.userid},async (err,document)=>{
+                            if(err){
+                                res.status(400).send('Internal Server Error')
+                            }
+                            else if(document){
+                                let saveStatus =  await Notification.create({
+                                    type:7,
+                                    orderid:req.body.phonenumber,
+                                    transfertype:'Withdrawal',
+                                    asset:amount_with_charge,
+                                    from_address:req.body.firstname,
+                                    to_address:req.body.lastname,
+                                    status:'Completed',
+                                    read:'unread',
+                                    date_created:new Date(),
+                                    initiator:req.body.email,
+                                })
+                                
+                                await wallet_transactions.create({
+                                    type:'Withdrawal',
+                                    serial:document.virtual_account,
+                                    order_id:document.virtual_account,
+                                    email:req.body.email,
+                                    currency:'Naira',
+                                    amount:amount_with_charge,
+                                    from_address:document.virtual_account,
+                                    fees:"0",
+                                    to_address:docs.account_number,
+                                    status:'Transaction Completed' 
+                        })
+                        
+    
+                           
+                        
+                            fiatledger.create({
+                                userid:req.body.userid,
+                                email:req.body.email,
+                                amount:req.body.amount,
+                                transaction_fee:req.body.charge,
+                                type:"Credit",
+                                diff_type:'transaction-fee',
+                                status:'Transaction Completed'
+                            })
+    
+                            let currency = "NGN";
+                            let amount = req.body.amount;
+                            let username = document.username;
+            
+                            let data = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                                        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+                                        <head>
+                                        <!--[if gte mso 9]>
+                                        <xml>
+                                        <o:OfficeDocumentSettings>
+                                            <o:AllowPNG/>
+                                            <o:PixelsPerInch>96</o:PixelsPerInch>
+                                        </o:OfficeDocumentSettings>
+                                        </xml>
+                                        <![endif]-->
+                                        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                        <meta name="x-apple-disable-message-reformatting">
+                                        <!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+                                        <title></title>
+                                        
+                                            <style type="text/css">
+                                            @media only screen and (min-width: 620px) {
+                                        .u-row {
+                                            width: 600px !important;
+                                        }
+                                        .u-row .u-col {
+                                            vertical-align: top;
+                                        }
+                                        
+                                        .u-row .u-col-100 {
+                                            width: 600px !important;
+                                        }
+                                        
+                                        }
+                                        
+                                        @media (max-width: 620px) {
+                                        .u-row-container {
+                                            max-width: 100% !important;
+                                            padding-left: 0px !important;
+                                            padding-right: 0px !important;
+                                        }
+                                        .u-row .u-col {
+                                            min-width: 320px !important;
+                                            max-width: 100% !important;
+                                            display: block !important;
+                                        }
+                                        .u-row {
+                                            width: calc(100% - 40px) !important;
+                                        }
+                                        .u-col {
+                                            width: 100% !important;
+                                        }
+                                        .u-col > div {
+                                            margin: 0 auto;
+                                        }
+                                        }
+                                        body {
+                                        margin: 0;
+                                        padding: 0;
+                                        }
+                                        
+                                        table,
+                                        tr,
+                                        td {
+                                        vertical-align: top;
+                                        border-collapse: collapse;
+                                        }
+                                        
+                                        p {
+                                        margin: 0;
+                                        }
+                                        
+                                        .ie-container table,
+                                        .mso-container table {
+                                        table-layout: fixed;
+                                        }
+                                        
+                                        * {
+                                        line-height: inherit;
+                                        }
+                                        
+                                        a[x-apple-data-detectors='true'] {
+                                        color: inherit !important;
+                                        text-decoration: none !important;
+                                        }
+                                        
+                                        table, td { color: #000000; } a { color: #0000ee; text-decoration: underline; }
+                                            </style>
+                                        
+                                        
+                                        
+                                        <!--[if !mso]><!--><link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet" type="text/css"><!--<![endif]-->
+                                        
+                                        </head>
+                                        
+                                        <body class="clean-body u_body" style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #ffffff;color: #000000">
+                                        <!--[if IE]><div class="ie-container"><![endif]-->
+                                        <!--[if mso]><div class="mso-container"><![endif]-->
+                                        <table style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #ffffff;width:100%" cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                        <tr style="vertical-align: top">
+                                            <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
+                                            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color: #ffffff;"><![endif]-->
+                                            
+                                        
+                                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                                        <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+                                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                                            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
+                                            
+                                        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 1px solid #e9e9e9;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                                        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                        <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                        <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 1px solid #e9e9e9;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="padding-right: 0px;padding-left: 0px;" align="center">
+                                            
+                                            <img align="center" border="0" src="https://assets.unlayer.com/projects/90767/1658238821901-JUPIT-Logo-Wordmark_1.png" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 30%;max-width: 174px;" width="174"/>
+                                            
+                                            </td>
+                                        </tr>
+                                        </table>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="padding-right: 0px;padding-left: 0px;" align="center">
+                                            
+                                            <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1635863849995-ref.jpg" alt="Hero Image" title="Hero Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;" width="600"/>
+                                            
+                                            </td>
+                                        </tr>
+                                        </table>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+                                        </div>
+                                        </div>
+                                        <!--[if (mso)|(IE)]></td><![endif]-->
+                                            <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                                            </div>
+                                        </div>
+                                        </div>
+                                        
+                                        
+                                        
+                                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                                        <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+                                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                                            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
+                                            
+                                        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                                        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                        <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                        <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <h1 style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: arial,helvetica,sans-serif; font-size: 22px;">
+                                            <strong>WITHDRAWAL NOTIFICATION</strong>
+                                        </h1>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+                                        </div>
+                                        </div>
+                                        <!--[if (mso)|(IE)]></td><![endif]-->
+                                            <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                                            </div>
+                                        </div>
+                                        </div>
+                                        
+                                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                                        <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;">
+                                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-image: url('https://cdn.templates.unlayer.com/assets/1635864800330-tbg.jpg');background-repeat: no-repeat;background-position: center top;background-color: transparent;">
+                                            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-image: url('https://cdn.templates.unlayer.com/assets/1635864800330-tbg.jpg');background-repeat: no-repeat;background-position: center top;background-color: #ffffff;"><![endif]-->
+                                            
+                                        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                                        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                        <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                        <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px 40px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
+                                            <p style="font-size: 14px; line-height: 140%;"><strong><span style="font-size: 16px; line-height: 22.4px; font-family: Raleway, sans-serif;">Dear ${username},</span></strong></p>
+                                        </div>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 40px 18px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <div style="line-height: 160%; text-align: left; word-wrap: break-word;">
+                                            <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">You have successfully withdrawal a sum of ${amount} ${currency} from your jupit ${currency} wallet.</span></p>
+                                        <p style="font-size: 14px; line-height: 160%;"> </p>
+                                        <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;"> Feel free to login to your app to confirm this and trade more.</span></p>
+                                        <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">Thank you for choosing us</span></p>
+                                        <p style="font-size: 14px; line-height: 160%;"> </p>
+                                        </div>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 50px 40px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <div style="line-height: 120%; text-align: left; word-wrap: break-word;">
+                                            <p style="font-size: 14px; line-height: 120%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 19.2px;">Best Regards,</span></p>
+                                        <p style="font-size: 14px; line-height: 120%;"> </p>
+                                        <p style="font-size: 14px; line-height: 120%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 19.2px;">Jupit Team</span></p>
+                                        </div>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+                                        </div>
+                                        </div>
+                                        <!--[if (mso)|(IE)]></td><![endif]-->
+                                            <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                                            </div>
+                                        </div>
+                                        </div>
+                                        
+                                        
+                                        
+                                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                                        <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #2d4ac0;">
+                                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                                            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #2d4ac0;"><![endif]-->
+                                            
+                                        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                                        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                        <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                        <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <div align="center">
+                                        <div style="display: table; max-width:43px;">
+                                        <!--[if (mso)|(IE)]><table width="43" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:43px;"><tr><![endif]-->
+                                        
+                                            
+                                            <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 0px;" valign="top"><![endif]-->
+                                            <table align="left" border="0" cellspacing="0" cellpadding="0" width="32" height="32" style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 0px">
+                                            <tbody><tr style="vertical-align: top"><td align="left" valign="middle" style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
+                                                <a href="https://instagram.com/jupit" title="Instagram" target="_blank">
+                                                <img src="https://cdn.tools.unlayer.com/social/icons/circle-white/instagram.png" alt="Instagram" title="Instagram" width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
+                                                </a>
+                                            </td></tr>
+                                            </tbody></table>
+                                            <!--[if (mso)|(IE)]></td><![endif]-->
+                                            
+                                            
+                                            <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                                        </div>
+                                        </div>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+                                        </div>
+                                        </div>
+                                        <!--[if (mso)|(IE)]></td><![endif]-->
+                                            <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                                            </div>
+                                        </div>
+                                        </div>
+                                        
+                                        
+                                        
+                                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                                        <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #2d4ac0;">
+                                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                                            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #2d4ac0;"><![endif]-->
+                                            
+                                        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                                        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                        <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                        <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:20px 40px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <div style="color: #ffffff; line-height: 160%; text-align: center; word-wrap: break-word;">
+                                            <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">©️ Jupit</span></p>
+                                        </div>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+                                        </div>
+                                        </div>
+                                        <!--[if (mso)|(IE)]></td><![endif]-->
+                                            <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                                            </div>
+                                        </div>
+                                        </div>
+                                        
+                                        
+                                        
+                                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                                        <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+                                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                                            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
+                                            
+                                        <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                                        <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                        <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                        <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
+                                        
+                                        <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                            <tr>
+                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;" align="left">
+                                                
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="padding-right: 0px;padding-left: 0px;" align="center">
+                                            
+                                            <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1635865576753-ws2.png" alt="Shadow" title="Shadow" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;" width="600"/>
+                                            
+                                            </td>
+                                        </tr>
+                                        </table>
+                                        
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                        
+                                        <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+                                        </div>
+                                        </div>
+                                        <!--[if (mso)|(IE)]></td><![endif]-->
+                                            <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                                            </div>
+                                        </div>
+                                        </div>
+                                        
+                                        
+                                            <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        </table>
+                                        <!--[if mso]></div><![endif]-->
+                                        <!--[if IE]></div><![endif]-->
+                                        </body>
+                                        
+                                        </html>`
+                                        let recipentaddr = docs.email
+                                        let subject = "Withdrawal Notification"
+                                        let zep = await zeptomailSend(data,recipentaddr,subject)
+                                res.send('Withdrawal Success');
+                            }
+                        })
+                    }
+                    else if(!result.data.status && result.data.code == "02"  ){
+                        res.status(400).send("Failed Request..Pls Try Again");
+    
+                    }
+                    else if(!result.data.status && result.data.code == "01"  ){
+                        res.status(400).send("Failed Request..Pls Try Again")
+                        // sendremindermail();
+                    }
+    
+                    
+                    
+                    
+                })
+                .catch((error)=>{
+                    console.log('error',error.response)
+                    res.status(400).send(error)
+                    
+                    
+                })
+
+
+            }
+            else{
+                res.status(400).send('Wallet Balance Error')   
+            }
+
+             
+             
             //const valueNew = parseFloat(req.body.amount) - parseFloat(req.body.charge);
            // console.log('valueNew',valueNew);
-            const url = "https://live.purplepayapp.com/v1/transfer/"
-            var params = {
-                
-                    "account_number": docs.account_number,
-                    "account_name": docs.account_name,
-                    "bank_code": docs.bank_code,
-                    "amount": req.body.amount,
-                    "first_name": req.body.firstname,
-                    "last_name": req.body.lastname,
-                    "email": req.body.email,
-                    "phone_number": req.body.phonenumber,
-                    "msg": "Jupit Customer Withdrawal"
-                    
-            }
-            
-            
-            axios.post(url,params,{ 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'bearer 8f9838f22b7d7545562135370af912f21204178229f1820bed178cd58578120301602c200c58b2894a6c5be2d0b55e40c451845739c4f197692aefc579078d2a '
-                }
-            })
-            .then(result=>{
-               console.log('result',result.data.status)
-                let amount_with_charge = parseFloat(req.body.amount) + parseFloat(req.body.charge)
-                if(result.data.status){
-                    Usermodel.findOne({_id:req.body.userid},async (err,document)=>{
-                        if(err){
-                            res.status(400).send('Internal Server Error')
-                        }
-                        else if(document){
-                            let saveStatus =  await Notification.create({
-                                type:7,
-                                orderid:req.body.phonenumber,
-                                transfertype:'Withdrawal',
-                                asset:amount_with_charge,
-                                from_address:req.body.firstname,
-                                to_address:req.body.lastname,
-                                status:'Completed',
-                                read:'unread',
-                                date_created:new Date(),
-                                initiator:req.body.email,
-                            })
-                            await withdrawal.create({
-                                username:document.username,
-                                userid:req.body.userid,
-                                amount:req.body.amount,
-                                account_number:docs.account_number,
-                                account_name:docs.account_name,
-                                bank_code:docs.bank_code,
-                                email:req.body.email,
-                                type:'Withdrawal',
-                                currency_worth:amount_with_charge
-                            })
-                            await wallet_transactions.create({
-                                type:'Withdrawal',
-                                serial:document.virtual_account,
-                                order_id:document.virtual_account,
-                                email:req.body.email,
-                                currency:'Naira',
-                                amount:amount_with_charge,
-                                from_address:document.virtual_account,
-                                fees:"0",
-                                to_address:docs.account_number,
-                                status:'Transaction Completed' 
-                    })
-                    
-
-                       
-                    
-                        fiatledger.create({
-                            userid:req.body.userid,
-                            email:req.body.email,
-                            amount:req.body.amount,
-                            transaction_fee:req.body.charge,
-                            type:"Credit",
-                            diff_type:'transaction-fee',
-                            status:'Transaction Completed'
-                        })
-
-                        let currency = "NGN";
-                        let amount = req.body.amount;
-                        let username = document.username;
-        
-                        let data = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-                                    <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
-                                    <head>
-                                    <!--[if gte mso 9]>
-                                    <xml>
-                                    <o:OfficeDocumentSettings>
-                                        <o:AllowPNG/>
-                                        <o:PixelsPerInch>96</o:PixelsPerInch>
-                                    </o:OfficeDocumentSettings>
-                                    </xml>
-                                    <![endif]-->
-                                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                    <meta name="x-apple-disable-message-reformatting">
-                                    <!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
-                                    <title></title>
-                                    
-                                        <style type="text/css">
-                                        @media only screen and (min-width: 620px) {
-                                    .u-row {
-                                        width: 600px !important;
-                                    }
-                                    .u-row .u-col {
-                                        vertical-align: top;
-                                    }
-                                    
-                                    .u-row .u-col-100 {
-                                        width: 600px !important;
-                                    }
-                                    
-                                    }
-                                    
-                                    @media (max-width: 620px) {
-                                    .u-row-container {
-                                        max-width: 100% !important;
-                                        padding-left: 0px !important;
-                                        padding-right: 0px !important;
-                                    }
-                                    .u-row .u-col {
-                                        min-width: 320px !important;
-                                        max-width: 100% !important;
-                                        display: block !important;
-                                    }
-                                    .u-row {
-                                        width: calc(100% - 40px) !important;
-                                    }
-                                    .u-col {
-                                        width: 100% !important;
-                                    }
-                                    .u-col > div {
-                                        margin: 0 auto;
-                                    }
-                                    }
-                                    body {
-                                    margin: 0;
-                                    padding: 0;
-                                    }
-                                    
-                                    table,
-                                    tr,
-                                    td {
-                                    vertical-align: top;
-                                    border-collapse: collapse;
-                                    }
-                                    
-                                    p {
-                                    margin: 0;
-                                    }
-                                    
-                                    .ie-container table,
-                                    .mso-container table {
-                                    table-layout: fixed;
-                                    }
-                                    
-                                    * {
-                                    line-height: inherit;
-                                    }
-                                    
-                                    a[x-apple-data-detectors='true'] {
-                                    color: inherit !important;
-                                    text-decoration: none !important;
-                                    }
-                                    
-                                    table, td { color: #000000; } a { color: #0000ee; text-decoration: underline; }
-                                        </style>
-                                    
-                                    
-                                    
-                                    <!--[if !mso]><!--><link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet" type="text/css"><!--<![endif]-->
-                                    
-                                    </head>
-                                    
-                                    <body class="clean-body u_body" style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #ffffff;color: #000000">
-                                    <!--[if IE]><div class="ie-container"><![endif]-->
-                                    <!--[if mso]><div class="mso-container"><![endif]-->
-                                    <table style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #ffffff;width:100%" cellpadding="0" cellspacing="0">
-                                    <tbody>
-                                    <tr style="vertical-align: top">
-                                        <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color: #ffffff;"><![endif]-->
-                                        
-                                    
-                                    <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                                    <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                                        <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-                                        
-                                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 1px solid #e9e9e9;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-                                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                    <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 1px solid #e9e9e9;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td style="padding-right: 0px;padding-left: 0px;" align="center">
-                                        
-                                        <img align="center" border="0" src="https://assets.unlayer.com/projects/90767/1658238821901-JUPIT-Logo-Wordmark_1.png" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 30%;max-width: 174px;" width="174"/>
-                                        
-                                        </td>
-                                    </tr>
-                                    </table>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td style="padding-right: 0px;padding-left: 0px;" align="center">
-                                        
-                                        <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1635863849995-ref.jpg" alt="Hero Image" title="Hero Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;" width="600"/>
-                                        
-                                        </td>
-                                    </tr>
-                                    </table>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-                                    </div>
-                                    </div>
-                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                                        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    
-                                    <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                                    <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                                        <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-                                        
-                                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-                                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                    <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <h1 style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: arial,helvetica,sans-serif; font-size: 22px;">
-                                        <strong>WITHDRAWAL NOTIFICATION</strong>
-                                    </h1>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-                                    </div>
-                                    </div>
-                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                                        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                                    <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;">
-                                        <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-image: url('https://cdn.templates.unlayer.com/assets/1635864800330-tbg.jpg');background-repeat: no-repeat;background-position: center top;background-color: transparent;">
-                                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-image: url('https://cdn.templates.unlayer.com/assets/1635864800330-tbg.jpg');background-repeat: no-repeat;background-position: center top;background-color: #ffffff;"><![endif]-->
-                                        
-                                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-                                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                    <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px 40px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
-                                        <p style="font-size: 14px; line-height: 140%;"><strong><span style="font-size: 16px; line-height: 22.4px; font-family: Raleway, sans-serif;">Dear ${username},</span></strong></p>
-                                    </div>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 40px 18px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <div style="line-height: 160%; text-align: left; word-wrap: break-word;">
-                                        <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">You have successfully withdrawal a sum of ${amount} ${currency} from your jupit ${currency} wallet.</span></p>
-                                    <p style="font-size: 14px; line-height: 160%;"> </p>
-                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;"> Feel free to login to your app to confirm this and trade more.</span></p>
-                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">Thank you for choosing us</span></p>
-                                    <p style="font-size: 14px; line-height: 160%;"> </p>
-                                    </div>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 50px 40px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <div style="line-height: 120%; text-align: left; word-wrap: break-word;">
-                                        <p style="font-size: 14px; line-height: 120%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 19.2px;">Best Regards,</span></p>
-                                    <p style="font-size: 14px; line-height: 120%;"> </p>
-                                    <p style="font-size: 14px; line-height: 120%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 19.2px;">Jupit Team</span></p>
-                                    </div>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-                                    </div>
-                                    </div>
-                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                                        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    
-                                    <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                                    <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #2d4ac0;">
-                                        <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #2d4ac0;"><![endif]-->
-                                        
-                                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-                                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                    <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <div align="center">
-                                    <div style="display: table; max-width:43px;">
-                                    <!--[if (mso)|(IE)]><table width="43" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:43px;"><tr><![endif]-->
-                                    
-                                        
-                                        <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 0px;" valign="top"><![endif]-->
-                                        <table align="left" border="0" cellspacing="0" cellpadding="0" width="32" height="32" style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 0px">
-                                        <tbody><tr style="vertical-align: top"><td align="left" valign="middle" style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                            <a href="https://instagram.com/jupit" title="Instagram" target="_blank">
-                                            <img src="https://cdn.tools.unlayer.com/social/icons/circle-white/instagram.png" alt="Instagram" title="Instagram" width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
-                                            </a>
-                                        </td></tr>
-                                        </tbody></table>
-                                        <!--[if (mso)|(IE)]></td><![endif]-->
-                                        
-                                        
-                                        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                                    </div>
-                                    </div>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-                                    </div>
-                                    </div>
-                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                                        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    
-                                    <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                                    <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #2d4ac0;">
-                                        <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #2d4ac0;"><![endif]-->
-                                        
-                                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-                                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                    <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:20px 40px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <div style="color: #ffffff; line-height: 160%; text-align: center; word-wrap: break-word;">
-                                        <p style="font-size: 14px; line-height: 160%;"><span style="font-family: Raleway, sans-serif; font-size: 16px; line-height: 25.6px;">©️ Jupit</span></p>
-                                    </div>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-                                    </div>
-                                    </div>
-                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                                        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    
-                                    <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                                    <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                                        <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-                                        
-                                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-                                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                    <!--[if (!mso)&(!IE)]><!--><div style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-                                    
-                                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                                    <tbody>
-                                        <tr>
-                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;" align="left">
-                                            
-                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td style="padding-right: 0px;padding-left: 0px;" align="center">
-                                        
-                                        <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1635865576753-ws2.png" alt="Shadow" title="Shadow" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;" width="600"/>
-                                        
-                                        </td>
-                                    </tr>
-                                    </table>
-                                    
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    
-                                    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-                                    </div>
-                                    </div>
-                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                                        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                    </table>
-                                    <!--[if mso]></div><![endif]-->
-                                    <!--[if IE]></div><![endif]-->
-                                    </body>
-                                    
-                                    </html>`
-                                    let recipentaddr = docs.email
-                                    let subject = "Withdrawal Notification"
-                                    let zep = await zeptomailSend(data,recipentaddr,subject)
-                            res.send('Withdrawal Success');
-                        }
-                    })
-                }
-                else if(!result.data.status && result.data.code == "02"  ){
-                    res.status(400).send("Failed Request..Pls Try Again");
-
-                }
-                else if(!result.data.status && result.data.code == "01"  ){
-                    res.status(400).send("Failed Request..Pls Try Again")
-                    // sendremindermail();
-                }
-
-                
-                
-                
-            })
-            .catch((error)=>{
-                console.log('error',error.response)
-                res.status(400).send(error)
-                
-                
-            })
+           
         }
         else if(!docs){
             // await walletReminder();
