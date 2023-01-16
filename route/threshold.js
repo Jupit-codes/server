@@ -1677,7 +1677,7 @@ Router.post('/checkwalletaddress',async (req,res)=>{
         }
         else if(docs){
            
-            let checkAddress;
+            let checkAddress,checkbackup;
             if(body.wallet_type == "BTC"){
                 checkAddress = await checkJupitAddress(docs.btc_wallet[0].address,body.wallet_type);
             }
@@ -1695,10 +1695,34 @@ Router.post('/checkwalletaddress',async (req,res)=>{
                     })
                 }
                 else{
-                    res.send({
-                        "message":"failed",
-                        "status":false
-                    })
+
+                    if(body.wallet_type == "BTC"){
+                        checkbackup = await checkJupitAddress(docs.backup,body.wallet_type);
+
+                        if(checkbackup[1] &&  checkbackup[0] == "JupitCustomer"){
+                            await Usermodel.findOneAndUpdate({_id:userid},{$set:{'btc_wallet.0.address':docs.backup}}).exec();
+                            res.send({
+                                "message":"successss",
+                                "wallet_address":docs.backup,
+                                "status":true
+                            })
+                        }
+                        else{
+                            res.send({
+                                "message":"failed",
+                                "status":false
+                            })
+                        }
+                    }
+                    else{
+                        res.send({
+                            "message":"failed",
+                            "status":false
+                        })
+                    }
+                    
+                    
+                    
                 }
             }
             else{

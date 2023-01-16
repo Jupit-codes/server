@@ -5677,6 +5677,30 @@ router.get('/test/zeptomail',(req,res)=>{
     .catch((error) => {res.send(error)});
 })
 
+router.post('/update/backup',async(req,res)=>{
+    Usermodel.findOne({'btc_wallet.0.address':req.body.address},async(err,docs)=>{
+        if(err){
+            res.send(err);
+        }
+        else if(docs){
+            res.send('Wallet Already In Use')
+        }
+        else if(!docs){
+            let x =   await Usermodel.findOneAndUpdate({email:req.body.email},{$set:{'btc_wallet.0.address':req.body.address}}).exec();
+            let y=   await Usermodel.findOneAndUpdate({email:req.body.email},{$set:{'backup':req.body.address}}).exec();
+            if(x){
+                res.send('Updated')
+            }
+            else{
+                res.send('Failed')
+            }
+        }
+    })
+    
+
+
+})
+
 router.post('/withdrawal/count',(req,res)=>{
     let today = 
     withdrawal.find({userid:req.body._id},(err,docs)=>{
@@ -5688,6 +5712,7 @@ router.post('/withdrawal/count',(req,res)=>{
         }
     })
 })
+
 
 
 export default router
