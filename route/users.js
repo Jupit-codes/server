@@ -2175,6 +2175,7 @@ router.post('/users/login',(req,res)=>{
                         blacklist:0,
                         TWOFA: 0,
                         backup:0,
+                        wallet_pin:0
                        
 
                       });
