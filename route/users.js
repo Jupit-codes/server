@@ -2173,7 +2173,12 @@ router.post('/users/login',(req,res)=>{
                         Pin_Created:0,
                         suspension:0,
                         blacklist:0,
-                        TWOFA: 0
+                        TWOFA: 0,
+                        backup:0,
+                        btc_wallet:0,
+                        usdt_wallet:0,
+                        naira_wallet:0,
+                        
 
                       });
 
