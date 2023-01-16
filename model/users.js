@@ -68,7 +68,9 @@ const userSchema = mongoose.Schema({
     loginTime:{
         type:'String'
     },
+
     updated: { type: Date, default: Date.now },
+    backup:{type:'String'}
 })
 
 // const User = mongoose.model('User',userSchema);
