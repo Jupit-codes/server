@@ -70,7 +70,7 @@ const userSchema = mongoose.Schema({
     },
 
     updated: { type: Date, default: Date.now },
-    backup:{type:'String'}
+    backup:{type:'String',immutable: true,unique:true}
 })
 
 // const User = mongoose.model('User',userSchema);
