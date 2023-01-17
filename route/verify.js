@@ -2870,9 +2870,9 @@ router.post('/check/pin',(req,res)=>{
 
 })
 
-router.post('smile_callback',(req,res)=>{
+router.post('/smile_callback',(req,res)=>{
     console.log(req.body);
-    
+
 })
 
 
