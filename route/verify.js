@@ -33,12 +33,20 @@ import setup_pin from "../model/setup_pin.js";
 import cryptoledger from "../model/cryptoledger.js";
 import fiatledger from "../model/fiatledger.js";
 import { SendMailClient } from "zeptomail";
+import  smileIdentityCore from "smile-identity-core";
+
+
 
 cloudinary.config({ 
     cloud_name: 'jupit', 
     api_key: '848134193962787', 
     api_secret: '57S453gwuBc1_vypuLOcqYQ2V5o' 
   });
+
+const partner_id = '2412'; // login to the Smile Identity portal to view your partner id
+const api_key = '3381a7ae-041a-4338-9dc3-bd917cccfd30';
+
+
 
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -52,6 +60,29 @@ cloudinary.config({
     });
 
 const router = express.Router();
+
+router.get('/generate/signature',(req,res)=>{
+
+    
+    let timestamp = new Date().toISOString();
+    let api_key = "3381a7ae-041a-4338-9dc3-bd917cccfd30";
+    let partner_id = "2412";
+    let hmac = Crypto.createHmac('sha256', api_key);
+
+    hmac.update(timestamp, 'utf8');
+    hmac.update(partner_id, 'utf8');
+    hmac.update("sid_request", 'utf8');
+
+    let signature = hmac.digest().toString('base64');
+
+    // signature==== zYvQipng2lJY5vToouUruFNTYqqpDzq4LhChqhOssCo=
+    res.send({
+        "signature":signature,
+        "timestamp":timestamp
+    })
+
+    
+})
 
 router.get('/me',(req,res)=>{
     // console.log('Welcome to Verify me');
@@ -2838,6 +2869,12 @@ router.post('/check/pin',(req,res)=>{
     })
 
 })
+
+router.post('smile_callback',(req,res)=>{
+    console.log(req.body);
+    
+})
+
 
 router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
 
