@@ -2157,7 +2157,7 @@ router.post('/users/login',(req,res)=>{
             }
             
             const validPassword = bcrypt.compareSync(req.body.password, docs.password);
-            // console.log(validPassword)
+            console.log(validPassword)
             if (validPassword) {
                 if(docs.TWOFA){
                     res.send('Token is Required')
@@ -2205,7 +2205,7 @@ router.post('/users/login',(req,res)=>{
                 // })
                 // res.statusMessage = "Invalid Password";
                 // res.send(400).end();
-
+                console.log('Invalid Password')
                 res.status(400).send('Invalid Password');
             }
              
@@ -2213,6 +2213,7 @@ router.post('/users/login',(req,res)=>{
         else{
             // res.sendStatus(404).send({'message':'Invalid Username',
             //     'status':false})
+            console.log('Invalid Email')
             res.status(400).send('Invalid Email Address');
            
         }

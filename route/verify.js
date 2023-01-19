@@ -5713,26 +5713,33 @@ router.get('/test/zeptomail',(req,res)=>{
     }).then((resp) => {res.send("Mail Sent")})
     .catch((error) => {res.send(error)});
 })
-
-router.post('/update/backup',async(req,res)=>{
-    Usermodel.findOne({'btc_wallet.0.address':req.body.address},async(err,docs)=>{
+//3JyY9zPJQKWBk6EKxwbEcXHrtrXiSRNegB 
+//3ApNkdgidS37vxgS6TJR4nJQdg8bfnRNix
+router.get('/update/backup',async(req,res)=>{
+     await Usermodel.find({},(err,docs)=>{
         if(err){
             res.send(err);
         }
         else if(docs){
-            res.send('Wallet Already In Use')
+            res.send(docs)
         }
-        else if(!docs){
-            let x =   await Usermodel.findOneAndUpdate({email:req.body.email},{$set:{'btc_wallet.0.address':req.body.address}}).exec();
-            let y=   await Usermodel.findOneAndUpdate({email:req.body.email},{$set:{'backup':req.body.address}}).exec();
-            if(x){
-                res.send('Updated')
-            }
-            else{
-                res.send('Failed')
-            }
+        else{
+            res.send("Not Found")
         }
-    })
+
+        // else if(!docs){
+
+
+        //     let x =   await Usermodel.findOneAndUpdate({email:req.body.email},{$set:{'btc_wallet.0.address':req.body.address}}).exec();
+        //     let y=   await Usermodel.findOneAndUpdate({email:req.body.email},{$set:{'backup':req.body.address}}).exec();
+        //     if(x){
+        //         res.send('Updated')
+        //     }
+        //     else{
+        //         res.send('Failed')
+        //     }
+        // }
+    }).clone().catch(function(err){ return [err,false]});
     
 
 
