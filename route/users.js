@@ -2225,12 +2225,15 @@ router.post('/users/login',(req,res)=>{
 
 async function signsuccessmail(email,username,time){
     let external_url = process.env.EXTERNAL_SERVER_URL
-    const mailData = {
-        from: 'Jupit <hello@jupitapp.co>',  // sender address
-        to: email,   // list of receivers
-        subject: 'Login Successful',
-        text: 'That was easy!',
-        html: `
+    // const mailData = {
+    //     from: 'Jupit <hello@jupitapp.co>',  // sender address
+    //     to: email,   // list of receivers
+    //     subject: 'Login Successful',
+    //     text: 'That was easy!',
+    //     html: 
+    //   };
+
+    let data = `
                   
                     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
                     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -2408,7 +2411,7 @@ async function signsuccessmail(email,username,time){
                     
                                                         <img align="center" border="0" src="https://res.cloudinary.com/jupit/image/upload/v1656160429/JUPIT-Logo-Wordmark_1_jo6ivd.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 32%;max-width: 179.2px;"
                                                         width="179.2" />
-                                                       
+                                                    
 
                     
                                                     </td>
@@ -2740,18 +2743,29 @@ async function signsuccessmail(email,username,time){
 
 
             `
-      };
 
-    transporter.sendMail(mailData, function (err, info) {
-        if(err){
-            console.log(err);
-            //res.status(400).send({"message":"An Error Occurred","callback":err})
-        }
-        else{
-            //res.status(200).send({'message':'Mailsent'})
-        }
+            let sendVerificationEmail = await zeptomailSend(data,email,subject)
+
+              if(sendVerificationEmail[0]){
+                console.log(`Welcome ${email}`)
+                //res.send({"message":"Check Mail for Account Verification Link","callback":"info","status":true})
+
+              }
+              else{
+                console.log(sendVerificationEmail)
+                //res.send({"message":"An Error Occurred..pls try again"})
+              }
+
+    // transporter.sendMail(mailData, function (err, info) {
+    //     if(err){
+    //         console.log(err);
+    //         //res.status(400).send({"message":"An Error Occurred","callback":err})
+    //     }
+    //     else{
+    //         //res.status(200).send({'message':'Mailsent'})
+    //     }
         
-    })
+    // })
 }
 
 
