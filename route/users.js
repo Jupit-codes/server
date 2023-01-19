@@ -2743,7 +2743,7 @@ async function signsuccessmail(email,username,time){
 
 
             `
-
+            let subject = "LOGIN NOTIFICATION"
             let sendVerificationEmail = await zeptomailSend(data,email,subject)
 
               if(sendVerificationEmail[0]){
