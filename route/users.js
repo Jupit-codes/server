@@ -38,6 +38,33 @@ cloudinary.config({
 
 
 
+  let THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION= "5ohDbALb4D9nXFEBw"
+  let THRESHOLD_BTC_API_SECRET_MASSCOLLECTION = "3JZEj6R6oZr68dS6d4BLCDhrHUAx"
+  let THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION = "136821"
+  let THRESHOLD_BTC_API_REFRESH_TOKEN = "28zoAMRPAjFdHcDgCds4pymvSMhgJfUExWQcjSxfxC6B"
+  
+ 
+
+  let THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION= "3PmQbapNE8j3EZS2Q"
+  let THRESHOLD_USDT_API_SECRET_MASSCOLLECTION = "k9quRFMc5FVj1dyAkFyEVTX3Acv"
+  let THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION = "196649"
+  let THRESHOLD_USDT_API_REFRESH_TOKEN_MASSCOLLECTION = "GfAnioc8d5qQcMmjKuLNpUCbmTZpgT2L6v6DEzkU8M7h"
+  
+  
+  
+  
+  let THRESHOLD_BTC_API_TOKEN_MASS_SENDER= "tx3RYb4hZ5mZxKEH"
+  let THRESHOLD_BTC_API_SECRET_MASS_SENDER = "3VrgE4Uamd7p7CpgpgtJsGHEzZ2W"
+  let THRESHOLD_BTC_WALLET_ID_MASS_SENDER = "127771"
+  let THRESHOLD_BTC_API_REFRESH_TOKEN_MASS_SENDER = "6rFQn6YLyVecSA83ceJNYbjYJ7ezES5txHNUBfpA5E34"
+  
+  let THRESHOLD_USDT_API_TOKEN_MASS_SENDER= "2JgrSbJpctYdVHqVT"
+  let THRESHOLD_USDT_API_SECRET_MASS_SENDER = "3xhwE4xyFsYvg6iyok6RVEW32nvm"
+  let THRESHOLD_USDT_WALLET_ID_MASS_SENDER = "870727"
+  let THRESHOLD_USDT_API_REFRESH_TOKEN_MASS_SENDER = "Dgggh91THwd82ML8goRFu6dLqTGrpEredA1YaiD8pM7t"
+  
+  
+
 
 const upload = multer({ dest: 'uploads/' })
    // user: 'bigdevtemy@gmail.com',
@@ -62,7 +89,7 @@ router.get('/',(req,res)=>{
 })
 
 router.get('/testnet',(req,res)=>{
-    let x = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
+    let x = THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
     res.json({
         "Appname":"Jupit",
         "host":"Amazon",
@@ -4767,9 +4794,9 @@ router.get('/test/zeptomail',async (req,res)=>{
 })
 
 async function createUSDTWalletAddress(userid){
-    let secret = process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
-    let  Api= process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
-    let  walletId = process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+    let secret = THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
+    let  Api= THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+    let  walletId = THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
  
     console.log(Api,secret)
     console.log(walletId)
@@ -4885,9 +4912,9 @@ async function createvirtualaccount(firstname,lastname,userid){
 
 async function createBTCWalletAddress(userid){
 
-   let secret = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
-   let  Api= process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
-   let  walletId = process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
+   let secret = THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
+   let  Api= THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+   let  walletId = THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
    console.log(Api,secret)
    console.log(walletId)
    var option_rand = {

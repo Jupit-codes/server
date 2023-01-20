@@ -19,6 +19,32 @@ import https, { get } from 'https'
 import fiatledger from '../model/fiatledger.js';
 import { SendMailClient } from "zeptomail";
 
+
+let THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION= "5ohDbALb4D9nXFEBw"
+let THRESHOLD_BTC_API_SECRET_MASSCOLLECTION = "3JZEj6R6oZr68dS6d4BLCDhrHUAx"
+let THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION = "136821"
+let THRESHOLD_BTC_API_REFRESH_TOKEN = "28zoAMRPAjFdHcDgCds4pymvSMhgJfUExWQcjSxfxC6B"
+
+
+
+let THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION= "3PmQbapNE8j3EZS2Q"
+let THRESHOLD_USDT_API_SECRET_MASSCOLLECTION = "k9quRFMc5FVj1dyAkFyEVTX3Acv"
+let THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION = "196649"
+let THRESHOLD_USDT_API_REFRESH_TOKEN_MASSCOLLECTION = "GfAnioc8d5qQcMmjKuLNpUCbmTZpgT2L6v6DEzkU8M7h"
+
+
+
+
+let THRESHOLD_BTC_API_TOKEN_MASS_SENDER= "tx3RYb4hZ5mZxKEH"
+let THRESHOLD_BTC_API_SECRET_MASS_SENDER = "3VrgE4Uamd7p7CpgpgtJsGHEzZ2W"
+let THRESHOLD_BTC_WALLET_ID_MASS_SENDER = "127771"
+let THRESHOLD_BTC_API_REFRESH_TOKEN_MASS_SENDER = "6rFQn6YLyVecSA83ceJNYbjYJ7ezES5txHNUBfpA5E34"
+
+let THRESHOLD_USDT_API_TOKEN_MASS_SENDER= "2JgrSbJpctYdVHqVT"
+let THRESHOLD_USDT_API_SECRET_MASS_SENDER = "3xhwE4xyFsYvg6iyok6RVEW32nvm"
+let THRESHOLD_USDT_WALLET_ID_MASS_SENDER = "870727"
+let THRESHOLD_USDT_API_REFRESH_TOKEN_MASS_SENDER = "Dgggh91THwd82ML8goRFu6dLqTGrpEredA1YaiD8pM7t"
+
 //https://vault.thresh0ld.com/v1/sofa
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -34,7 +60,7 @@ const transporter = nodemailer.createTransport({
 const Router  = express.Router();
 
 Router.get('/testprocess',(req,res)=>{
-    res.json(process.env.THRESHOLD_BTC_API_TOKEN_MASS_SENDER)
+    res.json(HRESHOLD_BTC_API_TOKEN_MASS_SENDER)
     
 })
 
@@ -47,14 +73,14 @@ Router.post('/getautofee',async (req,res)=>{
     let secret = "";
 
     if(req.body.walletType == "BTC"){
-            secret=process.env.THRESHOLD_BTC_API_SECRET_MASS_SENDER;
-            Api=process.env.THRESHOLD_BTC_API_TOKEN_MASS_SENDER
-            wallet_id=process.env.THRESHOLD_BTC_WALLET_ID_MASS_SENDER
+            secret= THRESHOLD_BTC_API_SECRET_MASS_SENDER;
+            Api= THRESHOLD_BTC_API_TOKEN_MASS_SENDER
+            wallet_id= THRESHOLD_BTC_WALLET_ID_MASS_SENDER
     }
     else if(req.body.walletType == "USDT"){
-        wallet_id=process.env.THRESHOLD_USDT_WALLET_ID_MASS_SENDER
-        Api=process.env.THRESHOLD_USDT_API_TOKEN_MASS_SENDER
-        secret=process.env.THRESHOLD_USDT_API_SECRET_MASS_SENDER
+        wallet_id= THRESHOLD_USDT_WALLET_ID_MASS_SENDER
+        Api= THRESHOLD_USDT_API_TOKEN_MASS_SENDER
+        secret= THRESHOLD_USDT_API_SECRET_MASS_SENDER
     }
         
     let rand = random(option_rand);
@@ -654,17 +680,19 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     const networkFee = req.body.networkFee
     const block_average_fee = req.body.block_average;
     const charge = req.body.charge;
-
+    let checkAddress;
     
     if(tranfertype === "Internal Transfer"){
         let newamount = 0;
         if(wallet_type === "BTC"){
            newamount = parseFloat(amount).toFixed(8);
+           checkAddress = await checkJupitAddress(sender,wallet_type);
         }
         else if(wallet_type === "USDT"){
             newamount = parseFloat(amount).toFixed(6);
+            checkAddress = await checkJupitAddress(sender,wallet_type);
         }
-        
+
         let SubFundToWallet = await SubFund(user_id,newamount,wallet_type,block_average_fee,sender,recipentaddress);
                         
         if(SubFundToWallet){
@@ -1177,9 +1205,9 @@ async function creditWalletAddress(userid,address,recipentAddress,wallet_type,au
     // let apikey = "4XoSQPfLwbUiyvF5i";
     // let wallet_id="127771"
 
-    let secret= process.env.THRESHOLD_BTC_API_SECRET_MASS_SENDER
-    let apikey = process.env.THRESHOLD_BTC_API_TOKEN_MASS_SENDER;
-    let wallet_id= process.env.THRESHOLD_BTC_WALLET_ID_MASS_SENDER
+    let secret= THRESHOLD_BTC_API_SECRET_MASS_SENDER
+    let apikey = THRESHOLD_BTC_API_TOKEN_MASS_SENDER;
+    let wallet_id= THRESHOLD_BTC_WALLET_ID_MASS_SENDER
    
     
 
@@ -1282,9 +1310,9 @@ async function creditWalletAddressUSDT(userid,address,recipentAddress,wallet_typ
     // let  apikey="WtjgBd7JbpeBTHCF"
     // let wallet_id="201075"
     
-    let secret= process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
-    let apikey = process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
-    let wallet_id= process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+    let secret= THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
+    let apikey = THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+    let wallet_id= THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
 
 
     let rand = random(option_rand);
@@ -1386,9 +1414,9 @@ async function checkJupitAddress(address,wallet_type){
     let wallet_id=""
     if(wallet_type === "BTC"){
 
-         secret= process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION
-         apikey = process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
-         wallet_id= process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
+         secret= THRESHOLD_BTC_API_SECRET_MASSCOLLECTION
+         apikey = THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+         wallet_id= THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
 
         // secret="3A84eebqYqeU3HaaXMcEAip8zBRS";
         // apikey = "4PiVpdbyLJZatLBwR";
@@ -1396,9 +1424,9 @@ async function checkJupitAddress(address,wallet_type){
     else if(wallet_type === "USDT"){
         // secret="3EXdWbtVAiMb5BGVF7utbXnCDGb2";
         // apikey = "WtjgBd7JbpeBTHCF";
-         secret=process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
-         apikey = process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
-         wallet_id=process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+         secret= THRESHOLD_USDT_API_SECRET_MASSCOLLECTION
+         apikey = THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+         wallet_id= THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
     }
     else{
         return ["Invalid Wallet Type",false]
@@ -1484,9 +1512,9 @@ async function CheckAddressValidity (address,walletType){
             // Api="55JbxSP6xosFTkFvg";
             // walletId ="194071"
 
-            secret = process.env.THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
-            Api= process.env.THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
-            walletId = process.env.THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
+            secret = THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
+            Api= THRESHOLD_BTC_API_TOKEN_MASSCOLLECTION;
+            walletId = THRESHOLD_BTC_WALLET_ID_MASSCOLLECTION
             
         }
         else if(walletType === "USDT"){
@@ -1494,9 +1522,9 @@ async function CheckAddressValidity (address,walletType){
             // secret = "3EXdWbtVAiMb5BGVF7utbXnCDGb2";
             // walletId="488433"
 
-            secret = process.env.THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
-            Api= process.env.THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
-            walletId = process.env.THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
+            secret = THRESHOLD_USDT_API_SECRET_MASSCOLLECTION;
+            Api= THRESHOLD_USDT_API_TOKEN_MASSCOLLECTION;
+            walletId = THRESHOLD_USDT_WALLET_ID_MASSCOLLECTION
 
         }
 
