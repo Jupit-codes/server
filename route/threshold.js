@@ -742,7 +742,6 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
     else if(tranfertype === "BlockChain Transfer"){
 
         checkAddress = await checkJupitAddress(sender,wallet_type);
-
         if(checkAddress[1] && checkAddress[0] != "JupitCustomer"){
             res.status(403).send("Invalid Sender Wallet Address");
         }
