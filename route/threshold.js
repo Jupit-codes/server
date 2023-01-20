@@ -686,11 +686,12 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
         let newamount = 0;
         if(wallet_type === "BTC"){
            newamount = parseFloat(amount).toFixed(8);
-           checkAddress = await checkJupitAddress(sender,wallet_type);
+           
+
         }
         else if(wallet_type === "USDT"){
             newamount = parseFloat(amount).toFixed(6);
-            checkAddress = await checkJupitAddress(sender,wallet_type);
+           
         }
 
         let SubFundToWallet = await SubFund(user_id,newamount,wallet_type,block_average_fee,sender,recipentaddress);
@@ -739,11 +740,18 @@ Router.post('/transfer/coin/',middlewareVerify,async(req,res)=>{
         }
     }
     else if(tranfertype === "BlockChain Transfer"){
+
+        checkAddress = await checkJupitAddress(sender,wallet_type);
+
+        if(checkAddress[1] && checkAddress[0] != "JupitCustomer"){
+            res.status(403).send("Invalid Sender Wallet Address");
+        }
+
         let fee = parseFloat(block_average_fee * 226 * 0.00000001 ).toFixed(8);
         let totalAmount  = parseFloat(networkFee) + parseFloat(amount);
         let totalAmount_with_Charges = parseFloat(networkFee) + parseFloat(amount) + parseFloat(charge)  
         let UpdateWalletBalances = await updateWalletBalance(user_id,parseFloat(totalAmount_with_Charges).toFixed(8),wallet_type,fee,sender,recipentaddress);
-            console.log('UpdateWalletBalances',UpdateWalletBalances)
+            console.log('UpdateWalletBalances',UpdateWalletBalances);
         if(UpdateWalletBalances){
             if(wallet_type === "BTC"){
                 console.log('WalletType',wallet_type)
