@@ -432,58 +432,133 @@ async function parseJwt(token){
       }
   }
 
+// async function middlewareVerify(req,res,next){
+//     const bearerHeader = req.headers['authorization'];
+//     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+//         res.sendStatus(403);
+//         return false;
+//     }
+//     else{
+//         let decodedJwt = await parseJwt(bearerHeader);
+      
+//         if(!decodedJwt){
+//              res.status(403).send({"message":"Forbidden Request."});
+//              return false;
+            
+//         }
+//         if(decodedJwt){
+//             const expiration = new Date(decodedJwt.exp * 1000);
+//             const now = new Date();
+//             const Oneminute = 1000 * 60 * 1;
+//             if( expiration.getTime() - now.getTime() < Oneminute ){
+//                 res.status(403).send('Token Expired');
+//                 return false;
+                
+//             }
+//             else{
+                
+//         Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+//             if(err){
+//                  res.status(403).send({"message":"Internal Server Error"});
+//                  return false;
+//             } 
+//             else if(docs){
+//                  if(docs.password != decodedJwt.user.password ){
+//                     res.status(403).send("Password Expired");
+//                     return false;
+//                  }
+//                  if(docs.Status != "Active"){
+//                    res.status(403).send("Account Blocked");
+//                    return false;
+//                  }
+//             }
+//             else if(!docs){
+//                 res.status(403).send({"message":"Internal Server Error"});
+//                 return false;
+//             }
+//          })
+//             }
+//         }
+        
+
+//         req.token = bearerHeader;
+//         next();
+        
+    
+//     }
+// }
+
+
+
 async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
-        res.sendStatus(403);
-        return false;
+         res.sendStatus(403);
+         return false;
     }
     else{
-        let decodedJwt = await parseJwt(bearerHeader);
-      
-        if(!decodedJwt){
-             res.status(403).send({"message":"Forbidden Request."});
-             return false;
-            
-        }
-        if(decodedJwt){
-            const expiration = new Date(decodedJwt.exp * 1000);
+        // console.log(bearerHeader)
+        
+        try {
+            const decoded = jwt.verify(bearerHeader, 'secretkey');
+            req.user = decoded;
+            const expiration = new Date(req.user.exp * 1000);
+            console.log("Expiration",req.user.user.email)
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
-                res.status(403).send('Token Expired');
-                return false;
+                 res.status(403).send('Token Expired');
+                 return false;
                 
             }
             else{
-                
-        Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
-            if(err){
-                 res.status(403).send({"message":"Internal Server Error"});
-                 return false;
-            } 
-            else if(docs){
-                 if(docs.password != decodedJwt.user.password ){
-                    res.status(403).send("Password Expired");
-                    return false;
-                 }
-                 if(docs.Status != "Active"){
-                   res.status(403).send("Account Blocked");
-                   return false;
-                 }
+                Usermodel.findOne({email:req.user.user.email},(err,docs)=>{
+                    if(err){
+                     res.status(403).send({"message":"Internal Server Error"});
+                     return false;
+                         
+                    } 
+                    else if(docs){
+                         if(docs.password != req.user.user.password ){
+                             res.status(403).send("Password Expired");
+                             return false;
+                             
+                         }
+                         if(docs.Status != "Active"){
+                             res.status(403).send("Account Blocked");
+                             return false;
+                            
+                         }
+                    }
+                    else if(!docs){
+                     res.status(403).send({"message":"Internal Server Error"});
+                     return false;
+                        
+                    }
+                 })
+
             }
-            else if(!docs){
-                res.status(403).send({"message":"Internal Server Error"});
-                return false;
-            }
-         })
-            }
-        }
+
+          } catch (err) {
+            // return res.status(401).send("Invalid Token");
+            return res.sendStatus(403);
+          }
+        //let decodedJwt = await parseJwt(bearerHeader);
+        
+        // if(!decodedJwt){
+        //     res.status(403).send({"message":"Forbidden Request."});
+        //     return false;
+           
+        // }
+        // if(decodedJwt){
+        //            }
+        
         
 
         req.token = bearerHeader;
         next();
         
+
     
     }
 }

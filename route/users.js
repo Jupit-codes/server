@@ -6579,7 +6579,8 @@ async function middlewareVerify(req,res,next){
             }
 
           } catch (err) {
-            return res.status(401).send("Invalid Token");
+            // return res.status(401).send("Invalid Token");
+            return res.sendStatus(403);
           }
         //let decodedJwt = await parseJwt(bearerHeader);
         
