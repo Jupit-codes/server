@@ -2158,7 +2158,7 @@ router.post('/users/refresh',middlewareVerify,(req,res)=>{
 })
 
 router.post('/users/test',middlewareVerify,(req,res)=>{
-    // console.log(req.body)
+    res.send(req.body)
 })
 
 
@@ -6536,15 +6536,13 @@ async function middlewareVerify(req,res,next){
          return false;
     }
     else{
-        let decodedJwt = await parseJwt(bearerHeader);
-      
-        if(!decodedJwt){
-            res.status(403).send({"message":"Forbidden Request."});
-            return false;
-           
-        }
-        if(decodedJwt){
-            const expiration = new Date(decodedJwt.exp * 1000);
+        // console.log(bearerHeader)
+        
+        try {
+            const decoded = jwt.verify(bearerHeader, 'secretkey');
+            req.user = decoded;
+            const expiration = new Date(req.user.exp * 1000);
+            console.log("Expiration",req.user.user.email)
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
@@ -6553,14 +6551,14 @@ async function middlewareVerify(req,res,next){
                 
             }
             else{
-                Usermodel.findOne({email:decodedJwt.user.email},(err,docs)=>{
+                Usermodel.findOne({email:req.user.user.email},(err,docs)=>{
                     if(err){
                      res.status(403).send({"message":"Internal Server Error"});
                      return false;
                          
                     } 
                     else if(docs){
-                         if(docs.password != decodedJwt.user.password ){
+                         if(docs.password != req.user.user.password ){
                              res.status(403).send("Password Expired");
                              return false;
                              
@@ -6579,7 +6577,19 @@ async function middlewareVerify(req,res,next){
                  })
 
             }
-        }
+
+          } catch (err) {
+            return res.status(401).send("Invalid Token");
+          }
+        //let decodedJwt = await parseJwt(bearerHeader);
+        
+        // if(!decodedJwt){
+        //     res.status(403).send({"message":"Forbidden Request."});
+        //     return false;
+           
+        // }
+        // if(decodedJwt){
+        //            }
         
         
 
