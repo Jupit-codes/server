@@ -217,27 +217,27 @@ router.post('/getChart/data',async (req,res)=>{
   
 })
 
-router.get('/emptyTable',(req,res)=>{
-    buy_n_sell.deleteMany({},(err,docs)=>{
-        if(err){
-            res.json(err)
-        }
-        if(docs){
-            res.json('Deleted')
-        }
-    })
-})
+// router.get('/emptyTable',(req,res)=>{
+//     buy_n_sell.deleteMany({},(err,docs)=>{
+//         if(err){
+//             res.json(err)
+//         }
+//         if(docs){
+//             res.json('Deleted')
+//         }
+//     })
+// })
 
-router.get('/others',(req,res)=>{
-    wallet_transactions.updateMany(
-        { order_id: '9995786465' },
-        { $set: { email: 'fakoredekudus@gmail.com'}},{upsert:true}).then((result, err) => {
-           return res.status(200).json({ data: result, message:"Value Updated" });
-       })
-})
+// router.get('/others',(req,res)=>{
+//     wallet_transactions.updateMany(
+//         { order_id: '9995786465' },
+//         { $set: { email: 'fakoredekudus@gmail.com'}},{upsert:true}).then((result, err) => {
+//            return res.status(200).json({ data: result, message:"Value Updated" });
+//        })
+// })
 
 
-router.post('/latest/transaction',(req,res)=>{
+router.post('/latest/transaction',middlewareVerify,(req,res)=>{
     let btcaddress = req.body.btcaddress;
     let usdtaddress = req.body.usdtaddress
    wallet_transactions.find({
@@ -292,7 +292,7 @@ router.get('/aggregate',async (req,res)=>{
     //   console.log(docs);
 })
 
-router.post('/addCard',async(req,res)=>{
+router.post('/addCard',middlewareVerify,async(req,res)=>{
   
 
    giftCardnew.findOne({brandname:req.body.brandname},async (err,docs)=>{
@@ -1185,7 +1185,7 @@ async function crypomarketprice(){
 
 
 
-router.post('/purchase/coin',(req,res)=>{
+router.post('/purchase/coin',middlewareVerify,(req,res)=>{
     // console.log(req.body)
     let marketPrice=0;
     if(req.body.wallet_type === "BTC"){
@@ -1783,7 +1783,7 @@ router.post('/purchase/coin',(req,res)=>{
 
 
 
-router.post('/sell/coin',(req,res)=>{
+router.post('/sell/coin',middlewareVerify,(req,res)=>{
     let marketPrice = 0;
     if(req.body.wallet_type === "BTC"){
         Usermodel.findOneAndUpdate({_id:req.body.userid},{$inc:{'naira_wallet.0.balance': req.body.ngnamount,'btc_wallet.0.balance': - req.body.btcamount}},async (err,docs)=>{
@@ -2795,7 +2795,7 @@ router.post('/sell/coin',(req,res)=>{
     }
 })
 
-router.post('/change/wallet/pin',(req,res)=>{
+router.post('/change/wallet/pin',middlewareVerify,(req,res)=>{
     // console.log(req.body)
     Usermodel.findOne({_id:req.body.userid},(err,docs)=>{
         if(err){
@@ -2837,7 +2837,7 @@ router.post('/change/wallet/pin',(req,res)=>{
     })
 })
 
-router.post('/check/pin',(req,res)=>{
+router.post('/check/pin',middlewareVerify,(req,res)=>{
     // if(err){
     //     res.status(400).send({
     //         "message":err,
@@ -2874,6 +2874,149 @@ router.post('/smile_callback',(req,res)=>{
     console.log(req.body);
 
 })
+
+router.post('/wallet/balance',middlewareVerify,async (req,res)=>{
+    await Usermodel.findById(req.body.userid,async(err,docs)=>{
+        if(err){
+            res.send(err)
+        }
+        else{
+           
+        let sumNairaDeposit =  await NairaDeposit(docs.virtual_account)
+        let sumSell =  await Sell(docs._id)
+        let sumBuy =  await Buy(docs._id)
+        let sumWithdrawals =  await WithdrawalTotal(docs._id)
+            res.send({
+                "nairaDeposit":sumNairaDeposit,
+                "sellDeposit":sumSell,
+                "sumBuy":sumBuy,
+                "sumWithdrawals":sumWithdrawals
+            })
+
+        }
+    }).clone().catch(function(err){ return [err,false]});
+
+})
+
+
+async function NairaDeposit(user_accountnumber){
+    let UserNairaDeposit = await deposit_webhook.aggregate([
+        // { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
+        { $match: {
+            
+            account_number:user_accountnumber
+            
+            }
+        
+        },
+        { $group : { 
+            _id : {}, 
+            count : { $sum : 1 },
+            amount: { $sum : "$amount"}
+            
+            
+        },
+            
+            }, 
+       
+    ])
+    return [UserNairaDeposit];
+     
+}
+
+
+async function Sell(userid){
+    let UserSell = await wallet_transactions.aggregate([
+        // { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
+        { $match: {
+            
+           $and:[
+
+                { order_id:userid},
+                {type:"Sell"}
+           ]
+
+            
+            }
+        
+        },
+        { $group : { 
+            _id : {}, 
+            count : { $sum : 1 },
+            amount: { $sum : "$amount"}
+            
+            
+        },
+            
+            }, 
+       
+    ])
+    return [UserSell];
+     
+}
+
+
+
+async function Buy(userid){
+    let UserBuy = await wallet_transactions.aggregate([
+        // { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
+        { $match: {
+            
+           $and:[
+
+                { order_id:userid},
+                {type:"Buy"}
+           ]
+
+            
+            }
+        
+        },
+        { $group : { 
+            _id : {}, 
+            count : { $sum : 1 },
+            amount: { $sum : "$amount"}
+            
+            
+        },
+            
+            }, 
+       
+    ])
+    return [UserBuy];
+     
+}
+
+
+async function WithdrawalTotal(userid){
+    let UserWithdrawal= await withdrawal.aggregate([
+        // { $match: { currency: 'BTC',order_id:'6265c9d156dbc6a0fe361daa' } },
+        { $match: {
+            
+            $and:[
+
+                    { userid:userid},
+                    {type:"Withdrawal"}
+            ]
+
+            
+            }
+        
+        },
+        { $group : { 
+            _id : {}, 
+            count : { $sum : 1 },
+            amount: { $sum : "$amount"}
+            
+            
+        },
+            
+            }, 
+       
+    ])
+    return [UserWithdrawal];
+     
+}
 
 
 router.post('/catch/deposit/response',verifyResponse,(req,res)=>{
@@ -3473,7 +3616,7 @@ router.get('/test/immutable',async(req,res)=>{
     res.send(x)
 })
 
-router.post('/client/withdrawal',(req,res)=>{
+router.post('/client/withdrawal',middlewareVerify,(req,res)=>{
    // res.send(req.body)
     
     bank.findOne({email:req.body.email},async (err,docs)=>{
@@ -4035,7 +4178,7 @@ router.post('/client/withdrawal',(req,res)=>{
     
 })
 
-router.post('/transaction/history',(req,res)=>{
+router.post('/transaction/history',middlewareVerify,(req,res)=>{
    
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -4220,7 +4363,7 @@ router.post('/transaction/history',(req,res)=>{
 
 
 
-router.post('/filter',(req,res)=>{
+router.post('/filter',middlewareVerify,(req,res)=>{
    
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -4345,7 +4488,7 @@ router.post('/filter',(req,res)=>{
 
 
 //filtercryptoledger
-router.post('/filtercryptoledger',(req,res)=>{
+router.post('/filtercryptoledger',middlewareVerify,(req,res)=>{
    
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -4470,7 +4613,7 @@ router.post('/filtercryptoledger',(req,res)=>{
 
 //filterfiatledger
 
-router.post('/filterfiatledger',async(req,res)=>{
+router.post('/filterfiatledger',middlewareVerify,async(req,res)=>{
    
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -4625,7 +4768,7 @@ router.post('/filterfiatledger',async(req,res)=>{
 })
 
 
-router.post('/filter/deposit',(req,res)=>{
+router.post('/filter/deposit',middlewareVerify,(req,res)=>{
   
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -4695,7 +4838,7 @@ router.post('/filter/deposit',(req,res)=>{
 
 
 
-router.post('/filter/tradelogs',(req,res)=>{
+router.post('/filter/tradelogs',middlewareVerify,(req,res)=>{
   
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -4917,7 +5060,7 @@ router.post('/filter/tradelogs',(req,res)=>{
 })
 
 
-router.post('/filter/withdrawal',(req,res)=>{
+router.post('/filter/withdrawal',middlewareVerify,(req,res)=>{
    
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -5001,7 +5144,6 @@ router.post('/filter/withdrawal',(req,res)=>{
         
 })
 
-
 router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
    
     const {SelectedImage} = req.body
@@ -5056,7 +5198,7 @@ router.post('/addgiftcard/buy/request',middlewareVerify,(req,res)=>{
 })
 
 
-router.post('/filter/transactionlog',(req,res)=>{
+router.post('/filter/transactionlog',middlewareVerify,(req,res)=>{
    
     let startDate = req.body.startdate;
     let endDate = req.body.enddate;
@@ -5129,7 +5271,7 @@ router.post('/filter/transactionlog',(req,res)=>{
         
 })
 
-router.post('/getwithrawal/count',(req,res)=>{
+router.post('/getwithrawal/count',middlewareVerify,(req,res)=>{
     let currentdate = new Date();
 // res.send(new Date(currentDate));
 // return false;
@@ -5745,7 +5887,7 @@ router.get('/update/backup',async(req,res)=>{
 
 })
 
-router.post('/withdrawal/count',(req,res)=>{
+router.post('/withdrawal/count',middlewareVerify,(req,res)=>{
     let today = 
     withdrawal.find({userid:req.body._id},(err,docs)=>{
         if(err){

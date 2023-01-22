@@ -88,7 +88,7 @@ router.get('/',(req,res)=>{
     res.sendStatus(200); 
 })
 
-router.get('/testnet',(req,res)=>{
+router.get('/testnet',middlewareVerify,(req,res)=>{
     let x = THRESHOLD_BTC_API_SECRET_MASSCOLLECTION;
     res.json({
         "Appname":"Jupit",
@@ -99,7 +99,7 @@ router.get('/testnet',(req,res)=>{
     }) 
 })
 
-router.get('/sendmail', (req,res)=>{
+router.get('/sendmail',middlewareVerify, (req,res)=>{
     var dt = NodeDateTime.create();
     var formatted = dt.format('Y-m-d H:M:S');
     let email = 'bigdevtemy@gmail.com';
@@ -1823,7 +1823,7 @@ router.post('/activate/2FA',middlewareVerify,(req,res)=>{
 })
 
 
-router.post('/login/2FA',(req,res)=>{
+router.post('/login/2FA',middlewareVerify,(req,res)=>{
     const {email,token,password} = req.body
 
         Usermodel.findOne({email:email},async (err,docs)=>{
@@ -1877,13 +1877,13 @@ router.post('/login/2FA',(req,res)=>{
     
 })
 
-router.get('/kyc',(req,res)=>{
+router.get('/kyc',middlewareVerify,(req,res)=>{
     // console.log(path.basename(path.resolve(`${'./aws.json'}`)));
     // console.log(process.cwd())
     res.send('Welcome to jupit server');
 });
 
-router.post('/users/kyc',(req,res)=>{
+router.post('/users/kyc',middlewareVerify,(req,res)=>{
    
     Kyc.findOne({userid:req.body.userid},function(err,docs){
         if(err){
@@ -1954,7 +1954,7 @@ router.post('/users/2fa',middlewareVerify,(req,res)=>{
     })
 })
 
-router.post('/users/idcardverification',(req,res)=>{
+router.post('/users/idcardverification',middlewareVerify,(req,res)=>{
     
     // console.log("app",req.body.items.CapturedImage);
   
@@ -2065,7 +2065,7 @@ router.get('/users/test',middlewareVerify,(req,res)=>{
 
     })
 })
-router.get('/users',async(req,res,next)=>{
+router.get('/users',middlewareVerify,async(req,res,next)=>{
     
     const bearerHeader = req.headers['authorization'];
     
@@ -2162,7 +2162,7 @@ router.post('/users/test',middlewareVerify,(req,res)=>{
 })
 
 
-router.post('/users/login',(req,res)=>{
+router.post('/users/login',middlewareVerify,(req,res)=>{
 //   console.log(req.body)
     Usermodel.findOne({email:req.body.email},async (err,docs)=>{
         if(err){
@@ -2871,7 +2871,7 @@ router.post('/customer_webhook', (req,res)=>{
     
 })
 
-router.get('/users/test/hook',async (req,res)=>{
+router.get('/users/test/hook',middlewareVerify,async (req,res)=>{
     let customer_code = "CUS_70tg6oyphbuaue6";
     let callback_email = "hademylola@gmail.com";
      await KycModel.findOneAndUpdate({customercode:customer_code,'level2.email':callback_email},{'level2.$.event_status':"TEST SUCCESS"},null,(err,docs)=>{

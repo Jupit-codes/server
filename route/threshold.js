@@ -1167,7 +1167,7 @@ Router.post('/update/read',middlewareVerify,(req,res)=>{
 
 })
 
-Router.post('/updateWallet',async (req,res)=>{
+Router.post('/updateWallet',middlewareVerify,async (req,res)=>{
     let amount = req.body.amount;
     let user_id = req.body.user
     console.log(req.body)
