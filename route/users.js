@@ -2162,7 +2162,7 @@ router.post('/users/test',middlewareVerify,(req,res)=>{
 })
 
 
-router.post('/users/login',middlewareVerify,(req,res)=>{
+router.post('/users/login',(req,res)=>{
 //   console.log(req.body)
     Usermodel.findOne({email:req.body.email},async (err,docs)=>{
         if(err){
