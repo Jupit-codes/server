@@ -6564,6 +6564,7 @@ async function middlewareVerify(req,res,next){
                     } 
                     else if(docs){
                          if(docs.password != req.user.user.password ){
+                            console.log('Password Expired')
                              res.status(403).send("Password Expired");
                              return false;
                              
