@@ -559,8 +559,6 @@ async function middlewareVerify(req,res,next){
         // if(decodedJwt){
         //            }
         
-        
-
         req.token = bearerHeader;
         next();
         
