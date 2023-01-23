@@ -2088,6 +2088,7 @@ async function middlewareVerify(req,res,next){
     console.log("type",bearerHeader)
     
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
+        console.log('You are out')
          res.sendStatus(403);
          return false;
     }
