@@ -6533,6 +6533,7 @@ async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['Authorization'];
     console.log('bearerHEader',bearerHeader)
     console.log("type",typeof bearerHeader)
+    console.log("check",req)
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
          res.sendStatus(403);
          return false;
