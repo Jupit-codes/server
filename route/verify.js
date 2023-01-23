@@ -510,6 +510,7 @@ async function middlewareVerify(req,res,next){
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
+                console.log('You are out')
                  res.status(403).send('Token Expired');
                  return false;
                 

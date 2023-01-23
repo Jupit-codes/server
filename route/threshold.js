@@ -2088,7 +2088,7 @@ async function middlewareVerify(req,res,next){
     console.log("type",bearerHeader)
     
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
-        console.log('You are out')
+       
          res.sendStatus(403);
          return false;
     }
@@ -2103,6 +2103,7 @@ async function middlewareVerify(req,res,next){
             const now = new Date();
             const Oneminute = 1000 * 60 * 1;
             if( expiration.getTime() - now.getTime() < Oneminute ){
+                console.log('You are out')
                  res.status(403).send('Token Expired');
                  return false;
                 
