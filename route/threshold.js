@@ -12,6 +12,7 @@ import wallet_transactions from '../model/wallet_transactions.js';
 import nodemailer from 'nodemailer';
 import cloudinary from 'cloudinary'
 import { Route } from 'express';
+import jwt from 'jsonwebtoken'
 import bank from '../model/bank.js';
 import rate from '../model/rate.js';
 import cryptoledger from '../model/cryptoledger.js';

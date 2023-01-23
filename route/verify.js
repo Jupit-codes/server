@@ -14,6 +14,7 @@ import notification from "../model/notification.js";
 import webhook from "../model/webhook.js";
 import giftcard from "../model/giftcard.js";
 import Crypto from 'crypto'
+import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer';
 import giftCardnew from "../model/giftCardnew.js";
 import { randomUUID } from 'crypto'
