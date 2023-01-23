@@ -745,7 +745,9 @@ async function parseJwt(token){
 
 
 async function middlewareVerify(req,res,next){
-    const bearerHeader = req.headers['authorization'];
+    const bearerHeader = req.headers['Authorization'];
+    console.log('bea5er',bearerHeader);
+    console.log('Checked',typeof bearerHeader);
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
        return  res.status(403).send('Forbidden Request');
         
