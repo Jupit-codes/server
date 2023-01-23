@@ -546,7 +546,7 @@ async function middlewareVerify(req,res,next){
 
           } catch (err) {
             // return res.status(401).send("Invalid Token");
-            console.log('Invalid Token')
+            console.log('InvalidToken Verify')
             return res.sendStatus(403);
           }
         //let decodedJwt = await parseJwt(bearerHeader);

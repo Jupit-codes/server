@@ -2138,6 +2138,7 @@ async function middlewareVerify(req,res,next){
             }
 
           } catch (err) {
+            console.log('InvalidToken Thresh0ld')
             // return res.status(401).send("Invalid Token");
             return res.sendStatus(403);
           }
