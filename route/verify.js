@@ -492,7 +492,6 @@ async function parseJwt(token){
 
 async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
-    console.log("type",bearerHeader)
    
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         console.log('You are out')
@@ -536,6 +535,7 @@ async function middlewareVerify(req,res,next){
                          }
                     }
                     else if(!docs){
+                        console.log('Internal Server Error')
                      res.status(403).send({"message":"Internal Server Error"});
                      return false;
                         
@@ -546,6 +546,7 @@ async function middlewareVerify(req,res,next){
 
           } catch (err) {
             // return res.status(401).send("Invalid Token");
+            console.log('Invalid Token')
             return res.sendStatus(403);
           }
         //let decodedJwt = await parseJwt(bearerHeader);
