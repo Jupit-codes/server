@@ -492,7 +492,7 @@ async function parseJwt(token){
 
 async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
-    console.log("type",typeof bearerHeader)
+    console.log("type",bearerHeader)
    
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
          res.sendStatus(403);
