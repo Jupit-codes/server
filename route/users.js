@@ -2163,7 +2163,7 @@ router.post('/users/test',middlewareVerify,(req,res)=>{
 
 
 router.post('/users/login',(req,res)=>{
-//   console.log(req.body)
+  console.log(req.body)
     Usermodel.findOne({email:req.body.email},async (err,docs)=>{
         if(err){
             res.send({
@@ -6532,7 +6532,7 @@ async function comparePassword(hashedPassword,requestPassword){
 async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
     
-    console.log("type",bearerHeader)
+    // console.log("type",bearerHeader)
     
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
         console.log('You are out')
@@ -6570,12 +6570,14 @@ async function middlewareVerify(req,res,next){
                              
                          }
                          if(docs.Status != "Active"){
+                            console.log('Account Blocked')
                              res.status(403).send("Account Blocked");
                              return false;
                             
                          }
                     }
                     else if(!docs){
+                        console.log('UseremailNotfound')
                      res.status(403).send({"message":"Internal Server Error"});
                      return false;
                         
@@ -6585,6 +6587,7 @@ async function middlewareVerify(req,res,next){
             }
 
           } catch (err) {
+            console.log('Invalid Token')
             // return res.status(401).send("Invalid Token");
             return res.sendStatus(403);
           }
