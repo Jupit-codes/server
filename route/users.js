@@ -6531,7 +6531,7 @@ async function comparePassword(hashedPassword,requestPassword){
 
 async function middlewareVerify(req,res,next){
     const bearerHeader = req.headers['authorization'];
-    console.log('bearerHEader',bearerHeader)
+    
     console.log("type",typeof bearerHeader)
     
     if(typeof bearerHeader === "undefined" || bearerHeader === ""){
